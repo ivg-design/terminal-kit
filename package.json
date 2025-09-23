@@ -1,50 +1,25 @@
 {
   "name": "terminal-kit",
   "version": "1.0.0",
+  "description": "A retro-futuristic web components library with terminal aesthetics",
   "type": "module",
+  "main": "index.js",
   "scripts": {
-    "dev": "concurrently --kill-others-on-fail -s first \"npm:dev:vite\" \"npm:dev:docs\"",
-    "dev:all": "concurrently --kill-others-on-fail -s first -n VITE,CDP -c green,cyan \"npm:dev\" \"npm:dev:cdp\"",
-    "dev:vite": "vite --clearScreen false",
-    "dev:docs": "npm run docs:build --silent && nodemon --quiet --watch docs --watch mkdocs.yml --ext md,yml --exec \"npm run docs:build --silent\"",
+    "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest",
-    "test:ui": "vitest --ui --config vitest.ui.config.js",
-    "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "test:integration": "vitest run --config vitest.integration.config.js",
-    "test:all": "npm run test:run && npm run test:integration",
-    "docs": "python3 -m mkdocs serve --dev-addr=0.0.0.0:8001",
-    "docs:build": "python3 -m mkdocs build --clean --quiet",
-    "logs": "echo 'CDP logs: logs/cdp-console-*.log'",
-    "logs:follow": "tail -f logs/cdp-console-*.log",
-    "logs:clean": "node scripts/log-cleanup-bundled.js",
-    "logs:clean:preview": "node scripts/log-cleanup-bundled.js --dry-run --verbose",
-    "logs:stats": "node scripts/log-cleanup-bundled.js --dry-run --verbose",
-    "logs:clean:old": "node scripts/log-cleanup.js",
-    "dev:cdp": "DEV_URL=http://localhost:3007 node scripts/cdp-console-mirror-safe.js",
-    "dev:cdp:unsafe": "DEV_URL=http://localhost:3007 node scripts/cdp-console-mirror.js",
-    "dev:mirror": "DEVMIRROR_PKG_PATH=\"/Users/ivg/github/rive-preview/src-v2\" concurrently \"npx devmirror-cli\" \"concurrently \"npm:dev:vite\" \"npm:dev:docs\"\""
+    "preview": "vite preview"
   },
-  "dependencies": {
-    "@rive-app/canvas": "^2.21.0",
-    "@rive-app/webgl": "^2.21.0",
-    "@simonwep/pickr": "^1.9.1",
-    "@supabase/supabase-js": "^2.45.0",
-    "loglevel": "^1.9.2",
-    "tar": "^7.4.3"
-  },
+  "keywords": [
+    "web-components",
+    "terminal",
+    "ui-library",
+    "cyberpunk",
+    "retro"
+  ],
+  "author": "IVG Design",
+  "license": "MIT",
   "devDependencies": {
-    "@vitest/ui": "^3.2.4",
     "concurrently": "^9.2.1",
-    "jsdom": "^27.0.0",
-    "nodemon": "^3.1.7",
-    "prettier": "^3.6.2",
-    "puppeteer": "^23.7.0",
-    "rollup-plugin-copy": "^3.5.0",
-    "vite": "^7.1.5",
-    "vite-console-forward-plugin": "^2.0.1",
-    "vitest": "^3.2.4"
+    "vite": "^7.1.5"
   }
 }
