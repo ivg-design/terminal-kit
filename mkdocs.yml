@@ -1,0 +1,60 @@
+site_name: Terminal UI Components
+site_description: Documentation for Terminal UI Web Components
+site_url: http://localhost:8001
+use_directory_urls: false
+site_dir: public/docs
+
+# Documentation source
+docs_dir: docs
+
+# Theme configuration
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: black
+    accent: green
+  font:
+    text: SF Mono, Monaco, Inconsolata, Fira Code, monospace
+    code: SF Mono, Monaco, Inconsolata, Fira Code, monospace
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - toc.follow
+    - search.highlight
+    - content.code.copy
+
+# Custom CSS and JS
+extra_css:
+  - terminal-theme.css
+
+extra_javascript:
+  - terminal-sidebar.js
+
+# Plugins
+plugins:
+  - search
+
+# Markdown extensions
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+
+# Extra content
+extra:
+  homepage: ../demos/index.html
+
+# Navigation (auto-generated with awesome-pages plugin)

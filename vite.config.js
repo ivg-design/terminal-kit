@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import reloadDocsOnChange from './vite-reload-docs.js';
+import redirectDocsToIndex from './vite-redirect-docs.js';
 
 export default defineConfig({
   base: '/',
@@ -16,4 +18,10 @@ export default defineConfig({
     port: 12358,
     open: false,
   },
+  plugins: [
+    // Ensure /docs route hits /docs/index.html
+    redirectDocsToIndex(),
+    // Force full reload when built docs under public/docs change
+    reloadDocsOnChange(),
+  ]
 });

@@ -5,10 +5,14 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently --kill-others-on-fail -s first \"npm:dev:vite\" \"npm:dev:docs\"",
+    "dev:vite": "vite --clearScreen false",
+    "dev:docs": "npm run docs:build --silent && nodemon --quiet --watch docs --watch mkdocs.yml --ext md,yml --exec \"npm run docs:build --silent\"",
     "build": "vite build",
     "preview": "vite preview",
-    "dev:mirror": "DEVMIRROR_PKG_PATH=\"/Users/ivg/github/terminal-kit\" concurrently \"npx devmirror-cli\" \"vite\""
+    "docs": "python3 -m mkdocs serve --dev-addr=0.0.0.0:8001",
+    "docs:build": "python3 -m mkdocs build --clean --quiet",
+    "dev:mirror": "DEVMIRROR_PKG_PATH=\"/Users/ivg/github/terminal-kit\" concurrently \"npx devmirror-cli\" \"npm:dev\""
   },
   "keywords": [
     "web-components",
@@ -21,6 +25,7 @@
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^9.2.1",
+    "nodemon": "^3.1.7",
     "vite": "^7.1.5"
   }
 }
