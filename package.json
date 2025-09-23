@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:mirror": "DEVMIRROR_PKG_PATH=\"/Users/ivg/github/terminal-kit\" concurrently \"npx devmirror-cli\" \"vite\""
   },
   "keywords": [
     "web-components",
