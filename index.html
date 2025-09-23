@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>RIVE PREVIEW V2 | Terminal Edition</title>
+	
+	<!-- Preconnect to external domains -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="dns-prefetch" href="https://clerk.mograph.life">
+	
+	<!-- Styles -->
+	<link rel="stylesheet" href="/css/main.css">
+	
+	<!-- Configuration -->
+	<script>
+		// Inline config for Clerk - same pattern as v1
+		window.appConfig = {
+			isLocalDev: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1',
+			clerkPublishableKey: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+				? 'pk_test_ZWxlZ2FudC1wdW1hLTk0LmNsZXJrLmFjY291bnRzLmRldiQ'
+				: 'pk_live_Y2xlcmsubW9ncmFwaC5saWZlJA',
+			getClerkScriptUrl: function () {
+				return 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js';
+			}
+		};
+	</script>
+	
+	<!-- Clerk -->
+	<script 
+		async
+		crossorigin="anonymous"
+		type="text/javascript">
+		(function() {
+			const script = document.createElement('script');
+			script.src = window.appConfig.getClerkScriptUrl();
+			script.setAttribute('data-clerk-publishable-key', window.appConfig.clerkPublishableKey);
+			script.async = true;
+			script.crossOrigin = 'anonymous';
+			document.head.appendChild(script);
+		})();
+	</script>
+</head>
+<body>
+	<div id="app" class="app-container">
+		<!-- Loading Screen -->
+		<div class="app-loading" id="loading-screen">
+			<div class="loading-text terminal-cursor">INITIALIZING SYSTEM</div>
+		</div>
+
+		<!-- Main App (Hidden Initially) -->
+		<div id="app-content" class="hidden">
+			<!-- Header -->
+			<header class="app-header">
+				<div class="app-logo">RIVE PREVIEW V2</div>
+				<!-- Test Modal Button for Phase 2 -->
+				<button class="btn btn-sm" id="test-modal-btn" style="margin-right: 20px;">Test Modal</button>
+				<div class="user-badge" id="user-badge">
+					<img class="user-avatar" id="user-avatar" src="" alt="">
+					<span class="user-name" id="user-name">Guest</span>
+				</div>
+			</header>
+
+			<!-- Main Content -->
+			<main class="app-main">
+				
+				<!-- Control Panel -->
+				<div class="control-panel">
+					<div class="control-panel-grid">
+						<!-- Left Column -->
+						<div class="left-column">
+							<!-- Controls Row -->
+							<div class="controls-row">
+								<div class="animation-selector">
+									<div class="dropdown" id="animation-dropdown">
+										<div class="dropdown-trigger">
+											<span>Select Animation</span>
+										</div>
+										<div class="dropdown-menu">
+											<div class="dropdown-search">
+												<input type="text" placeholder="Search...">
+											</div>
+											<ul class="dropdown-list"></ul>
+										</div>
+									</div>
+								</div>
+								<div class="playback-controls">
+									<button class="btn btn-icon playback-btn" id="play-btn" title="Play">▶</button>
+									<button class="btn btn-icon playback-btn" id="pause-btn" title="Pause">⏸</button>
+									<button class="btn btn-icon playback-btn" id="reset-btn" title="Reset">⏹</button>
+								</div>
+								<div class="mode-toggle">
+									<span class="mode-toggle-label">MODE:</span>
+									<div class="mode-toggle-switch" id="mode-toggle">
+										<div class="mode-toggle-slider"></div>
+									</div>
+									<span class="mode-toggle-label" id="mode-label">WORK</span>
+								</div>
+								<div class="upload-section">
+									<button class="btn btn-primary upload-btn hidden" id="upload-btn">
+										UPLOAD
+										<input type="file" class="upload-input" accept=".riv">
+									</button>
+									<button class="btn btn-icon download-btn" id="download-btn" title="Download">⬇</button>
+								</div>
+							</div>
+
+							<!-- Style Row -->
+							<div class="style-controls">
+								<div class="color-picker-group">
+									<label class="color-picker-label">CANVAS BG</label>
+									<div class="color-picker-button" id="canvas-bg-picker"></div>
+									<span class="color-picker-value" id="canvas-bg-value">#000000</span>
+								</div>
+								<div class="color-picker-group">
+									<label class="color-picker-label">WRAPPER BG</label>
+									<div class="color-picker-button" id="wrapper-bg-picker"></div>
+									<span class="color-picker-value" id="wrapper-bg-value">#0a0a0a</span>
+								</div>
+								<div class="zoom-controls">
+									<label class="zoom-label">ZOOM</label>
+									<div class="zoom-slider-wrapper">
+										<input type="range" class="form-range zoom-slider" id="zoom-slider" min="25" max="200" value="100">
+										<span class="zoom-value" id="zoom-value">100%</span>
+									</div>
+								</div>
+							</div>
+
+							<!-- CSS Editor -->
+							<div class="css-editor-panel">
+								<div class="css-editor-header">
+									<div class="css-editor-title">CSS EDITOR</div>
+									<div class="css-editor-actions">
+										<button class="btn btn-sm css-editor-action-btn" id="css-save-btn">SAVE</button>
+										<button class="btn btn-sm css-editor-action-btn" id="css-copy-btn">COPY</button>
+										<button class="btn btn-sm css-editor-action-btn" id="css-clear-btn">CLEAR</button>
+									</div>
+								</div>
+								<div class="css-editor-wrapper">
+									<textarea 
+										class="css-editor-textarea" 
+										id="css-editor"
+										placeholder="/* Enter custom CSS here */"
+										spellcheck="false"
+									></textarea>
+								</div>
+							</div>
+						</div>
+
+						<!-- Right Column - Rive Controls -->
+						<div class="right-column" id="rive-controls-column">
+							<div class="rive-controls-panel panel">
+								<div class="panel-header">
+									<div class="panel-title">RIVE CONTROLS</div>
+								</div>
+								<div class="panel-body">
+									<div class="rive-controls-content" id="rive-controls-content">
+										<div class="rive-controls-empty">
+											No animation loaded
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Canvas Area -->
+				<div class="canvas-container" id="canvas-container">
+					<div class="canvas-wrapper" id="canvas-wrapper">
+						<canvas id="rive-canvas"></canvas>
+					</div>
+				</div>
+			</main>
+
+			<!-- Status Bar -->
+			<footer class="status-bar">
+				<div class="status-bar-left">
+					<span class="status-bar-item">
+						<span>FILE</span>
+						<span id="status-file">--</span>
+					</span>
+					<span class="status-bar-separator">|</span>
+					<span class="status-bar-item">
+						<span>AB</span>
+						<span id="status-artboard">--</span>
+					</span>
+					<span class="status-bar-separator">|</span>
+					<span class="status-bar-item">
+						<span>SM</span>
+						<span id="status-state-machine">--</span>
+					</span>
+					<span class="status-bar-separator">|</span>
+					<span class="status-bar-item">
+						<span>VM</span>
+						<span id="status-view-model">--</span>
+					</span>
+					<span class="status-bar-separator">|</span>
+					<span class="status-bar-item">
+						<span>FPS</span>
+						<span id="status-fps" class="fps-value">--</span>
+					</span>
+				</div>
+				<div class="status-bar-right">
+					<span class="version-badge">LOCAL-v2.0.0</span>
+				</div>
+			</footer>
+		</div>
+
+		<!-- Mobile Toggle Button (Hidden on Desktop) -->
+		<button class="btn btn-icon rive-controls-toggle hidden" id="rive-controls-toggle" title="Toggle Rive Controls">
+			☰
+		</button>
+	</div>
+
+	<!-- Modals will be inserted here -->
+	<div id="modal-container"></div>
+
+	<!-- Main JavaScript Entry Point -->
+	<script type="module" src="/js/main.js"></script>
+</body>
+</html>

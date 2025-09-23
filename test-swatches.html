@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Swatch Removal</title>
+    <link rel="stylesheet" href="css/theme/terminal.css">
+    <link rel="stylesheet" href="css/components/color-picker.css">
+    <link rel="stylesheet" href="css/libs/pickr.min.css">
+</head>
+<body style="background: #0a0a0a; color: #00ff41; padding: 40px;">
+    <h1>Swatch Removal Test</h1>
+
+    <terminal-color-picker id="testPicker" value="#00ff41" label1="Test" label2="Picker"></terminal-color-picker>
+
+    <div style="margin-top: 20px;">
+        <button onclick="testSwatches()">Test Swatches</button>
+        <button onclick="addTestSwatch()">Add Test Swatch</button>
+        <button onclick="clearSwatches()">Clear All Swatches</button>
+    </div>
+
+    <pre id="output" style="margin-top: 20px; background: #1a1a1a; padding: 10px; border: 1px solid #00ff41;"></pre>
+
+    <script src="public/js/libs/pickr.min.js"></script>
+    <script type="module">
+        import './js/components/TerminalComponent.js';
+        import './js/components/TerminalColorPicker.js';
+
+        window.log = function(msg) {
+            const output = document.getElementById('output');
+            output.textContent += msg + '\n';
+            console.log(msg);
+        };
+
+        window.testSwatches = function() {
+            const picker = document.getElementById('testPicker');
+            log('=== Testing Swatches ===');
+            log('Custom swatches: ' + JSON.stringify(picker.customSwatches));
+
+            // Find Pickr popup
+            const pickrId = picker._pickrId;
+            log('Pickr ID: ' + pickrId);
+
+            // Wait a moment for Pickr to open
+            setTimeout(() => {
+                const pickrApp = document.querySelector('.pcr-app');
+                if (!pickrApp) {
+                    log('ERROR: No Pickr app found. Click the picker first.');
+                    return;
+                }
+
+                log('Found Pickr app');
+
+                const swatchContainer = pickrApp.querySelector('.pcr-swatches');
+                if (!swatchContainer) {
+                    log('ERROR: No swatch container found');
+                    return;
+                }
+
+                log('Found swatch container');
+                log('Container HTML (first 500 chars): ' + swatchContainer.innerHTML.substring(0, 500));
+
+                // Try to find buttons
+                const buttons1 = swatchContainer.querySelectorAll('.pcr-button');
+                log('Found ' + buttons1.length + ' elements with class .pcr-button');
+
+                const buttons2 = swatchContainer.querySelectorAll('button');
+                log('Found ' + buttons2.length + ' <button> elements');
+
+                // Check all children
+                log('Direct children: ' + swatchContainer.children.length);
+                for (let i = 0; i < Math.min(3, swatchContainer.children.length); i++) {
+                    const child = swatchContainer.children[i];
+                    log(`Child ${i}: tagName=${child.tagName}, className="${child.className}"`);
+                }
+
+                // Check if buttons have the color property
+                buttons1.forEach((btn, i) => {
+                    const color = btn.style.getPropertyValue('--pcr-color');
+                    log(`Button ${i}: color="${color}"`);
+                });
+            }, 100);
+        };
+
+        window.addTestSwatch = function() {
+            const picker = document.getElementById('testPicker');
+            const color = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+            picker.addColorToSwatches(color);
+            log('Added swatch: ' + color);
+        };
+
+        window.clearSwatches = function() {
+            const picker = document.getElementById('testPicker');
+            picker.clearAllCustomSwatches();
+            log('Cleared all swatches');
+        };
+
+        // Auto-open picker on load
+        customElements.whenDefined('terminal-color-picker').then(() => {
+            setTimeout(() => {
+                const picker = document.getElementById('testPicker');
+                // Click to open Pickr
+                picker.querySelector('.color-picker-swatch')?.click();
+                log('Ready to test. Click "Test Swatches" button.');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

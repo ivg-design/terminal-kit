@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Terminal Toast - Component Demo</title>
+
+        <!-- Load CSS -->
+        <link rel="stylesheet" href="../css/theme/terminal.css">
+        <link rel="stylesheet" href="../css/components/toast.css">
+        <link rel="stylesheet" href="../css/components/buttons.css">
+
+        <style>
+            html, body {
+                overflow: visible !important;
+            }
+            
+            body {
+                font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+                background: #0a0a0a;
+                color: #00ff41;
+                padding: 40px 20px;
+                line-height: 1.6;
+            }
+
+            .demo-container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            h1 {
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                border-bottom: 2px solid #00ff41;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+
+            .breadcrumb {
+                margin-bottom: 30px;
+                font-size: 12px;
+                color: #00cc33;
+            }
+
+            .breadcrumb a {
+                color: #00cc33;
+                text-decoration: none;
+            }
+
+            .breadcrumb a:hover {
+                color: #00ff41;
+            }
+
+            .demo-section {
+                margin-bottom: 60px;
+                padding: 30px;
+                background: #1a1a1a;
+                border: 1px solid #333333;
+            }
+
+            h2 {
+                color: #00ff41;
+                font-size: 18px;
+                margin-bottom: 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            h3 {
+                color: #00ff41;
+                font-size: 14px;
+                margin: 25px 0 15px 0;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .section-description {
+                color: #00cc33;
+                font-size: 13px;
+                margin-bottom: 30px;
+            }
+
+            .demo-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+                margin-bottom: 30px;
+            }
+
+            .demo-item {
+                background: #242424;
+                border: 1px solid #333333;
+                padding: 15px;
+                text-align: center;
+            }
+
+            .demo-label {
+                display: block;
+                color: #00cc33;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-bottom: 10px;
+                padding-bottom: 5px;
+                border-bottom: 1px solid #333333;
+            }
+
+            .code-example {
+                background: #0a0a0a;
+                border: 1px solid #333333;
+                padding: 20px;
+                margin-top: 30px;
+                overflow-x: auto;
+            }
+
+            .code-example pre {
+                margin: 0;
+                color: #00cc33;
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .event-log {
+                background: #0a0a0a;
+                border: 1px solid #333;
+                padding: 15px;
+                margin-top: 15px;
+                color: #00cc33;
+                font-size: 11px;
+                height: 150px;
+                overflow-y: auto;
+            }
+
+            .warning-button {
+                background: #ff9500;
+                border-color: #ff9500;
+                color: #000;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="demo-container">
+            <div class="breadcrumb">
+                <a href="index.html">← Back to Gallery</a> / Toast
+            </div>
+
+            <h1>Terminal Toast</h1>
+            <p style="color: #00cc33; margin-bottom: 40px;">
+                Toast notification system with queue management, auto-dismiss, and multiple types. Includes a global toast manager for easy use.
+            </p>
+
+            <!-- Toast Types -->
+            <div class="demo-section">
+                <h2>Toast Types</h2>
+                <p class="section-description">
+                    Different types of toast notifications for various scenarios.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Success Toast</span>
+                        <terminal-button id="showSuccessToast" variant="success" size="small">Show Success</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Error Toast</span>
+                        <terminal-button id="showErrorToast" variant="danger" size="small">Show Error</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Warning Toast</span>
+                        <terminal-button id="showWarningToast" class="warning-button" size="small">Show Warning</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Info Toast</span>
+                        <terminal-button id="showInfoToast" variant="secondary" size="small">Show Info</terminal-button>
+                    </div>
+                </div>
+
+                <h3>Toast Positioning</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Top Right</span>
+                        <terminal-button id="showToastTopRight" variant="primary" size="small">Top Right</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Top Left</span>
+                        <terminal-button id="showToastTopLeft" variant="primary" size="small">Top Left</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Top Center</span>
+                        <terminal-button id="showToastTopCenter" variant="primary" size="small">Top Center</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Bottom Right</span>
+                        <terminal-button id="showToastBottomRight" variant="primary" size="small">Bottom Right</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Bottom Left</span>
+                        <terminal-button id="showToastBottomLeft" variant="primary" size="small">Bottom Left</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Bottom Center</span>
+                        <terminal-button id="showToastBottomCenter" variant="primary" size="small">Bottom Center</terminal-button>
+                    </div>
+                </div>
+
+                <h3>Toast Options</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Persistent Toast</span>
+                        <terminal-button id="showPersistentToast" variant="secondary" size="small">No Auto-Dismiss</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Quick Toast (1s)</span>
+                        <terminal-button id="showQuickToast" variant="secondary" size="small">Quick Dismiss</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Long Message</span>
+                        <terminal-button id="showLongToast" variant="secondary" size="small">Long Message</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">No Close Button</span>
+                        <terminal-button id="showNonDismissibleToast" variant="secondary" size="small">No Close Button</terminal-button>
+                    </div>
+                </div>
+
+                <h3>Toast Queue Management</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Spam Toasts</span>
+                        <terminal-button id="spamToasts" variant="primary" size="small">Show 10 Toasts</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Progress Updates</span>
+                        <terminal-button id="progressiveToasts" variant="primary" size="small">Progress Updates</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Clear All</span>
+                        <terminal-button id="clearAllToasts" variant="danger" size="small">Clear All Toasts</terminal-button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Log -->
+            <div class="demo-section">
+                <h2>Event Log</h2>
+                <p class="section-description">
+                    Toast events and interactions are logged here.
+                </p>
+                <div id="eventLog" class="event-log">
+                    Click buttons above to show toasts and see events...
+                </div>
+            </div>
+
+            <!-- Code Examples -->
+            <div class="demo-section">
+                <h2>Code Examples</h2>
+                <p class="section-description">
+                    How to use the Terminal Toast Manager in your application.
+                </p>
+
+                <div class="code-example">
+                    <pre>&lt;!-- Toast HTML structure is automatically managed --&gt;
+&lt;!-- Just import the component and use the ToastManager API --&gt;
+
+&lt;script type="module"&gt;
+import './js/components/TerminalToast.js';
+
+// Simple toast notifications
+window.TerminalToastManager.success('Operation completed successfully!');
+window.TerminalToastManager.error('Something went wrong');
+window.TerminalToastManager.warning('Please review your settings');
+window.TerminalToastManager.info('New update available');
+
+// Custom toast with options
+window.TerminalToastManager.show('Custom message', 'info', {
+  duration: 5000,        // Auto-dismiss after 5 seconds (0 = no auto-dismiss)
+  position: 'top-right', // Position on screen
+  dismissible: true,     // Show close button
+  actions: [             // Custom action buttons
+    {
+      text: 'Undo',
+      callback: () => console.log('Undo clicked')
+    }
+  ]
+});
+&lt;/script&gt;</pre>
+                </div>
+
+                <div class="code-example">
+                    <pre>// Advanced Toast Manager API
+const toastManager = window.TerminalToastManager;
+
+// Queue management
+toastManager.dismissAll();        // Clear all toasts
+toastManager.getActiveCount();    // Get number of active toasts
+
+// Toast with custom styling
+toastManager.show('Custom toast', 'success', {
+  duration: 3000,
+  position: 'bottom-center',
+  className: 'custom-toast-class'
+});
+
+// Toast with progress indicator
+let progress = 0;
+const progressToast = toastManager.show('Processing...', 'info', {
+  duration: 0,  // Don't auto-dismiss
+  progress: progress
+});
+
+const interval = setInterval(() => {
+  progress += 10;
+  progressToast.setProgress(progress);
+  
+  if (progress >= 100) {
+    clearInterval(interval);
+    progressToast.dismiss();
+    toastManager.success('Process completed!');
+  }
+}, 200);
+
+// Listen for toast events
+document.addEventListener('toast-shown', (e) => {
+  console.log('Toast shown:', e.detail);
+});
+
+document.addEventListener('toast-dismissed', (e) => {
+  console.log('Toast dismissed:', e.detail);
+});
+
+document.addEventListener('toast-action', (e) => {
+  console.log('Toast action clicked:', e.detail);
+});</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import Components -->
+        <script type="module">
+            import '../js/components/TerminalComponent.js';
+            import '../js/components/TerminalToast.js';
+            import '../js/components/TerminalButton.js';
+
+            function logEvent(message) {
+                const eventLog = document.getElementById('eventLog');
+                if (eventLog) {
+                    const timestamp = new Date().toLocaleTimeString();
+                    eventLog.innerHTML += `[${timestamp}] ${message}<br>`;
+                    eventLog.scrollTop = eventLog.scrollHeight;
+                }
+            }
+
+            // Setup after components load
+            setTimeout(() => {
+                // Toast type buttons
+                const toastButtons = [
+                    { id: 'showSuccessToast', type: 'success', message: 'Operation completed successfully!' },
+                    { id: 'showErrorToast', type: 'error', message: 'Something went wrong. Please try again.' },
+                    { id: 'showWarningToast', type: 'warning', message: 'Please review your settings before proceeding.' },
+                    { id: 'showInfoToast', type: 'info', message: 'New update available for download.' }
+                ];
+
+                toastButtons.forEach(({ id, type, message }) => {
+                    const button = document.getElementById(id);
+                    if (button) {
+                        button.addEventListener('click', () => {
+                            if (window.TerminalToastManager) {
+                                window.TerminalToastManager.show(message, type);
+                                logEvent(`${type.toUpperCase()} toast shown: "${message}"`);
+                            }
+                        });
+                    }
+                });
+
+                // Toast positioning buttons
+                const positionButtons = [
+                    { id: 'showToastTopRight', position: 'top-right' },
+                    { id: 'showToastTopLeft', position: 'top-left' },
+                    { id: 'showToastTopCenter', position: 'top-center' },
+                    { id: 'showToastBottomRight', position: 'bottom-right' },
+                    { id: 'showToastBottomLeft', position: 'bottom-left' },
+                    { id: 'showToastBottomCenter', position: 'bottom-center' }
+                ];
+
+                positionButtons.forEach(({ id, position }) => {
+                    const button = document.getElementById(id);
+                    if (button) {
+                        button.addEventListener('click', () => {
+                            if (window.TerminalToastManager) {
+                                window.TerminalToastManager.info(`Toast in ${position} position`, { position });
+                                logEvent(`Positioned toast shown: ${position}`);
+                            }
+                        });
+                    }
+                });
+
+                // Special option buttons
+                const showPersistentToast = document.getElementById('showPersistentToast');
+                if (showPersistentToast) {
+                    showPersistentToast.addEventListener('click', () => {
+                        if (window.TerminalToastManager) {
+                            window.TerminalToastManager.info('This toast will not auto-dismiss', { duration: 0 });
+                            logEvent('Persistent toast shown (no auto-dismiss)');
+                        }
+                    });
+                }
+
+                const showQuickToast = document.getElementById('showQuickToast');
+                if (showQuickToast) {
+                    showQuickToast.addEventListener('click', () => {
+                        if (window.TerminalToastManager) {
+                            window.TerminalToastManager.success('Quick dismiss!', { duration: 1000 });
+                            logEvent('Quick toast shown (1s duration)');
+                        }
+                    });
+                }
+
+                const showLongToast = document.getElementById('showLongToast');
+                if (showLongToast) {
+                    showLongToast.addEventListener('click', () => {
+                        if (window.TerminalToastManager) {
+                            window.TerminalToastManager.info('This is a very long message that demonstrates how the toast component handles lengthy text content and ensures proper wrapping and readability.');
+                            logEvent('Long message toast shown');
+                        }
+                    });
+                }
+
+                const showNonDismissibleToast = document.getElementById('showNonDismissibleToast');
+                if (showNonDismissibleToast) {
+                    showNonDismissibleToast.addEventListener('click', () => {
+                        if (window.TerminalToastManager) {
+                            window.TerminalToastManager.warning('No close button available', { dismissible: false, duration: 3000 });
+                            logEvent('Non-dismissible toast shown (3s auto-dismiss)');
+                        }
+                    });
+                }
+
+                // Queue management buttons
+                const spamToasts = document.getElementById('spamToasts');
+                if (spamToasts) {
+                    spamToasts.addEventListener('click', () => {
+                        if (window.TerminalToastManager) {
+                            for (let i = 1; i <= 10; i++) {
+                                setTimeout(() => {
+                                    window.TerminalToastManager.info(`Toast #${i} of 10`);
+                                }, i * 100);
+                            }
+                            logEvent('10 toasts queued for display');
+                        }
+                    });
+                }
+
+                const progressiveToasts = document.getElementById('progressiveToasts');
+                if (progressiveToasts) {
+                    progressiveToasts.addEventListener('click', () => {
+                        if (window.TerminalToastManager) {
+                            const steps = [
+                                { message: 'Starting process...', type: 'info' },
+                                { message: 'Loading data...', type: 'info' },
+                                { message: 'Processing...', type: 'warning' },
+                                { message: 'Almost done...', type: 'warning' },
+                                { message: 'Process completed!', type: 'success' }
+                            ];
+                            
+                            steps.forEach(({ message, type }, index) => {
+                                setTimeout(() => {
+                                    window.TerminalToastManager.show(message, type);
+                                }, index * 1000);
+                            });
+                            
+                            logEvent(`Progressive toasts started (${steps.length} steps)`);
+                        }
+                    });
+                }
+
+                const clearAllToasts = document.getElementById('clearAllToasts');
+                if (clearAllToasts) {
+                    clearAllToasts.addEventListener('click', () => {
+                        if (window.TerminalToastManager) {
+                            window.TerminalToastManager.dismissAll();
+                            logEvent('All toasts cleared');
+                        }
+                    });
+                }
+
+                // Listen for global toast events
+                document.addEventListener('toast-shown', (e) => {
+                    logEvent(`Toast event: shown (${e.detail.type || 'unknown'})`);
+                });
+
+                document.addEventListener('toast-dismissed', (e) => {
+                    logEvent(`Toast event: dismissed (${e.detail.reason || 'unknown'})`);
+                });
+
+                logEvent('Toast demo initialized - Ready to show notifications!');
+            }, 100);
+        </script>
+    </body>
+
+</html>

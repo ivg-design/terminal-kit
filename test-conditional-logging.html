@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conditional Logging Test</title>
+    <link rel="stylesheet" href="/css/global.css">
+</head>
+<body style="padding: 20px;">
+    <h1>Conditional Logging Test</h1>
+
+    <h2>Test Links:</h2>
+    <ul>
+        <li><a href="?">No debug parameter (minimal logging)</a></li>
+        <li><a href="?debug=TButton">Debug TButton only</a></li>
+        <li><a href="?debug=all">Debug all components</a></li>
+    </ul>
+
+    <h2>Current URL Parameters:</h2>
+    <div id="params"></div>
+
+    <h2>Test Button:</h2>
+    <t-btn variant="primary">Test Button</t-btn>
+
+    <script type="module">
+        // Display current URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const debugParam = params.get('debug') || 'none';
+        document.getElementById('params').textContent = `debug = ${debugParam}`;
+
+        // Import button component
+        import('/js/components/TButton.js');
+
+        console.log('Test page loaded with debug parameter:', debugParam);
+        console.log('Expected behavior:');
+        if (debugParam === 'none') {
+            console.log('- Minimal logging (only debug messages)');
+        } else if (debugParam === 'TButton') {
+            console.log('- Detailed logging for TButton stylesheet only');
+        } else if (debugParam === 'all') {
+            console.log('- Detailed logging for all stylesheets');
+        }
+    </script>
+</body>
+</html>

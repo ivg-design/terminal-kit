@@ -1,0 +1,560 @@
+/**
+ * Panel Component (t-pnl)
+ * Terminal-style panels with collapsible states
+ */
+
+/* Base panel */
+.t-pnl {
+  background-color: var(--terminal-black-light); /* #1a1a1a */
+  border: 1px solid var(--terminal-green-dark); /* #333333 */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: relative; /* For footer toggle positioning */
+  /* No default min-height - let content determine or use state classes */
+  transition: min-height 0.3s ease-out, height 0.3s ease-out, border 0.3s ease-out;
+  /* margin-bottom handled by demo styles */
+}
+
+.t-pnl__header {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--terminal-gray-dark); /* #242424 */
+  border-bottom: 1px solid var(--terminal-gray-light);
+  min-height: 36px;
+  gap: var(--spacing-xs);
+}
+
+.t-pnl__title {
+  font-size: var(--font-size-sm);
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--terminal-green); /* #00ff41 */
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex: 1;
+}
+
+/* Standard panels get default min-height */
+.t-pnl--standard {
+  min-height: 60px;
+}
+
+/* Brackets for standard (non-collapsible) panels */
+.t-pnl--standard .t-pnl__title::before {
+  content: '[ ';
+  color: var(--terminal-green-dim);
+}
+
+.t-pnl--standard .t-pnl__title::after {
+  content: ' ]';
+  color: var(--terminal-green-dim);
+}
+
+.t-pnl__actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+  margin-left: auto;
+}
+
+.t-pnl__body {
+  flex: 1;
+  padding: var(--spacing-md);
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 40px;
+  /* Ensure body is always visible when expanded */
+}
+
+.t-pnl__footer {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--terminal-gray-dark);
+  border-top: 1px solid var(--terminal-gray-light);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+}
+
+/* Control Panel variant */
+.t-pnl--control {
+  background: var(--terminal-black-light);
+  border-bottom: 1px solid var(--terminal-gray-light);
+  padding: var(--spacing-md);
+  flex-shrink: 0;
+}
+
+.t-pnl__grid {
+  display: flex;
+  gap: var(--spacing-md);
+  height: 350px;
+}
+
+.t-pnl__left-col {
+  flex: 0 0 60%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.t-pnl__right-col {
+  flex: 0 0 calc(40% - var(--spacing-md));
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Slide Panel variant */
+.t-pnl--slide {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100vh;
+  background: var(--terminal-black-light);
+  border-left: 1px solid var(--terminal-green);
+  transition: right 0.3s ease;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.t-pnl--slide.is-active {
+  right: 0;
+}
+
+.t-pnl--slide.is-pinned {
+  position: relative;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  border-left: none;
+  border: 1px solid var(--terminal-gray-light);
+}
+
+/* Panel States - Collapsed */
+.t-pnl--collapsed .t-pnl__body {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  /* Force hide for clean collapse */
+}
+
+.t-pnl--collapsed .t-pnl__footer,
+.t-pnl--collapsed .t-pnl__status-bar {
+  display: none !important;
+}
+
+/* When collapsed, the entire panel should shrink to just header height */
+.t-pnl--collapsed {
+  min-height: 0;
+  height: auto;
+  /* Just the header height */
+}
+
+/* When collapsed, ensure no extra space */
+.t-pnl--collapsed .t-pnl__body,
+.t-pnl--collapsed .t-pnl__footer,
+.t-pnl--collapsed .t-pnl__status-bar {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+.t-pnl--collapsed .t-pnl__header {
+  border-bottom: none;
+}
+
+/* Expanded state */
+.t-pnl--expanded {
+  min-height: 60px; /* Normal min-height for expanded panels */
+}
+
+.t-pnl--expanded .t-pnl__body {
+  display: block;
+  visibility: visible;
+  height: auto;
+}
+
+.t-pnl--loading .t-pnl__body {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.t-pnl--loading .t-pnl__body::after {
+  content: 'LOADING...';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--terminal-green);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.1em;
+  animation: pulse 1s infinite;
+}
+
+/* Collapsible Panel variant */
+.t-pnl--collapsible .t-pnl__header {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+/* Collapsible Panel Collapse Button */
+.t-pnl__collapse-btn {
+  margin-right: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+/* Compact Panel Mode - Half height with minimal padding */
+.t-pnl--compact .t-pnl__header {
+  min-height: 20px;
+  height: 20px;
+  padding: 2px var(--spacing-sm);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.t-pnl--compact .t-pnl__collapse-btn {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  padding: 0;
+  margin-right: 4px;
+  border: none;
+  background: transparent;
+}
+
+.t-pnl--compact .t-pnl__collapse-btn:hover {
+  background: transparent;
+  border: none;
+}
+
+.t-pnl--compact .t-pnl__collapse-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.t-pnl--compact .t-pnl__title {
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.t-pnl--compact .t-pnl__action-btn {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+}
+
+/* Fix action slot buttons in compact mode */
+.t-pnl--compact .t-pnl__actions {
+  display: flex;
+  align-items: center;
+  /* Remove fixed height - let buttons determine height */
+}
+
+.t-pnl__collapse-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Brackets around collapsible title */
+.t-pnl--collapsible .t-pnl__title::before {
+  content: '[ ';
+  color: var(--terminal-green-dim);
+}
+
+.t-pnl--collapsible .t-pnl__title::after {
+  content: ' ]';
+  color: var(--terminal-green-dim);
+}
+
+/* CSS Editor Section */
+.t-pnl__css-editor {
+  background: var(--terminal-black);
+  border: 1px solid var(--terminal-gray-light);
+  padding: var(--spacing-md);
+}
+
+.t-pnl__editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.t-pnl__editor-title {
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  color: var(--terminal-green);
+  letter-spacing: 0.5px;
+}
+
+.t-pnl__editor-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+/* Rive Controls Section */
+.t-pnl__rive-controls {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.t-pnl__controls-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  background: var(--terminal-gray-dark);
+  border-bottom: 1px solid var(--terminal-gray-light);
+}
+
+.t-pnl__controls-title {
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  color: var(--terminal-green);
+  letter-spacing: 0.5px;
+}
+
+.t-pnl__controls-content {
+  flex: 1;
+  padding: var(--spacing-md);
+  overflow-y: auto;
+}
+
+.t-pnl__placeholder {
+  color: var(--terminal-green-dim);
+  text-align: center;
+  padding: var(--spacing-xl);
+  font-size: var(--font-size-sm);
+}
+
+/* Responsive Panels */
+@media (max-width: 1024px) {
+  .t-pnl__grid {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .t-pnl__left-col,
+  .t-pnl__right-col {
+    flex: 1;
+    width: 100%;
+  }
+
+  .t-pnl--slide {
+    width: 70vw;
+    right: -70vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .t-pnl--control {
+    padding: var(--spacing-sm);
+  }
+
+  .t-pnl--slide {
+    width: 100vw;
+    right: -100vw;
+  }
+
+  .t-pnl--slide.is-active {
+    right: 0;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Component container */
+t-pnl {
+  position: relative;
+  display: block;
+}
+
+/* Footer toggle tab */
+.t-pnl__footer-toggle {
+  position: absolute;
+  bottom: 0;
+  right: 8px;
+  background: var(--terminal-gray-dark);
+  border: 1px solid var(--terminal-green-dark);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  padding: 2px 6px;
+  min-width: 24px;
+  height: 20px;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+  display: none; /* Hidden by default, shown when footer is hidden */
+
+  /* Center the icon within the button */
+  align-items: center;
+  justify-content: center;
+}
+
+.t-pnl__footer-toggle:hover {
+  background: var(--terminal-gray);
+  border-color: var(--terminal-green);
+}
+
+/* Headless mode styling */
+.t-pnl__body--headless {
+  border: none;
+  padding: var(--spacing-md);
+  background: transparent;
+  min-height: 40px; /* Smaller min-height for headless */
+  /* Ensure headless panels are visible */
+}
+
+/* With-status-bar mode styling */
+.t-pnl__body--with-status {
+  border-bottom: none;
+}
+
+.t-pnl__status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--terminal-gray-dark);
+  border-top: 1px solid var(--terminal-green-dark);
+  min-height: 32px;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+/* Ensure status bar content is visible */
+.t-pnl__status-content {
+  width: 100%;
+}
+
+/* Panel icon styling */
+.t-pnl__title-icon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  margin-right: var(--spacing-xs);
+}
+
+/* Error and empty states */
+.t-pnl__error,
+.t-pnl__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  text-align: center;
+  min-height: 120px;
+  color: var(--terminal-green-dim);
+}
+
+.t-pnl__error {
+  color: var(--terminal-red);
+}
+
+.t-pnl__error-icon,
+.t-pnl__empty-icon {
+  font-size: 24px;
+  margin-bottom: var(--spacing-sm);
+  opacity: 0.7;
+}
+
+.t-pnl__error-msg,
+.t-pnl__empty-msg {
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+}
+
+/* Slot content styling */
+.t-pnl__slot {
+  display: contents;
+}
+
+/* Panel body default state */
+.t-pnl__body {
+  overflow: auto;
+}
+
+/* Scrollbar styling for panel content */
+.t-pnl__body::-webkit-scrollbar,
+.t-pnl__content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.t-pnl__body::-webkit-scrollbar-track,
+.t-pnl__content::-webkit-scrollbar-track {
+  background: var(--terminal-black);
+}
+
+.t-pnl__body::-webkit-scrollbar-thumb,
+.t-pnl__content::-webkit-scrollbar-thumb {
+  background: var(--terminal-green-dark);
+  border: 1px solid var(--terminal-black);
+}
+
+.t-pnl__body::-webkit-scrollbar-thumb:hover,
+.t-pnl__content::-webkit-scrollbar-thumb:hover {
+  background: var(--terminal-green);
+}
+
+/* Firefox scrollbar styling */
+.t-pnl__body,
+.t-pnl__content {
+  scrollbar-width: thin;
+  scrollbar-color: var(--terminal-green-dark) var(--terminal-black);
+}
+
+/* Focus states for accessibility */
+.t-pnl--collapsible .t-pnl__header:focus {
+  outline: 1px solid var(--terminal-green);
+  outline-offset: -1px;
+}
+
+.t-pnl--collapsible .t-pnl__header {
+  transition: background-color 0.15s ease;
+}
+
+.t-pnl--collapsible .t-pnl__header:hover {
+  background-color: var(--terminal-gray-medium);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .t-pnl__status-bar {
+    flex-wrap: wrap;
+    min-height: auto;
+    padding: var(--spacing-sm);
+  }
+
+  .t-pnl__error,
+  .t-pnl__empty {
+    min-height: 80px;
+    padding: var(--spacing-md);
+  }
+}

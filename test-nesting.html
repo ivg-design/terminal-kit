@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Nesting</title>
+    <link rel="stylesheet" href="css/theme/terminal.css">
+    <link rel="stylesheet" href="css/components/dynamic-controls.css">
+    <link rel="stylesheet" href="css/components/panel.css">
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #00ff41;
+            padding: 20px;
+            font-family: monospace;
+        }
+        #output {
+            background: #1a1a1a;
+            padding: 10px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div id="test-container"></div>
+    <div id="output"></div>
+
+    <script type="module">
+        import './js/components/TerminalComponent.js';
+        import './js/components/TerminalPanel.js';
+        import './js/components/TerminalButton.js';
+        import './js/components/TerminalInput.js';
+        import './js/components/TerminalToggle.js';
+        import './js/components/TerminalDropdown.js';
+        import './js/components/TerminalColorPicker.js';
+        import './js/components/TerminalDynamicControls.js';
+
+        const testSchema = {
+            viewModel: {
+                name: "RootVM",
+                blueprintName: "Root",
+                properties: [
+                    { name: "rootProp", type: "boolean", value: true }
+                ],
+                nestedViewModels: [
+                    {
+                        name: "Level1VM",
+                        blueprintName: "Level 1",
+                        properties: [
+                            { name: "l1Prop", type: "number", value: 1 }
+                        ],
+                        nestedViewModels: [
+                            {
+                                name: "Level2VM",
+                                blueprintName: "Level 2",
+                                properties: [
+                                    { name: "l2Prop", type: "string", value: "test" }
+                                ],
+                                nestedViewModels: [
+                                    {
+                                        name: "Level3VM",
+                                        blueprintName: "Level 3",
+                                        properties: [
+                                            { name: "l3Prop", type: "boolean", value: false }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        name: "SiblingVM",
+                        blueprintName: "Sibling",
+                        properties: [
+                            { name: "sibProp", type: "number", value: 42 }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        const container = document.getElementById('test-container');
+        container.innerHTML = '<terminal-dynamic-controls></terminal-dynamic-controls>';
+        const controls = container.querySelector('terminal-dynamic-controls');
+
+        customElements.whenDefined('terminal-dynamic-controls').then(() => {
+            controls.setSchema(testSchema);
+
+            // Show the generated HTML structure
+            setTimeout(() => {
+                const html = controls.shadowRoot ? controls.shadowRoot.innerHTML : controls.innerHTML;
+                document.getElementById('output').textContent = html;
+
+                // Also check the actual DOM structure
+                const panels = controls.querySelectorAll('terminal-panel');
+                console.log('Panels found:', panels.length);
+                panels.forEach(panel => {
+                    console.log('Panel:', panel.id, 'Classes:', panel.className);
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>

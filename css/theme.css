@@ -1,0 +1,70 @@
+/**
+ * Terminal Theme CSS Variables
+ * Defines all CSS variables for the component system
+ */
+
+/* Define variables on :host so they cascade to shadow DOM */
+:host {
+    /* Terminal Theme Colors */
+    --terminal-black: #0a0a0a;
+    --terminal-black-light: #1a1a1a;
+    --terminal-gray-darkest: #1a1a1a;
+    --terminal-gray-dark: #242424;
+    --terminal-gray: #333333;
+    --terminal-gray-light: #333333;
+    --terminal-gray-medium: #4a4a4a;
+    --terminal-green: #00ff41;
+    --terminal-green-dim: #00cc33;
+    --terminal-green-dark: #009929;
+    --terminal-green-bright: #00ff66;
+    --terminal-green-glow: rgba(0, 255, 65, 0.2);
+    --terminal-red: #ff0041;
+    --terminal-yellow: #ffcc00;
+    --terminal-blue: #00ccff;
+    --terminal-cyan: #00ffff;
+
+    /* Typography */
+    --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+    --font-size-xs: 10px;
+    --font-size-sm: 11px;
+    --font-size-md: 12px;
+    --font-size-lg: 14px;
+    --font-size-xl: 16px;
+    --font-size-base: 12px;
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 24px;
+
+    /* Sizing */
+    --control-height: 28px;
+    --control-height-sm: 24px;
+    --control-height-lg: 36px;
+
+    /* Borders */
+    --border-width: 1px;
+    --border-radius: 0px;
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+
+    /* Component defaults */
+    font-family: var(--font-mono);
+    font-size: var(--font-size-md);
+    color: var(--terminal-green);
+    box-sizing: border-box;
+}
+
+/* Make all elements in shadow DOM have access to variables */
+* {
+    box-sizing: border-box;
+}
+
+/* Reset styles for slotted content */
+::slotted(*) {
+    box-sizing: border-box;
+}

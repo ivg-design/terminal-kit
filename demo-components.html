@@ -1,0 +1,2883 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Terminal Web Components Demo</title>
+
+        <!-- Load CSS -->
+        <link rel="stylesheet" href="css/theme/terminal.css">
+        <link rel="stylesheet" href="css/components/buttons.css">
+        <link rel="stylesheet" href="css/components/form.css">
+        <link rel="stylesheet" href="css/components/dropdown.css">
+        <link rel="stylesheet" href="css/components/color-picker.css">
+        <link rel="stylesheet" href="css/components/slider.css">
+        <link rel="stylesheet" href="css/components/toggle.css">
+        <link rel="stylesheet" href="css/components/user-menu.css">
+        <link rel="stylesheet" href="css/components/status-bar.css">
+        <link rel="stylesheet" href="css/components/panel.css">
+        <link rel="stylesheet" href="css/components/modal.css">
+        <link rel="stylesheet" href="css/components/dynamic-controls.css">
+        <link rel="stylesheet" href="css/components/tree-view.css">
+        <link rel="stylesheet" href="css/components/toast.css">
+        <link rel="stylesheet" href="css/components/loader.css">
+        
+        <!-- Pickr Library CSS -->
+        <link rel="stylesheet" href="css/libs/pickr.min.css">
+
+        <style>
+            :root {
+                --terminal-black: #0a0a0a;
+                --terminal-gray-darkest: #1a1a1a;
+                --terminal-gray-dark: #242424;
+                --terminal-gray-medium: #2a2a2a;
+                --terminal-gray-light: #333333;
+                --terminal-gray-lighter: #404040;
+                --terminal-gray-text: #808080;
+                --terminal-white: #ffffff;
+
+                --terminal-green: #00ff41;
+                --terminal-green-dim: #00cc33;
+                --terminal-green-dark: #009926;
+                --terminal-green-glow: rgba(0, 255, 65, 0.2);
+                --terminal-green-glow-strong: rgba(0, 255, 65, 0.4);
+
+                --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+                --font-size-xs: 10px;
+                --font-size-sm: 11px;
+                --font-size-base: 12px;
+                --font-size-md: 13px;
+                --font-size-lg: 14px;
+
+                --spacing-xs: 4px;
+                --spacing-sm: 8px;
+                --spacing-md: 12px;
+                --spacing-lg: 16px;
+                --spacing-xl: 24px;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                width: 100%;
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            body {
+                font-family: var(--font-mono);
+                background: var(--terminal-black);
+                color: var(--terminal-green);
+                padding: 40px 20px;
+                line-height: 1.6;
+                position: relative;
+            }
+
+            .demo-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                position: relative;
+                padding-bottom: 100px;
+            }
+
+            h1 {
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                border-bottom: 2px solid var(--terminal-green);
+                padding-bottom: 10px;
+                margin-bottom: 40px;
+            }
+
+            .component-section {
+                margin-bottom: 60px;
+                padding: 30px;
+                background: var(--terminal-gray-darkest);
+                border: 1px solid var(--terminal-gray-light);
+            }
+
+            .component-title {
+                font-size: 18px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-bottom: 20px;
+                color: var(--terminal-green);
+            }
+
+            .component-description {
+                color: var(--terminal-green-dim);
+                margin-bottom: 20px;
+                font-size: 12px;
+            }
+
+            .demo-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+
+            .demo-item {
+                padding: 20px;
+                background: var(--terminal-gray-dark);
+                border: 1px solid var(--terminal-gray-light);
+            }
+
+            .demo-label {
+                display: block;
+                margin-bottom: 10px;
+                font-size: 11px;
+                text-transform: uppercase;
+                color: var(--terminal-green-dim);
+            }
+
+            .code-block {
+                background: var(--terminal-black);
+                padding: 15px;
+                border: 1px solid var(--terminal-green-dark);
+                font-size: 11px;
+                overflow-x: auto;
+                margin-top: 20px;
+            }
+
+            .code-block code {
+                color: var(--terminal-green);
+            }
+
+            .event-log {
+                background: var(--terminal-black);
+                border: 1px solid var(--terminal-gray-light);
+                padding: 10px;
+                max-height: 200px;
+                overflow-y: auto;
+                font-size: 11px;
+                margin-top: 20px;
+            }
+
+            .event-log .log-entry {
+                padding: 4px;
+                border-bottom: 1px solid var(--terminal-gray-dark);
+            }
+
+            .event-log .log-entry:last-child {
+                border-bottom: none;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="demo-container">
+            <h1>Terminal Web Components Demo</h1>
+
+            <!-- Color Picker Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalColorPicker</h2>
+                <p class="component-description">
+                    A custom color picker with label, swatch, and hex input. Integrates with Pickr when available.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Default Color Picker</span>
+                        <terminal-color-picker id="colorPicker1" value="#00ff41" label1="Theme" label2="Color">
+                        </terminal-color-picker>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Compact Mode</span>
+                        <terminal-color-picker id="colorPicker2" value="#00aaff" label1="Accent" label2="Color" compact>
+                        </terminal-color-picker>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Disabled State</span>
+                        <terminal-color-picker value="#ff3333" label1="Error" label2="Color" disabled>
+                        </terminal-color-picker>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>&lt;terminal-color-picker value="#00ff41" label1="Theme" label2="Color"&gt;&lt;/terminal-color-picker&gt;</code>
+                </div>
+            </div>
+
+            <!-- Button Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalButton</h2>
+                <p class="component-description">
+                    Buttons with three types (text, icon+text, icon-only), various styles, and sizes.
+                </p>
+
+                <h3>Button Types</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Text Button</span>
+                        <terminal-button type="text" variant="primary">Save Changes</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon + Text Button</span>
+                        <terminal-button type="icon-text" variant="primary" id="iconTextBtn">Add Item</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon Only Button</span>
+                        <terminal-button type="icon" variant="primary" id="iconOnlyBtn"></terminal-button>
+                    </div>
+                </div>
+
+                <h3>Button Variants</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Primary Button</span>
+                        <terminal-button variant="primary">Primary</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Secondary Button</span>
+                        <terminal-button variant="secondary">Secondary</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Danger Button</span>
+                        <terminal-button variant="danger">Delete</terminal-button>
+                    </div>
+                </div>
+
+                <h3>Button Sizes</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Small (Icon Only)</span>
+                        <terminal-button size="small" id="smallIconBtn"></terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Default Size</span>
+                        <terminal-button size="default">Default</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Large Size</span>
+                        <terminal-button size="large">Large Button</terminal-button>
+                    </div>
+                </div>
+
+                <h3>Button States</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Loading State</span>
+                        <terminal-button id="loadingBtn" loading>Loading</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Disabled State</span>
+                        <terminal-button disabled>Disabled</terminal-button>
+                    </div>
+                </div>
+
+                <h3>Toggle Buttons</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Play/Pause Toggle</span>
+                        <terminal-button 
+                            id="playPauseToggle"
+                            variant="toggle"
+                            type="icon"
+                            toggle-state="false">
+                        </terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Recording Toggle</span>
+                        <terminal-button 
+                            variant="toggle"
+                            color-on="#ff0000"
+                            color-off="#00ff41"
+                            toggle-state="false">
+                            Recording
+                        </terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Expand/Collapse</span>
+                        <terminal-button 
+                            id="expandCollapseToggle"
+                            variant="toggle"
+                            type="icon-text"
+                            toggle-state="false">
+                            Details
+                        </terminal-button>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>&lt;terminal-button type="text" variant="primary"&gt;Text Button&lt;/terminal-button&gt;
+&lt;terminal-button type="icon-text" variant="secondary" icon="..."&gt;Icon + Text&lt;/terminal-button&gt;
+&lt;terminal-button type="icon" variant="danger" icon="..."&gt;&lt;/terminal-button&gt;
+&lt;terminal-button variant="toggle" icon-on="..." icon-off="..." toggle-state="false"&gt;&lt;/terminal-button&gt;</code>
+                </div>
+            </div>
+
+            <!-- Input Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalInput</h2>
+                <p class="component-description">
+                    Form inputs with validation, icons, and various states.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Text Input</span>
+                        <terminal-input id="input1" type="text" placeholder="Enter text...">
+                        </terminal-input>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Email Input</span>
+                        <terminal-input type="email" placeholder="user@example.com">
+                        </terminal-input>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Password Input</span>
+                        <terminal-input type="password" placeholder="Enter password...">
+                        </terminal-input>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Number Input</span>
+                        <terminal-input type="number" placeholder="0">
+                        </terminal-input>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">With Error</span>
+                        <terminal-input type="text" value="Invalid" error>
+                        </terminal-input>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Disabled Input</span>
+                        <terminal-input type="text" value="Disabled" disabled>
+                        </terminal-input>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Readonly Input</span>
+                        <terminal-input type="text" value="Read Only" readonly>
+                        </terminal-input>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>&lt;terminal-input type="text" placeholder="Enter text..."&gt;&lt;/terminal-input&gt;</code>
+                </div>
+            </div>
+
+            <!-- Dropdown Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalDropdown</h2>
+                <p class="component-description">
+                    Nested dropdown with folder structure, search, and metadata support.
+                </p>
+
+                <div class="demo-item">
+                    <span class="demo-label">Nested Dropdown with Search (Default width: 300px)</span>
+                    <terminal-dropdown id="dropdown1" placeholder="Select animation...">
+                    </terminal-dropdown>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Wide Dropdown (400px)</span>
+                    <terminal-dropdown id="dropdown2" placeholder="Select from a wider dropdown..." width="400px">
+                    </terminal-dropdown>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Narrow Dropdown (200px)</span>
+                    <terminal-dropdown id="dropdown3" placeholder="Narrow..." width="200px">
+                    </terminal-dropdown>
+                </div>
+
+                <div class="demo-item" style="margin-top: 20px;">
+                    <span class="demo-label">Disabled Dropdown</span>
+                    <terminal-dropdown placeholder="Disabled dropdown" disabled>
+                    </terminal-dropdown>
+                </div>
+
+                <div class="code-block">
+                    <code>// Default width (300px)<br>
+&lt;terminal-dropdown placeholder="Select animation..."&gt;&lt;/terminal-dropdown&gt;<br><br>
+// Custom width<br>
+&lt;terminal-dropdown width="450px" placeholder="Select..."&gt;&lt;/terminal-dropdown&gt;<br><br>
+// Set width via JavaScript<br>
+dropdown.setWidth('500px');</code>
+                </div>
+            </div>
+
+            <!-- Slider Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalSlider</h2>
+                <p class="component-description">
+                    Range slider with multiple variants: stepped, smooth, with input field, value inside track, icons, and tick marks.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Default Stepped (5s)</span>
+                        <terminal-slider id="slider1" min="0" max="100" value="50" step="5" label="Volume">
+                        </terminal-slider>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Smooth Continuous</span>
+                        <terminal-slider min="0" max="1" value="0.75" step="0.01" label="Opacity" smooth>
+                        </terminal-slider>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">With Input Field</span>
+                        <terminal-slider min="0" max="200" value="100" step="10" label="Zoom" variant="with-input">
+                        </terminal-slider>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Value in Thumb</span>
+                        <terminal-slider min="0" max="100" value="65" step="5" label="Progress" variant="value-in-thumb">
+                        </terminal-slider>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">With Volume Icon</span>
+                        <terminal-slider id="slider-volume"
+                            min="0" max="100" value="75" step="5">
+                        </terminal-slider>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">With Tick Marks</span>
+                        <terminal-slider min="0" max="10" value="5" step="1" label="Level" show-ticks>
+                        </terminal-slider>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Compact Default</span>
+                        <terminal-slider min="0" max="10" value="5" step="0.5" label="Rate" compact>
+                        </terminal-slider>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Compact with Input</span>
+                        <terminal-slider min="1" max="99" value="10" step="1" label="Qty" variant="with-input" compact>
+                        </terminal-slider>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon + Label + Input</span>
+                        <terminal-slider id="slider-brightness" label="Brightness"
+                            min="0" max="100" value="80" step="10" variant="with-input">
+                        </terminal-slider>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Disabled Slider</span>
+                        <terminal-slider value="75" label="Disabled" disabled>
+                        </terminal-slider>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>&lt;terminal-slider min="0" max="100" value="50" step="5" label="Volume"&gt;&lt;/terminal-slider&gt;</code>
+                    <code>&lt;terminal-slider variant="with-input" smooth show-ticks&gt;&lt;/terminal-slider&gt;</code>
+                    <code>&lt;terminal-slider icon='&lt;svg&gt;...&lt;/svg&gt;' compact&gt;&lt;/terminal-slider&gt;</code>
+                </div>
+            </div>
+
+            <!-- Toggle Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalToggle</h2>
+                <p class="component-description">
+                    Toggle switch with label and icon that all switch together.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Label + Toggle (Default)</span>
+                        <terminal-toggle id="toggle1" label="Auto-save" layout="label-toggle">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon + Toggle</span>
+                        <terminal-toggle id="toggle-heart"
+                            layout="icon-toggle">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon + Label + Toggle</span>
+                        <terminal-toggle id="toggle-notifications" label="Notifications"
+                            layout="icon-label-toggle">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Switching Label/Icon</span>
+                        <terminal-toggle id="toggle-online" on-label="ONLINE" off-label="OFFLINE"
+                            layout="switching">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon-Only Switching</span>
+                        <terminal-toggle id="toggle-plus-minus"
+                            layout="icon-switching">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Small Size</span>
+                        <terminal-toggle label="Compact" size="small">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Large Size</span>
+                        <terminal-toggle label="Feature" size="large">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Checked State</span>
+                        <terminal-toggle label="Dark Mode" checked>
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Disabled State</span>
+                        <terminal-toggle label="Locked" checked disabled>
+                        </terminal-toggle>
+                    </div>
+                </div>
+
+                <h3>Equal-State Toggles (Work/Personal, A/B)</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Work / Personal</span>
+                        <terminal-toggle id="toggle-personal-work" on-label="PERSONAL" off-label="WORK"
+                            layout="switching" equal-states>
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">A / B Testing</span>
+                        <terminal-toggle on-label="VERSION B" off-label="VERSION A" layout="switching" equal-states>
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Dev / Prod</span>
+                        <terminal-toggle id="toggle-dev-prod" on-label="PRODUCTION" off-label="DEVELOPMENT"
+                            layout="icon-switching" equal-states>
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Light / Dark Theme</span>
+                        <terminal-toggle id="toggle-theme"
+                            layout="icon-toggle" equal-states>
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">View Mode</span>
+                        <terminal-toggle id="toggle-view-mode" on-label="GRID" off-label="LIST"
+                            layout="icon-label-toggle" equal-states>
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Compact Equal-State</span>
+                        <terminal-toggle on-label="OPT B" off-label="OPT A" layout="switching" size="small" equal-states>
+                        </terminal-toggle>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>&lt;terminal-toggle label="Auto-save" checked&gt;&lt;/terminal-toggle&gt;
+&lt;terminal-toggle equal-states on-label="PERSONAL" off-label="WORK" layout="switching"&gt;&lt;/terminal-toggle&gt;</code>
+                </div>
+            </div>
+
+            <!-- User Menu Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalUserMenu</h2>
+                <p class="component-description">
+                    Dropdown user menu with avatar, user info, and customizable menu items.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Default User Menu</span>
+                        <terminal-user-menu 
+                            id="userMenu1"
+                            user-name="John Doe">
+                        </terminal-user-menu>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">With Avatar</span>
+                        <terminal-user-menu 
+                            id="userMenu2"
+                            user-name="Jane Smith"
+                            user-avatar="https://i.pravatar.cc/150?img=5">
+                        </terminal-user-menu>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Custom Menu Items</span>
+                        <terminal-user-menu 
+                            id="userMenu3"
+                            user-name="Admin User">
+                        </terminal-user-menu>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Disabled State</span>
+                        <terminal-user-menu 
+                            user-name="Disabled"
+                            disabled>
+                        </terminal-user-menu>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Mobile View (Simulated)</span>
+                        <div style="max-width: 300px; border: 1px solid var(--terminal-gray-light); padding: 10px; background: var(--terminal-gray-darkest);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 12px; color: var(--terminal-green);">Mobile Header</span>
+                                <terminal-user-menu 
+                                    id="userMenuMobile"
+                                    user-name="Alexander Hamilton"
+                                    user-avatar="https://i.pravatar.cc/150?img=8"
+                                    class="mobile-view">
+                                </terminal-user-menu>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 11px; color: var(--terminal-green);">
+                            Shows initials "AH" - simulates mobile view without resizing browser
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>&lt;terminal-user-menu 
+  user-name="John Doe"
+  user-email="john@example.com"
+  user-avatar="/path/to/avatar.jpg"&gt;
+&lt;/terminal-user-menu&gt;</code>
+                </div>
+            </div>
+
+            <!-- TerminalStatusBar Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalStatusBar</h2>
+                <p class="component-description">
+                    Container for multiple status fields with alignment options, separators, and marquee scrolling for long text.
+                </p>
+
+                <h3>Status Fields with Different Properties</h3>
+                <div class="demo-item">
+                    <span class="demo-label">Basic Status Bar (with percentage widths for stable layout)</span>
+                    <terminal-status-bar id="statusBar1" separator=" | ">
+                    </terminal-status-bar>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Interactive Status Bar Configuration</span>
+                    <terminal-status-bar id="statusBar2" separator=" • " compact>
+                    </terminal-status-bar>
+                    
+                    <div style="margin-top: 15px; padding: 10px; border: 1px solid var(--terminal-gray-light); background: var(--terminal-gray-darkest);">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px;">
+                            <div>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim); margin-bottom: 5px;">Field 1 Display:</label>
+                                <select id="field1Display" style="width: 100%; background: var(--terminal-gray-dark); color: var(--terminal-green); border: 1px solid var(--terminal-gray-light); padding: 2px; margin-bottom: 5px;">
+                                    <option value="text">Text Only</option>
+                                    <option value="icon">Icon Only</option>
+                                    <option value="icon-text" selected>Icon + Text</option>
+                                </select>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim); margin-bottom: 5px;">Width:</label>
+                                <select id="field1Width" style="width: 100%; background: var(--terminal-gray-dark); color: var(--terminal-green); border: 1px solid var(--terminal-gray-light); padding: 2px; margin-bottom: 5px;">
+                                    <option value="auto">Auto</option>
+                                    <option value="10%">10%</option>
+                                    <option value="15%">15%</option>
+                                    <option value="20%">20%</option>
+                                    <option value="25%">25%</option>
+                                    <option value="30%">30%</option>
+                                    <option value="35%" selected>35%</option>
+                                    <option value="40%">40%</option>
+                                    <option value="45%">45%</option>
+                                    <option value="50%">50%</option>
+                                    <option value="60%">60%</option>
+                                    <option value="75%">75%</option>
+                                    <option value="100%">100%</option>
+                                </select>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim); margin-bottom: 5px;">Align:</label>
+                                <select id="field1Align" style="width: 100%; background: var(--terminal-gray-dark); color: var(--terminal-green); border: 1px solid var(--terminal-gray-light); padding: 2px; margin-bottom: 5px;">
+                                    <option value="left" selected>Left</option>
+                                    <option value="center">Center</option>
+                                    <option value="right">Right</option>
+                                </select>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim);">
+                                    <input type="checkbox" id="field1Marquee" checked style="margin-right: 5px;">
+                                    Enable Marquee
+                                </label>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim); margin-bottom: 5px;">Field 2 Display:</label>
+                                <select id="field2Display" style="width: 100%; background: var(--terminal-gray-dark); color: var(--terminal-green); border: 1px solid var(--terminal-gray-light); padding: 2px; margin-bottom: 5px;">
+                                    <option value="text" selected>Text Only</option>
+                                    <option value="icon">Icon Only</option>
+                                    <option value="icon-text">Icon + Text</option>
+                                </select>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim); margin-bottom: 5px;">Width:</label>
+                                <select id="field2Width" style="width: 100%; background: var(--terminal-gray-dark); color: var(--terminal-green); border: 1px solid var(--terminal-gray-light); padding: 2px; margin-bottom: 5px;">
+                                    <option value="auto">Auto</option>
+                                    <option value="10%">10%</option>
+                                    <option value="15%">15%</option>
+                                    <option value="20%">20%</option>
+                                    <option value="25%" selected>25%</option>
+                                    <option value="30%">30%</option>
+                                    <option value="35%">35%</option>
+                                    <option value="40%">40%</option>
+                                    <option value="45%">45%</option>
+                                    <option value="50%">50%</option>
+                                    <option value="60%">60%</option>
+                                    <option value="75%">75%</option>
+                                    <option value="100%">100%</option>
+                                </select>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim); margin-bottom: 5px;">Align:</label>
+                                <select id="field2Align" style="width: 100%; background: var(--terminal-gray-dark); color: var(--terminal-green); border: 1px solid var(--terminal-gray-light); padding: 2px; margin-bottom: 5px;">
+                                    <option value="left">Left</option>
+                                    <option value="center" selected>Center</option>
+                                    <option value="right">Right</option>
+                                </select>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim);">
+                                    <input type="checkbox" id="field2Marquee" style="margin-right: 5px;">
+                                    Enable Marquee
+                                </label>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim); margin-bottom: 5px;">Field 3 Display:</label>
+                                <select id="field3Display" style="width: 100%; background: var(--terminal-gray-dark); color: var(--terminal-green); border: 1px solid var(--terminal-gray-light); padding: 2px; margin-bottom: 5px;">
+                                    <option value="text" selected>Text Only</option>
+                                    <option value="icon">Icon Only</option>
+                                    <option value="icon-text">Icon + Text</option>
+                                </select>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim); margin-bottom: 5px;">Width:</label>
+                                <select id="field3Width" style="width: 100%; background: var(--terminal-gray-dark); color: var(--terminal-green); border: 1px solid var(--terminal-gray-light); padding: 2px; margin-bottom: 5px;">
+                                    <option value="auto">Auto</option>
+                                    <option value="10%">10%</option>
+                                    <option value="15%" selected>15%</option>
+                                    <option value="20%">20%</option>
+                                    <option value="25%">25%</option>
+                                    <option value="30%">30%</option>
+                                    <option value="35%">35%</option>
+                                    <option value="40%">40%</option>
+                                    <option value="45%">45%</option>
+                                    <option value="50%">50%</option>
+                                    <option value="60%">60%</option>
+                                    <option value="75%">75%</option>
+                                    <option value="100%">100%</option>
+                                </select>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim); margin-bottom: 5px;">Align:</label>
+                                <select id="field3Align" style="width: 100%; background: var(--terminal-gray-dark); color: var(--terminal-green); border: 1px solid var(--terminal-gray-light); padding: 2px; margin-bottom: 5px;">
+                                    <option value="left">Left</option>
+                                    <option value="center">Center</option>
+                                    <option value="right" selected>Right</option>
+                                </select>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim);">
+                                    <input type="checkbox" id="field3Marquee" style="margin-right: 5px;">
+                                    Enable Marquee
+                                </label>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim); margin-bottom: 5px;">Field 4 Display:</label>
+                                <select id="field4Display" style="width: 100%; background: var(--terminal-gray-dark); color: var(--terminal-green); border: 1px solid var(--terminal-gray-light); padding: 2px; margin-bottom: 5px;">
+                                    <option value="text" selected>Text Only</option>
+                                    <option value="icon">Icon Only</option>
+                                    <option value="icon-text">Icon + Text</option>
+                                </select>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim); margin-bottom: 5px;">Width:</label>
+                                <select id="field4Width" style="width: 100%; background: var(--terminal-gray-dark); color: var(--terminal-green); border: 1px solid var(--terminal-gray-light); padding: 2px; margin-bottom: 5px;">
+                                    <option value="auto">Auto</option>
+                                    <option value="10%">10%</option>
+                                    <option value="15%">15%</option>
+                                    <option value="20%">20%</option>
+                                    <option value="25%" selected>25%</option>
+                                    <option value="30%">30%</option>
+                                    <option value="35%">35%</option>
+                                    <option value="40%">40%</option>
+                                    <option value="45%">45%</option>
+                                    <option value="50%">50%</option>
+                                    <option value="60%">60%</option>
+                                    <option value="75%">75%</option>
+                                    <option value="100%">100%</option>
+                                </select>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim); margin-bottom: 5px;">Align:</label>
+                                <select id="field4Align" style="width: 100%; background: var(--terminal-gray-dark); color: var(--terminal-green); border: 1px solid var(--terminal-gray-light); padding: 2px; margin-bottom: 5px;">
+                                    <option value="left">Left</option>
+                                    <option value="center">Center</option>
+                                    <option value="right" selected>Right</option>
+                                </select>
+                                <label style="display: block; font-size: 10px; color: var(--terminal-green-dim);">
+                                    <input type="checkbox" id="field4Marquee" style="margin-right: 5px;">
+                                    Enable Marquee
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Dynamic Status Updates (fixed percentage layout)</span>
+                    <terminal-status-bar id="statusBar3">
+                    </terminal-status-bar>
+                    <div style="margin-top: 10px; display: flex; gap: 10px; align-items: center; min-height: 36px;">
+                        <terminal-button id="startProgressBtn" variant="primary" size="small">Start Progress</terminal-button>
+                        <terminal-button id="updateStatusBtn" variant="secondary" size="small">Cycle Quality</terminal-button>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>&lt;!-- Basic usage with JavaScript API --&gt;
+&lt;terminal-status-bar id="myStatusBar" separator=" | "&gt;&lt;/terminal-status-bar&gt;
+
+&lt;script&gt;
+const statusBar = document.getElementById('myStatusBar');
+statusBar.setFields([
+    { label: 'CPU', value: '42%', width: '25%' },
+    { label: 'RAM', value: '1.2GB', width: '25%' },
+    { label: 'Status', value: 'Running', width: '50%' }
+]);
+
+// Update individual fields
+statusBar.updateField(0, { value: '55%' });
+
+// With icons and display modes
+statusBar.addField({
+    label: 'File',
+    value: 'long_filename.riv',
+    marquee: true,
+    width: '35%',
+    displayMode: 'icon-text',
+    icon: '&lt;svg&gt;...&lt;/svg&gt;'
+});
+&lt;/script&gt;
+
+&lt;!-- Display mode options: "text", "icon", "icon-text" --&gt;
+&lt;!-- Width can be: "auto", percentage (e.g., "25%"), or pixels (e.g., "150px") --&gt;</code>
+                </div>
+            </div>
+
+            <!-- TerminalPanel Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalPanel</h2>
+                <p class="component-description">
+                    Flexible panel component with three modes: with-header (collapsible), headless, and with-taskbar.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">With Header (Collapsible)</span>
+                        <terminal-panel id="panel1" mode="with-header" title="Configuration Panel" collapsible>
+                            <div slot="content">
+                                <p>Panel content goes here. This panel has a header and can be collapsed.</p>
+                                <terminal-input placeholder="Enter configuration..."></terminal-input>
+                                <div style="margin-top: 10px;">
+                                    <terminal-button variant="primary" size="small">Save</terminal-button>
+                                    <terminal-button variant="secondary" size="small">Cancel</terminal-button>
+                                </div>
+                            </div>
+                            <div slot="header-actions">
+                                <terminal-button id="settingsBtn1" type="icon" variant="secondary" size="small"></terminal-button>
+                            </div>
+                        </terminal-panel>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Headless Mode</span>
+                        <terminal-panel id="panel2" mode="headless">
+                            <div slot="content">
+                                <h4 style="color: var(--terminal-green); margin-bottom: 10px;">Raw Content Panel</h4>
+                                <p style="margin-bottom: 15px;">This panel has no header or taskbar, just pure content area.</p>
+                                <terminal-slider min="0" max="100" value="75" label="Volume"></terminal-slider>
+                                <div style="margin-top: 15px; display: flex; gap: 10px;">
+                                    <terminal-button variant="primary" size="small">Apply</terminal-button>
+                                    <terminal-button variant="secondary" size="small">Reset</terminal-button>
+                                </div>
+                            </div>
+                        </terminal-panel>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">With Taskbar</span>
+                        <terminal-panel id="panel3" mode="with-taskbar">
+                            <div slot="content">
+                                <p>This panel has a taskbar at the bottom for actions or status information.</p>
+                                <terminal-color-picker value="#ff6b35" label1="Theme" label2="Color"></terminal-color-picker>
+                            </div>
+                            <div slot="taskbar">
+                                <terminal-status-bar>
+                                    <terminal-status-field label="Modified" value="2 min ago"></terminal-status-field>
+                                    <terminal-status-field label="Size" value="1.2MB"></terminal-status-field>
+                                </terminal-status-bar>
+                            </div>
+                        </terminal-panel>
+                    </div>
+                </div>
+
+                <h3>Panel States and Interactions</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Nested Panels Example</span>
+                        <terminal-panel id="panel-nested-outer" mode="with-header" title="Parent Panel" collapsible>
+                            <div slot="content">
+                                <p style="margin-bottom: 15px;">This panel contains nested panels:</p>
+                                <terminal-panel mode="with-header" title="Child Panel 1" style="margin-bottom: 10px;">
+                                    <div slot="content">
+                                        <terminal-slider min="0" max="255" value="128" label="Red"></terminal-slider>
+                                        <terminal-slider min="0" max="255" value="64" label="Green"></terminal-slider>
+                                        <terminal-slider min="0" max="255" value="192" label="Blue"></terminal-slider>
+                                    </div>
+                                </terminal-panel>
+                                <terminal-panel mode="headless">
+                                    <div slot="content">
+                                        <div style="background: var(--terminal-gray-dark); padding: 10px; border: 1px solid var(--terminal-green-dim);">
+                                            <p style="color: var(--terminal-green); margin-bottom: 10px;">Nested headless panel</p>
+                                            <terminal-toggle label="Enable feature"></terminal-toggle>
+                                            <terminal-toggle label="Show preview" style="margin-top: 8px;"></terminal-toggle>
+                                        </div>
+                                    </div>
+                                </terminal-panel>
+                            </div>
+                        </terminal-panel>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Rich Content Example</span>
+                        <terminal-panel id="panel-rich" mode="with-header" title="Control Center" collapsible>
+                            <div slot="content">
+                                <div style="margin-bottom: 15px;">
+                                    <terminal-dropdown id="modeDropdown" placeholder="Select mode..."></terminal-dropdown>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                                    <terminal-button variant="success" size="small">Start</terminal-button>
+                                    <terminal-button variant="danger" size="small">Stop</terminal-button>
+                                    <terminal-button variant="warning" size="small">Pause</terminal-button>
+                                    <terminal-button variant="secondary" size="small">Reset</terminal-button>
+                                </div>
+                                <terminal-color-picker value="#00ff41" label1="Theme" label2="Color"></terminal-color-picker>
+                                <div style="margin-top: 15px;">
+                                    <terminal-status-bar>
+                                        <terminal-status-field label="Status" value="Active"></terminal-status-field>
+                                        <terminal-status-field label="Memory" value="256MB"></terminal-status-field>
+                                    </terminal-status-bar>
+                                </div>
+                            </div>
+                            <div slot="header-actions">
+                                <terminal-button type="icon" variant="secondary" size="small">⚙</terminal-button>
+                            </div>
+                        </terminal-panel>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Loading State</span>
+                        <terminal-panel id="panel4" mode="with-header" title="Loading Panel" collapsible>
+                            <div slot="content">
+                                <p>Click the button below to see loading state.</p>
+                                <terminal-button id="loadPanelBtn" variant="primary" size="small">Show Loading</terminal-button>
+                            </div>
+                        </terminal-panel>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Error State</span>
+                        <terminal-panel id="panel5" mode="with-header" title="Error Panel">
+                            <div slot="content">
+                                <terminal-button id="errorPanelBtn" variant="danger" size="small">Trigger Error</terminal-button>
+                            </div>
+                        </terminal-panel>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Empty State</span>
+                        <terminal-panel id="panel6" mode="with-header" title="Empty Panel">
+                            <div slot="content">
+                                <terminal-button id="emptyPanelBtn" variant="secondary" size="small">Show Empty</terminal-button>
+                            </div>
+                        </terminal-panel>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>&lt;terminal-panel mode="with-header" title="My Panel" collapsible&gt;
+    &lt;div slot="content"&gt;Panel content...&lt;/div&gt;
+    &lt;div slot="header-actions"&gt;Action buttons...&lt;/div&gt;
+&lt;/terminal-panel&gt;
+
+&lt;terminal-panel mode="with-taskbar"&gt;
+    &lt;div slot="content"&gt;Main content...&lt;/div&gt;
+    &lt;div slot="taskbar"&gt;Status bar...&lt;/div&gt;
+&lt;/terminal-panel&gt;</code>
+                </div>
+            </div>
+
+            <!-- TerminalModal Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalModal</h2>
+                <p class="component-description">
+                    Modal component that can house multiple panels with various layout modes: single, 2-column, 2x2, etc.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Single Panel Layout</span>
+                        <terminal-button id="showModal1" variant="primary">Show Single Modal</terminal-button>
+                        <terminal-modal id="modal1" layout="single" title="Single Panel Modal" size="md">
+                            <terminal-panel mode="with-header" title="Settings" slot="panel-1">
+                                <div slot="content">
+                                    <p>This is a single panel modal with standard settings content.</p>
+                                    <terminal-input placeholder="Enter your name..."></terminal-input>
+                                    <terminal-toggle label="Enable notifications" style="margin-top: 10px;"></terminal-toggle>
+                                </div>
+                            </terminal-panel>
+                        </terminal-modal>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">2-Column Layout</span>
+                        <terminal-button id="showModal2" variant="primary">Show 2-Column Modal</terminal-button>
+                        <terminal-modal id="modal2" layout="2-column" title="Two Column Modal" size="lg">
+                            <terminal-panel mode="with-header" title="Configuration" slot="panel-1">
+                                <div slot="content">
+                                    <p>Left panel with configuration options.</p>
+                                    <terminal-slider min="0" max="100" value="50" label="Quality"></terminal-slider>
+                                    <terminal-color-picker value="#00ff41" label1="Primary" label2="Color"></terminal-color-picker>
+                                </div>
+                            </terminal-panel>
+                            <terminal-panel mode="with-header" title="Preview" slot="panel-2">
+                                <div slot="content">
+                                    <p>Right panel showing preview or results.</p>
+                                    <div style="height: 100px; background: var(--terminal-gray-dark); border: 1px solid var(--terminal-green); display: flex; align-items: center; justify-content: center;">
+                                        Preview Area
+                                    </div>
+                                </div>
+                            </terminal-panel>
+                        </terminal-modal>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">2x2 Grid Layout</span>
+                        <terminal-button id="showModal3" variant="primary">Show 2x2 Modal</terminal-button>
+                        <terminal-modal id="modal3" layout="2x2" title="Dashboard Modal" size="xl">
+                            <terminal-panel mode="with-header" title="Analytics" slot="panel-1">
+                                <div slot="content">
+                                    <p>Top-left: Analytics panel</p>
+                                    <terminal-status-bar>
+                                        <terminal-status-field label="Users" value="1,234"></terminal-status-field>
+                                        <terminal-status-field label="Sessions" value="5,678"></terminal-status-field>
+                                    </terminal-status-bar>
+                                </div>
+                            </terminal-panel>
+                            <terminal-panel mode="with-header" title="Performance" slot="panel-2">
+                                <div slot="content">
+                                    <p>Top-right: Performance metrics</p>
+                                    <terminal-slider min="0" max="100" value="85" label="CPU Usage"></terminal-slider>
+                                </div>
+                            </terminal-panel>
+                            <terminal-panel mode="with-header" title="Logs" slot="panel-3">
+                                <div slot="content">
+                                    <p>Bottom-left: System logs</p>
+                                    <code style="display: block; font-size: 10px;">[INFO] System initialized</code>
+                                </div>
+                            </terminal-panel>
+                            <terminal-panel mode="with-header" title="Controls" slot="panel-4">
+                                <div slot="content">
+                                    <p>Bottom-right: Control panel</p>
+                                    <terminal-button variant="success" size="small">Start</terminal-button>
+                                    <terminal-button variant="danger" size="small">Stop</terminal-button>
+                                </div>
+                            </terminal-panel>
+                        </terminal-modal>
+                    </div>
+                </div>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">1-2-1 Layout</span>
+                        <terminal-button id="showModal4" variant="secondary">Show 1-2-1 Modal</terminal-button>
+                        <terminal-modal id="modal4" layout="1-2-1" title="Editor Layout" size="xl">
+                            <terminal-panel mode="with-header" title="File Explorer" slot="panel-1">
+                                <div slot="content">
+                                    <p>Left sidebar: File explorer</p>
+                                    <div style="font-size: 11px;">
+                                        <div>📁 src/</div>
+                                        <div style="margin-left: 15px;">📄 app.js</div>
+                                        <div style="margin-left: 15px;">📄 styles.css</div>
+                                    </div>
+                                </div>
+                            </terminal-panel>
+                            <terminal-panel mode="headless" slot="panel-2">
+                                <div slot="content">
+                                    <p style="margin-bottom: 10px;">Main editor area</p>
+                                    <div style="background: var(--terminal-black); padding: 10px; border: 1px solid var(--terminal-gray-light); font-family: monospace; font-size: 11px;">
+                                        <div style="color: var(--terminal-green-dim);">// Main application code</div>
+                                        <div>function main() {</div>
+                                        <div>&nbsp;&nbsp;console.log('Hello World');</div>
+                                        <div>}</div>
+                                    </div>
+                                </div>
+                            </terminal-panel>
+                            <terminal-panel mode="with-header" title="Properties" slot="panel-3">
+                                <div slot="content">
+                                    <p>Right sidebar: Properties</p>
+                                    <terminal-input placeholder="Component name" value="Button"></terminal-input>
+                                </div>
+                            </terminal-panel>
+                        </terminal-modal>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Small Modal</span>
+                        <terminal-button id="showModal5" variant="secondary">Show Small Modal</terminal-button>
+                        <terminal-modal id="modal5" layout="single" title="Confirmation" size="sm">
+                            <terminal-panel mode="headless" slot="panel-1">
+                                <div slot="content">
+                                    <p style="margin-bottom: 15px;">Are you sure you want to delete this item?</p>
+                                    <div style="text-align: center;">
+                                        <terminal-button variant="danger" size="small">Delete</terminal-button>
+                                        <terminal-button variant="secondary" size="small" style="margin-left: 10px;">Cancel</terminal-button>
+                                    </div>
+                                </div>
+                            </terminal-panel>
+                        </terminal-modal>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Full Screen Modal</span>
+                        <terminal-button id="showModal6" variant="secondary">Show Full Modal</terminal-button>
+                        <terminal-modal id="modal6" layout="2-column" title="Full Screen Dashboard" size="full">
+                            <terminal-panel mode="with-taskbar" slot="panel-1">
+                                <div slot="content">
+                                    <h4 style="color: var(--terminal-green); margin-bottom: 10px;">Data Visualization</h4>
+                                    <div style="height: 200px; background: var(--terminal-gray-dark); border: 1px solid var(--terminal-green); display: flex; align-items: center; justify-content: center;">
+                                        Chart Area
+                                    </div>
+                                </div>
+                                <div slot="taskbar">
+                                    <terminal-status-bar>
+                                        <terminal-status-field label="Data Points" value="15,432"></terminal-status-field>
+                                        <terminal-status-field label="Last Update" value="2 sec ago"></terminal-status-field>
+                                    </terminal-status-bar>
+                                </div>
+                            </terminal-panel>
+                            <terminal-panel mode="with-header" title="Controls & Settings" slot="panel-2">
+                                <div slot="content">
+                                    <p>Full-screen modal with comprehensive controls.</p>
+                                    <terminal-dropdown id="chartTypeDropdown" placeholder="Select chart type..."></terminal-dropdown>
+                                    <terminal-slider min="1" max="100" value="25" label="Data Range" style="margin-top: 15px;"></terminal-slider>
+                                </div>
+                            </terminal-panel>
+                        </terminal-modal>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>&lt;terminal-modal layout="2-column" title="My Modal" size="lg"&gt;
+    &lt;terminal-panel mode="with-header" title="Panel 1" slot="panel-1"&gt;
+        &lt;div slot="content"&gt;Left panel content&lt;/div&gt;
+    &lt;/terminal-panel&gt;
+    &lt;terminal-panel mode="with-header" title="Panel 2" slot="panel-2"&gt;
+        &lt;div slot="content"&gt;Right panel content&lt;/div&gt;
+    &lt;/terminal-panel&gt;
+&lt;/terminal-modal&gt;</code>
+                </div>
+            </div>
+
+            <!-- TerminalDynamicControls Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalDynamicControls</h2>
+                <p class="component-description">
+                    Schema-based control generation with recursive nesting support. Supports number, color, dropdown, text, trigger, boolean, and group controls.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Basic Controls</span>
+                        <terminal-dynamic-controls id="dynamicControls1"></terminal-dynamic-controls>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Animation Controls</span>
+                        <terminal-dynamic-controls id="dynamicControls2"></terminal-dynamic-controls>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Complex Nested Groups</span>
+                        <terminal-dynamic-controls id="dynamicControls3"></terminal-dynamic-controls>
+                    </div>
+                </div>
+
+                <h3>Control Schema Examples</h3>
+                <div class="demo-item">
+                    <span class="demo-label">Values Output</span>
+                    <div style="background: var(--terminal-black); padding: 15px; border: 1px solid var(--terminal-gray-light); margin-top: 10px;">
+                        <pre id="dynamicControlsOutput" style="color: var(--terminal-green); font-size: 11px; margin: 0; white-space: pre-wrap;">Click controls above to see values...</pre>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>// Basic control schema example
+const schema = [
+  {
+    type: 'group',
+    label: 'Appearance',
+    controls: [
+      { type: 'color', key: 'backgroundColor', label: 'Background', value: '#1a1a1a' },
+      { type: 'number', key: 'opacity', label: 'Opacity', value: 1.0, min: 0, max: 1, step: 0.1 },
+      { type: 'boolean', key: 'visible', label: 'Visible', value: true }
+    ]
+  },
+  {
+    type: 'dropdown',
+    key: 'theme',
+    label: 'Theme',
+    value: 'dark',
+    options: [
+      { value: 'dark', label: 'Dark Mode' },
+      { value: 'light', label: 'Light Mode' }
+    ]
+  },
+  { type: 'trigger', key: 'reset', label: 'Reset to Defaults' }
+];</code>
+                </div>
+            </div>
+
+            <!-- TerminalTreeView Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalTreeView</h2>
+                <p class="component-description">
+                    Hierarchical tree view with expand/collapse and selection management. Perfect for file explorers, navigation menus, or nested data structures.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">File Explorer Tree</span>
+                        <terminal-tree-view id="treeView1" style="height: 250px; overflow-y: auto; border: 1px solid var(--terminal-gray-light); background: var(--terminal-gray-darkest);">
+                            <terminal-tree-node id="rootNode" label="Project Root" type="folder" expanded>
+                                <terminal-tree-node label="src" type="folder" expanded>
+                                    <terminal-tree-node label="components" type="folder">
+                                        <terminal-tree-node label="TerminalButton.js" type="file"></terminal-tree-node>
+                                        <terminal-tree-node label="TerminalInput.js" type="file"></terminal-tree-node>
+                                        <terminal-tree-node label="TerminalModal.js" type="file"></terminal-tree-node>
+                                    </terminal-tree-node>
+                                    <terminal-tree-node label="utils" type="folder">
+                                        <terminal-tree-node label="helpers.js" type="file"></terminal-tree-node>
+                                        <terminal-tree-node label="constants.js" type="file"></terminal-tree-node>
+                                    </terminal-tree-node>
+                                    <terminal-tree-node label="app.js" type="file"></terminal-tree-node>
+                                </terminal-tree-node>
+                                <terminal-tree-node label="css" type="folder">
+                                    <terminal-tree-node label="theme" type="folder">
+                                        <terminal-tree-node label="terminal.css" type="file"></terminal-tree-node>
+                                        <terminal-tree-node label="components.css" type="file"></terminal-tree-node>
+                                    </terminal-tree-node>
+                                    <terminal-tree-node label="main.css" type="file"></terminal-tree-node>
+                                </terminal-tree-node>
+                                <terminal-tree-node label="package.json" type="file"></terminal-tree-node>
+                                <terminal-tree-node label="README.md" type="file"></terminal-tree-node>
+                            </terminal-tree-node>
+                        </terminal-tree-view>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Multi-Select Tree</span>
+                        <terminal-tree-view id="treeView2" multi-select style="height: 250px; overflow-y: auto; border: 1px solid var(--terminal-gray-light); background: var(--terminal-gray-darkest);">
+                            <terminal-tree-node label="Features" type="folder" expanded>
+                                <terminal-tree-node label="Authentication" type="category">
+                                    <terminal-tree-node label="Login" type="feature"></terminal-tree-node>
+                                    <terminal-tree-node label="Logout" type="feature"></terminal-tree-node>
+                                    <terminal-tree-node label="Password Reset" type="feature"></terminal-tree-node>
+                                </terminal-tree-node>
+                                <terminal-tree-node label="UI Components" type="category">
+                                    <terminal-tree-node label="Buttons" type="feature"></terminal-tree-node>
+                                    <terminal-tree-node label="Forms" type="feature"></terminal-tree-node>
+                                    <terminal-tree-node label="Modals" type="feature"></terminal-tree-node>
+                                </terminal-tree-node>
+                                <terminal-tree-node label="Data Management" type="category">
+                                    <terminal-tree-node label="CRUD Operations" type="feature"></terminal-tree-node>
+                                    <terminal-tree-node label="Search & Filter" type="feature"></terminal-tree-node>
+                                </terminal-tree-node>
+                            </terminal-tree-node>
+                        </terminal-tree-view>
+                        <div style="margin-top: 10px;">
+                            <terminal-button id="selectAllBtn" variant="secondary" size="small">Select All</terminal-button>
+                            <terminal-button id="clearSelectionBtn" variant="secondary" size="small">Clear Selection</terminal-button>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Navigation Tree</span>
+                        <terminal-tree-view id="treeView3" expand-on-select style="height: 250px; overflow-y: auto; border: 1px solid var(--terminal-gray-light); background: var(--terminal-gray-darkest);">
+                            <terminal-tree-node label="Dashboard" type="page" icon="📊"></terminal-tree-node>
+                            <terminal-tree-node label="Analytics" type="folder" icon="📈">
+                                <terminal-tree-node label="Overview" type="page" icon="🔍"></terminal-tree-node>
+                                <terminal-tree-node label="Reports" type="folder" icon="📋">
+                                    <terminal-tree-node label="Sales Report" type="page" icon="💰"></terminal-tree-node>
+                                    <terminal-tree-node label="Traffic Report" type="page" icon="🚗"></terminal-tree-node>
+                                    <terminal-tree-node label="User Report" type="page" icon="👥"></terminal-tree-node>
+                                </terminal-tree-node>
+                                <terminal-tree-node label="Real-time" type="page" icon="⚡"></terminal-tree-node>
+                            </terminal-tree-node>
+                            <terminal-tree-node label="Settings" type="folder" icon="⚙️">
+                                <terminal-tree-node label="General" type="page" icon="🔧"></terminal-tree-node>
+                                <terminal-tree-node label="Security" type="page" icon="🔒"></terminal-tree-node>
+                                <terminal-tree-node label="Integrations" type="page" icon="🔌"></terminal-tree-node>
+                            </terminal-tree-node>
+                        </terminal-tree-view>
+                    </div>
+                </div>
+
+                <h3>Tree Actions</h3>
+                <div class="demo-item">
+                    <span class="demo-label">Selection Output</span>
+                    <div style="background: var(--terminal-black); padding: 15px; border: 1px solid var(--terminal-gray-light); margin-top: 10px;">
+                        <pre id="treeSelectionOutput" style="color: var(--terminal-green); font-size: 11px; margin: 0; white-space: pre-wrap;">Select nodes in trees above to see selection data...</pre>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>&lt;terminal-tree-view multi-select expand-on-select&gt;
+    &lt;terminal-tree-node label="Root Folder" type="folder" expanded&gt;
+        &lt;terminal-tree-node label="Subfolder" type="folder"&gt;
+            &lt;terminal-tree-node label="file.txt" type="file"&gt;&lt;/terminal-tree-node&gt;
+        &lt;/terminal-tree-node&gt;
+        &lt;terminal-tree-node label="document.pdf" type="file"&gt;&lt;/terminal-tree-node&gt;
+    &lt;/terminal-tree-node&gt;
+&lt;/terminal-tree-view&gt;</code>
+                </div>
+            </div>
+
+            <!-- TerminalToast Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalToast</h2>
+                <p class="component-description">
+                    Toast notification system with queue management, auto-dismiss, and multiple types. Includes a global toast manager for easy use.
+                </p>
+
+                <h3>Toast Types</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Success Toast</span>
+                        <terminal-button id="showSuccessToast" variant="success" size="small">Show Success</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Error Toast</span>
+                        <terminal-button id="showErrorToast" variant="danger" size="small">Show Error</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Warning Toast</span>
+                        <terminal-button id="showWarningToast" style="background: #ff9500; border-color: #ff9500;" size="small">Show Warning</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Info Toast</span>
+                        <terminal-button id="showInfoToast" variant="secondary" size="small">Show Info</terminal-button>
+                    </div>
+                </div>
+
+                <h3>Toast Positioning</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Top Right (Default)</span>
+                        <terminal-button id="showToastTopRight" variant="primary" size="small">Top Right</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Top Left</span>
+                        <terminal-button id="showToastTopLeft" variant="primary" size="small">Top Left</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Top Center</span>
+                        <terminal-button id="showToastTopCenter" variant="primary" size="small">Top Center</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Bottom Right</span>
+                        <terminal-button id="showToastBottomRight" variant="primary" size="small">Bottom Right</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Bottom Left</span>
+                        <terminal-button id="showToastBottomLeft" variant="primary" size="small">Bottom Left</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Bottom Center</span>
+                        <terminal-button id="showToastBottomCenter" variant="primary" size="small">Bottom Center</terminal-button>
+                    </div>
+                </div>
+
+                <h3>Toast Options</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Persistent Toast</span>
+                        <terminal-button id="showPersistentToast" variant="secondary" size="small">No Auto-Dismiss</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Quick Toast (1s)</span>
+                        <terminal-button id="showQuickToast" variant="secondary" size="small">Quick Dismiss</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Long Message</span>
+                        <terminal-button id="showLongToast" variant="secondary" size="small">Long Message</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Non-Dismissible</span>
+                        <terminal-button id="showNonDismissibleToast" variant="secondary" size="small">No Close Button</terminal-button>
+                    </div>
+                </div>
+
+                <h3>Toast Queue Management</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Spam Toasts</span>
+                        <terminal-button id="spamToasts" variant="primary" size="small">Show 10 Toasts</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Progressive Updates</span>
+                        <terminal-button id="progressiveToasts" variant="primary" size="small">Progress Updates</terminal-button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Clear All</span>
+                        <terminal-button id="clearAllToasts" variant="danger" size="small">Clear All Toasts</terminal-button>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>// Using the global toast manager
+window.TerminalToastManager.success('Operation completed successfully!');
+window.TerminalToastManager.error('Something went wrong');
+window.TerminalToastManager.warning('Please review your settings');
+window.TerminalToastManager.info('New update available');
+
+// With custom options
+window.TerminalToastManager.show('Custom message', 'info', {
+    position: 'top-left',
+    duration: 3000,
+    dismissible: true
+});
+
+// Using the component directly
+&lt;terminal-toast 
+    type="success" 
+    message="File uploaded successfully" 
+    position="top-right"
+    duration="5000"&gt;
+&lt;/terminal-toast&gt;</code>
+                </div>
+            </div>
+
+            <!-- TerminalLoader Section -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalLoader</h2>
+                <p class="component-description">
+                    Loading indicators with terminal/cyberpunk styling. Support for spinner, dots, and bars animations with multiple sizes.
+                </p>
+
+                <h3>Loader Types</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Spinner (Default)</span>
+                        <terminal-loader id="loader1" type="spinner" size="medium"></terminal-loader>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Animated Dots</span>
+                        <terminal-loader id="loader2" type="dots" size="medium"></terminal-loader>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Bars Animation</span>
+                        <terminal-loader id="loader3" type="bars" size="medium"></terminal-loader>
+                    </div>
+                </div>
+
+                <h3>Loader Sizes</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Small Spinner</span>
+                        <terminal-loader id="loader4" type="spinner" size="small"></terminal-loader>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Medium Dots</span>
+                        <terminal-loader id="loader5" type="dots" size="medium"></terminal-loader>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Large Bars</span>
+                        <terminal-loader id="loader6" type="bars" size="large"></terminal-loader>
+                    </div>
+                </div>
+
+                <h3>Loaders with Text</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Loading Text</span>
+                        <terminal-loader id="loader7" type="spinner" size="medium" text="Loading..."></terminal-loader>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Processing Text</span>
+                        <terminal-loader id="loader8" type="dots" size="medium" text="Processing data..."></terminal-loader>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Uploading Text</span>
+                        <terminal-loader id="loader9" type="bars" size="medium" text="Uploading files..."></terminal-loader>
+                    </div>
+                </div>
+
+                <h3>Custom Colors</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Custom Green</span>
+                        <terminal-loader id="loader10" type="spinner" size="medium" color="#00ff41" text="Custom color"></terminal-loader>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Blue Loader</span>
+                        <terminal-loader id="loader11" type="dots" size="medium" color="#00aaff" text="Blue theme"></terminal-loader>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Orange Loader</span>
+                        <terminal-loader id="loader12" type="bars" size="medium" color="#ff6b35" text="Warning state"></terminal-loader>
+                    </div>
+                </div>
+
+                <h3>Loader Controls</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Show/Hide Controls</span>
+                        <terminal-loader id="controllableLoader" type="spinner" size="medium" text="Controllable loader" style="display: none;"></terminal-loader>
+                        <div style="margin-top: 15px;">
+                            <terminal-button id="showLoaderBtn" variant="primary" size="small">Show Loader</terminal-button>
+                            <terminal-button id="hideLoaderBtn" variant="secondary" size="small">Hide Loader</terminal-button>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Dynamic Updates</span>
+                        <terminal-loader id="dynamicLoader" type="spinner" size="medium" text="Step 1 of 5"></terminal-loader>
+                        <div style="margin-top: 15px;">
+                            <terminal-button id="updateLoaderBtn" variant="primary" size="small">Next Step</terminal-button>
+                            <terminal-button id="resetLoaderBtn" variant="secondary" size="small">Reset</terminal-button>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Type Switching</span>
+                        <terminal-loader id="typeSwitchLoader" type="spinner" size="medium" text="Loading content..."></terminal-loader>
+                        <div style="margin-top: 15px;">
+                            <terminal-button id="switchTypeBtn" variant="secondary" size="small">Switch Type</terminal-button>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Integration Examples</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Panel Loading State</span>
+                        <terminal-panel id="loaderPanel" mode="with-header" title="Data Panel" style="min-height: 150px;">
+                            <div slot="content" style="display: flex; align-items: center; justify-content: center; height: 100px;">
+                                <terminal-loader type="dots" size="medium" text="Loading data..." style="display: none;" id="panelLoader"></terminal-loader>
+                                <div id="panelContent">
+                                    <p>Panel is ready. Click "Load Data" to see loading state.</p>
+                                    <terminal-button id="loadDataBtn" variant="primary" size="small">Load Data</terminal-button>
+                                </div>
+                            </div>
+                        </terminal-panel>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Button Loading State</span>
+                        <div style="text-align: center; padding: 20px;">
+                            <p>Loading states integrated with buttons:</p>
+                            <terminal-button id="saveWithLoader" variant="primary">Save Changes</terminal-button>
+                            <div id="saveLoaderContainer" style="margin-top: 15px; display: none;">
+                                <terminal-loader type="spinner" size="small" text="Saving..."></terminal-loader>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>// Basic loader usage
+&lt;terminal-loader type="spinner" size="medium" text="Loading..."&gt;&lt;/terminal-loader&gt;
+&lt;terminal-loader type="dots" size="large" color="#00ff41"&gt;&lt;/terminal-loader&gt;
+&lt;terminal-loader type="bars" size="small" text="Processing..."&gt;&lt;/terminal-loader&gt;
+
+// Programmatic control
+const loader = document.querySelector('terminal-loader');
+loader.show();                    // Show the loader
+loader.hide();                    // Hide the loader
+loader.setText('New message');    // Update loading text
+loader.setType('dots');          // Change animation type
+loader.update({                   // Update multiple properties
+    type: 'bars',
+    size: 'large',
+    text: 'Almost done...',
+    color: '#ff6b35'
+});</code>
+                </div>
+            </div>
+
+            <!-- Event Log -->
+            <div class="component-section">
+                <h2 class="component-title">Event Log</h2>
+                <p class="component-description">
+                    Interact with the components above to see their events logged here.
+                </p>
+                <div class="event-log" id="eventLog"></div>
+            </div>
+        </div>
+
+        <!-- Load Pickr for color picker (optional) -->
+        <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
+
+        <!-- Load Components -->
+        <script type="module">
+            import './js/components/TerminalComponent.js';
+            import './js/components/TerminalColorPicker.js';
+            import './js/components/TerminalButton.js';
+            import './js/components/TerminalInput.js';
+            import './js/components/TerminalDropdown.js';
+            import './js/components/TerminalSlider.js';
+            import './js/components/TerminalToggle.js';
+            import './js/components/TerminalUserMenu.js';
+            import './js/components/TerminalStatusBar.js';
+            import './js/components/TerminalPanel.js';
+            import './js/components/TerminalModal.js';
+            import './js/components/TerminalDynamicControls.js';
+            import './js/components/TerminalTreeView.js';
+            import './js/components/TerminalTreeNode.js';
+            import './js/components/TerminalToast.js';
+            import './js/components/TerminalLoader.js';
+            
+            // Import all icons from phosphor-icons module
+            import { 
+                speakerHighIcon,
+                gaugeIcon,
+                paletteIcon,
+                infoIcon,
+                checkCircleIcon,
+                xIcon,
+                plusCircleIcon,
+                minusCircleIcon,
+                userCircleIcon,
+                briefcaseIcon,
+                folderStarIcon,
+                keyboardIcon,
+                eyeIcon,
+                eyeClosedIcon,
+                tableIcon,
+                slidersHorizontalIcon,
+                floppyDiskIcon,
+                gearSixIcon,
+                playIcon,
+                pauseIcon,
+                caretUpIcon,
+                caretDownIcon,
+                signOutIcon,
+                houseIcon,
+                chartBarIcon,
+                folderUserIcon,
+                fileIcon
+            } from './js/utils/phosphor-icons.js';
+
+            // Event logging
+            const eventLog = document.getElementById('eventLog');
+            
+            // Set icons on components after DOM loads
+            window.addEventListener('DOMContentLoaded', () => {
+                // Set slider icons
+                const sliderVolume = document.getElementById('slider-volume');
+                if (sliderVolume) sliderVolume.setAttribute('icon', speakerHighIcon);
+                
+                const sliderBrightness = document.getElementById('slider-brightness');
+                if (sliderBrightness) sliderBrightness.setAttribute('icon', gaugeIcon);
+                
+                // Set toggle icons
+                const toggleHeart = document.getElementById('toggle-heart');
+                if (toggleHeart) toggleHeart.setAttribute('icon', paletteIcon);
+                
+                const toggleNotifications = document.getElementById('toggle-notifications');
+                if (toggleNotifications) toggleNotifications.setAttribute('icon', infoIcon);
+                
+                const toggleOnline = document.getElementById('toggle-online');
+                if (toggleOnline) {
+                    toggleOnline.setAttribute('on-icon', checkCircleIcon);
+                    toggleOnline.setAttribute('off-icon', xIcon);
+                }
+                
+                const togglePlusMinus = document.getElementById('toggle-plus-minus');
+                if (togglePlusMinus) {
+                    togglePlusMinus.setAttribute('on-icon', plusCircleIcon);
+                    togglePlusMinus.setAttribute('off-icon', minusCircleIcon);
+                }
+                
+                const togglePersonalWork = document.getElementById('toggle-personal-work');
+                if (togglePersonalWork) {
+                    togglePersonalWork.setAttribute('on-icon', userCircleIcon);
+                    togglePersonalWork.setAttribute('off-icon', briefcaseIcon);
+                }
+                
+                const toggleDevProd = document.getElementById('toggle-dev-prod');
+                if (toggleDevProd) {
+                    toggleDevProd.setAttribute('on-icon', folderStarIcon);
+                    toggleDevProd.setAttribute('off-icon', keyboardIcon);
+                }
+                
+                const toggleTheme = document.getElementById('toggle-theme');
+                if (toggleTheme) {
+                    toggleTheme.setAttribute('on-icon', eyeClosedIcon);
+                    toggleTheme.setAttribute('off-icon', eyeIcon);
+                }
+                
+                const toggleViewMode = document.getElementById('toggle-view-mode');
+                if (toggleViewMode) {
+                    toggleViewMode.setAttribute('on-icon', tableIcon);
+                    toggleViewMode.setAttribute('off-icon', slidersHorizontalIcon);
+                }
+            });
+
+            function logEvent(component, event, data) {
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                const timestamp = new Date().toLocaleTimeString();
+                entry.innerHTML = `[${timestamp}] <strong>${component}</strong>: ${event} ${data ? '- ' + JSON.stringify(data) : ''}`;
+                eventLog.insertBefore(entry, eventLog.firstChild);
+            }
+
+            // Color Picker Events
+            const colorPicker1 = document.getElementById('colorPicker1');
+            colorPicker1.addEventListener('color-change', (e) => {
+                logEvent('ColorPicker1', 'color-change', e.detail);
+            });
+
+            const colorPicker2 = document.getElementById('colorPicker2');
+            colorPicker2.addEventListener('color-change', (e) => {
+                logEvent('ColorPicker2', 'color-change', e.detail);
+            });
+
+            // Icons for button demos already imported above
+
+            // Set icons for button demos
+            const iconTextBtn = document.getElementById('iconTextBtn');
+            if (iconTextBtn) {
+                iconTextBtn.setIcon(plusCircleIcon);
+            }
+
+            const iconOnlyBtn = document.getElementById('iconOnlyBtn');
+            if (iconOnlyBtn) {
+                iconOnlyBtn.setIcon(floppyDiskIcon);
+            }
+
+            const smallIconBtn = document.getElementById('smallIconBtn');
+            if (smallIconBtn) {
+                smallIconBtn.setIcon(gearSixIcon);
+            }
+
+            // Set icons for toggle buttons
+            const playPauseToggle = document.getElementById('playPauseToggle');
+            if (playPauseToggle) {
+                playPauseToggle.setAttribute('icon-on', pauseIcon);
+                playPauseToggle.setAttribute('icon-off', playIcon);
+            }
+
+            const expandCollapseToggle = document.getElementById('expandCollapseToggle');
+            if (expandCollapseToggle) {
+                expandCollapseToggle.setAttribute('icon-on', caretUpIcon);
+                expandCollapseToggle.setAttribute('icon-off', caretDownIcon);
+            }
+
+            // Button Events
+            const iconTextBtn2 = document.getElementById('iconTextBtn');
+            if (iconTextBtn2) {
+                iconTextBtn2.addEventListener('button-click', (e) => {
+                    logEvent('IconTextButton', 'button-click', null);
+                });
+            }
+
+            // Loading button demo
+            const loadingBtn = document.getElementById('loadingBtn');
+            setTimeout(() => {
+                loadingBtn.removeAttribute('loading');
+                loadingBtn.textContent = 'Done!';
+            }, 3000);
+
+            // Toggle button events
+            if (playPauseToggle) {
+                playPauseToggle.addEventListener('toggle', (e) => {
+                    logEvent('PlayPauseToggle', 'toggle', { state: e.detail.state });
+                });
+            }
+
+            document.querySelectorAll('terminal-button[variant="toggle"]').forEach((toggleBtn, index) => {
+                toggleBtn.addEventListener('toggle', (e) => {
+                    const text = toggleBtn.textContent || `Toggle${index}`;
+                    logEvent(`ToggleButton (${text})`, 'toggle', e.detail);
+                });
+            });
+
+            // Input Events
+            const input1 = document.getElementById('input1');
+            input1.addEventListener('input-value', (e) => {
+                logEvent('Input1', 'input-value', e.detail);
+            });
+            input1.addEventListener('input-focus', (e) => {
+                logEvent('Input1', 'input-focus', null);
+            });
+            input1.addEventListener('input-blur', (e) => {
+                logEvent('Input1', 'input-blur', null);
+            });
+
+            // Dropdown Demo Data
+            const demoData = {
+                folders: {
+                        'Characters': {
+                            folders: {
+                                'Heroes': {
+                                    files: [
+                                        'knight.riv', 
+                                        'wizard.riv', 
+                                        'archer.riv',
+                                        'knight_with_golden_armor_and_enchanted_sword.riv',
+                                        'powerful_archmage_with_elemental_mastery_skills.riv'
+                                    ]
+                                },
+                                'Enemies': {
+                                    files: [
+                                        'goblin.riv', 
+                                        'dragon.riv', 
+                                        'skeleton.riv',
+                                        'ancient_dragon_boss_with_multiple_attack_phases.riv',
+                                        'undead_skeleton_warrior_with_cursed_weapons.riv'
+                                    ]
+                                }
+                            },
+                            files: [
+                                'npc_merchant.riv', 
+                                'npc_guard.riv',
+                                'friendly_merchant_with_randomized_inventory_system.riv'
+                            ]
+                        },
+                        'Effects': {
+                            folders: {
+                                'Magic': {
+                                    files: [
+                                        'fireball.riv', 
+                                        'lightning.riv', 
+                                        'heal.riv',
+                                        'chain_lightning_spell_with_multiple_targets.riv',
+                                        'grand_healing_aura_with_particle_effects.riv'
+                                    ]
+                                },
+                                'Physical': {
+                                    files: [
+                                        'slash.riv', 
+                                        'impact.riv', 
+                                        'explosion.riv',
+                                        'devastating_ground_slam_with_shockwave_effect.riv'
+                                    ]
+                                }
+                            },
+                            files: ['sparkle.riv', 'smoke.riv']
+                        },
+                        'UI': {
+                            files: [
+                                'button_press.riv', 
+                                'loading_spinner.riv', 
+                                'transition.riv',
+                                'advanced_loading_bar_with_percentage_indicator.riv',
+                                'smooth_page_transition_with_fade_and_slide_effects.riv'
+                            ]
+                        }
+                    },
+                    files: [
+                        'intro_animation.riv', 
+                        'logo_animation.riv',
+                        'company_logo_with_complex_morphing_animation_sequence.riv'
+                    ]
+                };
+
+            // Initialize dropdown1
+            const dropdown1 = document.getElementById('dropdown1');
+            if (dropdown1) {
+                // Wait for component to be ready
+                setTimeout(() => {
+                    if (dropdown1.loadData) {
+                        // Load data into dropdown
+                        dropdown1.loadData({ structure: demoData });
+
+                        // Set some metadata
+                        dropdown1.setMetadata({
+                            'knight.riv': { description: 'Armored knight character with sword animations' },
+                            'wizard.riv': { description: 'Magic user with spell casting animations' },
+                            'fireball.riv': { description: 'Projectile fire spell effect' },
+                            'loading_spinner.riv': { description: 'Circular loading indicator' }
+                        });
+                    } else {
+                        console.error('Dropdown component not ready');
+                    }
+                }, 100);
+
+                // Dropdown Events
+                dropdown1.addEventListener('dropdown-change', (e) => {
+                    logEvent('Dropdown1', 'dropdown-change', e.detail);
+                });
+            }
+
+            // Initialize dropdown2 and dropdown3 with the same data
+            const dropdown2 = document.getElementById('dropdown2');
+            const dropdown3 = document.getElementById('dropdown3');
+            
+            if (dropdown2) {
+                setTimeout(() => {
+                    if (dropdown2.loadData) {
+                        // Use the same data which already has long filenames
+                        dropdown2.loadData({ structure: demoData });
+                        dropdown2.setMetadata({
+                            'knight_with_golden_armor_and_enchanted_sword.riv': { 
+                                description: 'Epic knight character with special abilities'
+                            },
+                            'ancient_dragon_boss_with_multiple_attack_phases.riv': {
+                                description: 'Multi-phase boss fight animation sequence'
+                            },
+                            'smooth_page_transition_with_fade_and_slide_effects.riv': {
+                                description: 'Advanced UI transition animation'
+                            }
+                        });
+                    }
+                }, 100);
+                
+                dropdown2.addEventListener('dropdown-change', (e) => {
+                    logEvent('Dropdown2', 'dropdown-change', e.detail);
+                });
+            }
+            
+            if (dropdown3) {
+                setTimeout(() => {
+                    if (dropdown3.loadData) {
+                        dropdown3.loadData({ structure: demoData });
+                    }
+                }, 100);
+                
+                dropdown3.addEventListener('dropdown-change', (e) => {
+                    logEvent('Dropdown3', 'dropdown-change', e.detail);
+                });
+            }
+
+            // Slider Events
+            const slider1 = document.getElementById('slider1');
+            if (slider1) {
+                slider1.addEventListener('slider-change', (e) => {
+                    logEvent('Slider1', 'slider-change', e.detail);
+                });
+            }
+
+            // Toggle Events  
+            const toggle1 = document.getElementById('toggle1');
+            if (toggle1) {
+                toggle1.addEventListener('toggle-change', (e) => {
+                    logEvent('Toggle1', 'toggle-change', e.detail);
+                });
+            }
+
+            // Add event listeners for all equal-states toggles
+            document.querySelectorAll('terminal-toggle[equal-states]').forEach((toggle, index) => {
+                toggle.addEventListener('toggle-change', (e) => {
+                    const label = toggle.getAttribute('off-label') || 'Toggle';
+                    logEvent(`EqualStates${index + 1} (${label})`, 'toggle-change', e.detail);
+                });
+            });
+
+            // User Menu Setup
+            const userMenu3 = document.getElementById('userMenu3');
+            if (userMenu3) {
+                userMenu3.setMenuItems([
+                    { id: 'dashboard', label: 'Dashboard', icon: houseIcon },
+                    { id: 'analytics', label: 'Analytics', icon: chartBarIcon },
+                    { id: 'profile', label: 'Profile', icon: userCircleIcon },
+                    { id: 'files', label: 'User Files', icon: folderUserIcon },
+                    { id: 'settings', label: 'Settings', icon: gearSixIcon },
+                    { type: 'separator' },
+                    { id: 'logout', label: 'Sign Out', icon: signOutIcon }
+                ]);
+            }
+
+            // User Menu Events
+            document.querySelectorAll('terminal-user-menu').forEach((menu, index) => {
+                menu.addEventListener('menu-select', (e) => {
+                    logEvent(`UserMenu${index + 1}`, 'menu-select', { itemId: e.detail.itemId });
+                });
+                menu.addEventListener('menu-open', () => {
+                    logEvent(`UserMenu${index + 1}`, 'menu-open');
+                });
+                menu.addEventListener('menu-close', () => {
+                    logEvent(`UserMenu${index + 1}`, 'menu-close');
+                });
+            });
+
+            // Initial log entry
+            logEvent('System', 'Demo initialized', null);
+
+            // Color Picker Supabase Integration Example
+            // Listen for color-save and swatches-updated events
+            const colorPicker = document.querySelector('terminal-color-picker');
+            if (colorPicker) {
+                // Listen for save events - can be connected to Supabase storage
+                colorPicker.addEventListener('color-save', (e) => {
+                    logEvent('ColorPicker', 'Color saved', e.detail);
+                    // Example: If using Supabase integration
+                    // if (window.colorSwatchesStorage) {
+                    //     window.colorSwatchesStorage.addSwatch(e.detail.color);
+                    // }
+                });
+
+                // Listen for swatches updates - can be synced with Supabase
+                colorPicker.addEventListener('swatches-updated', (e) => {
+                    logEvent('ColorPicker', 'Swatches updated', e.detail);
+                    // Example: If using Supabase integration
+                    // if (window.colorSwatchesStorage) {
+                    //     window.colorSwatchesStorage.saveSwatches(e.detail.swatches);
+                    // }
+                });
+            }
+
+            // ===== NEW COMPONENTS EVENT LISTENERS =====
+
+            // TerminalStatusBar Events
+            // Initialize Status Bars with the merged component API
+            const statusBar1 = document.getElementById('statusBar1');
+            if (statusBar1) {
+                // Initialize basic status bar with fields
+                statusBar1.setFields([
+                    { label: 'CPU', value: '42%', width: '20%' },
+                    { label: 'RAM', value: '1.2GB / 8GB', width: '30%' },
+                    { label: 'Status', value: 'Running', width: '20%' },
+                    { label: 'User', value: 'Admin', width: '30%' }
+                ]);
+                
+                statusBar1.addEventListener('status-update', (e) => {
+                    logEvent('StatusBar1', 'status-update', e.detail);
+                });
+            }
+            
+            const statusBar2 = document.getElementById('statusBar2');
+            if (statusBar2) {
+                // Initialize interactive status bar with advanced features
+                statusBar2.setFields([
+                    { 
+                        label: 'File', 
+                        value: 'very_long_filename_that_will_scroll_automatically_when_it_overflows_the_container.riv',
+                        marquee: true,
+                        width: '35%',
+                        displayMode: 'icon-text',
+                        icon: fileIcon
+                    },
+                    { 
+                        label: 'Frame', 
+                        value: '125 / 300',
+                        width: '25%',
+                        displayMode: 'text',
+                        icon: playIcon,
+                        align: 'center'
+                    },
+                    { 
+                        label: 'FPS', 
+                        value: '60',
+                        width: '15%',
+                        displayMode: 'text',
+                        icon: gaugeIcon,
+                        align: 'right'
+                    },
+                    { 
+                        label: 'Mode', 
+                        value: 'Edit',
+                        width: '25%',
+                        displayMode: 'text',
+                        icon: gearSixIcon,
+                        align: 'right'
+                    }
+                ]);
+            }
+            
+            const statusBar3 = document.getElementById('statusBar3');
+            if (statusBar3) {
+                // Initialize dynamic status bar
+                statusBar3.setFields([
+                    { label: 'Progress', value: '0%', width: '33%' },
+                    { label: 'Time', value: '00:00', width: '33%' },
+                    { label: 'Quality', value: 'High', width: '34%' }
+                ]);
+            }
+
+            // Status field dynamic updates
+            const startProgressBtn = document.getElementById('startProgressBtn');
+            const updateStatusBtn = document.getElementById('updateStatusBtn');
+            let progressValue = 0;
+            let progressInterval;
+
+            if (startProgressBtn && statusBar3) {
+                startProgressBtn.addEventListener('click', () => {
+                    // Clear any existing interval
+                    if (progressInterval) {
+                        clearInterval(progressInterval);
+                        progressInterval = null;
+                    }
+                    
+                    progressValue = 0;
+                    let seconds = 0;
+                    
+                    // Reset fields immediately using updateFieldValue
+                    statusBar3.updateFieldValue(0, '0%');  // Progress field
+                    statusBar3.updateFieldValue(1, '00:00'); // Time field
+                    
+                    progressInterval = setInterval(() => {
+                        progressValue += 5;
+                        seconds += 1;
+                        
+                        statusBar3.updateFieldValue(0, `${progressValue}%`);
+                        statusBar3.updateFieldValue(1, `00:${seconds.toString().padStart(2, '0')}`);
+                        
+                        if (progressValue >= 100) {
+                            clearInterval(progressInterval);
+                            progressInterval = null;
+                            logEvent('StatusBar', 'progress-complete', { progress: progressValue, time: seconds });
+                        }
+                    }, 200);
+                    
+                    logEvent('StatusBar', 'progress-started');
+                });
+            }
+
+            if (updateStatusBtn && statusBar3) {
+                updateStatusBtn.addEventListener('click', () => {
+                    const qualities = ['Low', 'Medium', 'High', 'Ultra'];
+                    // Get current quality value from the status bar fields
+                    const currentFields = statusBar3._props.fields;
+                    const currentQuality = currentFields[2]?.value || 'High';
+                    const currentIndex = qualities.indexOf(currentQuality);
+                    const nextIndex = (currentIndex + 1) % qualities.length;
+                    
+                    statusBar3.updateFieldValue(2, qualities[nextIndex]); // Quality field
+                    logEvent('StatusBar', 'quality-updated', { quality: qualities[nextIndex] });
+                });
+            }
+
+            // Icons are already set in the statusBar2 initialization above
+            
+            // Interactive Status Bar Controls (for statusBar2)
+            const field1Display = document.getElementById('field1Display');
+            const field2Display = document.getElementById('field2Display');
+            const field3Display = document.getElementById('field3Display');
+            const field4Display = document.getElementById('field4Display');
+            
+            const field1Width = document.getElementById('field1Width');
+            const field2Width = document.getElementById('field2Width');
+            const field3Width = document.getElementById('field3Width');
+            const field4Width = document.getElementById('field4Width');
+            
+            const field1Align = document.getElementById('field1Align');
+            const field2Align = document.getElementById('field2Align');
+            const field3Align = document.getElementById('field3Align');
+            const field4Align = document.getElementById('field4Align');
+            
+            const field1Marquee = document.getElementById('field1Marquee');
+            const field2Marquee = document.getElementById('field2Marquee');
+            const field3Marquee = document.getElementById('field3Marquee');
+            const field4Marquee = document.getElementById('field4Marquee');
+            
+            // Display mode handlers for statusBar2
+            if (field1Display && statusBar2) {
+                field1Display.addEventListener('change', (e) => {
+                    statusBar2.updateField(0, { displayMode: e.target.value });
+                });
+            }
+            if (field2Display && statusBar2) {
+                field2Display.addEventListener('change', (e) => {
+                    statusBar2.updateField(1, { displayMode: e.target.value });
+                });
+            }
+            if (field3Display && statusBar2) {
+                field3Display.addEventListener('change', (e) => {
+                    statusBar2.updateField(2, { displayMode: e.target.value });
+                });
+            }
+            if (field4Display && statusBar2) {
+                field4Display.addEventListener('change', (e) => {
+                    statusBar2.updateField(3, { displayMode: e.target.value });
+                });
+            }
+            
+            // Width handlers for statusBar2
+            if (field1Width && statusBar2) {
+                field1Width.addEventListener('change', (e) => {
+                    statusBar2.updateField(0, { width: e.target.value });
+                });
+            }
+            if (field2Width && statusBar2) {
+                field2Width.addEventListener('change', (e) => {
+                    statusBar2.updateField(1, { width: e.target.value });
+                });
+            }
+            if (field3Width && statusBar2) {
+                field3Width.addEventListener('change', (e) => {
+                    statusBar2.updateField(2, { width: e.target.value });
+                });
+            }
+            if (field4Width && statusBar2) {
+                field4Width.addEventListener('change', (e) => {
+                    statusBar2.updateField(3, { width: e.target.value });
+                });
+            }
+            
+            // Alignment handlers for statusBar2
+            if (field1Align && statusBar2) {
+                field1Align.addEventListener('change', (e) => {
+                    statusBar2.updateField(0, { align: e.target.value });
+                });
+            }
+            if (field2Align && statusBar2) {
+                field2Align.addEventListener('change', (e) => {
+                    statusBar2.updateField(1, { align: e.target.value });
+                });
+            }
+            if (field3Align && statusBar2) {
+                field3Align.addEventListener('change', (e) => {
+                    statusBar2.updateField(2, { align: e.target.value });
+                });
+            }
+            if (field4Align && statusBar2) {
+                field4Align.addEventListener('change', (e) => {
+                    statusBar2.updateField(3, { align: e.target.value });
+                });
+            }
+            
+            // Marquee handlers for statusBar2
+            if (field1Marquee && statusBar2) {
+                field1Marquee.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        statusBar2.enableFieldMarquee(0);
+                    } else {
+                        statusBar2.disableFieldMarquee(0);
+                    }
+                });
+            }
+            if (field2Marquee && statusBar2) {
+                field2Marquee.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        statusBar2.enableFieldMarquee(1);
+                    } else {
+                        statusBar2.disableFieldMarquee(1);
+                    }
+                });
+            }
+            if (field3Marquee && statusBar2) {
+                field3Marquee.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        statusBar2.enableFieldMarquee(2);
+                    } else {
+                        statusBar2.disableFieldMarquee(2);
+                    }
+                });
+            }
+            if (field4Marquee && statusBar2) {
+                field4Marquee.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        statusBar2.enableFieldMarquee(3);
+                    } else {
+                        statusBar2.disableFieldMarquee(3);
+                    }
+                });
+            }
+
+            // TerminalPanel Events
+            const panels = document.querySelectorAll('terminal-panel');
+            panels.forEach((panel, index) => {
+                panel.addEventListener('panel-collapsed', () => {
+                    logEvent(`Panel${index + 1}`, 'panel-collapsed');
+                });
+                panel.addEventListener('panel-expanded', () => {
+                    logEvent(`Panel${index + 1}`, 'panel-expanded');
+                });
+            });
+
+            // Set panel icon
+            const settingsBtn1 = document.getElementById('settingsBtn1');
+            if (settingsBtn1) settingsBtn1.setIcon(gearSixIcon);
+
+            // Panel state buttons
+            const loadPanelBtn = document.getElementById('loadPanelBtn');
+            const errorPanelBtn = document.getElementById('errorPanelBtn');
+            const emptyPanelBtn = document.getElementById('emptyPanelBtn');
+
+            if (loadPanelBtn) {
+                loadPanelBtn.addEventListener('click', () => {
+                    const panel = document.getElementById('panel4');
+                    panel.showLoading();
+                    setTimeout(() => {
+                        panel.hideLoading();
+                        logEvent('Panel4', 'loading-complete');
+                    }, 2000);
+                    logEvent('Panel4', 'loading-started');
+                });
+            }
+
+            if (errorPanelBtn) {
+                errorPanelBtn.addEventListener('click', () => {
+                    const panel = document.getElementById('panel5');
+                    panel.setError('Failed to load data. Please try again.');
+                    logEvent('Panel5', 'error-shown', { message: 'Failed to load data' });
+                });
+            }
+
+            if (emptyPanelBtn) {
+                emptyPanelBtn.addEventListener('click', () => {
+                    const panel = document.getElementById('panel6');
+                    panel.setEmpty('No items to display');
+                    logEvent('Panel6', 'empty-shown');
+                });
+            }
+
+            // Initialize the mode dropdown in the rich panel
+            const modeDropdown = document.getElementById('modeDropdown');
+            if (modeDropdown) {
+                const modeOptions = [
+                    { value: 'automatic', label: 'Automatic' },
+                    { value: 'manual', label: 'Manual' },
+                    { value: 'hybrid', label: 'Hybrid' },
+                    { value: 'performance', label: 'Performance' },
+                    { value: 'economy', label: 'Economy' }
+                ];
+                modeDropdown.setOptions(modeOptions);
+                modeDropdown.setValue('automatic');
+                modeDropdown.addEventListener('change', (e) => {
+                    logEvent('ModeDropdown', 'change', { value: e.detail.value });
+                });
+            }
+
+            // TerminalModal Events
+            const modals = document.querySelectorAll('terminal-modal');
+            modals.forEach((modal, index) => {
+                modal.addEventListener('modal-open', () => {
+                    logEvent(`Modal${index + 1}`, 'modal-open');
+                });
+                modal.addEventListener('modal-close', () => {
+                    logEvent(`Modal${index + 1}`, 'modal-close');
+                });
+            });
+
+            // Modal show buttons
+            const modalButtons = [
+                'showModal1', 'showModal2', 'showModal3', 
+                'showModal4', 'showModal5', 'showModal6'
+            ];
+
+            modalButtons.forEach((btnId, index) => {
+                const btn = document.getElementById(btnId);
+                const modal = document.getElementById(`modal${index + 1}`);
+                
+                if (btn && modal) {
+                    btn.addEventListener('click', () => {
+                        modal.show();
+                        logEvent(`Modal${index + 1}`, 'show-requested');
+                    });
+                }
+            });
+
+            // Chart type dropdown data for modal
+            const chartTypeDropdown = document.getElementById('chartTypeDropdown');
+            if (chartTypeDropdown) {
+                setTimeout(() => {
+                    if (chartTypeDropdown.loadData) {
+                        chartTypeDropdown.loadData({
+                            structure: {
+                                files: ['Line Chart', 'Bar Chart', 'Pie Chart', 'Scatter Plot', 'Area Chart']
+                            }
+                        });
+                    }
+                }, 100);
+            }
+
+            // TerminalDynamicControls Events
+            const dynamicControls1 = document.getElementById('dynamicControls1');
+            const dynamicControls2 = document.getElementById('dynamicControls2');
+            const dynamicControls3 = document.getElementById('dynamicControls3');
+            const dynamicControlsOutput = document.getElementById('dynamicControlsOutput');
+
+            // Define schemas for dynamic controls
+            const basicSchema = [
+                {
+                    type: 'group',
+                    label: 'Appearance',
+                    controls: [
+                        { type: 'color', key: 'backgroundColor', label: 'Background', value: '#1a1a1a' },
+                        { type: 'number', key: 'opacity', label: 'Opacity', value: 1.0, min: 0, max: 1, step: 0.1 },
+                        { type: 'boolean', key: 'visible', label: 'Visible', value: true }
+                    ]
+                },
+                { type: 'dropdown', key: 'theme', label: 'Theme', value: 'dark', options: [
+                    { value: 'dark', label: 'Dark Mode' },
+                    { value: 'light', label: 'Light Mode' }
+                ]},
+                { type: 'text', key: 'title', label: 'Title', value: 'My Component' },
+                { type: 'trigger', key: 'reset', label: 'Reset to Defaults' }
+            ];
+
+            const animationSchema = [
+                {
+                    type: 'group',
+                    label: 'Animation Settings',
+                    controls: [
+                        { type: 'number', key: 'duration', label: 'Duration (ms)', value: 1000, min: 0, max: 5000, step: 100 },
+                        { type: 'dropdown', key: 'easing', label: 'Easing', value: 'ease-in-out', options: [
+                            { value: 'linear', label: 'Linear' },
+                            { value: 'ease-in', label: 'Ease In' },
+                            { value: 'ease-out', label: 'Ease Out' },
+                            { value: 'ease-in-out', label: 'Ease In-Out' }
+                        ]},
+                        { type: 'boolean', key: 'loop', label: 'Loop Animation', value: false },
+                        { type: 'number', key: 'delay', label: 'Delay (ms)', value: 0, min: 0, max: 2000, step: 50 }
+                    ]
+                },
+                { type: 'trigger', key: 'preview', label: 'Preview Animation' }
+            ];
+
+            const complexSchema = [
+                {
+                    type: 'group',
+                    label: 'Layout',
+                    controls: [
+                        { type: 'dropdown', key: 'layout', label: 'Layout Type', value: 'flex', options: [
+                            { value: 'flex', label: 'Flexbox' },
+                            { value: 'grid', label: 'CSS Grid' },
+                            { value: 'absolute', label: 'Absolute' }
+                        ]},
+                        {
+                            type: 'group',
+                            label: 'Spacing',
+                            controls: [
+                                { type: 'number', key: 'padding', label: 'Padding', value: 16, min: 0, max: 64, step: 4 },
+                                { type: 'number', key: 'margin', label: 'Margin', value: 8, min: 0, max: 32, step: 2 }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    type: 'group',
+                    label: 'Typography',
+                    controls: [
+                        { type: 'number', key: 'fontSize', label: 'Font Size', value: 14, min: 8, max: 32, step: 1 },
+                        { type: 'color', key: 'textColor', label: 'Text Color', value: '#00ff41' },
+                        { type: 'boolean', key: 'bold', label: 'Bold Text', value: false }
+                    ]
+                }
+            ];
+
+            // Initialize dynamic controls
+            setTimeout(() => {
+                if (dynamicControls1 && dynamicControls1.setSchema) {
+                    dynamicControls1.setSchema(basicSchema);
+                }
+                if (dynamicControls2 && dynamicControls2.setSchema) {
+                    dynamicControls2.setSchema(animationSchema);
+                }
+                if (dynamicControls3 && dynamicControls3.setSchema) {
+                    dynamicControls3.setSchema(complexSchema);
+                }
+            }, 100);
+
+            // Dynamic controls event listeners
+            [dynamicControls1, dynamicControls2, dynamicControls3].forEach((controls, index) => {
+                if (controls) {
+                    controls.addEventListener('control-change', (e) => {
+                        logEvent(`DynamicControls${index + 1}`, 'control-change', e.detail);
+                        if (dynamicControlsOutput) {
+                            const values = controls.getValues ? controls.getValues() : {};
+                            dynamicControlsOutput.textContent = JSON.stringify(values, null, 2);
+                        }
+                    });
+
+                    controls.addEventListener('trigger-fired', (e) => {
+                        logEvent(`DynamicControls${index + 1}`, 'trigger-fired', e.detail);
+                    });
+                }
+            });
+
+            // TerminalTreeView Events
+            const treeViews = document.querySelectorAll('terminal-tree-view');
+            const treeSelectionOutput = document.getElementById('treeSelectionOutput');
+
+            treeViews.forEach((treeView, index) => {
+                treeView.addEventListener('node-select', (e) => {
+                    logEvent(`TreeView${index + 1}`, 'node-select', e.detail);
+                    
+                    if (treeSelectionOutput && treeView.getSelectedNodes) {
+                        const selected = treeView.getSelectedNodes();
+                        treeSelectionOutput.textContent = `TreeView ${index + 1} Selection:\n${JSON.stringify(selected.map(node => ({
+                            label: node.label,
+                            type: node.type,
+                            path: node.getPath ? node.getPath() : 'N/A'
+                        })), null, 2)}`;
+                    }
+                });
+
+                treeView.addEventListener('node-expand', (e) => {
+                    logEvent(`TreeView${index + 1}`, 'node-expand', e.detail);
+                });
+
+                treeView.addEventListener('node-collapse', (e) => {
+                    logEvent(`TreeView${index + 1}`, 'node-collapse', e.detail);
+                });
+            });
+
+            // Tree view control buttons
+            const selectAllBtn = document.getElementById('selectAllBtn');
+            const clearSelectionBtn = document.getElementById('clearSelectionBtn');
+            const treeView2 = document.getElementById('treeView2');
+
+            if (selectAllBtn && treeView2) {
+                selectAllBtn.addEventListener('click', () => {
+                    if (treeView2.selectAll) {
+                        treeView2.selectAll();
+                        logEvent('TreeView2', 'select-all');
+                    }
+                });
+            }
+
+            if (clearSelectionBtn && treeView2) {
+                clearSelectionBtn.addEventListener('click', () => {
+                    if (treeView2.clearSelection) {
+                        treeView2.clearSelection();
+                        logEvent('TreeView2', 'clear-selection');
+                    }
+                });
+            }
+
+            // TerminalToast Events and Controls
+            const toastButtons = [
+                { id: 'showSuccessToast', type: 'success', message: 'Operation completed successfully!' },
+                { id: 'showErrorToast', type: 'error', message: 'Something went wrong. Please try again.' },
+                { id: 'showWarningToast', type: 'warning', message: 'Please review your settings before proceeding.' },
+                { id: 'showInfoToast', type: 'info', message: 'New update available for download.' }
+            ];
+
+            toastButtons.forEach(({ id, type, message }) => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.addEventListener('click', () => {
+                        if (window.TerminalToastManager) {
+                            window.TerminalToastManager.show(message, type);
+                            logEvent('ToastManager', 'toast-shown', { type, message });
+                        }
+                    });
+                }
+            });
+
+            // Toast positioning buttons
+            const positionButtons = [
+                { id: 'showToastTopRight', position: 'top-right' },
+                { id: 'showToastTopLeft', position: 'top-left' },
+                { id: 'showToastTopCenter', position: 'top-center' },
+                { id: 'showToastBottomRight', position: 'bottom-right' },
+                { id: 'showToastBottomLeft', position: 'bottom-left' },
+                { id: 'showToastBottomCenter', position: 'bottom-center' }
+            ];
+
+            positionButtons.forEach(({ id, position }) => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.addEventListener('click', () => {
+                        if (window.TerminalToastManager) {
+                            window.TerminalToastManager.info(`Toast in ${position} position`, { position });
+                            logEvent('ToastManager', 'positioned-toast', { position });
+                        }
+                    });
+                }
+            });
+
+            // Special toast buttons
+            const showPersistentToast = document.getElementById('showPersistentToast');
+            if (showPersistentToast) {
+                showPersistentToast.addEventListener('click', () => {
+                    if (window.TerminalToastManager) {
+                        window.TerminalToastManager.info('This toast will not auto-dismiss', { duration: 0 });
+                        logEvent('ToastManager', 'persistent-toast');
+                    }
+                });
+            }
+
+            const showQuickToast = document.getElementById('showQuickToast');
+            if (showQuickToast) {
+                showQuickToast.addEventListener('click', () => {
+                    if (window.TerminalToastManager) {
+                        window.TerminalToastManager.success('Quick dismiss!', { duration: 1000 });
+                        logEvent('ToastManager', 'quick-toast');
+                    }
+                });
+            }
+
+            const showLongToast = document.getElementById('showLongToast');
+            if (showLongToast) {
+                showLongToast.addEventListener('click', () => {
+                    if (window.TerminalToastManager) {
+                        window.TerminalToastManager.info('This is a very long message that demonstrates how the toast component handles lengthy text content and ensures proper wrapping and readability.');
+                        logEvent('ToastManager', 'long-toast');
+                    }
+                });
+            }
+
+            const showNonDismissibleToast = document.getElementById('showNonDismissibleToast');
+            if (showNonDismissibleToast) {
+                showNonDismissibleToast.addEventListener('click', () => {
+                    if (window.TerminalToastManager) {
+                        window.TerminalToastManager.warning('No close button available', { dismissible: false, duration: 3000 });
+                        logEvent('ToastManager', 'non-dismissible-toast');
+                    }
+                });
+            }
+
+            const spamToasts = document.getElementById('spamToasts');
+            if (spamToasts) {
+                spamToasts.addEventListener('click', () => {
+                    if (window.TerminalToastManager) {
+                        for (let i = 1; i <= 10; i++) {
+                            setTimeout(() => {
+                                window.TerminalToastManager.info(`Toast #${i} of 10`);
+                            }, i * 200);
+                        }
+                        logEvent('ToastManager', 'spam-toasts', { count: 10 });
+                    }
+                });
+            }
+
+            const progressiveToasts = document.getElementById('progressiveToasts');
+            if (progressiveToasts) {
+                progressiveToasts.addEventListener('click', () => {
+                    if (window.TerminalToastManager) {
+                        const steps = ['Initializing...', 'Loading data...', 'Processing...', 'Finalizing...', 'Complete!'];
+                        steps.forEach((step, index) => {
+                            setTimeout(() => {
+                                const type = index === steps.length - 1 ? 'success' : 'info';
+                                window.TerminalToastManager.show(step, type);
+                            }, index * 1500);
+                        });
+                        logEvent('ToastManager', 'progressive-toasts', { steps: steps.length });
+                    }
+                });
+            }
+
+            const clearAllToasts = document.getElementById('clearAllToasts');
+            if (clearAllToasts) {
+                clearAllToasts.addEventListener('click', () => {
+                    if (window.TerminalToastManager) {
+                        window.TerminalToastManager.dismissAll();
+                        logEvent('ToastManager', 'clear-all-toasts');
+                    }
+                });
+            }
+
+            // TerminalLoader Events and Controls
+            const loaders = document.querySelectorAll('terminal-loader');
+            loaders.forEach((loader, index) => {
+                loader.addEventListener('loader-start', (e) => {
+                    logEvent(`Loader${index + 1}`, 'loader-start', e.detail);
+                });
+                loader.addEventListener('loader-show', (e) => {
+                    logEvent(`Loader${index + 1}`, 'loader-show', e.detail);
+                });
+                loader.addEventListener('loader-hide', (e) => {
+                    logEvent(`Loader${index + 1}`, 'loader-hide', e.detail);
+                });
+            });
+
+            // Loader control buttons
+            const showLoaderBtn = document.getElementById('showLoaderBtn');
+            const hideLoaderBtn = document.getElementById('hideLoaderBtn');
+            const controllableLoader = document.getElementById('controllableLoader');
+
+            if (showLoaderBtn && controllableLoader) {
+                showLoaderBtn.addEventListener('click', () => {
+                    controllableLoader.show();
+                    logEvent('ControllableLoader', 'manually-shown');
+                });
+            }
+
+            if (hideLoaderBtn && controllableLoader) {
+                hideLoaderBtn.addEventListener('click', () => {
+                    controllableLoader.hide();
+                    logEvent('ControllableLoader', 'manually-hidden');
+                });
+            }
+
+            const updateLoaderBtn = document.getElementById('updateLoaderBtn');
+            const resetLoaderBtn = document.getElementById('resetLoaderBtn');
+            const dynamicLoader = document.getElementById('dynamicLoader');
+            let loaderStep = 1;
+
+            if (updateLoaderBtn && dynamicLoader) {
+                updateLoaderBtn.addEventListener('click', () => {
+                    loaderStep = (loaderStep % 5) + 1;
+                    dynamicLoader.setText(`Step ${loaderStep} of 5`);
+                    logEvent('DynamicLoader', 'step-updated', { step: loaderStep });
+                });
+            }
+
+            if (resetLoaderBtn && dynamicLoader) {
+                resetLoaderBtn.addEventListener('click', () => {
+                    loaderStep = 1;
+                    dynamicLoader.setText('Step 1 of 5');
+                    logEvent('DynamicLoader', 'reset');
+                });
+            }
+
+            const switchTypeBtn = document.getElementById('switchTypeBtn');
+            const typeSwitchLoader = document.getElementById('typeSwitchLoader');
+            const loaderTypes = ['spinner', 'dots', 'bars'];
+            let currentTypeIndex = 0;
+
+            if (switchTypeBtn && typeSwitchLoader) {
+                switchTypeBtn.addEventListener('click', () => {
+                    currentTypeIndex = (currentTypeIndex + 1) % loaderTypes.length;
+                    typeSwitchLoader.setType(loaderTypes[currentTypeIndex]);
+                    logEvent('TypeSwitchLoader', 'type-changed', { type: loaderTypes[currentTypeIndex] });
+                });
+            }
+
+            // Panel integration example
+            const loadDataBtn = document.getElementById('loadDataBtn');
+            const panelLoader = document.getElementById('panelLoader');
+            const panelContent = document.getElementById('panelContent');
+
+            if (loadDataBtn && panelLoader && panelContent) {
+                loadDataBtn.addEventListener('click', () => {
+                    panelContent.style.display = 'none';
+                    panelLoader.style.display = 'flex';
+                    
+                    setTimeout(() => {
+                        panelLoader.style.display = 'none';
+                        panelContent.innerHTML = `
+                            <p>Data loaded successfully!</p>
+                            <div style="background: var(--terminal-gray-dark); padding: 10px; border: 1px solid var(--terminal-green);">
+                                <div>Users: 1,234</div>
+                                <div>Sessions: 5,678</div>
+                                <div>Revenue: $12,345</div>
+                            </div>
+                            <terminal-button id="loadDataBtn2" variant="secondary" size="small" style="margin-top: 10px;">Load New Data</terminal-button>
+                        `;
+                        panelContent.style.display = 'block';
+                        
+                        // Re-attach event listener to new button
+                        const newLoadBtn = document.getElementById('loadDataBtn2');
+                        if (newLoadBtn) {
+                            newLoadBtn.addEventListener('click', () => {
+                                panelContent.innerHTML = `
+                                    <p>Panel is ready. Click "Load Data" to see loading state.</p>
+                                    <terminal-button id="loadDataBtn" variant="primary" size="small">Load Data</terminal-button>
+                                `;
+                                // Note: In a real app, you'd want to properly manage these event listeners
+                            });
+                        }
+                        
+                        logEvent('PanelLoader', 'data-loaded');
+                    }, 3000);
+                    
+                    logEvent('PanelLoader', 'loading-started');
+                });
+            }
+
+            // Button loading state example
+            const saveWithLoader = document.getElementById('saveWithLoader');
+            const saveLoaderContainer = document.getElementById('saveLoaderContainer');
+
+            if (saveWithLoader && saveLoaderContainer) {
+                saveWithLoader.addEventListener('click', () => {
+                    saveWithLoader.style.display = 'none';
+                    saveLoaderContainer.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        saveLoaderContainer.style.display = 'none';
+                        saveWithLoader.style.display = 'inline-block';
+                        saveWithLoader.textContent = 'Saved!';
+                        
+                        setTimeout(() => {
+                            saveWithLoader.textContent = 'Save Changes';
+                        }, 2000);
+                        
+                        logEvent('SaveLoader', 'save-complete');
+                    }, 2500);
+                    
+                    logEvent('SaveLoader', 'save-started');
+                });
+            }
+
+            // Example of how to integrate with Supabase (commented out for demo)
+            /*
+            import { ColorSwatchesStorage } from './js/modules/storage/color-swatches-storage.js';
+            
+            // Initialize when Supabase is ready
+            if (window.supabase) {
+                const colorSwatchesStorage = new ColorSwatchesStorage(window.supabase);
+                await colorSwatchesStorage.init();
+                
+                // Load saved swatches into color picker
+                const savedSwatches = colorSwatchesStorage.getSwatches();
+                if (savedSwatches.length > 0 && colorPicker) {
+                    colorPicker.customSwatches = savedSwatches;
+                    colorPicker.updateSwatchesDisplay();
+                }
+                
+                // Listen for auth changes
+                colorSwatchesStorage.onAuthChange((swatches) => {
+                    if (colorPicker) {
+                        colorPicker.customSwatches = swatches;
+                        colorPicker.updateSwatchesDisplay();
+                    }
+                });
+                
+                window.colorSwatchesStorage = colorSwatchesStorage;
+            }
+            */
+        </script>
+    </body>
+
+</html>

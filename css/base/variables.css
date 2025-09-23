@@ -1,0 +1,114 @@
+/**
+ * Global CSS Variables
+ * Terminal theme with monochrome palette + accent colors
+ * Simplified and consistent naming convention
+ */
+
+:root {
+	/* ========================================
+	   COLORS - Simple monochrome + accents
+	   ======================================== */
+	/* Grayscale palette */
+	--c-black:     #0a0a0a;  /* Pure black background */
+	--c-gray-1:    #1a1a1a;  /* Darkest surface */
+	--c-gray-2:    #242424;  /* Dark surface */
+	--c-gray-3:    #2a2a2a;  /* Medium surface */
+	--c-gray-4:    #333333;  /* Light surface/border */
+	--c-gray-5:    #666666;  /* Disabled text */
+
+	/* Primary colors */
+	--c-green:     #00ff41;  /* Primary terminal green */
+	--c-green-dim: #00cc33;  /* Dimmed green */
+	--c-green-dark:#009926;  /* Dark green for borders */
+
+	/* Accent colors */
+	--c-yellow:    #ffcc00;  /* Warning */
+	--c-red:       #ff3333;  /* Error/danger */
+	--c-blue:      #00aaff;  /* Info */
+
+	/* Semantic color mappings */
+	--c-bg:        var(--c-black);
+	--c-surface:   var(--c-gray-2);
+	--c-border:    var(--c-gray-4);
+	--c-text:      var(--c-green);
+	--c-text-dim:  var(--c-green-dim);
+	--c-warn:      var(--c-yellow);
+	--c-error:     var(--c-red);
+	--c-info:      var(--c-blue);
+
+	/* ========================================
+	   SIZING - Consistent scale
+	   ======================================== */
+	--size-xxs: 16px;   /* Tiny controls */
+	--size-xs:  20px;   /* Extra small */
+	--size-sm:  24px;   /* Small/compact */
+	--size-md:  28px;   /* Default controls */
+	--size-lg:  36px;   /* Large controls */
+	--size-xl:  48px;   /* Extra large */
+	--size-xxl: 64px;   /* Huge/hero */
+
+	/* ========================================
+	   SPACING - Based on 4px grid
+	   ======================================== */
+	--sp-0: 0;
+	--sp-1: 4px;   /* 0.5 char width */
+	--sp-2: 8px;   /* 1 char width */
+	--sp-3: 12px;  /* 1.5 chars */
+	--sp-4: 16px;  /* 2 chars */
+	--sp-5: 20px;  /* 2.5 chars */
+	--sp-6: 24px;  /* 3 chars */
+	--sp-8: 32px;  /* 4 chars */
+
+	/* ========================================
+	   TYPOGRAPHY - Monospace only
+	   ======================================== */
+	--font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+
+	/* Font sizes - px for precision with monospace */
+	--fs-xxs: 9px;   /* Tiny labels */
+	--fs-xs:  10px;  /* Small labels */
+	--fs-sm:  11px;  /* Default UI text */
+	--fs-md:  12px;  /* Body text */
+	--fs-lg:  14px;  /* Subheadings */
+	--fs-xl:  16px;  /* Headings */
+	--fs-xxl: 20px;  /* Large headings */
+
+	/* ========================================
+	   TRANSITIONS
+	   ======================================== */
+	--trans-fast: 0.15s ease;
+	--trans-base: 0.2s ease;
+	--trans-slow: 0.3s ease;
+
+	/* ========================================
+	   SHADOWS - Subtle terminal glow
+	   ======================================== */
+	--shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+	--shadow-md: 0 2px 4px rgba(0,0,0,0.3);
+	--shadow-lg: 0 4px 8px rgba(0,0,0,0.4);
+	--shadow-glow: 0 0 10px rgba(0,255,65,0.3);
+
+	/* ========================================
+	   Z-INDEX SCALE
+	   ======================================== */
+	--z-base:     0;
+	--z-dropdown: 100;
+	--z-sticky:   200;
+	--z-overlay:  300;
+	--z-modal:    400;
+	--z-popup:    500;
+	--z-tooltip:  600;
+	--z-max:      9999;
+
+	/* ========================================
+	   LEGACY MAPPINGS (for compatibility)
+	   ======================================== */
+	--terminal-green: var(--c-green);
+	--terminal-green-dim: var(--c-green-dim);
+	--terminal-black: var(--c-black);
+	--terminal-gray-dark: var(--c-gray-2);
+	--terminal-gray-light: var(--c-gray-4);
+	--font-size-sm: var(--fs-sm);
+	--spacing-md: var(--sp-3);
+	--control-height: var(--size-md);
+}

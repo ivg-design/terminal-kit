@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Textarea - Component Demo</title>
+
+    <!-- Core styles -->
+    <link rel="stylesheet" href="../css/theme/terminal.css">
+    <link rel="stylesheet" href="../css/components/form.css">
+
+    <!-- Web Components -->
+    <script type="module">
+        import '../js/components/TerminalComponent.js';
+        import '../js/components/TerminalTextarea.js';
+    </script>
+
+    <style>
+        :root {
+            --terminal-black: #0a0a0a;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-gray-dark: #242424;
+            --terminal-gray-medium: #2a2a2a;
+            --terminal-gray-light: #333333;
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-red: #ff3333;
+            --terminal-yellow: #ffcc00;
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: auto !important;
+            overflow: visible !important;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--terminal-black);
+            color: var(--terminal-green);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 30px;
+            font-size: 12px;
+            color: var(--terminal-green-dim);
+        }
+
+        .breadcrumb a {
+            color: var(--terminal-green-dim);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--terminal-green);
+        }
+
+        .component-section {
+            margin-bottom: 60px;
+            padding: 30px;
+            background: var(--terminal-gray-darkest);
+            border: 1px solid var(--terminal-gray-light);
+        }
+
+        h2.component-title {
+            color: var(--terminal-green);
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .component-description {
+            color: var(--terminal-green-dim);
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            color: var(--terminal-green);
+            font-size: 14px;
+            margin: 30px 0 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .demo-item {
+            background: var(--terminal-gray-dark);
+            border: 1px solid var(--terminal-gray-light);
+            padding: 20px;
+        }
+
+        .demo-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .demo-label {
+            display: block;
+            color: var(--terminal-green-dim);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-light);
+            padding: 20px;
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            color: var(--terminal-green-dim);
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: pre;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .event-log {
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-light);
+            padding: 15px;
+            margin-top: 30px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .event-log h3 {
+            color: var(--terminal-green);
+            font-size: 14px;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .event-entry {
+            font-size: 11px;
+            color: var(--terminal-green-dim);
+            margin: 5px 0;
+            padding: 5px;
+            background: var(--terminal-gray-darkest);
+            border-left: 2px solid var(--terminal-green);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .terminal-button {
+            padding: 8px 16px;
+            background: var(--terminal-gray-dark);
+            color: var(--terminal-green);
+            border: 1px solid var(--terminal-green);
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+
+        .terminal-button:hover {
+            background: rgba(0, 255, 65, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+
+        .terminal-button.primary {
+            background: var(--terminal-green);
+            color: var(--terminal-black);
+        }
+
+        .terminal-button.primary:hover {
+            background: var(--terminal-green-dim);
+        }
+
+        .info-box {
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-green-dim);
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 11px;
+            color: var(--terminal-green-dim);
+        }
+
+        .keyboard-shortcuts {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 20px;
+            font-size: 11px;
+            color: var(--terminal-green-dim);
+        }
+
+        .shortcut-key {
+            color: var(--terminal-green);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="breadcrumb">
+            <a href="index.html">← Back to Gallery</a> / Textarea
+        </div>
+
+        <h1>Terminal Textarea Component</h1>
+
+        <div class="component-section">
+            <h2 class="component-title">Basic Textarea Variants</h2>
+            <p class="component-description">
+                Multiline text input with configurable rows, resize options, and states.
+            </p>
+
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Basic Textarea</span>
+                    <terminal-textarea
+                        placeholder="Enter your text here..."
+                        rows="5">
+                    </terminal-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Pre-filled Content</span>
+                    <terminal-textarea
+                        value="This textarea comes with pre-filled content.
+You can edit this text.
+Multiple lines are supported."
+                        rows="5">
+                    </terminal-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Large Textarea</span>
+                    <terminal-textarea
+                        placeholder="Large textarea for longer content..."
+                        rows="10">
+                    </terminal-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Small Textarea</span>
+                    <terminal-textarea
+                        placeholder="Compact textarea..."
+                        rows="3">
+                    </terminal-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Read-only Textarea</span>
+                    <terminal-textarea
+                        value="This content is read-only.
+You cannot edit it."
+                        readonly
+                        rows="5">
+                    </terminal-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Disabled Textarea</span>
+                    <terminal-textarea
+                        value="This textarea is disabled"
+                        disabled
+                        rows="5">
+                    </terminal-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Non-resizable</span>
+                    <terminal-textarea
+                        placeholder="This textarea cannot be resized"
+                        resizable="false"
+                        rows="5">
+                    </terminal-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">With Size Constraints</span>
+                    <terminal-textarea
+                        placeholder="Min: 200px, Max: 400px height"
+                        rows="6"
+                        min-height="200px"
+                        max-height="400px">
+                    </terminal-textarea>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;terminal-textarea placeholder="Enter text..." rows="5"&gt;&lt;/terminal-textarea&gt;</code>
+                <code>&lt;terminal-textarea value="Pre-filled content" rows="5"&gt;&lt;/terminal-textarea&gt;</code>
+                <code>&lt;terminal-textarea readonly rows="5"&gt;&lt;/terminal-textarea&gt;</code>
+                <code>&lt;terminal-textarea resizable="false" rows="5"&gt;&lt;/terminal-textarea&gt;</code>
+                <code>&lt;terminal-textarea min-height="200px" max-height="400px"&gt;&lt;/terminal-textarea&gt;</code>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <h2 class="component-title">Code Editor Mode</h2>
+            <p class="component-description">
+                Advanced textarea with line numbers and IDE-like keyboard shortcuts.
+            </p>
+
+            <div class="demo-item full-width">
+                <span class="demo-label">Code Editor with Line Numbers</span>
+                <div class="info-box">
+                    <strong>IDE Keyboard Shortcuts:</strong>
+                    <div class="keyboard-shortcuts">
+                        <span class="shortcut-key">Tab</span><span>Insert tab / Indent selection</span>
+                        <span class="shortcut-key">Shift+Tab</span><span>Outdent current line or selection</span>
+                        <span class="shortcut-key">Enter</span><span>Auto-indent new line</span>
+                        <span class="shortcut-key">Ctrl/Cmd + /</span><span>Toggle line comment</span>
+                        <span class="shortcut-key">Ctrl/Cmd + D</span><span>Duplicate current line</span>
+                    </div>
+                </div>
+                <terminal-textarea
+                    id="codeEditor"
+                    line-numbers
+                    placeholder="// Enter your code here..."
+                    rows="15"
+                    min-height="300px"
+                    max-height="600px"
+                    value="function fibonacci(n) {
+  if (n <= 1) return n;
+
+  let prev = 0;
+  let curr = 1;
+
+  for (let i = 2; i <= n; i++) {
+    const temp = curr;
+    curr = prev + curr;
+    prev = temp;
+  }
+
+  return curr;
+}
+
+// Test the function
+console.log(fibonacci(10)); // Output: 55
+console.log(fibonacci(20)); // Output: 6765">
+                </terminal-textarea>
+                <div class="button-row">
+                    <button class="terminal-button" onclick="document.getElementById('codeEditor').toggleLineNumbers()">
+                        Toggle Line Numbers
+                    </button>
+                    <button class="terminal-button" onclick="document.getElementById('codeEditor').selectAll()">
+                        Select All
+                    </button>
+                    <button class="terminal-button" onclick="copyToClipboard()">
+                        Copy to Clipboard
+                    </button>
+                </div>
+            </div>
+
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Code Editor without Line Numbers</span>
+                    <terminal-textarea
+                        code-editor
+                        placeholder="// Code editor mode without line numbers"
+                        rows="8"
+                        value="// IDE shortcuts still work here
+const greeting = 'Hello, World!';
+console.log(greeting);">
+                    </terminal-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">JSON Editor</span>
+                    <terminal-textarea
+                        id="jsonEditor"
+                        line-numbers
+                        placeholder="// Enter JSON data..."
+                        rows="8"
+                        value='{
+  "name": "Terminal UI",
+  "version": "1.0.0",
+  "components": [
+    "Button",
+    "Input",
+    "Textarea"
+  ]
+}'>
+                    </terminal-textarea>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;terminal-textarea line-numbers rows="15"&gt;&lt;/terminal-textarea&gt;</code>
+                <code>&lt;terminal-textarea code-editor rows="10"&gt;&lt;/terminal-textarea&gt;</code>
+                <code>// Toggle line numbers programmatically</code>
+                <code>textarea.toggleLineNumbers();</code>
+                <code>textarea.setLineNumbers(true);</code>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <h2 class="component-title">Interactive Examples</h2>
+            <p class="component-description">
+                Dynamic examples showing character counting, auto-resize, and validation.
+            </p>
+
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Character Counter</span>
+                    <terminal-textarea
+                        id="charCounter"
+                        placeholder="Type something (max 280 chars)..."
+                        rows="6">
+                    </terminal-textarea>
+                    <div id="charCount" style="text-align: right; margin-top: 5px; color: var(--terminal-green-dim); font-size: 11px;">
+                        0 / 280 characters
+                    </div>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Auto-growing Textarea</span>
+                    <terminal-textarea
+                        id="autoGrow"
+                        placeholder="This textarea grows as you type..."
+                        rows="3">
+                    </terminal-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Markdown Editor</span>
+                    <terminal-textarea
+                        id="markdownEditor"
+                        placeholder="# Enter Markdown
+Type **bold** or *italic* text..."
+                        rows="8">
+                    </terminal-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">SQL Query Editor</span>
+                    <terminal-textarea
+                        id="sqlEditor"
+                        line-numbers
+                        placeholder="-- Enter SQL query"
+                        rows="8"
+                        value="SELECT
+  users.name,
+  COUNT(orders.id) as order_count
+FROM users
+LEFT JOIN orders ON users.id = orders.user_id
+WHERE users.created_at > '2024-01-01'
+GROUP BY users.id
+ORDER BY order_count DESC;">
+                    </terminal-textarea>
+                </div>
+            </div>
+
+            <h3>Note-taking Application</h3>
+            <div class="demo-item full-width">
+                <div style="display: flex; gap: 20px;">
+                    <div style="flex: 1;">
+                        <span class="demo-label">Write Note</span>
+                        <terminal-textarea
+                            id="noteEditor"
+                            placeholder="Write your note here..."
+                            rows="10">
+                        </terminal-textarea>
+                        <div class="button-row">
+                            <button class="terminal-button primary" onclick="saveNote()">Save Note</button>
+                            <button class="terminal-button" onclick="clearNote()">Clear</button>
+                        </div>
+                    </div>
+                    <div style="flex: 1;">
+                        <span class="demo-label">Saved Notes</span>
+                        <terminal-textarea
+                            id="savedNotes"
+                            readonly
+                            rows="10"
+                            value="Your saved notes will appear here...">
+                        </terminal-textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="event-log" id="eventLog">
+            <h3>Event Log</h3>
+        </div>
+    </div>
+
+    <script>
+        // Event logging
+        function logEvent(component, event, detail) {
+            const log = document.getElementById('eventLog');
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${component}: ${event} ${detail ? '- ' + JSON.stringify(detail) : ''}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Add event listeners to all textareas
+        document.addEventListener('DOMContentLoaded', () => {
+            const textareas = document.querySelectorAll('terminal-textarea');
+            textareas.forEach((textarea) => {
+                const id = textarea.id || textarea.getAttribute('placeholder')?.substring(0, 20) || 'Textarea';
+
+                textarea.addEventListener('input', (e) => {
+                    const value = e.detail?.value || '';
+                    const preview = value.substring(0, 50);
+                    logEvent(id, 'input', { preview: preview + (value.length > 50 ? '...' : '') });
+                });
+
+                textarea.addEventListener('change', (e) => {
+                    const value = e.detail?.value || '';
+                    logEvent(id, 'change', { length: value.length });
+                });
+
+                textarea.addEventListener('focus', () => {
+                    logEvent(id, 'focus');
+                });
+
+                textarea.addEventListener('blur', () => {
+                    logEvent(id, 'blur');
+                });
+            });
+
+            // Character counter
+            const charCounter = document.getElementById('charCounter');
+            const charCount = document.getElementById('charCount');
+            const maxChars = 280;
+
+            if (charCounter && charCount) {
+                charCounter.addEventListener('input', (e) => {
+                    const length = e.detail.value.length;
+                    charCount.textContent = `${length} / ${maxChars} characters`;
+
+                    if (length > maxChars) {
+                        charCount.style.color = 'var(--terminal-red)';
+                    } else if (length > maxChars * 0.9) {
+                        charCount.style.color = 'var(--terminal-yellow)';
+                    } else {
+                        charCount.style.color = 'var(--terminal-green-dim)';
+                    }
+                });
+            }
+
+            // Auto-growing textarea
+            const autoGrow = document.getElementById('autoGrow');
+            if (autoGrow) {
+                autoGrow.addEventListener('input', (e) => {
+                    const lines = e.detail.value.split('\n').length;
+                    const newRows = Math.max(3, Math.min(lines + 1, 15)); // Min 3, max 15 rows
+                    autoGrow.setRows(newRows);
+                });
+            }
+
+            // Log initial state
+            logEvent('System', 'Demo initialized');
+        });
+
+        // Copy to clipboard
+        async function copyToClipboard() {
+            const codeEditor = document.getElementById('codeEditor');
+            if (codeEditor) {
+                const text = codeEditor.getValue();
+                try {
+                    await navigator.clipboard.writeText(text);
+                    logEvent('CodeEditor', 'copied to clipboard');
+                } catch (err) {
+                    logEvent('CodeEditor', 'copy failed', { error: err.message });
+                }
+            }
+        }
+
+        // Note-taking functions
+        let notes = [];
+
+        function saveNote() {
+            const noteEditor = document.getElementById('noteEditor');
+            const savedNotes = document.getElementById('savedNotes');
+
+            if (noteEditor && savedNotes) {
+                const note = noteEditor.getValue();
+                if (note.trim()) {
+                    const timestamp = new Date().toLocaleString();
+                    notes.push(`[${timestamp}]\n${note}\n`);
+                    savedNotes.setValue(notes.join('\n' + '='.repeat(40) + '\n'));
+                    noteEditor.setValue('');
+                    logEvent('Notes', 'saved', { length: note.length });
+                }
+            }
+        }
+
+        function clearNote() {
+            const noteEditor = document.getElementById('noteEditor');
+            if (noteEditor) {
+                noteEditor.setValue('');
+                noteEditor.focus();
+                logEvent('Notes', 'cleared');
+            }
+        }
+    </script>
+</body>
+</html>

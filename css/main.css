@@ -1,0 +1,341 @@
+/* Main CSS Import Orchestrator */
+
+/* Theme Styles - Load First */
+@import './theme/terminal.css';
+
+/* Base Styles */
+@import './base/reset.css';
+@import './base/variables.css';
+@import './base/typography.css';
+
+/* Component Styles */
+@import './components/buttons.css';
+@import './components/panel.css';
+@import './components/modal.css';
+@import './components/dropdown.css';
+@import './components/form.css';
+@import './components/loader.css';
+@import './components/status-bar.css';
+@import './components/canvas.css';
+@import './components/auth.css';
+
+/* Panel Specific Styles */
+@import './panels/controls-panel.css';
+@import './panels/style-panel.css';
+@import './panels/css-editor-panel.css';
+@import './panels/rive-controls-panel.css';
+@import './panels/code-export-panel.css';
+
+/* Feature Styles */
+@import './features/animation-library.css';
+@import './features/tag-manager.css';
+@import './features/metadata-editor.css';
+
+/* Responsive Styles */
+@import './responsive/breakpoints.css';
+@import './responsive/tablet.css';
+@import './responsive/mobile.css';
+
+/* Layout Styles */
+@import './layout/app-layout.css';
+
+/* Third-party Library Overrides */
+/* @import './libs/pickr.min.css'; */
+
+/* Layout Styles */
+.app-container {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	background: var(--color-bg-primary);
+	position: relative;
+}
+
+/* Header */
+.app-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: var(--header-height);
+	padding: 0 var(--spacing-md);
+	background: var(--color-bg-secondary);
+	border-bottom: var(--border-width) solid var(--color-border-dim);
+	flex-shrink: 0;
+	z-index: var(--z-sticky);
+}
+
+.app-logo {
+	font-size: var(--font-size-lg);
+	font-weight: var(--font-weight-bold);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--color-text-bright);
+}
+
+.app-logo::before {
+	content: '[ ';
+	color: var(--color-text-dim);
+}
+
+.app-logo::after {
+	content: ' ]';
+	color: var(--color-text-dim);
+}
+
+/* User Badge */
+.user-badge {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-sm);
+	padding: var(--spacing-xs) var(--spacing-sm);
+	background: var(--color-bg-tertiary);
+	border: var(--border-width) solid var(--color-border-dim);
+	font-size: var(--font-size-sm);
+	cursor: pointer;
+	transition: all var(--transition-fast);
+}
+
+.user-badge:hover {
+	border-color: var(--color-border);
+	background: var(--color-hover);
+}
+
+.user-avatar {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	border: var(--border-width) solid var(--color-border-dim);
+}
+
+/* Main Content Area */
+.app-main {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+/* Control Panel */
+.control-panel {
+	background: var(--color-bg-secondary);
+	border-bottom: var(--border-width) solid var(--color-border-dim);
+	padding: var(--spacing-md);
+	flex-shrink: 0;
+}
+
+.control-panel-grid {
+	display: flex;
+	gap: var(--spacing-md);
+	height: 350px;
+}
+
+.left-column {
+	flex: 0 0 60%;
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-md);
+}
+
+.right-column {
+	flex: 0 0 calc(40% - var(--spacing-md));
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
+
+/* Canvas Area */
+.canvas-container {
+	flex: 1;
+	background: var(--color-bg-primary);
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.canvas-wrapper {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#rive-canvas {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
+}
+
+/* Status Bar */
+.status-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: var(--footer-height);
+	padding: 0 var(--spacing-md);
+	background: var(--color-bg-secondary);
+	border-top: var(--border-width) solid var(--color-border-dim);
+	font-size: var(--font-size-xs);
+	color: var(--color-text-secondary);
+	flex-shrink: 0;
+}
+
+.status-bar-item {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-xs);
+}
+
+.status-bar-item::before {
+	content: '[';
+	color: var(--color-text-dim);
+}
+
+.status-bar-item::after {
+	content: ']';
+	color: var(--color-text-dim);
+}
+
+.status-bar-separator {
+	color: var(--color-text-dim);
+	margin: 0 var(--spacing-sm);
+}
+
+/* Version Badge */
+.version-badge {
+	padding: 2px var(--spacing-xs);
+	background: var(--color-bg-tertiary);
+	border: var(--border-width) solid var(--color-border-dim);
+	font-size: var(--font-size-xs);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+/* Loading State */
+.app-loading {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: var(--color-bg-primary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+}
+
+.loading-text {
+	font-size: var(--font-size-lg);
+	text-transform: uppercase;
+	letter-spacing: 0.2em;
+	animation: pulse 1s infinite;
+}
+
+/* Utility Classes */
+.hidden {
+	display: none !important;
+}
+
+.invisible {
+	visibility: hidden !important;
+}
+
+.disabled {
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.text-left {
+	text-align: left;
+}
+
+.flex {
+	display: flex;
+}
+
+.flex-column {
+	flex-direction: column;
+}
+
+.flex-1 {
+	flex: 1;
+}
+
+.gap-xs {
+	gap: var(--spacing-xs);
+}
+
+.gap-sm {
+	gap: var(--spacing-sm);
+}
+
+.gap-md {
+	gap: var(--spacing-md);
+}
+
+.gap-lg {
+	gap: var(--spacing-lg);
+}
+
+/* Animations */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes slideInLeft {
+	from {
+		transform: translateX(-100%);
+	}
+
+	to {
+		transform: translateX(0);
+	}
+}
+
+@keyframes slideInRight {
+	from {
+		transform: translateX(100%);
+	}
+
+	to {
+		transform: translateX(0);
+	}
+}
+
+@keyframes slideInUp {
+	from {
+		transform: translateY(100%);
+	}
+
+	to {
+		transform: translateY(0);
+	}
+}
+
+@keyframes slideInDown {
+	from {
+		transform: translateY(-100%);
+	}
+
+	to {
+		transform: translateY(0);
+	}
+}

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Terminal Buttons - Component Demo</title>
+
+        <!-- CSS is now handled by Shadow DOM with adoptedStyleSheets -->
+        <!-- No external CSS files needed -->
+
+        <style>
+            :root {
+                --terminal-black: #0a0a0a;
+                --terminal-gray-darkest: #1a1a1a;
+                --terminal-gray-dark: #242424;
+                --terminal-gray-medium: #2a2a2a;
+                --terminal-gray-light: #333333;
+                --terminal-green: #00ff41;
+                --terminal-green-dim: #00cc33;
+                --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+                --spacing-sm: 8px;
+                --spacing-md: 12px;
+                --spacing-lg: 16px;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                width: 100%;
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            body {
+                font-family: var(--font-mono);
+                background: var(--terminal-black);
+                color: var(--terminal-green);
+                padding: 40px 20px;
+                line-height: 1.6;
+            }
+
+            .demo-container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            h1 {
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                border-bottom: 2px solid var(--terminal-green);
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+
+            .breadcrumb {
+                margin-bottom: 30px;
+                font-size: 12px;
+                color: var(--terminal-green-dim);
+            }
+
+            .breadcrumb a {
+                color: var(--terminal-green-dim);
+                text-decoration: none;
+            }
+
+            .breadcrumb a:hover {
+                color: var(--terminal-green);
+            }
+
+            .component-section {
+                margin-bottom: 60px;
+                padding: 30px;
+                background: var(--terminal-gray-darkest);
+                border: 1px solid var(--terminal-gray-light);
+            }
+
+            h2.component-title {
+                color: var(--terminal-green);
+                font-size: 18px;
+                margin-bottom: 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .component-description {
+                color: var(--terminal-green-dim);
+                font-size: 13px;
+                margin-bottom: 30px;
+            }
+
+            h3 {
+                color: var(--terminal-green);
+                font-size: 14px;
+                margin: 30px 0 20px 0;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .demo-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 30px;
+                margin-bottom: 30px;
+            }
+
+            .demo-item {
+                background: var(--terminal-gray-dark);
+                border: 1px solid var(--terminal-gray-light);
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .demo-label {
+                display: block;
+                color: var(--terminal-green-dim);
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .code-block {
+                background: var(--terminal-black);
+                border: 1px solid var(--terminal-gray-light);
+                padding: 20px;
+                margin-top: 30px;
+                overflow-x: auto;
+            }
+
+            .code-block code {
+                color: var(--terminal-green-dim);
+                font-size: 12px;
+                line-height: 1.5;
+                white-space: pre;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="demo-container">
+            <div class="breadcrumb">
+                <a href="index.html">← Back to Gallery</a> / Buttons
+            </div>
+
+            <h1>Terminal Buttons</h1>
+
+            <div class="component-section">
+                <h2 class="component-title">TerminalButton</h2>
+                <p class="component-description">
+                    Buttons with three types (text, icon+text, icon-only), various styles, and sizes.
+                </p>
+
+                <h3>Button Types</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Text Button</span>
+                        <t-btn type="text" variant="primary">Save Changes</t-btn>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon + Text Button</span>
+                        <t-btn type="icon-text" variant="primary" id="iconTextBtn">Add Item</t-btn>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon Only Button</span>
+                        <t-btn type="icon" variant="primary" id="iconOnlyBtn"></t-btn>
+                    </div>
+                </div>
+
+                <h3>Button Variants</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Primary Button</span>
+                        <t-btn variant="primary">Primary</t-btn>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Secondary Button</span>
+                        <t-btn variant="secondary">Secondary</t-btn>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Danger Button</span>
+                        <t-btn variant="danger">Delete</t-btn>
+                    </div>
+                </div>
+
+                <h3>Button Sizes</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">XS (16px, no border)</span>
+                        <t-btn size="xs" type="icon" id="xsIconBtn"></t-btn>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Small (20px)</span>
+                        <t-btn size="small" type="icon" id="smallIconBtn"></t-btn>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Default (28px)</span>
+                        <t-btn size="default">Default</t-btn>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Large (36px)</span>
+                        <t-btn size="large">Large Button</t-btn>
+                    </div>
+                </div>
+
+                <h3>Button States</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Loading State</span>
+                        <t-btn id="loadingBtn" loader-type="spinner">Save Changes</t-btn>
+                        <div style="margin-top: 10px; display: flex; gap: 5px; flex-direction: row;">
+                            <t-btn id="toggleLoadingBtn" size="small" variant="secondary" type="icon-text">Toggle Loading</t-btn>
+                            <t-btn id="changeLoaderTypeBtn" size="small" variant="secondary" type="icon-text">Change Type</t-btn>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Disabled State</span>
+                        <t-btn disabled>Disabled</t-btn>
+                    </div>
+                </div>
+
+                <h3>Toggle Buttons</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Play/Pause Toggle</span>
+                        <t-btn id="playPauseToggle" variant="toggle" type="icon" toggle-state="false">
+                        </t-btn>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Recording Toggle</span>
+                        <t-btn variant="toggle" color-on="#ff0000" color-off="#00ff41" toggle-state="false">
+                            Recording
+                        </t-btn>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Expand/Collapse</span>
+                        <t-btn id="expandCollapseToggle" variant="toggle" type="icon-text" toggle-state="false">
+                            Details
+                        </t-btn>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>&lt;t-btn type="text" variant="primary"&gt;Text Button&lt;/t-btn&gt;
+&lt;t-btn type="icon-text" variant="secondary" icon="..."&gt;Icon + Text&lt;/t-btn&gt;
+&lt;t-btn type="icon" variant="danger" icon="..."&gt;&lt;/t-btn&gt;
+&lt;t-btn variant="toggle" icon-on="..." icon-off="..." toggle-state="false"&gt;&lt;/t-btn&gt;</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import Components -->
+        <script type="module">
+            import '../js/components/TComponent.js';
+            import '../js/components/TButton.js';
+            import '../js/components/TLoader.js';
+            import {
+                plusCircleIcon,
+                gearSixIcon,
+                xIcon,
+                playIcon,
+                pauseIcon,
+                caretDownIcon,
+                caretUpIcon,
+                arrowsClockwiseIcon,
+                dotsThreeCircleIcon
+            } from '../js/utils/phosphor-icons.js';
+
+            // Set icons for buttons
+            setTimeout(() => {
+                const iconTextBtn = document.getElementById('iconTextBtn');
+                if (iconTextBtn) {
+                    iconTextBtn.setIcon(plusCircleIcon);
+                }
+
+                const iconOnlyBtn = document.getElementById('iconOnlyBtn');
+                if (iconOnlyBtn) {
+                    iconOnlyBtn.setIcon(gearSixIcon);
+                }
+
+                const xsIconBtn = document.getElementById('xsIconBtn');
+                if (xsIconBtn) {
+                    xsIconBtn.setIcon(xIcon);
+                }
+
+                const smallIconBtn = document.getElementById('smallIconBtn');
+                if (smallIconBtn) {
+                    smallIconBtn.setIcon(gearSixIcon);
+                }
+
+                const playPauseToggle = document.getElementById('playPauseToggle');
+                if (playPauseToggle) {
+                    playPauseToggle.setAttribute('icon-on', pauseIcon);
+                    playPauseToggle.setAttribute('icon-off', playIcon);
+                }
+
+                const expandCollapseToggle = document.getElementById('expandCollapseToggle');
+                if (expandCollapseToggle) {
+                    expandCollapseToggle.setAttribute('icon-on', caretUpIcon);
+                    expandCollapseToggle.setAttribute('icon-off', caretDownIcon);
+                }
+
+                // Loading button demo with toggle
+                const loadingBtn = document.getElementById('loadingBtn');
+                const toggleLoadingBtn = document.getElementById('toggleLoadingBtn');
+                const changeLoaderTypeBtn = document.getElementById('changeLoaderTypeBtn');
+
+                // Set icons for loading demo buttons
+                if (toggleLoadingBtn) {
+                    toggleLoadingBtn.setIcon(arrowsClockwiseIcon);
+                }
+                if (changeLoaderTypeBtn) {
+                    changeLoaderTypeBtn.setIcon(dotsThreeCircleIcon);
+                }
+
+                // Loader types to cycle through
+                const loaderTypes = ['spinner', 'dots', 'bars'];
+                let currentLoaderIndex = 0;
+
+                // Set to loading state after a brief delay to capture width
+                setTimeout(() => {
+                    if (loadingBtn) {
+                        loadingBtn.setLoading(true);
+                        // Loading state will show loader component
+                    }
+                }, 100);
+
+                let loadingTimeout = null;
+
+                // Toggle loading state
+                if (toggleLoadingBtn && loadingBtn) {
+                    toggleLoadingBtn.addEventListener('click', () => {
+                        clearTimeout(loadingTimeout);
+
+                        if (loadingBtn.hasAttribute('loading')) {
+                            // Turn off loading
+                            loadingBtn.setLoading(false);
+                            loadingBtn.setText('Save Complete');
+                        } else {
+                            // Turn on loading
+                            loadingBtn.setLoading(true);
+                            // Don't set text - let loader show
+                            // No auto-timeout - stays loading until manually toggled
+                        }
+                    });
+                }
+
+                // Change loader type
+                if (changeLoaderTypeBtn && loadingBtn) {
+                    changeLoaderTypeBtn.addEventListener('click', () => {
+                        currentLoaderIndex = (currentLoaderIndex + 1) % loaderTypes.length;
+                        const newType = loaderTypes[currentLoaderIndex];
+                        loadingBtn.setAttribute('loader-type', newType);
+
+                        // Show the loading state to see the new type
+                        if (!loadingBtn.hasAttribute('loading')) {
+                            loadingBtn.setLoading(true);
+                            loadingBtn.setText('Loading');
+
+                            clearTimeout(loadingTimeout);
+                            loadingTimeout = setTimeout(() => {
+                                loadingBtn.setLoading(false);
+                                loadingBtn.setText('Save Complete');
+                            }, 3000);
+                        }
+                    });
+                }
+            }, 100);
+        </script>
+    </body>
+
+</html>

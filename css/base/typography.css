@@ -1,0 +1,135 @@
+/* Typography Styles */
+body {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+}
+
+/* Headings */
+h1 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+h3 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-base);
+  color: var(--color-text-primary);
+}
+
+/* Text styles */
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+
+.text-sm {
+  font-size: var(--font-size-sm);
+}
+
+.text-base {
+  font-size: var(--font-size-base);
+}
+
+.text-lg {
+  font-size: var(--font-size-lg);
+}
+
+.text-xl {
+  font-size: var(--font-size-xl);
+}
+
+.text-dim {
+  color: var(--color-text-dim);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-bright {
+  color: var(--color-text-bright);
+}
+
+.text-error {
+  color: var(--color-error);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+/* Code blocks */
+code, pre {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-bright);
+}
+
+code {
+  padding: 0.125rem 0.25rem;
+  border: 1px solid var(--color-border-dim);
+}
+
+pre {
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border-dim);
+  overflow-x: auto;
+}
+
+/* Terminal cursor effect */
+.terminal-cursor::after {
+  content: '_';
+  animation: blink 1s infinite;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Monospace input/textarea */
+input, textarea, select {
+  font-family: var(--font-mono);
+  color: var(--color-text-primary);
+}
+
+/* Links */
+a {
+  color: var(--color-secondary);
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-bright);
+  text-shadow: var(--shadow-sm);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}

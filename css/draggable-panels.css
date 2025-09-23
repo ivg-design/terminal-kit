@@ -1,0 +1,231 @@
+/* Panel System Styles */
+
+.panels-container {
+    position: fixed;
+    top: var(--header-height, 48px);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.panel {
+    position: absolute;
+    background: var(--surface-color, rgba(10, 10, 10, 0.95));
+    border: 1px solid var(--primary-color, #0f0);
+    border-radius: 0;
+    box-shadow: 0 4px 12px rgba(0, 255, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    pointer-events: all;
+    transition: box-shadow 0.2s;
+    min-width: 200px;
+    min-height: 150px;
+}
+
+.panel.hidden {
+    display: none;
+}
+
+.panel.dragging {
+    opacity: 0.9;
+    box-shadow: 0 8px 24px rgba(0, 255, 0, 0.3);
+}
+
+.panel.resizing {
+    user-select: none;
+}
+
+.panel.panel-active {
+    z-index: 1000;
+    box-shadow: 0 4px 16px rgba(0, 255, 0, 0.2);
+    border-color: var(--accent-color, #0ff);
+}
+
+/* Panel Header */
+.panel-header {
+    background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), transparent);
+    border-bottom: 1px solid var(--primary-color, #0f0);
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+    user-select: none;
+    height: 36px;
+    flex-shrink: 0;
+}
+
+.panel-header:hover {
+    background: linear-gradient(135deg, rgba(0, 255, 0, 0.15), transparent);
+}
+
+.panel-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--primary-color, #0f0);
+    text-shadow: 0 0 5px currentColor;
+}
+
+.panel-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.panel-controls button {
+    background: transparent;
+    border: 1px solid var(--primary-color, #0f0);
+    color: var(--primary-color, #0f0);
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.panel-controls button:hover {
+    background: var(--primary-color, #0f0);
+    color: var(--background-color, #000);
+    box-shadow: 0 0 8px var(--primary-color, #0f0);
+}
+
+/* Panel Content */
+.panel-content {
+    flex: 1;
+    overflow: auto;
+    padding: 12px;
+    color: var(--text-color, #0f0);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+}
+
+.panel.collapsed .panel-content {
+    display: none;
+}
+
+.panel.collapsed {
+    height: 36px !important;
+    min-height: 36px !important;
+}
+
+/* Resize Handle */
+.panel-resize-handle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 16px;
+    height: 16px;
+    cursor: nwse-resize;
+    background: linear-gradient(135deg, transparent 50%, var(--primary-color, #0f0) 50%);
+    opacity: 0.3;
+    transition: opacity 0.2s;
+}
+
+.panel:hover .panel-resize-handle {
+    opacity: 0.6;
+}
+
+.panel-resize-handle:hover {
+    opacity: 1 !important;
+}
+
+/* Panel Types */
+.panel.panel-properties {
+    right: 20px;
+    top: 60px;
+    width: 320px;
+    height: 400px;
+}
+
+.panel.panel-timeline {
+    bottom: 20px;
+    left: 20px;
+    right: 360px;
+    height: 200px;
+}
+
+.panel.panel-tools {
+    left: 20px;
+    top: 60px;
+    width: 60px;
+    height: 400px;
+}
+
+.panel.panel-output {
+    right: 20px;
+    bottom: 240px;
+    width: 320px;
+    height: 300px;
+}
+
+/* Panel content styles */
+.panel-section {
+    margin-bottom: 16px;
+}
+
+.panel-section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    opacity: 0.7;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+    padding-bottom: 4px;
+}
+
+.panel-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.panel-input-group label {
+    font-size: 10px;
+    opacity: 0.8;
+    text-transform: uppercase;
+}
+
+.panel-input-group input,
+.panel-input-group select {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    color: var(--primary-color, #0f0);
+    padding: 4px 8px;
+    font-family: inherit;
+    font-size: 11px;
+}
+
+.panel-input-group input:focus,
+.panel-input-group select:focus {
+    outline: none;
+    border-color: var(--primary-color, #0f0);
+    box-shadow: 0 0 4px rgba(0, 255, 0, 0.3);
+}
+
+/* Scrollbar styling for panels */
+.panel-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.panel-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.panel-content::-webkit-scrollbar-thumb {
+    background: var(--primary-color, #0f0);
+    opacity: 0.5;
+}
+
+.panel-content::-webkit-scrollbar-thumb:hover {
+    opacity: 1;
+}

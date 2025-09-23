@@ -1,0 +1,254 @@
+/**
+ * Canvas Component - EXACT from original
+ * Rive animation canvas area
+ */
+
+/* Canvas Area */
+.canvas-area {
+  flex: 1;
+  background: var(--terminal-black); /* #0a0a0a */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Canvas Container */
+.canvas-container {
+  flex: 1;
+  background: var(--terminal-black);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Canvas Wrapper */
+.canvas-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+#canvas-wrapper {
+  background: var(--terminal-black);
+  border: 1px solid var(--terminal-gray-light);
+}
+
+/* Rive Canvas */
+#rive-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Canvas Background Options */
+.canvas-wrapper.grid-bg {
+  background-image: 
+    linear-gradient(var(--terminal-gray-light) 1px, transparent 1px),
+    linear-gradient(90deg, var(--terminal-gray-light) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: -1px -1px;
+}
+
+.canvas-wrapper.dots-bg {
+  background-image: radial-gradient(circle, var(--terminal-gray-light) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Canvas Overlay Controls */
+.canvas-controls {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  display: flex;
+  gap: var(--spacing-sm);
+  z-index: 10;
+}
+
+.canvas-control-btn {
+  width: 32px;
+  height: 32px;
+  background: var(--terminal-gray-dark);
+  border: 1px solid var(--terminal-gray-light);
+  color: var(--terminal-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.canvas-control-btn:hover {
+  background: var(--terminal-gray);
+  border-color: var(--terminal-green);
+}
+
+.canvas-control-btn.active {
+  background: var(--terminal-green);
+  color: var(--terminal-black);
+}
+
+/* Canvas Zoom Controls */
+.zoom-controls {
+  position: absolute;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: var(--terminal-gray-dark);
+  border: 1px solid var(--terminal-gray-light);
+  padding: var(--spacing-xs);
+  z-index: 10;
+}
+
+.zoom-value {
+  min-width: 50px;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--terminal-green);
+}
+
+/* Canvas Info Overlay */
+.canvas-info {
+  position: absolute;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--terminal-green);
+  padding: var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  color: var(--terminal-green);
+  z-index: 10;
+}
+
+.canvas-info-row {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.canvas-info-label {
+  color: var(--terminal-green-dim);
+  text-transform: uppercase;
+}
+
+.canvas-info-value {
+  color: var(--terminal-green);
+}
+
+/* Canvas Empty State */
+.canvas-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  color: var(--terminal-green-dim);
+  text-align: center;
+  padding: var(--spacing-xl);
+}
+
+.canvas-empty-icon {
+  font-size: 48px;
+  opacity: 0.5;
+}
+
+.canvas-empty-text {
+  font-size: var(--font-size-md);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.canvas-empty-hint {
+  font-size: var(--font-size-sm);
+  opacity: 0.7;
+}
+
+/* Canvas Error State */
+.canvas-error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 51, 51, 0.1);
+  border: 1px solid #ff3333;
+  padding: var(--spacing-lg);
+  text-align: center;
+  color: #ff3333;
+}
+
+.canvas-error-icon {
+  font-size: 32px;
+  margin-bottom: var(--spacing-md);
+}
+
+.canvas-error-message {
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.canvas-error-details {
+  font-size: var(--font-size-xs);
+  opacity: 0.8;
+  font-family: var(--font-mono);
+}
+
+/* Canvas Resize Handle */
+.canvas-resize {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  cursor: nwse-resize;
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
+}
+
+.canvas-resize:hover {
+  opacity: 0.6;
+}
+
+.canvas-resize::before,
+.canvas-resize::after {
+  content: '';
+  position: absolute;
+  background: var(--terminal-green);
+}
+
+.canvas-resize::before {
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 1px;
+}
+
+.canvas-resize::after {
+  bottom: 2px;
+  right: 2px;
+  width: 1px;
+  height: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .canvas-controls,
+  .zoom-controls,
+  .canvas-info {
+    display: none; /* Hide overlays on mobile */
+  }
+  
+  .canvas-area {
+    height: 50vh; /* Reduced height on mobile */
+  }
+}

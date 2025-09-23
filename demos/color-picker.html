@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Terminal Color Picker - Component Demo</title>
+
+        <!-- Load CSS -->
+        <link rel="stylesheet" href="../css/theme/terminal.css">
+        <link rel="stylesheet" href="../css/components/color-picker.css">
+        <link rel="stylesheet" href="../css/components/button.css">
+
+        <!-- Pickr Library CSS -->
+        <link rel="stylesheet" href="../css/libs/pickr.min.css">
+
+        <style>
+            body {
+                font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+                background: #0a0a0a;
+                color: #00ff41;
+                padding: 40px 20px;
+                line-height: 1.6;
+            }
+
+            .demo-container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            h1 {
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                border-bottom: 2px solid #00ff41;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+
+            .breadcrumb {
+                margin-bottom: 30px;
+                font-size: 12px;
+                color: #00cc33;
+            }
+
+            .breadcrumb a {
+                color: #00cc33;
+                text-decoration: none;
+            }
+
+            .breadcrumb a:hover {
+                color: #00ff41;
+            }
+
+            .demo-section {
+                margin-bottom: 50px;
+                padding: 30px;
+                border: 1px solid #333;
+                background: #1a1a1a;
+            }
+
+            .demo-section h2 {
+                color: #00ff41;
+                text-transform: uppercase;
+                font-size: 16px;
+                margin-bottom: 15px;
+                letter-spacing: 0.05em;
+            }
+
+            .section-description {
+                color: #00cc33;
+                font-size: 12px;
+                margin-bottom: 25px;
+            }
+
+            .demo-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+
+            .demo-item {
+                padding: 20px;
+                background: #242424;
+                border: 1px solid #333;
+            }
+
+            .demo-label {
+                display: block;
+                margin-bottom: 10px;
+                font-size: 11px;
+                text-transform: uppercase;
+                color: #00cc33;
+            }
+
+            .code-block {
+                background: #0a0a0a;
+                padding: 15px;
+                border: 1px solid #009926;
+                font-size: 11px;
+                overflow-x: auto;
+                margin-top: 20px;
+            }
+
+            .code-block code {
+                color: #00ff41;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="demo-container">
+            <div class="breadcrumb">
+                <a href="index.html">← Back to Gallery</a> / Color Picker
+            </div>
+
+            <h1>Terminal Color Picker</h1>
+            <p style="color: #00cc33; margin-bottom: 40px;">
+                A custom color picker with label, swatch, and hex input. Integrates with Pickr when available.
+            </p>
+
+            <!-- Color Picker Examples -->
+            <div class="demo-section">
+                <h2>Color Picker Variants</h2>
+                <p class="section-description">
+                    Different configurations and states of the color picker component.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Default Color Picker</span>
+                        <terminal-color-picker-v2 id="colorPicker1" value="#00ff41" label="Theme Color">
+                        </terminal-color-picker-v2>
+                        <button onclick="document.getElementById('colorPicker1').clearAllCustomSwatches()"
+                                style="margin-top: 10px; padding: 4px 8px; background: #1a1a1a; color: #00ff41; border: 1px solid #00ff41; font-size: 11px; cursor: pointer;"
+                                onmouseover="this.style.background='#00ff41'; this.style.color='#0a0a0a'"
+                                onmouseout="this.style.background='#1a1a1a'; this.style.color='#00ff41'">
+                            Clear Custom Swatches
+                        </button>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Compact Mode</span>
+                        <terminal-color-picker-v2 id="colorPicker2" value="#00aaff" label="Accent Color" compact>
+                        </terminal-color-picker-v2>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Disabled State</span>
+                        <terminal-color-picker-v2 value="#ff3333" label="Error Color" disabled>
+                        </terminal-color-picker-v2>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Minimal Variant</span>
+                        <terminal-color-picker-v2 id="colorPicker3" value="#ffcc00" variant="minimal">
+                        </terminal-color-picker-v2>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Minimal Compact</span>
+                        <terminal-color-picker-v2 id="colorPicker4" value="#ff00ff" variant="minimal" compact>
+                        </terminal-color-picker-v2>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Minimal Disabled</span>
+                        <terminal-color-picker-v2 value="#00ffff" variant="minimal" disabled>
+                        </terminal-color-picker-v2>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>&lt;terminal-color-picker value="#00ff41" label1="Theme" label2="Color"&gt;&lt;/terminal-color-picker&gt;
+&lt;terminal-color-picker value="#00aaff" label1="Accent" label2="Color" compact&gt;&lt;/terminal-color-picker&gt;
+&lt;terminal-color-picker value="#ff3333" label1="Error" label2="Color" disabled&gt;&lt;/terminal-color-picker&gt;</code>
+                </div>
+            </div>
+
+            <!-- Event Log -->
+            <div class="demo-section">
+                <h2>Event Log</h2>
+                <p class="section-description">
+                    Interact with the color pickers above to see their events logged here.
+                </p>
+                <div id="eventLog" style="height: 150px; overflow-y: auto; background: #0a0a0a; border: 1px solid #333; padding: 15px; font-size: 11px; color: #00cc33;">
+                    Change colors to see events...
+                </div>
+            </div>
+
+            <!-- Code Examples -->
+            <div class="demo-section">
+                <h2>JavaScript API</h2>
+                <p class="section-description">
+                    How to interact with color pickers programmatically.
+                </p>
+
+                <div class="code-block">
+                    <code>// Get color picker element
+const colorPicker = document.querySelector('terminal-color-picker');
+
+// Get/set color value
+console.log(colorPicker.value);  // Get current hex value
+colorPicker.value = '#ff6b35';   // Set new color
+
+// Listen for color changes
+colorPicker.addEventListener('change', (e) => {
+    console.log('Color changed to:', e.target.value);
+});
+
+// Clear all custom swatches (useful for reset)
+colorPicker.clearAllCustomSwatches();
+
+// Enable/disable
+colorPicker.disabled = true;
+colorPicker.disabled = false;
+
+// DEBUGGING: Test swatch removal in console
+// 1. Hold CMD/Ctrl and look for visual changes in swatches
+// 2. Click while holding CMD/Ctrl to remove
+// 3. Check console for log messages</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load Pickr for color picker (local) -->
+        <script src="../public/js/libs/pickr.min.js"></script>
+
+        <!-- Import Components -->
+        <script type="module">
+            import '../js/components/TerminalComponent.js';
+            import '../js/components/TerminalColorPickerV2.js';
+
+            function logEvent(message) {
+                const eventLog = document.getElementById('eventLog');
+                if (eventLog) {
+                    const timestamp = new Date().toLocaleTimeString();
+                    const entry = document.createElement('div');
+                    entry.textContent = `[${timestamp}] ${message}`;
+                    eventLog.appendChild(entry);
+                    eventLog.scrollTop = eventLog.scrollHeight;
+                }
+            }
+
+            // Setup event listeners after components are defined
+            customElements.whenDefined('terminal-color-picker-v2').then(() => {
+                document.querySelectorAll('terminal-color-picker-v2').forEach((colorPicker, index) => {
+                    colorPicker.addEventListener('change', (e) => {
+                        const label = e.target.getAttribute('label1') || `Picker ${index + 1}`;
+                        logEvent(`${label} color changed to: ${e.target.value}`);
+                    });
+
+                    // Also listen for color-save events
+                    colorPicker.addEventListener('color-save', (e) => {
+                        const label = e.target.getAttribute('label1') || `Picker ${index + 1}`;
+                        logEvent(`${label} color saved: ${e.detail.color}`);
+                    });
+
+                    // Listen for swatch events
+                    colorPicker.addEventListener('swatches-updated', (e) => {
+                        const label = e.target.getAttribute('label1') || `Picker ${index + 1}`;
+                        logEvent(`${label} swatches updated: ${e.detail.swatches.length} custom swatches`);
+                    });
+
+                    colorPicker.addEventListener('swatches-cleared', (e) => {
+                        const label = e.target.getAttribute('label1') || `Picker ${index + 1}`;
+                        logEvent(`${label} all custom swatches cleared`);
+                    });
+                });
+                logEvent('Color picker demo initialized');
+
+                // Add global keyboard listener for debugging
+                document.addEventListener('keydown', (e) => {
+                    if (e.metaKey || e.ctrlKey) {
+                        console.log('[Demo] CMD/Ctrl key pressed - swatches should show removal UI');
+                    }
+                });
+                document.addEventListener('keyup', (e) => {
+                    if (!e.metaKey && !e.ctrlKey) {
+                        console.log('[Demo] CMD/Ctrl key released - removal UI should hide');
+                    }
+                });
+            }).catch((err) => {
+                logEvent(`Error initializing: ${err.message}`);
+            });
+        </script>
+    </body>
+
+</html>

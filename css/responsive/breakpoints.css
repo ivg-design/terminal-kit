@@ -1,0 +1,363 @@
+/**
+ * Responsive Breakpoints - EXACT from original
+ * Media queries for all screen sizes
+ */
+
+/* Breakpoint Variables (for reference) */
+/* 
+  Desktop: ≥1025px
+  Tablet: ≤1024px
+  Mobile: ≤768px
+  Small Mobile: ≤480px
+*/
+
+/* Tablet Breakpoint - 1024px */
+@media (max-width: 1024px) {
+  /* Control Panel */
+  .control-panel-grid {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .left-column,
+  .right-column {
+    flex: 1;
+    width: 100%;
+  }
+  
+  /* Rive Controls Panel */
+  .slide-panel {
+    width: 70vw;
+    right: -70vw;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 300;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .sidebar.collapsed {
+    margin-left: -100%;
+  }
+  
+  /* Layout Panels */
+  .layout-panel.secondary {
+    flex: 0 0 300px;
+  }
+}
+
+/* Mobile Breakpoint - 768px */
+@media (max-width: 768px) {
+  /* Base Typography */
+  :root {
+    --panel-padding: var(--spacing-md);
+    --font-size-base: 11px;
+  }
+  
+  /* App Header */
+  .app-header {
+    height: 40px;
+    padding: 0 var(--spacing-sm);
+  }
+  
+  /* Control Panel */
+  .control-panel {
+    padding: var(--spacing-sm);
+  }
+  
+  .control-panel-grid {
+    gap: var(--spacing-sm);
+  }
+  
+  /* Buttons */
+  .btn {
+    padding: 0 var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+  
+  .btn-toggle {
+    min-width: 110px;
+    width: 110px;
+  }
+  
+  /* Forms */
+  .select-control,
+  select {
+    width: 100%;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    font-size: var(--font-size-xs);
+  }
+  
+  /* Dropdown */
+  .dropdown-menu {
+    position: fixed;
+    left: var(--spacing-md);
+    right: var(--spacing-md);
+    max-width: calc(100vw - var(--spacing-xl));
+  }
+  
+  /* Rive Controls Panel */
+  .slide-panel {
+    width: 100vw;
+    right: -100vw;
+  }
+  
+  .slide-panel.active {
+    right: 0;
+  }
+  
+  /* Animation Manager Modal */
+  .animation-manager-dialog .manager-content {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  
+  .manager-sidebar {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    bottom: 0;
+    width: 250px;
+    z-index: 10;
+    transition: left 0.3s ease;
+    background: var(--terminal-black-light);
+    border-right: 1px solid var(--terminal-green);
+  }
+  
+  .manager-sidebar.mobile-open {
+    left: 0;
+  }
+  
+  /* Metadata Editor */
+  .metadata-editor-dialog .editor-content {
+    width: 90%;
+    max-width: 90%;
+  }
+  
+  /* Modals */
+  .modal-backdrop,
+  .modal-overlay {
+    padding: var(--spacing-md);
+  }
+  
+  .modal,
+  .modal-content {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .modal-sm,
+  .modal-md,
+  .modal-lg,
+  .modal-xl {
+    width: 100%;
+  }
+  
+  .files-manager-modal .modal-content {
+    width: 90%;
+  }
+  
+  /* Status Bar */
+  .status-bar {
+    font-size: 9px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    flex-wrap: wrap;
+  }
+  
+  .status-section {
+    flex: 0 0 auto;
+  }
+  
+  .status-label {
+    display: none; /* Hide labels on mobile */
+  }
+  
+  /* User Badge */
+  .user-badge {
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    padding: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+  }
+  
+  #userAvatar {
+    width: 20px;
+    height: 20px;
+  }
+  
+  #userName {
+    display: none; /* Hide username on mobile */
+  }
+  
+  .user-dropdown {
+    right: -var(--spacing-sm);
+    min-width: 150px;
+  }
+  
+  /* Canvas */
+  .canvas-controls,
+  .zoom-controls,
+  .canvas-info {
+    display: none; /* Hide overlays on mobile */
+  }
+  
+  .canvas-area {
+    height: 50vh; /* Reduced height on mobile */
+  }
+  
+  /* Layout */
+  .split-layout {
+    flex-direction: column !important;
+  }
+  
+  .layout-panel.secondary {
+    flex: 1;
+    border-left: none;
+    border-top: 1px solid var(--terminal-gray-light);
+  }
+  
+  .layout-resizer {
+    display: none;
+  }
+  
+  /* Tabs */
+  .tab-container {
+    scrollbar-width: none;
+  }
+  
+  .tab-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Form Rows */
+  .form-row {
+    flex-direction: column;
+  }
+  
+  .form-inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Small Mobile Breakpoint - 480px */
+@media (max-width: 480px) {
+  /* Base */
+  :root {
+    --spacing-xs: 2px;
+    --spacing-sm: 4px;
+    --spacing-md: 8px;
+    --spacing-lg: 12px;
+    --spacing-xl: 16px;
+  }
+  
+  /* App Logo */
+  .app-logo {
+    font-size: var(--font-size-sm);
+  }
+  
+  /* Control Panel */
+  .control-group {
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  /* Buttons */
+  .btn {
+    height: 24px;
+    font-size: 9px;
+  }
+  
+  .btn-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Forms */
+  input[type="text"],
+  input[type="number"],
+  select,
+  textarea {
+    height: 24px;
+    font-size: 10px;
+  }
+  
+  /* Animation Library Grid */
+  .library-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
+  }
+  
+  /* Status Bar */
+  .status-bar {
+    display: none; /* Hide status bar on very small screens */
+  }
+}
+
+/* Large Desktop - 1440px+ */
+@media (min-width: 1440px) {
+  /* Control Panel */
+  .control-panel-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  /* Modals */
+  .modal-xl {
+    width: 1400px;
+  }
+}
+
+/* Extra Large Desktop - 1920px+ */
+@media (min-width: 1920px) {
+  /* Base */
+  :root {
+    --font-size-base: 13px;
+    --font-size-lg: 16px;
+  }
+  
+  /* Control Panel */
+  .control-panel-grid {
+    max-width: 1800px;
+  }
+  
+  /* Layout */
+  .sidebar {
+    width: 280px;
+  }
+  
+  .layout-panel.secondary {
+    flex: 0 0 400px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .app-header,
+  .control-panel,
+  .status-bar,
+  .user-badge,
+  .slide-panel,
+  .modal-backdrop {
+    display: none !important;
+  }
+  
+  .canvas-area {
+    border: 1px solid #000;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+}

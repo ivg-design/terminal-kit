@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Terminal Toggles - Component Demo</title>
+
+        <!-- Load CSS -->
+        <link rel="stylesheet" href="../css/theme/terminal.css">
+        <link rel="stylesheet" href="../css/components/toggle.css">
+        <link rel="stylesheet" href="../css/components/buttons.css">
+
+        <style>
+            :root {
+                --terminal-black: #0a0a0a;
+                --terminal-gray-darkest: #1a1a1a;
+                --terminal-gray-dark: #242424;
+                --terminal-gray-medium: #2a2a2a;
+                --terminal-gray-light: #333333;
+                --terminal-green: #00ff41;
+                --terminal-green-dim: #00cc33;
+                --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+                --spacing-sm: 8px;
+                --spacing-md: 12px;
+                --spacing-lg: 16px;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                width: 100%;
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            body {
+                font-family: var(--font-mono);
+                background: var(--terminal-black);
+                color: var(--terminal-green);
+                padding: 40px 20px;
+                line-height: 1.6;
+            }
+
+            .demo-container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            h1 {
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                border-bottom: 2px solid var(--terminal-green);
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+
+            .breadcrumb {
+                margin-bottom: 30px;
+                font-size: 12px;
+                color: var(--terminal-green-dim);
+            }
+
+            .breadcrumb a {
+                color: var(--terminal-green-dim);
+                text-decoration: none;
+            }
+
+            .breadcrumb a:hover {
+                color: var(--terminal-green);
+            }
+
+            .component-section {
+                margin-bottom: 60px;
+                padding: 30px;
+                background: var(--terminal-gray-darkest);
+                border: 1px solid var(--terminal-gray-light);
+            }
+
+            h2.component-title {
+                color: var(--terminal-green);
+                font-size: 18px;
+                margin-bottom: 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .component-description {
+                color: var(--terminal-green-dim);
+                font-size: 13px;
+                margin-bottom: 30px;
+            }
+
+            h3 {
+                color: var(--terminal-green);
+                font-size: 14px;
+                margin: 30px 0 20px 0;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .demo-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 30px;
+                margin-bottom: 30px;
+            }
+
+            .demo-item {
+                background: var(--terminal-gray-dark);
+                border: 1px solid var(--terminal-gray-light);
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .demo-label {
+                display: block;
+                color: var(--terminal-green-dim);
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .code-block {
+                background: var(--terminal-black);
+                border: 1px solid var(--terminal-gray-light);
+                padding: 20px;
+                margin-top: 30px;
+                overflow-x: auto;
+            }
+
+            .code-block code {
+                color: var(--terminal-green-dim);
+                font-size: 12px;
+                line-height: 1.5;
+                white-space: pre;
+            }
+
+            .feature-enabled {
+                color: #00ff41;
+            }
+
+            .feature-disabled {
+                color: #666;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="demo-container">
+            <div class="breadcrumb">
+                <a href="index.html">← Back to Gallery</a> / Toggles
+            </div>
+
+            <h1>Terminal Toggles</h1>
+
+            <!-- Toggle Component -->
+            <div class="component-section">
+                <h2 class="component-title">TerminalToggle</h2>
+                <p class="component-description">
+                    Toggle switches for boolean settings with multiple layouts and states.
+                </p>
+
+                <h3>Basic Toggles</h3>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Label + Toggle (Default)</span>
+                        <terminal-toggle id="toggle1" label="Auto-save" layout="label-toggle">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon + Toggle</span>
+                        <terminal-toggle id="toggle-heart"
+                            layout="icon-toggle">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon + Label + Toggle</span>
+                        <terminal-toggle id="toggle-notifications" label="Notifications"
+                            layout="icon-label-toggle">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Switching Label/Icon</span>
+                        <terminal-toggle id="toggle-online" on-label="ONLINE" off-label="OFFLINE"
+                            layout="switching">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon-Only Switching</span>
+                        <terminal-toggle id="toggle-plus-minus"
+                            layout="icon-switching">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Small Size</span>
+                        <terminal-toggle label="Compact" size="small">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Large Size</span>
+                        <terminal-toggle label="Feature" size="large">
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Checked State</span>
+                        <terminal-toggle label="Dark Mode" checked>
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Disabled State</span>
+                        <terminal-toggle label="Locked" checked disabled>
+                        </terminal-toggle>
+                    </div>
+
+                </div>
+
+                <h3>Equal-State Toggles</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Work / Personal</span>
+                        <terminal-toggle id="toggle-personal-work" on-label="PERSONAL" off-label="WORK"
+                            layout="switching" equal-states>
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">A / B Testing</span>
+                        <terminal-toggle on-label="VERSION B" off-label="VERSION A" layout="switching" equal-states>
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Dev / Prod</span>
+                        <terminal-toggle id="toggle-dev-prod" on-label="PRODUCTION" off-label="DEVELOPMENT"
+                            layout="icon-switching" equal-states>
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Light / Dark Theme</span>
+                        <terminal-toggle id="toggle-theme"
+                            layout="icon-toggle" equal-states>
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">View Mode</span>
+                        <terminal-toggle id="toggle-view-mode" on-label="GRID" off-label="LIST"
+                            layout="icon-label-toggle" equal-states>
+                        </terminal-toggle>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Compact Equal-State</span>
+                        <terminal-toggle on-label="OPT B" off-label="OPT A" layout="switching" size="small" equal-states>
+                        </terminal-toggle>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checkbox Variant -->
+            <div class="component-section">
+                <h2 class="component-title">Checkbox Variant</h2>
+                <p class="component-description">
+                    Same toggle component styled as checkboxes for form-like interfaces.
+                </p>
+
+                <h3>Basic Checkboxes</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Default Checkbox</span>
+                        <div style="display: flex; justify-content: flex-end; width: 100%;">
+                            <terminal-toggle variant="checkbox" label="Accept terms"></terminal-toggle>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Checked State</span>
+                        <div style="display: flex; justify-content: flex-end; width: 100%;">
+                            <terminal-toggle variant="checkbox" label="Subscribe to newsletter" checked></terminal-toggle>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Disabled State</span>
+                        <div style="display: flex; justify-content: flex-end; width: 100%;">
+                            <terminal-toggle variant="checkbox" label="Premium feature" disabled></terminal-toggle>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon Checkbox</span>
+                        <div style="display: flex; justify-content: flex-end; width: 100%;">
+                            <terminal-toggle variant="checkbox" layout="icon-label-toggle" label="Notifications" id="checkbox-notifications"></terminal-toggle>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Checkbox Groups</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Features Selection</span>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; width: 100%;">
+                            <terminal-toggle variant="checkbox" label="Auto-save" checked></terminal-toggle>
+                            <terminal-toggle variant="checkbox" label="Dark mode" checked></terminal-toggle>
+                            <terminal-toggle variant="checkbox" label="Notifications"></terminal-toggle>
+                            <terminal-toggle variant="checkbox" label="Analytics"></terminal-toggle>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Permission Settings</span>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; width: 100%;">
+                            <terminal-toggle variant="checkbox" label="Read" checked></terminal-toggle>
+                            <terminal-toggle variant="checkbox" label="Write" checked></terminal-toggle>
+                            <terminal-toggle variant="checkbox" label="Execute"></terminal-toggle>
+                            <terminal-toggle variant="checkbox" label="Delete" disabled></terminal-toggle>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Size Variants</span>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; width: 100%;">
+                            <terminal-toggle variant="checkbox" label="Small" size="small"></terminal-toggle>
+                            <terminal-toggle variant="checkbox" label="Default" size="default"></terminal-toggle>
+                            <terminal-toggle variant="checkbox" label="Large" size="large"></terminal-toggle>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Error Checkboxes</span>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; width: 100%;">
+                            <terminal-toggle variant="checkbox" error label="Invalid input" checked></terminal-toggle>
+                            <terminal-toggle variant="checkbox" error label="Failed validation"></terminal-toggle>
+                            <terminal-toggle variant="checkbox" error label="Error (small)" size="small" checked></terminal-toggle>
+                            <terminal-toggle variant="checkbox" error label="Error (large)" size="large" checked></terminal-toggle>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Examples -->
+            <div class="component-section">
+                <h2 class="component-title">Code Examples</h2>
+                <p class="component-description">
+                    How to use Terminal Toggles in your application.
+                </p>
+
+                <div class="code-block">
+                    <code>&lt;!-- Toggle switches --&gt;
+&lt;terminal-toggle label="Enable feature"&gt;&lt;/terminal-toggle&gt;
+&lt;terminal-toggle label="Auto-save" checked&gt;&lt;/terminal-toggle&gt;
+
+&lt;!-- Icon toggles --&gt;
+&lt;terminal-toggle layout="icon-toggle"&gt;&lt;/terminal-toggle&gt;
+&lt;terminal-toggle layout="icon-label-toggle" label="Notifications"&gt;&lt;/terminal-toggle&gt;
+
+&lt;!-- Switching toggles --&gt;
+&lt;terminal-toggle layout="switching" on-label="ONLINE" off-label="OFFLINE"&gt;&lt;/terminal-toggle&gt;
+&lt;terminal-toggle layout="icon-switching"&gt;&lt;/terminal-toggle&gt;
+
+&lt;!-- Equal-state toggles --&gt;
+&lt;terminal-toggle layout="switching" equal-states on-label="WORK" off-label="PERSONAL"&gt;&lt;/terminal-toggle&gt;
+
+&lt;!-- Sizes --&gt;
+&lt;terminal-toggle label="Small" size="small"&gt;&lt;/terminal-toggle&gt;
+&lt;terminal-toggle label="Large" size="large"&gt;&lt;/terminal-toggle&gt;
+
+&lt;!-- States --&gt;
+&lt;terminal-toggle label="Checked" checked&gt;&lt;/terminal-toggle&gt;
+&lt;terminal-toggle label="Disabled" disabled&gt;&lt;/terminal-toggle&gt;
+
+&lt;!-- Checkbox variant --&gt;
+&lt;terminal-toggle variant="checkbox" label="Option 1"&gt;&lt;/terminal-toggle&gt;
+&lt;terminal-toggle variant="checkbox" label="Option 2" checked&gt;&lt;/terminal-toggle&gt;
+&lt;terminal-toggle variant="checkbox" label="Option 3" disabled&gt;&lt;/terminal-toggle&gt;
+
+&lt;!-- Error checkbox (shows X instead of checkmark) --&gt;
+&lt;terminal-toggle variant="checkbox" error label="Invalid" checked&gt;&lt;/terminal-toggle&gt;</code>
+                </div>
+
+                <div class="code-block">
+                    <code>// JavaScript API
+const toggle = document.querySelector('terminal-toggle');
+
+// Get/set checked state
+console.log(toggle.checked);
+toggle.checked = true;
+
+// Enable/disable
+toggle.disabled = true;
+toggle.disabled = false;
+
+// Event listeners
+toggle.addEventListener('change', (e) =&gt; {
+    console.log('Toggle changed:', e.target.checked);
+});
+
+// Setting icons programmatically
+toggle.setAttribute('icon', iconSVG);
+toggle.setAttribute('on-icon', onIconSVG);
+toggle.setAttribute('off-icon', offIconSVG);</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import Components -->
+        <script type="module">
+            import '../js/components/TerminalComponent.js';
+            import '../js/components/TerminalToggle.js';
+            import '../js/components/TerminalButton.js';
+            
+            // Import all icons from phosphor-icons module
+            import { 
+                speakerHighIcon,
+                gaugeIcon,
+                paletteIcon,
+                infoIcon,
+                checkCircleIcon,
+                xIcon,
+                plusCircleIcon,
+                minusCircleIcon,
+                userCircleIcon,
+                briefcaseIcon,
+                folderStarIcon,
+                keyboardIcon,
+                eyeIcon,
+                eyeClosedIcon,
+                tableIcon,
+                slidersHorizontalIcon
+            } from '../js/utils/phosphor-icons.js';
+
+            // Wait for components to load, then set icons
+            document.addEventListener('DOMContentLoaded', () => {
+
+                // Set toggle icons
+                const toggleHeart = document.getElementById('toggle-heart');
+                if (toggleHeart) toggleHeart.setAttribute('icon', paletteIcon);
+                
+                const toggleNotifications = document.getElementById('toggle-notifications');
+                if (toggleNotifications) toggleNotifications.setAttribute('icon', infoIcon);
+                
+                const toggleOnline = document.getElementById('toggle-online');
+                if (toggleOnline) {
+                    toggleOnline.setAttribute('on-icon', checkCircleIcon);
+                    toggleOnline.setAttribute('off-icon', xIcon);
+                }
+                
+                const togglePlusMinus = document.getElementById('toggle-plus-minus');
+                if (togglePlusMinus) {
+                    togglePlusMinus.setAttribute('on-icon', plusCircleIcon);
+                    togglePlusMinus.setAttribute('off-icon', minusCircleIcon);
+                }
+                
+                const togglePersonalWork = document.getElementById('toggle-personal-work');
+                if (togglePersonalWork) {
+                    togglePersonalWork.setAttribute('on-icon', userCircleIcon);
+                    togglePersonalWork.setAttribute('off-icon', briefcaseIcon);
+                }
+                
+                const toggleDevProd = document.getElementById('toggle-dev-prod');
+                if (toggleDevProd) {
+                    toggleDevProd.setAttribute('on-icon', folderStarIcon);
+                    toggleDevProd.setAttribute('off-icon', keyboardIcon);
+                }
+                
+                const toggleTheme = document.getElementById('toggle-theme');
+                if (toggleTheme) {
+                    toggleTheme.setAttribute('on-icon', eyeClosedIcon);
+                    toggleTheme.setAttribute('off-icon', eyeIcon);
+                }
+                
+                const toggleViewMode = document.getElementById('toggle-view-mode');
+                if (toggleViewMode) {
+                    toggleViewMode.setAttribute('on-icon', tableIcon);
+                    toggleViewMode.setAttribute('off-icon', slidersHorizontalIcon);
+                }
+
+                // Set icon for checkbox variant
+                const checkboxNotifications = document.getElementById('checkbox-notifications');
+                if (checkboxNotifications) {
+                    checkboxNotifications.setAttribute('icon', speakerHighIcon);
+                }
+            });
+
+            // Setup event listeners for demo purposes
+            function setupEventListeners() {
+                // Add event listeners to all toggles
+                document.querySelectorAll('terminal-toggle').forEach(toggle => {
+                    toggle.addEventListener('change', (e) => {
+                        console.log('Toggle changed:', e.target.id || 'unnamed', 'to', e.target.checked);
+                    });
+                });
+
+            }
+
+            // Initialize after components are loaded
+            setTimeout(() => {
+                setupEventListeners();
+                console.log('Toggle demo initialized');
+            }, 100);
+        </script>
+    </body>
+
+</html>

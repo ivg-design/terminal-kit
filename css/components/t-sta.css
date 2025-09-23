@@ -1,0 +1,447 @@
+/**
+ * Status Bar Component - EXACT from original
+ * Bottom status bar with file info and FPS
+ */
+
+/* Status Bar */
+.status-bar {
+  display: flex;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--terminal-black-light); /* #1a1a1a */
+  /* border-top: 1px solid var(--terminal-gray-light); #333333 */
+  font-size: var(--font-size-xs); /* 10px */
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  width:100%;
+}
+
+/* Status Sections */
+.status-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+/* Status Label */
+.status-label {
+  color: var(--terminal-green-dark); /* #008822 */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Status Value */
+.status-value {
+  color: var(--terminal-green); /* #00ff41 */
+  font-weight: 500;
+}
+
+/* Status IDs */
+#status-filename,
+#status-artboard,
+#status-state-machine,
+#status-view-model,
+#status-fps {
+  color: var(--terminal-green);
+}
+
+/* Version Indicator */
+.version-indicator {
+  padding: 2px var(--spacing-xs);
+  background: var(--terminal-gray-dark);
+  border: 1px solid var(--terminal-gray-light);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--terminal-green-dim);
+}
+
+#app-version {
+  color: var(--terminal-green);
+}
+
+/* Status Bar Items with Brackets */
+.status-bar-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.status-bar-item::before {
+  content: '[';
+  color: var(--terminal-green-dim);
+}
+
+.status-bar-item::after {
+  content: ']';
+  color: var(--terminal-green-dim);
+}
+
+/* Status Bar Separator */
+.status-bar-separator {
+  color: var(--terminal-green-dim);
+  margin: 0 var(--spacing-sm);
+}
+
+.status-bar-separator::before {
+  content: '|';
+}
+
+/* Status Bar States */
+.status-bar.loading .status-value {
+  animation: pulse 1s infinite;
+}
+
+.status-bar.error {
+  background: rgba(255, 51, 51, 0.1);
+  border-top-color: #ff3333;
+}
+
+.status-bar.error .status-value {
+  color: #ff3333;
+}
+
+.status-bar.warning {
+  background: rgba(255, 170, 0, 0.1);
+  border-top-color: #ffaa00;
+}
+
+.status-bar.warning .status-value {
+  color: #ffaa00;
+}
+
+/* Mini Status Bar (for panels) */
+.status-bar-mini {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--terminal-gray-dark);
+  /* border-top: 1px solid var(--terminal-gray-light); */
+  font-size: var(--font-size-xs);
+}
+
+/* Status Icons */
+.status-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.status-icon i {
+  font-size: 12px;
+  color: var(--terminal-green-dim);
+}
+
+.status-icon.active i {
+  color: var(--terminal-green);
+}
+
+/* Performance Metrics */
+.fps-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.fps-value {
+  min-width: 30px;
+  text-align: right;
+}
+
+.fps-good {
+  color: var(--terminal-green);
+}
+
+.fps-medium {
+  color: #ffaa00;
+}
+
+.fps-poor {
+  color: #ff3333;
+}
+
+/* Connection Status */
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.connection-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--terminal-gray-light);
+}
+
+.connection-dot.connected {
+  background: var(--terminal-green);
+  box-shadow: 0 0 4px var(--terminal-green);
+}
+
+.connection-dot.connecting {
+  background: #ffaa00;
+  animation: pulse 1s infinite;
+}
+
+.connection-dot.disconnected {
+  background: #ff3333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .status-bar {
+    font-size: 9px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    flex-wrap: wrap;
+  }
+  
+  .status-section {
+    flex: 0 0 auto;
+  }
+  
+  .status-label {
+    display: none; /* Hide labels on mobile to save space */
+  }
+}
+
+/**
+ * TerminalStatusBar and TerminalStatusField Component Styles
+ */
+
+/* Terminal Status Bar Container */
+.terminal-status-bar {
+  width: 100%;
+}
+
+.terminal-status-bar .status-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0; /* No gap, use margins instead */
+  background: var(--terminal-gray-dark);
+  border: 1px solid var(--terminal-gray-light);
+  padding: 2px var(--spacing-sm);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--terminal-green);
+  min-height: 20px;
+  height: auto;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Terminal Status Field - Updated for merged component */
+.terminal-status-field,
+.terminal-status-bar .status-field {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  justify-content: flex-start;
+  flex-direction: row;
+  flex-shrink: 1; /* Allow shrinking to prevent overflow */
+}
+
+/* When field has width, prevent growing but allow shrinking */
+.terminal-status-bar .status-field.has-width {
+  flex-grow: 0;
+  max-width: 100%; /* Prevent exceeding container */
+}
+
+/* Alignment via margins */
+.terminal-status-bar .status-field.push-left {
+  margin-right: auto;
+}
+
+.terminal-status-bar .status-field.push-right {
+  margin-left: auto;
+}
+
+.terminal-status-bar .status-field.push-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Field Icon - Fixed for merged component */
+.terminal-status-bar .field-icon,
+.terminal-status-field .field-icon,
+.status-field .field-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  color: var(--terminal-green-dim);
+}
+
+.terminal-status-bar .field-icon svg,
+.terminal-status-field .field-icon svg,
+.status-field .field-icon svg {
+  width: 12px !important;
+  height: 12px !important;
+  max-width: 12px !important;
+  max-height: 12px !important;
+  fill: currentColor;
+}
+
+/* Field Label */
+.terminal-status-field .field-label,
+.terminal-status-bar .field-label,
+.status-field .field-label {
+  color: var(--terminal-green-dim);
+  font-weight: 400;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+}
+
+/* Ensure labels don't change size with marquee */
+.terminal-status-bar .status-field.marquee-active .field-label {
+  font-size: var(--font-size-xs) !important;
+}
+
+/* Field Value Wrapper */
+.terminal-status-field .field-value-wrapper,
+.terminal-status-bar .status-field .field-value-wrapper {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1 1 auto;
+}
+
+/* Marquee container fix */
+.terminal-status-bar .status-field.marquee-active .field-label,
+.terminal-status-bar .status-field.marquee-active .field-icon {
+  flex-shrink: 0;
+  z-index: 1;
+  position: relative;
+}
+
+.terminal-status-bar .status-field.marquee-active .field-value-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Field Value */
+.terminal-status-field .field-value,
+.terminal-status-bar .field-value,
+.status-field .field-value {
+  color: var(--terminal-green);
+  white-space: nowrap;
+  display: inline-block;
+  font-size: var(--font-size-xs);
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+
+/* Ensure values don't change size with marquee */
+.terminal-status-bar .status-field.marquee-active .field-value {
+  font-size: var(--font-size-xs) !important;
+}
+
+.terminal-status-field .field-value-clone,
+.terminal-status-bar .field-value-clone,
+.status-field .field-value-clone {
+  position: absolute;
+  left: 100%;
+  margin-left: 20px;
+  color: var(--terminal-green);
+  white-space: nowrap;
+  display: inline-block;
+  font-size: var(--font-size-xs);
+}
+
+/* Status Separator for Terminal Status Bar */
+.terminal-status-bar .status-separator {
+  color: var(--terminal-gray-light);
+  user-select: none;
+  flex-shrink: 0;
+  margin: 0 var(--spacing-xs);
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Content alignment within fields */
+.terminal-status-bar .status-field {
+  justify-content: flex-start; /* Default content alignment within field */
+}
+
+
+/* Hover Effects */
+.terminal-status-field .status-field:hover .field-label,
+.terminal-status-field .status-field:hover .field-icon {
+  color: var(--terminal-green);
+}
+
+.terminal-status-field .status-field:hover .field-value {
+  color: var(--terminal-green-bright);
+}
+
+/* Marquee Animation Styles - Fixed like dropdown */
+.terminal-status-field.marquee-active,
+.terminal-status-bar .status-field.marquee-active {
+  /* Don't change field dimensions */
+}
+
+/* Marquee wrapper for value - maintain original dimensions */
+.terminal-status-bar .status-field.marquee-active .field-value-wrapper {
+  text-overflow: initial;
+  overflow: hidden;
+  position: relative;
+  width: 100%; /* Maintain wrapper width */
+}
+
+.terminal-status-bar .status-field.marquee-active .field-value-wrapper > span {
+  display: inline-block;
+  white-space: nowrap;
+  animation: status-marquee 10s linear infinite;
+  animation-delay: 2s;
+  font-size: inherit; /* Maintain font size during marquee */
+}
+
+.terminal-status-bar .status-field.marquee-active .marquee-text {
+  display: inline-block;
+  padding-right: 50px;
+  white-space: nowrap;
+  font-size: inherit; /* Keep same font size */
+}
+
+/* Animation definition matching dropdown */
+@keyframes status-marquee {
+  0%, 20% {
+    transform: translateX(0);  /* Pause for 2s (20% of 10s) */
+  }
+  100% {
+    transform: translateX(-50%);  /* Move second span to first position */
+  }
+}
+
+
+/* Ensure all elements maintain consistent font size during marquee */
+.terminal-status-bar .status-field.marquee-active,
+.terminal-status-bar .status-field.marquee-active * {
+  font-size: var(--font-size-xs) !important;
+  line-height: normal !important;
+}
+

@@ -1,0 +1,300 @@
+/* Rive Controls Panel Styles */
+.rive-controls-panel {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	overflow: hidden;
+}
+
+.rive-controls-header {
+	padding: var(--spacing-sm) var(--spacing-md);
+	background: var(--color-bg-tertiary);
+	border-bottom: var(--border-width) solid var(--color-border-dim);
+	font-size: var(--font-size-sm);
+	text-transform: uppercase;
+	color: var(--color-text-secondary);
+}
+
+.rive-controls-content {
+	flex: 1;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: var(--spacing-md);
+}
+
+.rive-controls-empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	color: var(--color-text-dim);
+	font-size: var(--font-size-sm);
+	text-align: center;
+	padding: var(--spacing-lg);
+}
+
+/* State Machine Section */
+.state-machine-section {
+	margin-bottom: var(--spacing-lg);
+	border: var(--border-width) solid var(--color-border-dim);
+	background: var(--color-bg-secondary);
+}
+
+.state-machine-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--spacing-sm) var(--spacing-md);
+	background: var(--color-bg-tertiary);
+	border-bottom: var(--border-width) solid var(--color-border-dim);
+	cursor: pointer;
+	user-select: none;
+}
+
+.state-machine-name {
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	color: var(--color-text-primary);
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-xs);
+}
+
+.state-machine-toggle {
+	width: 16px;
+	height: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--color-text-dim);
+	transition: transform var(--transition-fast);
+}
+
+.state-machine-section.collapsed .state-machine-toggle {
+	transform: rotate(-90deg);
+}
+
+.state-machine-body {
+	padding: var(--spacing-md);
+	display: block;
+}
+
+.state-machine-section.collapsed .state-machine-body {
+	display: none;
+}
+
+/* Input Controls */
+.input-control {
+	margin-bottom: var(--spacing-md);
+}
+
+.input-control:last-child {
+	margin-bottom: 0;
+}
+
+.input-label {
+	display: block;
+	margin-bottom: var(--spacing-xs);
+	font-size: var(--font-size-sm);
+	color: var(--color-text-secondary);
+}
+
+.input-label::after {
+	content: ':';
+	color: var(--color-text-dim);
+	margin-left: 2px;
+}
+
+/* Trigger Input */
+.trigger-input {
+	width: 100%;
+	padding: var(--spacing-sm);
+	background: var(--color-bg-primary);
+	border: var(--border-width) solid var(--color-border-dim);
+	color: var(--color-text-primary);
+	font-family: var(--font-mono);
+	font-size: var(--font-size-sm);
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: all var(--transition-fast);
+}
+
+.trigger-input:hover {
+	background: var(--color-hover);
+	border-color: var(--color-border);
+}
+
+.trigger-input:active {
+	background: var(--color-primary);
+	color: var(--color-text-inverse);
+	border-color: var(--color-primary);
+}
+
+/* Boolean Input */
+.boolean-input {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-sm);
+}
+
+.boolean-checkbox {
+	width: 20px;
+	height: 20px;
+	background: var(--color-bg-primary);
+	border: var(--border-width) solid var(--color-border-dim);
+	cursor: pointer;
+	position: relative;
+	transition: all var(--transition-fast);
+}
+
+.boolean-checkbox:hover {
+	border-color: var(--color-border);
+}
+
+.boolean-checkbox.checked {
+	background: var(--color-primary);
+	border-color: var(--color-primary);
+}
+
+.boolean-checkbox.checked::after {
+	content: '✓';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: var(--color-text-inverse);
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.boolean-label {
+	font-size: var(--font-size-sm);
+	color: var(--color-text-primary);
+	cursor: pointer;
+	user-select: none;
+}
+
+/* Number Input */
+.number-input {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-xs);
+}
+
+.number-slider {
+	width: 100%;
+	height: 4px;
+	background: var(--color-bg-secondary);
+	border: var(--border-width) solid var(--color-border-dim);
+	outline: none;
+	appearance: none;
+	cursor: pointer;
+}
+
+.number-slider::-webkit-slider-thumb {
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	background: var(--color-primary);
+	border: var(--border-width) solid var(--color-primary);
+	cursor: pointer;
+}
+
+.number-slider::-moz-range-thumb {
+	width: 16px;
+	height: 16px;
+	background: var(--color-primary);
+	border: var(--border-width) solid var(--color-primary);
+	cursor: pointer;
+}
+
+.number-value {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: var(--font-size-xs);
+	color: var(--color-text-secondary);
+}
+
+.number-current {
+	color: var(--color-text-primary);
+	font-weight: var(--font-weight-medium);
+	font-size: var(--font-size-sm);
+}
+
+.number-range {
+	display: flex;
+	gap: var(--spacing-sm);
+	color: var(--color-text-dim);
+}
+
+/* Input Groups */
+.input-group-title {
+	font-size: var(--font-size-xs);
+	text-transform: uppercase;
+	color: var(--color-text-dim);
+	margin-bottom: var(--spacing-sm);
+	padding-bottom: var(--spacing-xs);
+	border-bottom: var(--border-width) solid var(--color-border-dim);
+}
+
+.input-group {
+	margin-bottom: var(--spacing-md);
+	padding: var(--spacing-sm);
+	background: var(--color-bg-primary);
+	border: var(--border-width) solid var(--color-border-dim);
+}
+
+/* Reset Button */
+.reset-controls-btn {
+	width: 100%;
+	margin-top: var(--spacing-md);
+	padding: var(--spacing-sm);
+	background: var(--color-bg-tertiary);
+	border: var(--border-width) solid var(--color-border-dim);
+	color: var(--color-text-secondary);
+	font-size: var(--font-size-sm);
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: all var(--transition-fast);
+}
+
+.reset-controls-btn:hover {
+	background: var(--color-error);
+	border-color: var(--color-error);
+	color: var(--color-text-inverse);
+}
+
+/* Loading State */
+.rive-controls-loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 200px;
+	color: var(--color-text-dim);
+}
+
+.rive-controls-loading::after {
+	content: 'SCANNING...';
+	animation: pulse 1s infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.rive-controls-panel {
+		position: fixed;
+		top: var(--header-height);
+		right: -100%;
+		bottom: 0;
+		width: 280px;
+		background: var(--color-bg-primary);
+		border-left: var(--border-width) solid var(--color-border);
+		z-index: var(--z-panel);
+		transition: right var(--transition-base);
+	}
+	
+	.rive-controls-panel.open {
+		right: 0;
+		box-shadow: var(--shadow-lg);
+	}
+}

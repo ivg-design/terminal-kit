@@ -1,0 +1,5 @@
+{
+  "outputDir": "./devmirror-logs",
+  "mode": "cdp",
+  "url": "http://localhost:3007"
+}
