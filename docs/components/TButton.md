@@ -2,6 +2,10 @@
 
 A customizable button component with terminal/cyberpunk styling. Supports multiple variants, sizes, states, toggle functionality, and icon integration.
 
+## Live Demo
+
+<ButtonDemo />
+
 ## Tag Name
 ```html
 <t-btn></t-btn>

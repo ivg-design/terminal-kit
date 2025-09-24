@@ -3,36 +3,36 @@
     <div class="demo-section">
       <h3>Button Variants</h3>
       <div class="demo-row">
-        <terminal-button>Default Button</terminal-button>
-        <terminal-button variant="primary">Primary Button</terminal-button>
-        <terminal-button variant="success">Success Button</terminal-button>
-        <terminal-button variant="danger">Danger Button</terminal-button>
-        <terminal-button variant="warning">Warning Button</terminal-button>
+        <t-btn>Default Button</t-btn>
+        <t-btn variant="primary">Primary Button</t-btn>
+        <t-btn variant="success">Success Button</t-btn>
+        <t-btn variant="danger">Danger Button</t-btn>
+        <t-btn variant="warning">Warning Button</t-btn>
       </div>
     </div>
 
     <div class="demo-section">
       <h3>Button Sizes</h3>
       <div class="demo-row">
-        <terminal-button size="small">Small</terminal-button>
-        <terminal-button>Default</terminal-button>
-        <terminal-button size="large">Large</terminal-button>
+        <t-btn size="small">Small</t-btn>
+        <t-btn>Default</t-btn>
+        <t-btn size="large">Large</t-btn>
       </div>
     </div>
 
     <div class="demo-section">
       <h3>Button States</h3>
       <div class="demo-row">
-        <terminal-button>Normal</terminal-button>
-        <terminal-button disabled>Disabled</terminal-button>
-        <terminal-button loading>Loading</terminal-button>
+        <t-btn>Normal</t-btn>
+        <t-btn disabled>Disabled</t-btn>
+        <t-btn loading>Loading</t-btn>
       </div>
     </div>
 
     <div class="demo-section">
       <h3>Interactive Example</h3>
       <div class="demo-row">
-        <terminal-button @click="handleClick">{{ clickText }}</terminal-button>
+        <t-btn @click="handleClick">{{ clickText }}</t-btn>
         <span class="click-counter">Clicked: {{ clickCount }} times</span>
       </div>
     </div>
@@ -83,10 +83,11 @@ export default {
           loadCSS('/public/docs/css/components/buttons.css')
 
           // Load JS modules in order
-          await loadScript('/public/docs/js/components/TerminalComponent.js')
+          await loadScript('/public/docs/js/components/TComponent.js')
           await loadScript('/public/docs/js/utils/StyleSheetManager.js')
           await loadScript('/public/docs/js/utils/ComponentLogger.js')
-          await loadScript('/public/docs/js/components/TerminalButton.js')
+          await loadScript('/public/docs/js/components/TPanel.js')
+          await loadScript('/public/docs/js/components/TButton.js')
 
           console.log('TerminalButton component loaded')
         } catch (error) {

@@ -30,7 +30,6 @@ export default defineConfig({
         text: 'Components',
         items: [
           { text: 'TButton', link: '/components/TButton' },
-          { text: 'TerminalButton', link: '/components/TerminalButton' },
           { text: 'TerminalColorPicker', link: '/components/TerminalColorPicker' },
           { text: 'TerminalDropdown', link: '/components/TerminalDropdown' },
           { text: 'TerminalDynamicControls', link: '/components/TerminalDynamicControls' },
