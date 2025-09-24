@@ -3,6 +3,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'Terminal Kit',
   description: 'Terminal UI Web Components Documentation',
+  base: '/public/docs/',
 
   // Use clean URLs
   cleanUrls: true,
