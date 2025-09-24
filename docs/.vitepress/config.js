@@ -13,8 +13,8 @@ export default defineConfig({
     logo: false,
 
     nav: [
-      { text: 'Demos', link: '/demos/' },
-      { text: 'Icons', link: '/demo-icons.html' },
+      { text: 'Demos', link: 'http://localhost:12358/' },
+      { text: 'Icons', link: 'http://localhost:12358/demos/icons.html' },
       { text: 'GitHub', link: 'https://github.com/ivg-design/terminal-kit' }
     ],
 
