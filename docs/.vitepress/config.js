@@ -65,5 +65,23 @@ export default defineConfig({
   outDir: '../public/docs',
 
   // Don't fail on dead links (for now)
-  ignoreDeadLinks: true
+  ignoreDeadLinks: true,
+
+  // Configure Vite
+  vite: {
+    server: {
+      fs: {
+        // Allow serving files from project root
+        allow: ['../..']
+      }
+    },
+    build: {
+      rollupOptions: {
+        external: [
+          /^\/js\//,
+          /^\/css\//
+        ]
+      }
+    }
+  }
 })
