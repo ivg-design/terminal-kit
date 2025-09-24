@@ -4,19 +4,20 @@
  */
 
 :root {
-  /* Terminal Colors */
+  /* Terminal Colors - exact colors from terminal-kit */
   --terminal-green: #00ff41;
-  --terminal-green-dim: #00a72a;
+  --terminal-green-dim: #00cc33;
   --terminal-bg: #0a0a0a;
   --terminal-bg-light: #1a1a1a;
   --terminal-gray: #333333;
+  --terminal-gray-dark: #242424;
   --terminal-white: #ffffff;
 
   /* Override VitePress defaults */
   --vp-c-bg: var(--terminal-bg);
   --vp-c-bg-soft: var(--terminal-bg-light);
-  --vp-c-bg-mute: #1a1a1a;
-  --vp-c-bg-alt: #0a0a0a;
+  --vp-c-bg-mute: var(--terminal-bg-light);
+  --vp-c-bg-alt: var(--terminal-bg);
 
   --vp-c-text-1: var(--terminal-green);
   --vp-c-text-2: #a0a0a0;
@@ -29,9 +30,9 @@
   --vp-c-brand-light: var(--terminal-green);
   --vp-c-brand-dark: var(--terminal-green-dim);
 
-  /* Typography */
-  --vp-font-family-base: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
-  --vp-font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+  /* Typography - exact font from terminal-kit */
+  --vp-font-family-base: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  --vp-font-family-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
 
   /* Code blocks */
   --vp-code-block-bg: #0f0f0f;
