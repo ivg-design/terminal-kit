@@ -1,0 +1,217 @@
+/**
+ * Terminal Kit - VitePress Theme
+ * Minimal monochrome terminal styling
+ */
+
+:root {
+  /* Terminal Colors */
+  --terminal-green: #00ff41;
+  --terminal-green-dim: #00a72a;
+  --terminal-bg: #0a0a0a;
+  --terminal-bg-light: #1a1a1a;
+  --terminal-gray: #333333;
+  --terminal-white: #ffffff;
+
+  /* Override VitePress defaults */
+  --vp-c-bg: var(--terminal-bg);
+  --vp-c-bg-soft: var(--terminal-bg-light);
+  --vp-c-bg-mute: #1a1a1a;
+  --vp-c-bg-alt: #0a0a0a;
+
+  --vp-c-text-1: var(--terminal-green);
+  --vp-c-text-2: #a0a0a0;
+  --vp-c-text-3: #808080;
+
+  --vp-c-border: var(--terminal-gray);
+  --vp-c-divider: var(--terminal-gray);
+
+  --vp-c-brand: var(--terminal-green);
+  --vp-c-brand-light: var(--terminal-green);
+  --vp-c-brand-dark: var(--terminal-green-dim);
+
+  /* Typography */
+  --vp-font-family-base: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+  --vp-font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+
+  /* Code blocks */
+  --vp-code-block-bg: #0f0f0f;
+  --vp-code-color: var(--terminal-green);
+}
+
+/* Dark mode only (force dark) */
+.dark {
+  --vp-c-bg: var(--terminal-bg);
+}
+
+/* Force monospace everywhere */
+* {
+  font-family: var(--vp-font-family-mono) !important;
+  letter-spacing: 0.02em;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--terminal-green) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 400 !important;
+}
+
+/* Links */
+a {
+  color: var(--terminal-green) !important;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--terminal-white) !important;
+  text-shadow: 0 0 8px var(--terminal-green);
+}
+
+/* Navigation */
+.VPNav {
+  background: var(--terminal-bg) !important;
+  border-bottom: 1px solid var(--terminal-gray);
+}
+
+.VPNavBar {
+  background: transparent !important;
+}
+
+.VPNavBarTitle .title {
+  color: var(--terminal-green) !important;
+  font-weight: 400 !important;
+  text-transform: uppercase;
+}
+
+/* Sidebar */
+.VPSidebar {
+  background: var(--terminal-bg) !important;
+  border-right: 1px solid var(--terminal-gray);
+}
+
+.VPSidebarItem {
+  color: var(--terminal-green) !important;
+}
+
+.VPSidebarItem.is-active {
+  background: var(--terminal-bg-light);
+}
+
+.VPSidebarItem .text {
+  color: var(--terminal-green) !important;
+}
+
+.VPSidebarItem.is-active .text {
+  color: var(--terminal-white) !important;
+}
+
+/* Content */
+.VPContent {
+  background: var(--terminal-bg) !important;
+}
+
+.VPDoc {
+  color: var(--terminal-green) !important;
+}
+
+.vp-doc p {
+  color: var(--terminal-green);
+}
+
+/* Code blocks */
+.vp-doc div[class*='language-'] {
+  background-color: #0f0f0f !important;
+  border: 1px solid var(--terminal-gray);
+}
+
+.vp-doc div[class*='language-'] code {
+  background-color: transparent !important;
+  color: var(--terminal-green) !important;
+}
+
+/* Inline code */
+.vp-doc :not(pre) > code {
+  background-color: var(--terminal-bg-light) !important;
+  color: var(--terminal-green) !important;
+  border: 1px solid var(--terminal-gray);
+  padding: 2px 6px;
+}
+
+/* Tables */
+.vp-doc table {
+  border-collapse: collapse;
+}
+
+.vp-doc tr {
+  border-bottom: 1px solid var(--terminal-gray);
+}
+
+.vp-doc th {
+  background: var(--terminal-bg-light);
+  color: var(--terminal-white) !important;
+  text-transform: uppercase;
+  font-weight: 400 !important;
+  border: 1px solid var(--terminal-gray);
+}
+
+.vp-doc td {
+  border: 1px solid var(--terminal-gray);
+  color: var(--terminal-green);
+}
+
+/* Search */
+.VPLocalSearchBox {
+  --vp-local-search-bg: var(--terminal-bg) !important;
+  --vp-local-search-result-bg: var(--terminal-bg-light) !important;
+  --vp-local-search-result-border: var(--terminal-gray) !important;
+}
+
+/* Buttons */
+.VPButton {
+  background: transparent !important;
+  border: 1px solid var(--terminal-green) !important;
+  color: var(--terminal-green) !important;
+  text-transform: uppercase;
+}
+
+.VPButton:hover {
+  background: var(--terminal-green) !important;
+  color: var(--terminal-bg) !important;
+}
+
+/* Hide theme toggle (force dark mode) */
+.VPSwitch, .VPSwitchAppearance {
+  display: none !important;
+}
+
+/* Terminal cursor effect for headers */
+h1::after {
+  content: '_';
+  animation: terminal-blink 1s infinite;
+  color: var(--terminal-green);
+}
+
+@keyframes terminal-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--terminal-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--terminal-gray);
+  border: 1px solid var(--terminal-green);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--terminal-green-dim);
+}
