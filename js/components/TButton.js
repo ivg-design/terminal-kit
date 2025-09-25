@@ -37,57 +37,13 @@ export class TButton extends TComponent {
 
 	/**
 	 * Generate a generic template for DSD that works for all variants
-	 * This template should NOT include variant-specific classes
+	 * This template returns just the HTML structure
+	 * CSS will be injected by DSDTemplateGenerator from t-btn.css
 	 */
 	getGenericTemplate() {
-		// Return a minimal template that can work with any variant
-		// The actual variant classes will be added during hydration
-		return `
-			<style>
-				/* Include all variant styles using :host() selectors */
-				:host([variant="primary"]) button {
-					background: var(--color-primary, #00ff00);
-					color: var(--color-black, #000000);
-				}
-				:host([variant="secondary"]) button {
-					background: var(--color-secondary, #00ffff);
-					color: var(--color-black, #000000);
-				}
-				:host([variant="success"]) button {
-					background: var(--color-success, #00ff00);
-					color: var(--color-black, #000000);
-				}
-				:host([variant="danger"]) button {
-					background: var(--color-danger, #ff0000);
-					color: var(--color-white, #ffffff);
-				}
-				:host([variant="warning"]) button {
-					background: var(--color-warning, #ffff00);
-					color: var(--color-black, #000000);
-				}
-				:host([variant="info"]) button {
-					background: var(--color-info, #00ffff);
-					color: var(--color-black, #000000);
-				}
-
-				/* Base button styles */
-				button {
-					padding: 0.5em 1em;
-					border: 1px solid currentColor;
-					cursor: pointer;
-					font-family: inherit;
-					transition: all 0.2s;
-				}
-
-				:host([disabled]) button {
-					opacity: 0.5;
-					cursor: not-allowed;
-				}
-			</style>
-			<button class="t-btn" type="button">
-				<slot></slot>
-			</button>
-		`;
+		// Return just the HTML structure without styles
+		// DSDTemplateGenerator will prepend the CSS from t-btn.css
+		return `<button class="t-btn" type="button"><slot></slot></button>`;
 	}
 
 	onAttributeChange(name, oldValue, newValue) {

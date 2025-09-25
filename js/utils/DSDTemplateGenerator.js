@@ -4,6 +4,7 @@ export class DSDTemplateGenerator {
         this.componentsDir = options.componentsDir || './js/components';
         this.cache = new Map();
         this.jsdomModule = null;
+        this.cssCache = new Map();
     }
 
     async initJSDOM() {
@@ -61,6 +62,52 @@ export class DSDTemplateGenerator {
         return this.jsdomModule;
     }
 
+    async loadComponentCSS(tagName) {
+        // Check cache first
+        if (this.cssCache.has(tagName)) {
+            return this.cssCache.get(tagName);
+        }
+
+        // Map tag names to CSS file names
+        const cssFileMap = {
+            't-btn': 't-btn.css',
+            't-button': 't-btn.css',
+            't-pnl': 't-pnl.css',
+            't-panel': 't-pnl.css',
+            't-inp': 't-inp.css',
+            't-input': 't-inp.css',
+            't-drp': 't-drp.css',
+            't-dropdown': 't-drp.css',
+            't-sld': 't-sld.css',
+            't-slider': 't-sld.css',
+            't-tog': 't-tog.css',
+            't-toggle': 't-tog.css'
+        };
+
+        const cssFileName = cssFileMap[tagName.toLowerCase()];
+        if (!cssFileName) {
+            console.warn(`No CSS mapping found for ${tagName}`);
+            return '';
+        }
+
+        try {
+            const fs = await import('fs/promises');
+            const path = await import('path');
+            const { fileURLToPath } = await import('url');
+
+            const __filename = fileURLToPath(import.meta.url);
+            const __dirname = path.dirname(__filename);
+            const cssPath = path.join(__dirname, '../../css/components', cssFileName);
+
+            const cssContent = await fs.readFile(cssPath, 'utf-8');
+            this.cssCache.set(tagName, cssContent);
+            return cssContent;
+        } catch (error) {
+            console.warn(`Could not load CSS for ${tagName}: ${error.message}`);
+            return '';
+        }
+    }
+
     async generateTemplatesForComponent(ComponentClass, tagName) {
         await this.initJSDOM();
         const templates = new Map();
@@ -73,11 +120,27 @@ export class DSDTemplateGenerator {
             instance.attachShadow({ mode: 'open' });
         }
 
+        // Load CSS from file
+        const cssContent = await this.loadComponentCSS(tagName);
+
         // Check if component has a getGenericTemplate method
         let shadowHTML;
         if (typeof instance.getGenericTemplate === 'function') {
-            // Use the generic template that includes styles
-            shadowHTML = instance.getGenericTemplate();
+            // Use the generic template but prepend CSS
+            const templateContent = instance.getGenericTemplate();
+            // Check if template already has styles
+            if (templateContent.includes('<style>') && cssContent) {
+                // Replace the existing style tag with full CSS
+                shadowHTML = templateContent.replace(
+                    /<style>[^<]*<\/style>/,
+                    `<style>${cssContent}</style>`
+                );
+            } else if (cssContent) {
+                // Add CSS at the beginning
+                shadowHTML = `<style>${cssContent}</style>${templateContent}`;
+            } else {
+                shadowHTML = templateContent;
+            }
         } else {
             // Fallback to render method
             if (typeof instance.render === 'function') {
@@ -85,19 +148,10 @@ export class DSDTemplateGenerator {
             }
             shadowHTML = instance.shadowRoot.innerHTML;
 
-            // CRITICAL: Add CSS inline since adoptedStyleSheets don't work in DSD
-            // Try to get the component's CSS and inject it
-            const componentName = ComponentClass.name;
-            const cssPath = `/css/components/t-${tagName.substring(2)}.css`;
-
-            // Add a style tag with the CSS
-            shadowHTML = `
-                <style>
-                    /* Component styles should be loaded here */
-                    /* TODO: Load actual CSS from ${cssPath} */
-                </style>
-                ${shadowHTML}
-            `;
+            // Add CSS inline since adoptedStyleSheets don't work in DSD
+            if (cssContent) {
+                shadowHTML = `<style>${cssContent}</style>${shadowHTML}`;
+            }
         }
 
         const templateHTML = `<template shadowrootmode="open">${shadowHTML}</template>`;

@@ -127,10 +127,31 @@ export function extractTemplateForDSD(componentClass, props, templateFunction) {
  */
 export function initializeDSDComponent(component, initCallback) {
     // Check if we already have a shadow root from DSD
-    const isDSD = !!component.shadowRoot;
+    let isDSD = !!component.shadowRoot;
 
-    // Store DSD state for later use
+    // If no shadow root, check for DSD template that needs polyfilling
+    if (!isDSD) {
+        const template = component.querySelector('template[shadowrootmode]');
+        if (template) {
+            // Try to apply polyfill for this specific component
+            const mode = template.getAttribute('shadowrootmode');
+            if (mode && !component.shadowRoot) {
+                try {
+                    const shadowRoot = component.attachShadow({ mode });
+                    shadowRoot.appendChild(template.content.cloneNode(true));
+                    template.remove();
+                    isDSD = true;
+                    log.debug(`Applied DSD polyfill for ${component.tagName}`);
+                } catch (error) {
+                    log.error('Failed to apply DSD polyfill:', error);
+                }
+            }
+        }
+    }
+
+    // Store DSD state and render mode for later use
     component._isDSD = isDSD;
+    component._renderMode = isDSD ? 'dsd' : 'dynamic';
 
     // Call initialization callback with DSD information
     if (initCallback) {

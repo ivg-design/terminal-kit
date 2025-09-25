@@ -34,8 +34,14 @@ export class TComponent extends HTMLElement {
 		// ONLY adopt styles for non-DSD components
 		// DSD components already have inline styles in their shadow DOM
 		if (!this._isDSD) {
-			// Adopt styles - will happen immediately if ready, or async if not
-			this.adoptComponentStyles();
+			// Check if we have inline styles in template
+			const hasInlineStyles = !!this.shadowRoot?.querySelector('style');
+			if (!hasInlineStyles) {
+				// Only adopt styles if no inline styles present
+				this.adoptComponentStyles();
+			} else {
+				this.log.info('Found inline styles in template, skipping adoptedStyleSheets');
+			}
 		} else {
 			this.log.info('Skipping adoptedStyleSheets for DSD component - using inline styles');
 		}
