@@ -60,4 +60,4 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
-.cache/
+.cache/docs/.vitepress/cache/

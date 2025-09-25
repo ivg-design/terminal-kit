@@ -12,7 +12,7 @@ class ComponentLogger {
 			ERROR: 1,
 			WARN: 2,
 			INFO: 3,
-			DEBUG: 4
+			DEBUG: 4,
 		};
 
 		// Set initial level based on environment
@@ -40,11 +40,7 @@ class ComponentLogger {
 		}
 
 		// Default based on environment
-		const isDev = (
-			window.location.hostname === 'localhost' ||
-			window.location.hostname === '127.0.0.1' ||
-			window.TERMINAL_DEBUG === true
-		);
+		const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.TERMINAL_DEBUG === true;
 
 		return isDev ? this.LEVELS.INFO : this.LEVELS.ERROR;
 	}
@@ -79,7 +75,7 @@ class ComponentLogger {
 
 			// Grouping
 			group: (label) => this._group(name, label),
-			groupEnd: () => console.groupEnd()
+			groupEnd: () => console.groupEnd(),
 		};
 	}
 
@@ -92,9 +88,7 @@ class ComponentLogger {
 
 		// Format and log
 		const prefix = `[${component}]`;
-		const method = level === 'ERROR' ? 'error' :
-		              level === 'WARN' ? 'warn' :
-		              level === 'INFO' ? 'info' : 'log';
+		const method = level === 'ERROR' ? 'error' : level === 'WARN' ? 'warn' : level === 'INFO' ? 'info' : 'log';
 
 		// In dev, add color
 		if (this.level >= this.LEVELS.DEBUG) {
@@ -102,7 +96,7 @@ class ComponentLogger {
 				ERROR: '#ff3333',
 				WARN: '#ffcc00',
 				INFO: '#00ff41',
-				DEBUG: '#00aaff'
+				DEBUG: '#00aaff',
 			}[level];
 
 			console[method](`%c${prefix}`, `color: ${color}; font-weight: bold`, ...args);
@@ -161,7 +155,7 @@ class ComponentLogger {
 
 	// Show current configuration
 	config() {
-		const levelName = Object.keys(this.LEVELS).find(k => this.LEVELS[k] === this.level);
+		const levelName = Object.keys(this.LEVELS).find((k) => this.LEVELS[k] === this.level);
 		console.group('📋 Component Logger Config');
 		console.log('Level:', levelName);
 		console.log('Disabled:', [...this.disabled]);

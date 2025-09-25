@@ -35,6 +35,61 @@ export class TButton extends TComponent {
 		});
 	}
 
+	/**
+	 * Generate a generic template for DSD that works for all variants
+	 * This template should NOT include variant-specific classes
+	 */
+	getGenericTemplate() {
+		// Return a minimal template that can work with any variant
+		// The actual variant classes will be added during hydration
+		return `
+			<style>
+				/* Include all variant styles using :host() selectors */
+				:host([variant="primary"]) button {
+					background: var(--color-primary, #00ff00);
+					color: var(--color-black, #000000);
+				}
+				:host([variant="secondary"]) button {
+					background: var(--color-secondary, #00ffff);
+					color: var(--color-black, #000000);
+				}
+				:host([variant="success"]) button {
+					background: var(--color-success, #00ff00);
+					color: var(--color-black, #000000);
+				}
+				:host([variant="danger"]) button {
+					background: var(--color-danger, #ff0000);
+					color: var(--color-white, #ffffff);
+				}
+				:host([variant="warning"]) button {
+					background: var(--color-warning, #ffff00);
+					color: var(--color-black, #000000);
+				}
+				:host([variant="info"]) button {
+					background: var(--color-info, #00ffff);
+					color: var(--color-black, #000000);
+				}
+
+				/* Base button styles */
+				button {
+					padding: 0.5em 1em;
+					border: 1px solid currentColor;
+					cursor: pointer;
+					font-family: inherit;
+					transition: all 0.2s;
+				}
+
+				:host([disabled]) button {
+					opacity: 0.5;
+					cursor: not-allowed;
+				}
+			</style>
+			<button class="t-btn" type="button">
+				<slot></slot>
+			</button>
+		`;
+	}
+
 	onAttributeChange(name, oldValue, newValue) {
 		switch (name) {
 			case 'variant':
@@ -87,7 +142,7 @@ export class TButton extends TComponent {
 
 		// Build class list
 		const classes = ['t-btn'];
-		
+
 		// Add variant class
 		if (variant === 'toggle') {
 			classes.push('t-btn--toggle');
@@ -99,7 +154,7 @@ export class TButton extends TComponent {
 		} else if (variant && variant !== 'default') {
 			classes.push(`t-btn--${variant}`);
 		}
-		
+
 		// Add type class
 		if (type === 'icon') {
 			classes.push('t-btn--icon');
@@ -108,24 +163,24 @@ export class TButton extends TComponent {
 		} else {
 			classes.push('t-btn--text');
 		}
-		
+
 		// Add size class with proper mapping
 		if (size && size !== 'default') {
 			// Map size names to CSS class names
 			const sizeMap = {
-				'small': 'sm',
-				'large': 'lg',
-				'xs': 'xs',
-				'sm': 'sm',
-				'lg': 'lg',
-				'xl': 'xl',
-				'xxs': 'xxs',
-				'xxl': 'xxl'
+				small: 'sm',
+				large: 'lg',
+				xs: 'xs',
+				sm: 'sm',
+				lg: 'lg',
+				xl: 'xl',
+				xxs: 'xxs',
+				xxl: 'xxl',
 			};
 			const mappedSize = sizeMap[size] || size;
 			classes.push(`t-btn--${mappedSize}`);
 		}
-		
+
 		if (loading) {
 			classes.push('is-loading');
 			// Remove loader type class, not needed
@@ -137,7 +192,7 @@ export class TButton extends TComponent {
 
 		// Handle toggle icon
 		if (variant === 'toggle' && (iconOn || iconOff)) {
-			currentIcon = toggleState ? (iconOn || icon) : (iconOff || icon);
+			currentIcon = toggleState ? iconOn || icon : iconOff || icon;
 		}
 
 		// Scale icon based on button size
@@ -169,7 +224,8 @@ export class TButton extends TComponent {
 						<div class="btn-bar btn-bar-5"></div>
 					</div>
 				`;
-			} else { // spinner (default)
+			} else {
+				// spinner (default)
 				content = `
 					<div class="btn-loader-spinner" style="--loader-color: ${loaderColor};"></div>
 				`;
@@ -214,7 +270,7 @@ export class TButton extends TComponent {
 		if (styles.length > 0) {
 			style = `style="${styles.join('; ')}"`;
 		}
-		
+
 		return `
       <button 
         class="${classes.join(' ')}" 
@@ -261,13 +317,38 @@ export class TButton extends TComponent {
 	}
 
 	afterRender() {
-		const button = this.$('button');
+		this._setupButtonInteractivity();
+	}
+
+	/**
+	 * DSD Hydration: Cache DOM elements
+	 */
+	hydrateElements() {
+		this._button = this.$('button');
+	}
+
+	/**
+	 * DSD Hydration: Bind event listeners
+	 */
+	hydrateEventListeners() {
+		this._setupButtonInteractivity();
+	}
+
+	/**
+	 * Setup button interactivity (shared between render and hydrate)
+	 */
+	_setupButtonInteractivity() {
+		const button = this._button || this.$('button');
 
 		if (button) {
+			// Cache button reference for future use
+			this._button = button;
+
 			// Restore captured width if it exists
 			if (this._capturedWidth) {
 				button.style.minWidth = this._capturedWidth;
 			}
+
 			// Handle click events
 			this.addListener(button, 'click', (e) => {
 				if (!this.getProp('disabled') && !this.getProp('loading')) {
@@ -358,7 +439,7 @@ export class TButton extends TComponent {
 	setSize(size) {
 		this.setProp('size', size);
 	}
-	
+
 	// Toggle-specific methods
 	toggle() {
 		if (this.getProp('variant') === 'toggle') {
@@ -370,12 +451,12 @@ export class TButton extends TComponent {
 		}
 		return false;
 	}
-	
+
 	setToggleState(state) {
 		this.setProp('toggleState', state);
 		this.setAttribute('toggle-state', state.toString());
 	}
-	
+
 	getToggleState() {
 		return this.getProp('toggleState');
 	}

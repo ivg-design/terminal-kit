@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSD Debug - Slow Motion | Terminal Kit</title>
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/theme.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: var(--color-black);
+            color: var(--color-green);
+        }
+
+        .debug-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border: 1px solid var(--color-green);
+        }
+
+        .log-entry {
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            font-family: monospace;
+            font-size: 0.9em;
+            border-left: 3px solid var(--color-cyan);
+            padding-left: 1rem;
+        }
+
+        .log-entry.error {
+            border-color: var(--color-red);
+            color: var(--color-red);
+        }
+
+        .log-entry.success {
+            border-color: var(--color-green);
+            color: var(--color-green);
+        }
+
+        .log-entry.warning {
+            border-color: var(--color-yellow);
+            color: var(--color-yellow);
+        }
+
+        #test-container {
+            padding: 2rem;
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px dashed var(--color-cyan);
+            margin: 2rem 0;
+        }
+
+        .control-panel {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            background: var(--color-black);
+            border: 2px solid var(--color-green);
+            padding: 1rem;
+            z-index: 1000;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            background: var(--color-green);
+            color: var(--color-black);
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: var(--color-cyan);
+        }
+
+        .phase-indicator {
+            padding: 1rem;
+            margin: 1rem 0;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid var(--color-green);
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 DSD Debug - Slow Motion Analysis</h1>
+
+    <div class="control-panel">
+        <h3>Controls</h3>
+        <button onclick="startTest()">Start Test</button>
+        <button onclick="clearLogs()">Clear Logs</button>
+        <button onclick="toggleSlowMode()">Toggle Slow Mode</button>
+        <div>
+            <label>
+                <input type="checkbox" id="slow-mode" checked> Slow Mode
+            </label>
+        </div>
+        <div>
+            <label>
+                Delay (ms): <input type="number" id="delay" value="1000" min="0" max="5000">
+            </label>
+        </div>
+    </div>
+
+    <div class="phase-indicator" id="phase">
+        Phase: Waiting to start...
+    </div>
+
+    <div class="debug-section">
+        <h2>Test Sequence</h2>
+        <ol>
+            <li>Initial HTML state (before any JS)</li>
+            <li>DSD template parsing</li>
+            <li>Shadow DOM attachment</li>
+            <li>Component constructor</li>
+            <li>Component rendering</li>
+            <li>Style application</li>
+            <li>Hydration complete</li>
+        </ol>
+    </div>
+
+    <div id="test-container">
+        <h3>Test Component Will Appear Here</h3>
+        <!-- Component will be injected here -->
+    </div>
+
+    <div class="debug-section">
+        <h2>Debug Log</h2>
+        <div id="log"></div>
+    </div>
+
+    <!-- Load DSD Polyfill FIRST before any DSD templates -->
+    <script>
+        // Check native DSD support
+        function checkDSDSupport() {
+            const testDiv = document.createElement('div');
+            testDiv.innerHTML = '<div><template shadowrootmode="open"></template></div>';
+            return !!testDiv.firstElementChild?.shadowRoot;
+        }
+
+        if (!checkDSDSupport()) {
+            console.warn('Browser does not support DSD natively - polyfill needed!');
+
+            // Simple DSD polyfill
+            function polyfillDSD() {
+                const templates = document.querySelectorAll('template[shadowrootmode]');
+                templates.forEach(template => {
+                    const mode = template.getAttribute('shadowrootmode');
+                    const parent = template.parentElement;
+
+                    if (parent && !parent.shadowRoot) {
+                        const shadowRoot = parent.attachShadow({ mode });
+                        shadowRoot.innerHTML = template.innerHTML;
+                        template.remove();
+                        console.log('Polyfilled DSD for', parent.tagName);
+                    }
+                });
+            }
+
+            // Run polyfill on DOMContentLoaded and mutations
+            document.addEventListener('DOMContentLoaded', polyfillDSD);
+
+            // Also watch for dynamically added content
+            const observer = new MutationObserver(() => polyfillDSD());
+            observer.observe(document.body, { childList: true, subtree: true });
+        } else {
+            console.log('Browser supports DSD natively!');
+        }
+    </script>
+
+    <script>
+        const logContainer = document.getElementById('log');
+        const testContainer = document.getElementById('test-container');
+        const phaseIndicator = document.getElementById('phase');
+        let slowMode = true;
+        let delayMs = 1000;
+
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+            entry.textContent = `[${timestamp}] ${message}`;
+            logContainer.appendChild(entry);
+            console.log(`[DSD Debug] ${message}`);
+        }
+
+        function clearLogs() {
+            logContainer.innerHTML = '';
+            log('Logs cleared', 'success');
+        }
+
+        function updatePhase(phase) {
+            phaseIndicator.textContent = `Phase: ${phase}`;
+            log(`=== PHASE: ${phase} ===`, 'warning');
+        }
+
+        function toggleSlowMode() {
+            slowMode = !slowMode;
+            document.getElementById('slow-mode').checked = slowMode;
+            log(`Slow mode: ${slowMode ? 'ON' : 'OFF'}`, 'warning');
+        }
+
+        async function delay(ms) {
+            if (slowMode) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+
+        async function startTest() {
+            clearLogs();
+            delayMs = parseInt(document.getElementById('delay').value) || 1000;
+
+            log('Starting DSD debug test...', 'success');
+
+            // Phase 1: Create raw HTML with DSD template
+            updatePhase('1. Creating HTML with DSD template');
+            await delay(delayMs);
+
+            // First, let's check what the browser sees BEFORE any component JS
+            const rawHTML = `
+                <t-btn variant="danger" data-dsd="true">
+                    <template shadowrootmode="open">
+                        <style>
+                            /* Inline styles for immediate rendering */
+                            :host { display: inline-block; }
+                            :host([variant="danger"]) button {
+                                background: red;
+                                color: white;
+                                padding: 0.5em 1em;
+                                border: 1px solid red;
+                            }
+                            button {
+                                background: green;
+                                color: black;
+                                padding: 0.5em 1em;
+                                border: 1px solid green;
+                                cursor: pointer;
+                                font-family: inherit;
+                            }
+                        </style>
+                        <button class="t-btn" type="button">
+                            <slot></slot>
+                        </button>
+                    </template>
+                    Test Button
+                </t-btn>
+            `;
+
+            testContainer.innerHTML = '<h3>Raw HTML (with DSD):</h3>' + rawHTML;
+            log('Injected raw HTML with DSD template', 'success');
+            log('Button should appear RED if DSD styles work', 'warning');
+
+            // Run polyfill if needed
+            if (typeof polyfillDSD !== 'undefined') {
+                polyfillDSD();
+                log('Ran DSD polyfill', 'info');
+            }
+
+            await delay(delayMs);
+
+            // Phase 2: Check if shadow root exists
+            updatePhase('2. Checking shadow root attachment');
+            await delay(delayMs);
+
+            const element = testContainer.querySelector('t-btn');
+            if (element) {
+                log(`Element found: <${element.tagName.toLowerCase()}>`, 'success');
+
+                if (element.shadowRoot) {
+                    log('✅ Shadow root EXISTS (DSD worked!)', 'success');
+                    log(`Shadow root mode: ${element.shadowRoot.mode}`, 'info');
+
+                    // Check shadow root contents
+                    const shadowButton = element.shadowRoot.querySelector('button');
+                    if (shadowButton) {
+                        log('✅ Button found in shadow root', 'success');
+                        const computedStyle = getComputedStyle(shadowButton);
+                        log(`Button background: ${computedStyle.backgroundColor}`, 'info');
+                        log(`Button color: ${computedStyle.color}`, 'info');
+                    } else {
+                        log('❌ No button found in shadow root!', 'error');
+                    }
+
+                    const shadowStyle = element.shadowRoot.querySelector('style');
+                    if (shadowStyle) {
+                        log('✅ Style tag found in shadow root', 'success');
+                        log(`Style content length: ${shadowStyle.textContent.length} chars`, 'info');
+                    } else {
+                        log('❌ No style tag in shadow root!', 'error');
+                    }
+                } else {
+                    log('❌ No shadow root! DSD failed!', 'error');
+                }
+            } else {
+                log('❌ Element not found!', 'error');
+            }
+
+            await delay(delayMs);
+
+            // Phase 3: Now load the actual component JS
+            updatePhase('3. Loading component JavaScript');
+            await delay(delayMs);
+
+            log('Importing TButton component...', 'info');
+
+            // Create a hook to monitor component initialization
+            if (window.customElements) {
+                const originalDefine = window.customElements.define;
+                window.customElements.define = function(...args) {
+                    log(`customElements.define called: ${args[0]}`, 'warning');
+                    return originalDefine.apply(this, args);
+                };
+            }
+
+            try {
+                const module = await import('../js/components/TButton.js');
+                log('✅ TButton module loaded', 'success');
+
+                await delay(delayMs);
+
+                // Phase 4: Check post-JS state
+                updatePhase('4. Checking post-JavaScript state');
+                await delay(delayMs);
+
+                const postJSElement = testContainer.querySelector('t-btn');
+                if (postJSElement) {
+                    log('Checking element after JS load...', 'info');
+
+                    // Check if element was upgraded
+                    if (postJSElement.constructor.name !== 'HTMLUnknownElement') {
+                        log(`✅ Element upgraded to: ${postJSElement.constructor.name}`, 'success');
+                    } else {
+                        log('❌ Element not upgraded!', 'error');
+                    }
+
+                    // Check shadow root again
+                    if (postJSElement.shadowRoot) {
+                        const shadowButton = postJSElement.shadowRoot.querySelector('button');
+                        if (shadowButton) {
+                            const computedStyle = getComputedStyle(shadowButton);
+                            log(`Post-JS button background: ${computedStyle.backgroundColor}`, 'info');
+                            log(`Post-JS button color: ${computedStyle.color}`, 'info');
+
+                            // Check for class changes
+                            log(`Button classes: ${shadowButton.className}`, 'info');
+                        }
+                    }
+
+                    // Check if component has DSD flag
+                    if (postJSElement._isDSD !== undefined) {
+                        log(`Component _isDSD flag: ${postJSElement._isDSD}`, 'warning');
+                    }
+                }
+
+            } catch (error) {
+                log(`Error loading component: ${error.message}`, 'error');
+            }
+
+            await delay(delayMs);
+
+            updatePhase('5. Test complete - Check visual state');
+            log('Test complete! Check if button flashed from green to red', 'success');
+        }
+
+        // Auto-start on load if requested
+        if (window.location.search.includes('autostart')) {
+            window.addEventListener('DOMContentLoaded', () => {
+                setTimeout(startTest, 500);
+            });
+        }
+    </script>
+</body>
+</html>

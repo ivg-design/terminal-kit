@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSD Auto-Generation Test | Terminal Kit</title>
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/theme.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: var(--color-black);
+            color: var(--color-green);
+        }
+
+        .demo-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border: 1px solid var(--color-green);
+        }
+
+        .demo-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            margin-top: 1rem;
+        }
+
+        h1 {
+            color: var(--color-green);
+            text-shadow: 0 0 10px var(--color-green);
+        }
+
+        h2 {
+            color: var(--color-cyan);
+            border-bottom: 1px solid var(--color-cyan);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .status {
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid var(--color-cyan);
+            background: rgba(0, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>DSD Auto-Generation Test</h1>
+
+    <div class="status" id="dsd-status">
+        Checking DSD status...
+    </div>
+
+    <div class="demo-section">
+        <h2>Buttons with Auto-Generated DSD</h2>
+        <p>These buttons should use declarative shadow DOM templates generated at build time:</p>
+
+        <div class="demo-grid">
+            <t-btn variant="primary">Primary Button</t-btn>
+            <t-btn variant="secondary">Secondary Button</t-btn>
+            <t-btn variant="success">Success Button</t-btn>
+            <t-btn variant="danger">Danger Button</t-btn>
+            <t-btn variant="warning">Warning Button</t-btn>
+            <t-btn variant="info">Info Button</t-btn>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>Panels with Auto-Generated DSD</h2>
+        <p>These panels should also use DSD templates:</p>
+
+        <t-panel title="Panel Title">
+            <p>Panel content goes here</p>
+        </t-panel>
+
+        <t-panel title="Info Panel" variant="info">
+            <p>Information content</p>
+        </t-panel>
+    </div>
+
+    <div class="demo-section">
+        <h2>Component Statistics</h2>
+        <pre id="stats"></pre>
+    </div>
+
+    <script type="module">
+        import '../js/components/TButton.js';
+        import '../js/components/TPanel.js';
+
+        // Check DSD status
+        function checkDSDStatus() {
+            const buttons = document.querySelectorAll('t-btn');
+            const panels = document.querySelectorAll('t-panel');
+
+            let dsdCount = 0;
+            let totalCount = 0;
+
+            const stats = {
+                buttons: { dsd: 0, regular: 0 },
+                panels: { dsd: 0, regular: 0 }
+            };
+
+            buttons.forEach(btn => {
+                totalCount++;
+                if (btn.getAttribute('data-dsd') === 'true' || btn._isDSD) {
+                    dsdCount++;
+                    stats.buttons.dsd++;
+                } else {
+                    stats.buttons.regular++;
+                }
+            });
+
+            panels.forEach(panel => {
+                totalCount++;
+                if (panel.getAttribute('data-dsd') === 'true' || panel._isDSD) {
+                    dsdCount++;
+                    stats.panels.dsd++;
+                } else {
+                    stats.panels.regular++;
+                }
+            });
+
+            const percentage = totalCount > 0 ? Math.round((dsdCount / totalCount) * 100) : 0;
+
+            document.getElementById('dsd-status').innerHTML = `
+                <strong>DSD Usage: ${percentage}%</strong> (${dsdCount}/${totalCount} components)<br>
+                ${dsdCount > 0 ? '✅ DSD templates are being used!' : '❌ No DSD templates detected'}
+            `;
+
+            document.getElementById('stats').textContent = JSON.stringify(stats, null, 2);
+        }
+
+        // Check after components are initialized
+        setTimeout(checkDSDStatus, 500);
+
+        // Also listen for component registration
+        window.addEventListener('component-registered', checkDSDStatus);
+    </script>
+</body>
+</html>

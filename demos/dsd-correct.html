@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correct DSD Implementation | Terminal Kit</title>
+    <style>
+        /* CRITICAL: Hide custom elements until they're defined to prevent FOUC */
+        /* This is the recommended approach from web.dev */
+        t-btn:not(:defined) {
+            /* Hide the entire element until upgraded */
+            opacity: 0;
+        }
+
+        /* Alternative: Hide only the non-shadow content */
+        t-btn:not(:defined) > template[shadowrootmode] ~ * {
+            display: none;
+        }
+
+        body {
+            padding: 2rem;
+            background: #000;
+            color: #0f0;
+            font-family: monospace;
+        }
+
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid #0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Correct DSD Implementation (Per Official Docs)</h1>
+
+    <div class="test-section">
+        <h2>Test 1: Pure DSD (No JavaScript Yet)</h2>
+        <p>This button has declarative shadow DOM with inline styles:</p>
+
+        <!-- This is the CORRECT way per documentation -->
+        <t-btn variant="danger">
+            <template shadowrootmode="open">
+                <style>
+                    /* Inline styles for immediate rendering */
+                    :host {
+                        display: inline-block;
+                    }
+
+                    button {
+                        padding: 0.5em 1em;
+                        border: 1px solid currentColor;
+                        cursor: pointer;
+                        font-family: monospace;
+                        background: #00ff00;
+                        color: #000;
+                    }
+
+                    /* Variant styles using :host() */
+                    :host([variant="danger"]) button {
+                        background: #ff0000;
+                        color: #fff;
+                        border-color: #ff0000;
+                    }
+
+                    :host([variant="primary"]) button {
+                        background: #00ff00;
+                        color: #000;
+                        border-color: #00ff00;
+                    }
+
+                    :host([disabled]) button {
+                        opacity: 0.5;
+                        cursor: not-allowed;
+                    }
+                </style>
+                <button type="button">
+                    <slot></slot>
+                </button>
+            </template>
+            Delete
+        </t-btn>
+
+        <t-btn variant="primary">
+            <template shadowrootmode="open">
+                <style>
+                    /* Same styles as above - in production, use <link> for shared styles */
+                    :host {
+                        display: inline-block;
+                    }
+
+                    button {
+                        padding: 0.5em 1em;
+                        border: 1px solid currentColor;
+                        cursor: pointer;
+                        font-family: monospace;
+                        background: #00ff00;
+                        color: #000;
+                    }
+
+                    :host([variant="danger"]) button {
+                        background: #ff0000;
+                        color: #fff;
+                        border-color: #ff0000;
+                    }
+
+                    :host([variant="primary"]) button {
+                        background: #00ff00;
+                        color: #000;
+                        border-color: #00ff00;
+                    }
+
+                    :host([disabled]) button {
+                        opacity: 0.5;
+                        cursor: not-allowed;
+                    }
+                </style>
+                <button type="button">
+                    <slot></slot>
+                </button>
+            </template>
+            Save
+        </t-btn>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Check Browser Support</h2>
+        <pre id="support-check"></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Component JavaScript (Correct Hydration)</h2>
+        <button onclick="loadComponent()">Load TButton Component</button>
+        <pre id="hydration-log"></pre>
+    </div>
+
+    <script>
+        // Check browser support the CORRECT way (per documentation)
+        const supportCheck = document.getElementById('support-check');
+
+        // Method 1: Check for shadowRootMode property
+        const hasNativeSupport = HTMLTemplateElement.prototype.hasOwnProperty('shadowRootMode');
+
+        // Method 2: Functional test (alternative)
+        const testDiv = document.createElement('div');
+        testDiv.innerHTML = '<div><template shadowrootmode="open"></template></div>';
+        const functionalSupport = !!testDiv.firstElementChild?.shadowRoot;
+
+        supportCheck.textContent = `
+Native DSD Support (shadowRootMode property): ${hasNativeSupport}
+Functional DSD Support (test): ${functionalSupport}
+Browser: ${navigator.userAgent.substring(0, 50)}...
+        `;
+
+        // Log initial state
+        const log = document.getElementById('hydration-log');
+        function addLog(msg) {
+            log.textContent += `${new Date().toISOString().split('T')[1].split('.')[0]} - ${msg}\n`;
+        }
+
+        // Check shadow roots before any JS
+        document.querySelectorAll('t-btn').forEach((btn, i) => {
+            addLog(`Button ${i + 1}: shadowRoot = ${btn.shadowRoot ? 'EXISTS' : 'null'}`);
+            if (btn.shadowRoot) {
+                const button = btn.shadowRoot.querySelector('button');
+                const styles = getComputedStyle(button);
+                addLog(`  Background: ${styles.backgroundColor}`);
+            }
+        });
+
+        // Correct component implementation (simplified)
+        class TButtonCorrect extends HTMLElement {
+            constructor() {
+                super();
+
+                // CORRECT: Just check this.shadowRoot directly
+                // No need for complex DSD detection
+                if (!this.shadowRoot) {
+                    // No declarative shadow root, create one
+                    this.attachShadow({ mode: 'open' });
+                    this.render();
+                } else {
+                    // Declarative shadow root exists, just hydrate
+                    this.hydrate();
+                }
+            }
+
+            render() {
+                // Only called if no DSD
+                this.shadowRoot.innerHTML = `
+                    <style>
+                        /* styles here */
+                    </style>
+                    <button><slot></slot></button>
+                `;
+                this.attachEventListeners();
+            }
+
+            hydrate() {
+                // Just add interactivity, don't change styles!
+                this.attachEventListeners();
+            }
+
+            attachEventListeners() {
+                const button = this.shadowRoot.querySelector('button');
+                if (button) {
+                    button.addEventListener('click', () => {
+                        console.log('Button clicked!');
+                    });
+                }
+            }
+        }
+
+        function loadComponent() {
+            addLog('\n=== Loading Component ===');
+
+            // Register the component
+            if (!customElements.get('t-btn')) {
+                customElements.define('t-btn', TButtonCorrect);
+                addLog('Component registered');
+            }
+
+            // Check state after registration
+            document.querySelectorAll('t-btn').forEach((btn, i) => {
+                addLog(`Button ${i + 1} after JS:`);
+                if (btn.shadowRoot) {
+                    const button = btn.shadowRoot.querySelector('button');
+                    const styles = getComputedStyle(button);
+                    addLog(`  Background: ${styles.backgroundColor}`);
+                    addLog(`  Constructor: ${btn.constructor.name}`);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

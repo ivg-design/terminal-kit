@@ -345,10 +345,40 @@ export class TPanel extends TComponent {
 
     // After render lifecycle - attach event listeners
     afterRender() {
-        const header = this.$('.t-pnl__header');
-        const collapseBtn = this.$('.t-pnl__collapse-btn');
-        const footer = this.$('.t-pnl__footer');
-        const footerToggle = this.$('.t-pnl__footer-toggle');
+        this._setupPanelInteractivity();
+    }
+
+    /**
+     * DSD Hydration: Cache DOM elements
+     */
+    hydrateElements() {
+        this._header = this.$('.t-pnl__header');
+        this._collapseBtn = this.$('.t-pnl__collapse-btn');
+        this._footer = this.$('.t-pnl__footer');
+        this._footerToggle = this.$('.t-pnl__footer-toggle');
+    }
+
+    /**
+     * DSD Hydration: Bind event listeners
+     */
+    hydrateEventListeners() {
+        this._setupPanelInteractivity();
+    }
+
+    /**
+     * Setup panel interactivity (shared between render and hydrate)
+     */
+    _setupPanelInteractivity() {
+        const header = this._header || this.$('.t-pnl__header');
+        const collapseBtn = this._collapseBtn || this.$('.t-pnl__collapse-btn');
+        const footer = this._footer || this.$('.t-pnl__footer');
+        const footerToggle = this._footerToggle || this.$('.t-pnl__footer-toggle');
+
+        // Cache references for future use
+        this._header = header;
+        this._collapseBtn = collapseBtn;
+        this._footer = footer;
+        this._footerToggle = footerToggle;
 
         // Setup header interaction if collapsible
         if (header && this.getProp('collapsible')) {
@@ -391,12 +421,13 @@ export class TPanel extends TComponent {
         // Handle action buttons in the actions slot
         this._updateActionButtons();
 
-        // Log successful render with nesting info
+        // Log successful setup with nesting info
         const nestedCount = this.querySelectorAll('t-pnl').length;
         if (nestedCount > 0) {
-            this.logger.debug('Panel rendered with nested panels', {
+            this.logger.debug('Panel interactivity setup with nested panels', {
                 id: this.id || 'unnamed',
-                nestedCount
+                nestedCount,
+                isDSD: this._isDSD
             });
         }
     }

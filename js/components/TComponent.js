@@ -6,24 +6,39 @@
 
 import componentLogger from '../utils/ComponentLogger.js';
 import { styleSheetManager, stylesReady } from '../utils/StyleSheetManager.js';
+import { initializeDSDComponent, hydrateDSDComponent } from '../utils/DSDUtils.js';
 
 export class TComponent extends HTMLElement {
 	constructor() {
 		super();
 
-		// Create Shadow DOM for proper encapsulation
-		this.attachShadow({ mode: 'open' });
+		// Set up component logger FIRST
+		this.log = componentLogger.for(this.constructor.name);
+
+		// Initialize DSD-aware shadow DOM
+		this._isDSD = initializeDSDComponent(this, (isDSD) => {
+			if (!isDSD) {
+				// No existing shadow root from DSD, create one
+				this.attachShadow({ mode: 'open' });
+				this.log.debug('Created shadow DOM (regular rendering)');
+			} else {
+				this.log.info('Using pre-rendered shadow DOM (DSD) ✓');
+			}
+		});
 
 		this._props = {};
 		this._listeners = new Map();
 		this._initialized = false;
 		this._stylesAdopted = false;
 
-		// Set up component logger
-		this.log = componentLogger.for(this.constructor.name);
-
-		// Adopt styles - will happen immediately if ready, or async if not
-		this.adoptComponentStyles();
+		// ONLY adopt styles for non-DSD components
+		// DSD components already have inline styles in their shadow DOM
+		if (!this._isDSD) {
+			// Adopt styles - will happen immediately if ready, or async if not
+			this.adoptComponentStyles();
+		} else {
+			this.log.info('Skipping adoptedStyleSheets for DSD component - using inline styles');
+		}
 	}
 
 	/**
@@ -147,8 +162,19 @@ export class TComponent extends HTMLElement {
 	 * Lifecycle: Component connected to DOM
 	 */
 	connectedCallback() {
-		this.log.debug('Connected to DOM');
-		this.render();
+		this.log.debug('Connected to DOM', {
+			isDSD: this._isDSD,
+			id: this.id || this.getAttribute('name') || 'unnamed'
+		});
+
+		if (this._isDSD) {
+			// Component was server-rendered with DSD, hydrate instead of render
+			this.hydrate();
+		} else {
+			// Standard client-side rendering
+			this.render();
+		}
+
 		this.onMount();
 	}
 
@@ -232,6 +258,67 @@ export class TComponent extends HTMLElement {
 	}
 
 	/**
+	 * Hydrate component (for DSD components)
+	 * Re-establishes interactivity without re-rendering
+	 */
+	hydrate() {
+		this.log.info('Hydrating DSD component', {
+			component: this.constructor.name,
+			id: this.id || 'unnamed'
+		});
+
+		// Call beforeHydrate hook
+		if (this.beforeHydrate) {
+			this.beforeHydrate();
+		}
+
+		// Hydrate elements and event listeners
+		this.hydrateElements();
+		this.hydrateEventListeners();
+
+		// Add component-specific classes if needed
+		if (this.componentClass) {
+			this.classList.add(this.componentClass);
+		}
+
+		// Call afterHydrate hook
+		this.afterHydrate();
+
+		this.log.debug('Hydration complete', {
+			component: this.constructor.name
+		});
+	}
+
+	/**
+	 * Hook: Before hydration (override in subclasses)
+	 */
+	beforeHydrate() {
+		// Override in subclasses if needed
+	}
+
+	/**
+	 * Hook: Hydrate DOM elements (override in subclasses)
+	 */
+	hydrateElements() {
+		// Override in subclasses to cache DOM references
+	}
+
+	/**
+	 * Hook: Hydrate event listeners (override in subclasses)
+	 */
+	hydrateEventListeners() {
+		// Override in subclasses to bind event handlers
+	}
+
+	/**
+	 * Hook: After hydration (override in subclasses)
+	 */
+	afterHydrate() {
+		// Default behavior: call afterRender for compatibility
+		this.afterRender();
+	}
+
+	/**
 	 * Hook: After render
 	 */
 	afterRender() {
@@ -295,6 +382,70 @@ export class TComponent extends HTMLElement {
 	 */
 	generateId(prefix = 'terminal') {
 		return `${prefix}-${Math.random().toString(36).substr(2, 9)}`;
+	}
+
+	/**
+	 * Static method to get DSD statistics for all components on the page
+	 * @returns {Object} Statistics about DSD usage
+	 */
+	static getDSDStatistics() {
+		const allComponents = document.querySelectorAll('*');
+		const stats = {
+			total: 0,
+			dsd: 0,
+			regular: 0,
+			byType: {}
+		};
+
+		allComponents.forEach(element => {
+			// Check if it's a custom element (has a hyphen in tag name)
+			if (element.tagName.includes('-') && element._isDSD !== undefined) {
+				const tagName = element.tagName.toLowerCase();
+				stats.total++;
+
+				if (!stats.byType[tagName]) {
+					stats.byType[tagName] = { total: 0, dsd: 0, regular: 0 };
+				}
+
+				stats.byType[tagName].total++;
+
+				if (element._isDSD) {
+					stats.dsd++;
+					stats.byType[tagName].dsd++;
+				} else {
+					stats.regular++;
+					stats.byType[tagName].regular++;
+				}
+			}
+		});
+
+		return stats;
+	}
+
+	/**
+	 * Static method to log DSD statistics using component logger
+	 */
+	static logDSDStatistics() {
+		const logger = componentLogger.for('DSDStatistics');
+		const stats = TComponent.getDSDStatistics();
+
+		logger.info('=== DSD Usage Summary ===', {
+			totalComponents: stats.total,
+			usingDSD: stats.dsd,
+			regularRendering: stats.regular,
+			percentDSD: stats.total > 0 ? Math.round((stats.dsd / stats.total) * 100) : 0
+		});
+
+		// Log per-component-type statistics
+		Object.entries(stats.byType).forEach(([tagName, typeStats]) => {
+			logger.debug(`${tagName}:`, {
+				total: typeStats.total,
+				dsd: typeStats.dsd,
+				regular: typeStats.regular
+			});
+		});
+
+		return stats;
 	}
 
 	/**
