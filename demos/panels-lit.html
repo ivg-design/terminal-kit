@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Panels - Lit Components (Zero FOUC)</title>
+
+    <style>
+        /* Page styles only - components have embedded styles */
+        :root {
+            --terminal-black: #0a0a0a;
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--terminal-black);
+            color: var(--terminal-green);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .notice {
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid var(--terminal-green);
+            padding: 15px;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .notice strong {
+            color: var(--terminal-green);
+        }
+
+        h2 {
+            color: var(--terminal-green);
+            font-size: 18px;
+            margin: 30px 0 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+        }
+
+        t-panel, t-pnl {
+            margin-bottom: 20px;
+        }
+
+        .panel-content {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: var(--terminal-black);
+            border: 1px solid #333;
+            padding: 20px;
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+
+        code {
+            color: var(--terminal-green-dim);
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>Terminal Panels - Lit Components</h1>
+
+        <div class="notice">
+            <strong>✓ ZERO FOUC</strong> - These panel components use Lit framework with embedded styles.
+            All CSS is encapsulated in the component, no external loading required.
+        </div>
+
+        <div class="demo-section">
+            <h2>Standard Panel</h2>
+            <t-panel title="System Information" variant="standard">
+                <div class="panel-content">
+                    <p>> OS: Terminal Kit v1.0.0</p>
+                    <p>> Memory: 16GB Available</p>
+                    <p>> CPU: 8 Cores @ 3.2GHz</p>
+                    <p>> Status: All Systems Operational</p>
+                </div>
+            </t-panel>
+        </div>
+
+        <div class="demo-section">
+            <h2>Collapsible Panel</h2>
+            <t-pnl title="Network Status" collapsible>
+                <div class="panel-content">
+                    <p>> Connection: Active</p>
+                    <p>> Latency: 12ms</p>
+                    <p>> Bandwidth: 1000 Mbps</p>
+                    <p>> Packets Lost: 0%</p>
+                </div>
+            </t-pnl>
+        </div>
+
+        <div class="demo-section">
+            <h2>Panel with Footer</h2>
+            <t-panel title="Console Output" variant="standard">
+                <div class="panel-content">
+                    <p>> Initializing system...</p>
+                    <p>> Loading modules...</p>
+                    <p>> Establishing connections...</p>
+                    <p>> Ready.</p>
+                </div>
+                <div slot="footer">
+                    <t-btn size="small" variant="secondary">Clear</t-btn>
+                    <t-btn size="small" variant="primary">Export</t-btn>
+                </div>
+            </t-panel>
+        </div>
+
+        <div class="demo-section">
+            <h2>Panel with Actions</h2>
+            <t-pnl title="Process Monitor" collapsible>
+                <div slot="actions">
+                    <t-btn size="xs" variant="secondary" type="icon" id="refreshBtn"></t-btn>
+                    <t-btn size="xs" variant="secondary" type="icon" id="settingsBtn"></t-btn>
+                </div>
+                <div class="panel-content">
+                    <p>> PID 1234: terminal-kit [Running]</p>
+                    <p>> PID 5678: node [Active]</p>
+                    <p>> PID 9012: vite [Building]</p>
+                </div>
+            </t-pnl>
+        </div>
+
+        <div class="demo-section">
+            <h2>Loading Panel</h2>
+            <t-panel title="Data Processing" loading>
+                <div class="panel-content">
+                    <p>Processing data...</p>
+                </div>
+            </t-panel>
+        </div>
+
+        <div class="demo-section">
+            <h2>Compact Panel</h2>
+            <t-pnl title="Quick Stats" compact>
+                <div class="panel-content">
+                    <p>CPU: 45% | RAM: 8.2GB | DISK: 120GB</p>
+                </div>
+            </t-pnl>
+        </div>
+
+        <div class="demo-section">
+            <h2>Resizable Panel</h2>
+            <t-panel title="Terminal Output" resizable>
+                <div class="panel-content">
+                    <p>> Drag the corner to resize this panel</p>
+                    <p>> Minimum size is enforced</p>
+                    <p>> Content will scroll if needed</p>
+                </div>
+            </t-panel>
+        </div>
+
+        <div class="code-block">
+            <code>// Lit Panel Components - Zero FOUC
+import { TPanel } from './js/components/TPanelLit.js';
+
+// Usage Examples:
+&lt;t-panel title="Standard Panel" variant="standard"&gt;
+    Content here...
+&lt;/t-panel&gt;
+
+&lt;t-pnl title="Collapsible" collapsible collapsed="false"&gt;
+    Expandable content...
+&lt;/t-pnl&gt;
+
+// With slots:
+&lt;t-panel title="Advanced"&gt;
+    &lt;div slot="actions"&gt;Action buttons&lt;/div&gt;
+    Main content...
+    &lt;div slot="footer"&gt;Footer buttons&lt;/div&gt;
+&lt;/t-panel&gt;</code>
+        </div>
+    </div>
+
+    <!-- Import the Lit components -->
+    <script type="module">
+        import '../js/components/TButtonLit.js';
+        import '../js/components/TPanelLit.js';
+        import {
+            arrowsClockwiseIcon,
+            gearSixIcon
+        } from '../js/utils/phosphor-icons.js';
+
+        // Wait for components to be defined
+        Promise.all([
+            customElements.whenDefined('t-btn'),
+            customElements.whenDefined('t-panel'),
+            customElements.whenDefined('t-pnl')
+        ]).then(() => {
+            console.log('✓ Lit Components Loaded - Zero FOUC!');
+
+            // Set icons for action buttons
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.setIcon(arrowsClockwiseIcon);
+            }
+
+            const settingsBtn = document.getElementById('settingsBtn');
+            if (settingsBtn) {
+                settingsBtn.setIcon(gearSixIcon);
+            }
+        });
+
+        // Listen for panel events
+        document.addEventListener('panel-toggle', (e) => {
+            console.log('Panel toggled:', e.detail.collapsed);
+        });
+    </script>
+</body>
+</html>

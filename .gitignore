@@ -42,6 +42,11 @@ lerna-debug.log*
 # Vite
 .vite/
 
+# VitePress cache
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+docs/.vitepress/temp/
+
 # DevMirror logs
 devmirror-logs/
 
@@ -60,4 +65,4 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
-.cache/docs/.vitepress/cache/
+.dsd-preview/

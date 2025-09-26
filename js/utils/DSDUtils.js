@@ -24,19 +24,17 @@ export function supportsDSD() {
 /**
  * Polyfill for Declarative Shadow DOM
  * Converts <template shadowrootmode="open|closed"> elements to actual shadow DOM
+ * IMPORTANT: Chrome 140+ may have DSD support but still require manual processing
+ * if the HTML wasn't parsed with setHTMLUnsafe/parseHTMLUnsafe
  * @param {Element} root - Root element to scan for DSD templates (default: document)
  */
 export function polyfillDSD(root = document) {
-    if (supportsDSD()) {
-        log.debug('Native DSD support detected, skipping polyfill');
-        return; // Native support available, no polyfill needed
-    }
-
-    // Find all template elements with shadowrootmode attribute
+    // Always check for unparsed templates, even with native support
+    // Chrome 140 issue: DSD templates may exist but not be parsed
     const templates = root.querySelectorAll('template[shadowrootmode]');
 
     if (templates.length > 0) {
-        log.info(`Polyfilling ${templates.length} DSD templates`);
+        log.info(`Processing ${templates.length} DSD templates (may be unparsed despite browser support)`);
     }
 
     templates.forEach(template => {
@@ -44,31 +42,49 @@ export function polyfillDSD(root = document) {
         const parent = template.parentElement;
 
         if (parent && (mode === 'open' || mode === 'closed')) {
-            // Create shadow root
-            const shadowRoot = parent.attachShadow({ mode });
+            // Check if shadow root already exists
+            if (parent.shadowRoot) {
+                log.debug(`Shadow root already exists for ${parent.tagName}, skipping`);
+                return;
+            }
 
-            // Move template content to shadow root
-            shadowRoot.appendChild(template.content.cloneNode(true));
+            try {
+                // Create shadow root
+                const shadowRoot = parent.attachShadow({ mode });
 
-            // Remove the template element
-            template.remove();
+                // Move template content to shadow root
+                shadowRoot.appendChild(template.content.cloneNode(true));
 
-            log.debug(`Polyfilled DSD for ${parent.tagName}`, {
-                mode,
-                id: parent.id || 'unnamed'
-            });
+                // Remove the template element
+                template.remove();
+
+                // Mark as processed
+                shadowRoot._isDSD = true;
+                shadowRoot._processedManually = true;
+
+                log.debug(`Manually processed DSD for ${parent.tagName}`, {
+                    mode,
+                    id: parent.id || 'unnamed',
+                    reason: 'Template found but not parsed by browser'
+                });
+            } catch (error) {
+                log.error(`Failed to process DSD template for ${parent.tagName}:`, error);
+            }
         }
     });
 }
 
 /**
  * Initialize DSD polyfill when DOM is ready
+ * ALWAYS runs to handle Chrome 140 unparsed template issue
  */
 export function initDSDPolyfill() {
+    // Process immediately if possible, before any component initialization
+    polyfillDSD();
+
+    // Also process after DOM ready in case templates are added later
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => polyfillDSD());
-    } else {
-        polyfillDSD();
     }
 }
 

@@ -60,8 +60,15 @@ export function viteDSDPlugin(options = {}) {
             }
         },
 
+        transform(code, id) {
+            // Process HTML files
+            if (id.endsWith('.html')) {
+                return this.transformIndexHtml.handler(code);
+            }
+        },
+
         transformIndexHtml: {
-            order: 'pre',
+            order: 'pre', // Back to 'pre' to inject early
             async handler(html) {
                 // Enable DSD in both dev and build modes
                 // Can be disabled with options.disableDSD = true
@@ -75,11 +82,34 @@ export function viteDSDPlugin(options = {}) {
                         ? await generateTemplates()
                         : cachedTemplates || await generateTemplates();
 
+                    // Check if this HTML has any components we support
+                    const hasComponents = Array.from(templates.keys()).some(tag => html.includes(`<${tag}`));
+
+                    if (!hasComponents) {
+                        return html; // No components to process
+                    }
+
                     // Inject templates into HTML
                     const processedHtml = await generator.injectTemplatesIntoHTML(html, templates);
 
                     const mode = config.command === 'build' ? 'production' : 'development';
-                    console.log(`✨ [${mode}] Injected ${templates.size} DSD templates into HTML`);
+
+                    // Check if templates were actually injected
+                    const injected = processedHtml.includes('shadowrootmode');
+
+                    if (injected) {
+                        console.log(`✅ [${mode}] Successfully injected ${templates.size} DSD template(s)`);
+                        // Debug: Show a snippet of injected content
+                        const snippet = processedHtml.match(/<t-btn[^>]*>[\s\S]{0,100}/);
+                        if (snippet) {
+                            console.log('Sample:', snippet[0].substring(0, 80) + '...');
+                        }
+                    } else {
+                        console.log(`❌ [${mode}] Failed to inject templates - checking why...`);
+                        console.log('Has t-btn elements:', processedHtml.includes('<t-btn'));
+                        console.log('Template size:', templates.size);
+                    }
+
                     return processedHtml;
                 } catch (error) {
                     console.warn('Failed to inject DSD templates:', error);

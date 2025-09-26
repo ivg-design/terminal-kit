@@ -10,10 +10,13 @@
     "build": "vite build",
     "build:all": "npm run build && npm run docs:build",
     "preview": "vite preview",
-    "docs:dev": "vitepress dev docs --port 5173",
+    "docs:dev": "vitepress dev docs --port 5174",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "dev:all:mirror": "DEVMIRROR_PKG_PATH=\"/Users/ivg/github/terminal-kit\" concurrently \"node \\\"./.vscode/devmirror/cli.cjs\\\"\" \"concurrently --kill-others-on-fail \"npm:dev\" \"npm:docs:dev\"\""
+    "dev:dsd": "node scripts/serve-with-dsd.mjs",
+    "generate:dsd": "node scripts/dsd-generator.mjs",
+    "dev:all:mirror": "DEVMIRROR_PKG_PATH=\"/Users/ivg/github/terminal-kit\" concurrently \"node \\\"./.vscode/devmirror/cli.cjs\\\"\" \"concurrently --kill-others-on-fail \"npm:dev\" \"npm:docs:dev\"\"",
+    "dev:dsd:mirror": "DEVMIRROR_PKG_PATH=\"/Users/ivg/github/terminal-kit\" concurrently \"node \\\"./.vscode/devmirror/cli.cjs\\\"\" \"node scripts/serve-with-dsd.mjs\""
   },
   "keywords": [
     "web-components",
@@ -32,6 +35,7 @@
     "vitepress": "^1.6.4"
   },
   "dependencies": {
+    "lit": "^3.3.1",
     "puppeteer-core": "^24.22.3"
   }
 }

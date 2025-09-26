@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import { viteDSDPlugin } from './vite-plugin-dsd.js';
 
 export default defineConfig({
   base: '/',
@@ -17,11 +16,5 @@ export default defineConfig({
     port: 12358,
     open: false,
   },
-  plugins: [
-    viteDSDPlugin({
-      // DSD is enabled by default in both dev and production
-      // Set disableDSD: true to turn it off
-      disableDSD: false
-    })
-  ]
+  // No plugins needed - Lit components work out of the box with Vite
 });

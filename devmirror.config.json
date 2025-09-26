@@ -1,5 +1,14 @@
 {
   "outputDir": "./devmirror-logs",
   "mode": "cdp",
-  "url": "http://localhost:12358"
+  "url": "http://localhost:12358",
+  "debug": {
+    "enabled": false,
+    "logRawCDP": true,
+    "logExceptions": true,
+    "logConsoleAPI": true,
+    "logLogEntries": true,
+    "logToFile": true,
+    "logToConsole": false
+  }
 }

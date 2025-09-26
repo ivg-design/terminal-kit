@@ -1,0 +1,154 @@
+{
+  "version": "1.0.0",
+  "description": "Manifest of Terminal Kit components ready for DSD template generation",
+  "components": [
+    {
+      "name": "TButton",
+      "tagName": "t-btn",
+      "path": "js/components/TButton.js",
+      "cssPath": "css/components/t-btn.css",
+      "attributes": {
+        "variant": {
+          "values": ["primary", "secondary", "success", "danger", "warning", "info", "toggle"],
+          "default": "primary",
+          "description": "Button style variant"
+        },
+        "type": {
+          "values": ["text", "icon", "icon-text"],
+          "default": "text",
+          "description": "Button content type"
+        },
+        "size": {
+          "values": ["xs", "small", "default", "large"],
+          "default": "default",
+          "description": "Button size"
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable button interactions"
+        },
+        "icon": {
+          "type": "string",
+          "default": null,
+          "description": "Icon SVG content or identifier"
+        },
+        "loading": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show loading state"
+        },
+        "toggle-state": {
+          "type": "boolean",
+          "default": false,
+          "description": "Current state for toggle variant"
+        },
+        "icon-on": {
+          "type": "string",
+          "default": null,
+          "description": "Icon for toggle on state"
+        },
+        "icon-off": {
+          "type": "string",
+          "default": null,
+          "description": "Icon for toggle off state"
+        },
+        "color-on": {
+          "type": "string",
+          "default": null,
+          "description": "Custom color for toggle on state"
+        },
+        "color-off": {
+          "type": "string",
+          "default": null,
+          "description": "Custom color for toggle off state"
+        },
+        "loader-type": {
+          "values": ["spinner", "dots", "bars"],
+          "default": "spinner",
+          "description": "Type of loading animation"
+        },
+        "loader-color": {
+          "type": "string",
+          "default": null,
+          "description": "Custom color for loader"
+        }
+      },
+      "slots": {
+        "default": {
+          "description": "Button content"
+        }
+      }
+    },
+    {
+      "name": "TPanel",
+      "tagName": "t-panel",
+      "path": "js/components/TPanel.js",
+      "cssPath": "css/components/t-pnl.css",
+      "attributes": {
+        "title": {
+          "type": "string",
+          "default": ""
+        },
+        "collapsible": {
+          "type": "boolean",
+          "default": false
+        },
+        "collapsed": {
+          "type": "boolean",
+          "default": false
+        },
+        "resizable": {
+          "type": "boolean",
+          "default": false
+        },
+        "draggable": {
+          "type": "boolean",
+          "default": false
+        },
+        "variant": {
+          "values": ["default", "bordered", "elevated", "flat"],
+          "default": "default"
+        }
+      },
+      "slots": {
+        "default": {
+          "description": "Panel content"
+        },
+        "header": {
+          "description": "Custom header content"
+        },
+        "footer": {
+          "description": "Panel footer content"
+        }
+      },
+      "aliases": ["t-pnl"]
+    }
+  ],
+  "globalStyles": {
+    "cssVariables": [
+      "--terminal-black: #0a0a0a",
+      "--terminal-green: #00ff41",
+      "--terminal-green-bright: #33ff66",
+      "--terminal-green-dim: #00cc33",
+      "--terminal-green-dark: #008820",
+      "--terminal-amber: #ffbf00",
+      "--terminal-red: #ff4141",
+      "--terminal-blue: #0080ff",
+      "--terminal-purple: #bf00ff",
+      "--terminal-cyan: #00ffff",
+      "--terminal-white: #f0f0f0",
+      "--terminal-gray: #808080",
+      "--terminal-gray-dark: #242424",
+      "--terminal-gray-light: #333333",
+      "--terminal-bg: #0a0a0a",
+      "--terminal-fg: #00ff41",
+      "--terminal-font: 'Courier New', monospace",
+      "--font-mono: 'Courier New', monospace",
+      "--font-size-sm: 11px",
+      "--spacing-md: 12px",
+      "--toggle-color-on: #00ff41",
+      "--toggle-color-off: #808080"
+    ]
+  }
+}

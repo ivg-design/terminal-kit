@@ -26,6 +26,11 @@ class ComponentLogger {
 	}
 
 	getInitialLevel() {
+		// Check if we're in a browser environment
+		if (typeof window === 'undefined') {
+			return this.LEVELS.ERROR; // Default for Node.js
+		}
+
 		// Check URL param first
 		const params = new URLSearchParams(window.location.search);
 		const urlLevel = params.get('log');
@@ -46,6 +51,9 @@ class ComponentLogger {
 	}
 
 	loadSettings() {
+		// Skip if not in browser environment
+		if (typeof localStorage === 'undefined') return;
+
 		// Load disabled components
 		const disabled = localStorage.getItem('t_log_disabled');
 		if (disabled) {
@@ -56,6 +64,9 @@ class ComponentLogger {
 	}
 
 	saveSettings() {
+		// Skip if not in browser environment
+		if (typeof localStorage === 'undefined') return;
+
 		localStorage.setItem('t_log_disabled', JSON.stringify([...this.disabled]));
 	}
 
