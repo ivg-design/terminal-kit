@@ -9,12 +9,27 @@
         /* Page styles only - components have embedded styles */
         :root {
             --terminal-black: #0a0a0a;
+            --terminal-black-light: #1a1a1a;
             --terminal-green: #00ff41;
+            --terminal-green-bright: #33ff66;
             --terminal-green-dim: #00cc33;
+            --terminal-green-dark: #008820;
+            --terminal-amber: #ffbf00;
+            --terminal-red: #ff4141;
+            --terminal-blue: #0080ff;
+            --terminal-purple: #bf00ff;
+            --terminal-cyan: #00ffff;
+            --terminal-white: #f0f0f0;
+            --terminal-gray: #808080;
+            --terminal-gray-dark: #242424;
+            --terminal-gray-light: #333333;
+            --terminal-gray-medium: #2a2a2a;
             --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            --spacing-xs: 4px;
             --spacing-sm: 8px;
             --spacing-md: 12px;
             --spacing-lg: 16px;
+            --spacing-xl: 24px;
         }
 
         * {
@@ -27,13 +42,40 @@
             font-family: var(--font-mono);
             background: var(--terminal-black);
             color: var(--terminal-green);
-            padding: 40px 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
             line-height: 1.6;
         }
 
-        .demo-container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .breadcrumb {
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #242424;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: #00cc33;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .breadcrumb a {
+            color: #00cc33;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--terminal-green);
+        }
+
+        .breadcrumb-separator {
+            margin: 0 8px;
+            color: #333;
+        }
+
+        .breadcrumb-current {
+            color: var(--terminal-green);
         }
 
         h1 {
@@ -42,204 +84,589 @@
             border-bottom: 2px solid var(--terminal-green);
             padding-bottom: 10px;
             margin-bottom: 20px;
-        }
-
-        .notice {
-            background: rgba(0, 255, 65, 0.1);
-            border: 1px solid var(--terminal-green);
-            padding: 15px;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        .notice strong {
-            color: var(--terminal-green);
-        }
-
-        h2 {
-            color: var(--terminal-green);
-            font-size: 18px;
-            margin: 30px 0 20px 0;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .demo-section {
+            margin-bottom: 100px;
+        }
+
+        .demo-title {
+            color: #00ff41;
+            margin: 30px 0 15px 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.8;
+        }
+
+        .demo-description {
+            margin-bottom: 20px;
+            opacity: 0.7;
+            font-size: 13px;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Control row styles for nested demos */
+        .control-row {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-row > * {
+            flex: 0 0 auto;
+        }
+
+        .compact-toggle-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: #1a1a1a;
+            padding: 10px;
+            border: 1px solid #00ff41;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .size-label {
+            color: #00ff41;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Highlight nested panels */
+        .nested-highlight t-pnl {
+            border-left: 2px solid rgba(0, 255, 65, 0.3);
+            margin-left: 10px;
+        }
+
+        /* Spacing for panel demo sections */
+        .panel-demo {
             margin-bottom: 40px;
         }
 
-        t-panel, t-pnl {
-            margin-bottom: 20px;
+        .panel-demo h3 {
+            color: #00ff41;
+            font-size: 14px;
+            margin: 20px 0 10px 0;
+            opacity: 0.8;
         }
 
-        .panel-content {
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .code-block {
-            background: var(--terminal-black);
-            border: 1px solid #333;
-            padding: 20px;
-            margin-top: 30px;
-            overflow-x: auto;
-        }
-
-        code {
+        /* Status bar styles */
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            font-size: 11px;
             color: var(--terminal-green-dim);
-            font-size: 12px;
-            line-height: 1.5;
-            white-space: pre;
+        }
+
+        .status-field {
+            display: flex;
+            gap: 8px;
+        }
+
+        .status-field-label {
+            opacity: 0.7;
+        }
+
+        .status-field-value {
+            color: var(--terminal-green);
+        }
+
+        /* Size toggle buttons */
+        .size-toggle-group {
+            display: flex;
+            gap: 0;
+            border: 1px solid var(--terminal-green);
+        }
+
+        .size-toggle-btn {
+            background: transparent;
+            color: var(--terminal-green);
+            border: none;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .size-toggle-btn:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 20%;
+            height: 60%;
+            width: 1px;
+            background: var(--terminal-green);
+        }
+
+        .size-toggle-btn:hover {
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        .size-toggle-btn.active {
+            background: var(--terminal-green);
+            color: var(--terminal-black);
         }
     </style>
 </head>
 <body>
-    <div class="demo-container">
-        <h1>Terminal Panels - Lit Components</h1>
+    <div class="breadcrumb">
+        <a href="../index.html">Terminal Kit</a>
+        <span class="breadcrumb-separator">›</span>
+        <a href="index.html">Demos</a>
+        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb-current">Panels</span>
+    </div>
 
-        <div class="notice">
-            <strong>✓ ZERO FOUC</strong> - These panel components use Lit framework with embedded styles.
-            All CSS is encapsulated in the component, no external loading required.
-        </div>
+    <h1>Terminal Panels Component Demo</h1>
 
-        <div class="demo-section">
-            <h2>Standard Panel</h2>
-            <t-panel title="System Information" variant="standard">
-                <div class="panel-content">
-                    <p>> OS: Terminal Kit v1.0.0</p>
-                    <p>> Memory: 16GB Available</p>
-                    <p>> CPU: 8 Cores @ 3.2GHz</p>
-                    <p>> Status: All Systems Operational</p>
-                </div>
-            </t-panel>
-        </div>
-
-        <div class="demo-section">
-            <h2>Collapsible Panel</h2>
-            <t-pnl title="Network Status" collapsible>
-                <div class="panel-content">
-                    <p>> Connection: Active</p>
-                    <p>> Latency: 12ms</p>
-                    <p>> Bandwidth: 1000 Mbps</p>
-                    <p>> Packets Lost: 0%</p>
-                </div>
-            </t-pnl>
-        </div>
-
-        <div class="demo-section">
-            <h2>Panel with Footer</h2>
-            <t-panel title="Console Output" variant="standard">
-                <div class="panel-content">
-                    <p>> Initializing system...</p>
-                    <p>> Loading modules...</p>
-                    <p>> Establishing connections...</p>
-                    <p>> Ready.</p>
-                </div>
-                <div slot="footer">
-                    <t-btn size="small" variant="secondary">Clear</t-btn>
-                    <t-btn size="small" variant="primary">Export</t-btn>
-                </div>
-            </t-panel>
-        </div>
-
-        <div class="demo-section">
-            <h2>Panel with Actions</h2>
-            <t-pnl title="Process Monitor" collapsible>
-                <div slot="actions">
-                    <t-btn size="xs" variant="secondary" type="icon" id="refreshBtn"></t-btn>
-                    <t-btn size="xs" variant="secondary" type="icon" id="settingsBtn"></t-btn>
-                </div>
-                <div class="panel-content">
-                    <p>> PID 1234: terminal-kit [Running]</p>
-                    <p>> PID 5678: node [Active]</p>
-                    <p>> PID 9012: vite [Building]</p>
-                </div>
-            </t-pnl>
-        </div>
-
-        <div class="demo-section">
-            <h2>Loading Panel</h2>
-            <t-panel title="Data Processing" loading>
-                <div class="panel-content">
-                    <p>Processing data...</p>
-                </div>
-            </t-panel>
-        </div>
-
-        <div class="demo-section">
-            <h2>Compact Panel</h2>
-            <t-pnl title="Quick Stats" compact>
-                <div class="panel-content">
-                    <p>CPU: 45% | RAM: 8.2GB | DISK: 120GB</p>
-                </div>
-            </t-pnl>
-        </div>
-
-        <div class="demo-section">
-            <h2>Resizable Panel</h2>
-            <t-panel title="Terminal Output" resizable>
-                <div class="panel-content">
-                    <p>> Drag the corner to resize this panel</p>
-                    <p>> Minimum size is enforced</p>
-                    <p>> Content will scroll if needed</p>
-                </div>
-            </t-panel>
-        </div>
-
-        <div class="code-block">
-            <code>// Lit Panel Components - Zero FOUC
-import { TPanel } from './js/components/TPanelLit.js';
-
-// Usage Examples:
-&lt;t-panel title="Standard Panel" variant="standard"&gt;
-    Content here...
-&lt;/t-panel&gt;
-
-&lt;t-pnl title="Collapsible" collapsible collapsed="false"&gt;
-    Expandable content...
-&lt;/t-pnl&gt;
-
-// With slots:
-&lt;t-panel title="Advanced"&gt;
-    &lt;div slot="actions"&gt;Action buttons&lt;/div&gt;
-    Main content...
-    &lt;div slot="footer"&gt;Footer buttons&lt;/div&gt;
-&lt;/t-panel&gt;</code>
+    <!-- Size Mode Selector -->
+    <div class="compact-toggle-container">
+        <span class="size-label">Size:</span>
+        <div class="size-toggle-group">
+            <button class="size-toggle-btn" data-size="large">Large</button>
+            <button class="size-toggle-btn active" data-size="standard">Standard</button>
+            <button class="size-toggle-btn" data-size="compact">Compact</button>
         </div>
     </div>
 
-    <!-- Import the Lit components -->
+    <!-- SECTION 1: Basic Panel Modes -->
+    <div class="demo-section">
+        <h2 class="demo-title">1. Panel Modes (Presets of Features)</h2>
+        <p class="demo-description">
+            Modes are just presets that enable different panel features: header, footer, status bar, etc.
+        </p>
+
+        <!-- Mode: with-header (default) -->
+        <div class="panel-demo">
+            <h3>Mode: with-header</h3>
+            <t-pnl title="Panel with Header and Actions">
+                <div slot="actions">
+                    <t-btn type="icon" size="xs" id="settingsBtn"></t-btn>
+                    <t-btn type="icon" size="xs" id="refreshBtn"></t-btn>
+                    <t-btn type="icon" size="xs" id="closeBtn"></t-btn>
+                </div>
+                <p>This panel has action buttons in the header for quick access to common functions.</p>
+                <div class="control-row">
+                    <t-btn>Button</t-btn>
+                    <t-inp placeholder="Input field" value="Sample text"></t-inp>
+                    <t-sld min="0" max="100" value="50"></t-sld>
+                </div>
+            </t-pnl>
+        </div>
+
+        <!-- Headless Panel -->
+        <div class="panel-demo">
+            <h3>Mode: headless</h3>
+            <t-pnl variant="headless">
+                <p>This is a headless panel - no header, just content area.</p>
+                <div class="control-row">
+                    <t-tog label="Option A"></t-tog>
+                    <t-tog label="Option B"></t-tog>
+                    <t-drp placeholder="Select option">
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                    </t-drp>
+                </div>
+            </t-pnl>
+        </div>
+
+        <!-- Panel with Status Bar -->
+        <div class="panel-demo">
+            <h3>Mode: with-status-bar</h3>
+            <t-pnl title="Panel with Status Bar">
+                <p>This panel includes a status bar at the bottom.</p>
+                <div class="control-row">
+                    <t-btn variant="primary">Primary</t-btn>
+                    <t-btn variant="danger">Danger</t-btn>
+                    <t-btn variant="success">Success</t-btn>
+                </div>
+                <div slot="footer" class="status-bar">
+                    <div class="status-field">
+                        <span class="status-field-label">Status:</span>
+                        <span class="status-field-value">Ready</span>
+                    </div>
+                    <div class="status-field">
+                        <span class="status-field-label">Count:</span>
+                        <span class="status-field-value">42</span>
+                    </div>
+                    <div class="status-field">
+                        <span class="status-field-label">Mode:</span>
+                        <span class="status-field-value">Active</span>
+                    </div>
+                </div>
+            </t-pnl>
+        </div>
+    </div>
+
+    <!-- SECTION 2: Collapsible Panels -->
+    <div class="demo-section">
+        <h2 class="demo-title">2. Collapsible Panels</h2>
+
+        <div class="panel-demo">
+            <t-pnl title="Collapsible Panel (Click header to toggle)" collapsible>
+                <p>This panel can be collapsed by clicking the header or the collapse button.</p>
+                <div class="control-row">
+                    <t-inp placeholder="Name" size="small"></t-inp>
+                    <t-inp placeholder="Email" size="small"></t-inp>
+                    <t-btn size="small">Submit</t-btn>
+                </div>
+            </t-pnl>
+        </div>
+
+        <div class="panel-demo">
+            <t-pnl title="Initially Collapsed Panel" collapsible collapsed>
+                <p>This panel starts in a collapsed state. Click to expand!</p>
+                <t-ldr type="dots" message="Loading..."></t-ldr>
+            </t-pnl>
+        </div>
+    </div>
+
+    <!-- SECTION 3: Panel Variants -->
+    <div class="demo-section">
+        <h2 class="demo-title">3. Panel Variants</h2>
+
+        <div class="panel-demo">
+            <t-pnl title="Standard Non-Collapsible Panel">
+                <p>This is a regular panel without collapse functionality - just a standard container.</p>
+                <div class="control-row">
+                    <t-tog label="Enable feature" size="small"></t-tog>
+                    <t-sld min="0" max="10" value="5" size="small"></t-sld>
+                </div>
+            </t-pnl>
+        </div>
+
+        <div class="panel-demo">
+            <t-pnl title="Multiline Text Input Examples" collapsible id="textareaPanel">
+                <p>Various textarea and multiline input examples:</p>
+                <div style="margin: 15px 0;">
+                    <label style="display: block; margin-bottom: 5px; font-size: 12px; color: #00ff41;">Simple Textarea:</label>
+                    <t-textarea placeholder="Enter your text here..." rows="4" style="width: 100%;"></t-textarea>
+                </div>
+                <div style="margin: 15px 0;">
+                    <label style="display: block; margin-bottom: 5px; font-size: 12px; color: #00ff41;">Code Editor (CSS):</label>
+                    <t-textarea placeholder="/* Enter CSS code */" rows="6" style="width: 100%; font-family: monospace;">/* Example CSS */
+.panel {
+  background: #1a1a1a;
+  border: 1px solid #00ff41;
+  padding: 10px;
+}</t-textarea>
+                    <div style="text-align: right; margin-top: 5px; font-size: 11px; opacity: 0.7;">Line 6 | 12 words</div>
+                </div>
+                <div style="margin: 15px 0;">
+                    <label style="display: block; margin-bottom: 5px; font-size: 12px; color: #00ff41;">JSON Configuration:</label>
+                    <t-textarea placeholder='{ "key": "value" }' rows="5" style="width: 100%; font-family: monospace;">{
+  "theme": "dark",
+  "autoSave": true,
+  "fontSize": 14
+}</t-textarea>
+                </div>
+            </t-pnl>
+        </div>
+    </div>
+
+    <!-- SECTION 4: Nested Panels (Basic) -->
+    <div class="demo-section">
+        <h2 class="demo-title">4. Nested Panels (Basic)</h2>
+
+        <t-pnl title="Parent Panel" collapsible>
+            <p>Parent level content with nested child panels below.</p>
+            <div class="control-row">
+                <t-btn size="small">Parent Action</t-btn>
+                <t-inp placeholder="Parent input" size="small"></t-inp>
+            </div>
+
+            <!-- Nested Child Panel -->
+            <t-pnl title="Child Panel" collapsible>
+                <p>First level nested panel.</p>
+                <div class="control-row">
+                    <t-tog label="Child Option" size="xs"></t-tog>
+                    <t-sld min="0" max="100" value="25" size="xs"></t-sld>
+                </div>
+
+                <!-- Grandchild Panel -->
+                <t-pnl title="Grandchild Panel" collapsible compact>
+                    <p>Second level nested panel.</p>
+                    <div class="control-row">
+                        <t-btn size="xs">Tiny Button</t-btn>
+                        <t-inp placeholder="Tiny input" size="xs"></t-inp>
+                    </div>
+                </t-pnl>
+            </t-pnl>
+        </t-pnl>
+    </div>
+
+    <!-- SECTION 5: Deep Nested Controls Demo -->
+    <div class="demo-section nested-highlight">
+        <h2 class="demo-title">5. Deep Nested Controls (6+ Levels with Controls at Every Level)</h2>
+
+        <t-pnl title="Level 1: Application Settings" collapsible id="level1">
+            <div slot="actions">
+                <t-btn type="icon" size="xs" id="level1Btn1"></t-btn>
+                <t-btn type="icon" size="xs" id="level1Btn2"></t-btn>
+            </div>
+            <div class="control-row">
+                <t-btn size="small" variant="primary">Save All</t-btn>
+                <t-btn size="small" variant="danger">Reset</t-btn>
+                <t-tog label="Auto-save" size="small"></t-tog>
+                <t-inp placeholder="App Name" value="MyApp" size="small"></t-inp>
+            </div>
+
+            <t-pnl title="Level 2: System Configuration" collapsible id="level2">
+                <div class="control-row">
+                    <t-drp size="xs" placeholder="Theme">
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                    </t-drp>
+                    <t-drp size="xs" placeholder="Language">
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                    </t-drp>
+                    <t-tog label="Notifications" size="xs"></t-tog>
+                    <t-sld min="0" max="100" value="75" size="xs"></t-sld>
+                </div>
+
+                <t-pnl title="Level 3: Performance Tuning" collapsible id="level3">
+                    <div class="control-row">
+                        <t-inp placeholder="CPU Limit %" value="80" size="xs"></t-inp>
+                        <t-inp placeholder="Memory MB" value="2048" size="xs"></t-inp>
+                        <t-tog label="Turbo" size="xs"></t-tog>
+                        <t-btn size="xs" variant="success">Apply</t-btn>
+                    </div>
+
+                    <t-pnl title="Level 4: Advanced Settings" collapsible id="level4">
+                        <div class="control-row">
+                            <t-sld min="1" max="16" value="4" size="xs"></t-sld>
+                            <span style="font-size: 11px;">Threads</span>
+                            <t-tog label="HT" size="xs"></t-tog>
+                            <t-tog label="AVX" size="xs"></t-tog>
+                            <t-drp size="xs">
+                                <option>Low</option>
+                                <option>Normal</option>
+                                <option>High</option>
+                            </t-drp>
+                        </div>
+
+                        <t-pnl title="Level 5: GPU Configuration" collapsible compact id="level5">
+                            <div class="control-row">
+                                <t-inp placeholder="VRAM" value="8GB" size="xs"></t-inp>
+                                <t-tog label="RT" size="xs"></t-tog>
+                                <t-tog label="DLSS" size="xs"></t-tog>
+                                <t-sld min="30" max="144" value="60" size="xs"></t-sld>
+                                <span style="font-size: 10px;">FPS</span>
+                            </div>
+
+                            <t-pnl title="Level 6: Shader Options (Deepest)" collapsible compact id="level6">
+                                <div class="control-row">
+                                    <t-tog label="VS" size="xs"></t-tog>
+                                    <t-tog label="PS" size="xs"></t-tog>
+                                    <t-tog label="GS" size="xs"></t-tog>
+                                    <t-tog label="CS" size="xs"></t-tog>
+                                    <t-btn size="xs" variant="minimal">Compile</t-btn>
+                                    <t-clr value="#ff0080" size="xs"></t-clr>
+                                </div>
+                                <p style="font-size: 11px; margin-top: 10px;">
+                                    This is level 6 - the deepest nesting level in this demo!
+                                </p>
+                            </t-pnl>
+                        </t-pnl>
+                    </t-pnl>
+                </t-pnl>
+            </t-pnl>
+        </t-pnl>
+    </div>
+
+    <!-- SECTION 6: Mixed Content Panels -->
+    <div class="demo-section">
+        <h2 class="demo-title">6. Panels with Mixed Content</h2>
+
+        <t-pnl title="Rich Content Panel" collapsible>
+            <h3>Multiple Control Types</h3>
+            <div class="control-row">
+                <t-btn>Action 1</t-btn>
+                <t-btn variant="primary">Action 2</t-btn>
+                <t-btn variant="danger">Delete</t-btn>
+            </div>
+
+            <div class="control-row">
+                <t-inp placeholder="Search..." style="flex: 1;"></t-inp>
+                <t-btn type="icon" id="searchBtn"></t-btn>
+            </div>
+
+            <div class="control-row">
+                <t-tog label="Option A" style="margin-right: 15px;"></t-tog>
+                <t-tog label="Option B" style="margin-right: 15px;"></t-tog>
+                <t-tog label="Option C"></t-tog>
+            </div>
+
+            <div class="control-row">
+                <span>Volume:</span>
+                <t-sld min="0" max="100" value="50" style="flex: 1;"></t-sld>
+                <span id="volumeDisplay">50%</span>
+            </div>
+
+            <div class="control-row">
+                <t-drp placeholder="Select category">
+                    <option>Category 1</option>
+                    <option>Category 2</option>
+                    <option>Category 3</option>
+                </t-drp>
+                <t-clr value="#00ff41"></t-clr>
+                <t-ldr type="spinner" size="small"></t-ldr>
+            </div>
+
+            <div slot="footer" style="display: flex; justify-content: space-between; width: 100%; padding: 10px;">
+                <span style="opacity: 0.7;">Footer content is optional</span>
+                <t-btn size="xs" type="icon" id="footerCloseBtn" title="Hide Footer"></t-btn>
+            </div>
+        </t-pnl>
+    </div>
+
+    <!-- Include all components (mix of Lit and non-Lit for now) -->
     <script type="module">
-        import '../js/components/TButtonLit.js';
         import '../js/components/TPanelLit.js';
+        import '../js/components/TButtonLit.js';
+        import '../js/components/TInput.js';
+        import '../js/components/TSlider.js';
+        import '../js/components/TToggle.js';
+        import '../js/components/TDropdown.js';
+        import '../js/components/TColorPicker.js';
+        import '../js/components/TLoader.js';
+        import '../js/components/TTextarea.js';
         import {
             arrowsClockwiseIcon,
-            gearSixIcon
+            gearSixIcon,
+            xIcon,
+            magnifyingGlassIcon
         } from '../js/utils/phosphor-icons.js';
 
         // Wait for components to be defined
-        Promise.all([
-            customElements.whenDefined('t-btn'),
-            customElements.whenDefined('t-panel'),
-            customElements.whenDefined('t-pnl')
-        ]).then(() => {
-            console.log('✓ Lit Components Loaded - Zero FOUC!');
+        customElements.whenDefined('t-pnl').then(() => {
+            console.log('Panels loaded with Lit - Zero FOUC!');
 
-            // Set icons for action buttons
-            const refreshBtn = document.getElementById('refreshBtn');
-            if (refreshBtn) {
-                refreshBtn.setIcon(arrowsClockwiseIcon);
-            }
-
+            // Add icons to buttons
             const settingsBtn = document.getElementById('settingsBtn');
-            if (settingsBtn) {
-                settingsBtn.setIcon(gearSixIcon);
-            }
-        });
+            const refreshBtn = document.getElementById('refreshBtn');
+            const closeBtn = document.getElementById('closeBtn');
+            const searchBtn = document.getElementById('searchBtn');
+            const footerCloseBtn = document.getElementById('footerCloseBtn');
+            const level1Btn1 = document.getElementById('level1Btn1');
+            const level1Btn2 = document.getElementById('level1Btn2');
 
-        // Listen for panel events
-        document.addEventListener('panel-toggle', (e) => {
-            console.log('Panel toggled:', e.detail.collapsed);
+            if (settingsBtn && settingsBtn.setIcon) settingsBtn.setIcon(gearSixIcon);
+            if (refreshBtn && refreshBtn.setIcon) refreshBtn.setIcon(arrowsClockwiseIcon);
+            if (closeBtn && closeBtn.setIcon) closeBtn.setIcon(xIcon);
+            if (searchBtn && searchBtn.setIcon) searchBtn.setIcon(magnifyingGlassIcon);
+            if (footerCloseBtn && footerCloseBtn.setIcon) footerCloseBtn.setIcon(xIcon);
+            if (level1Btn1 && level1Btn1.setIcon) level1Btn1.setIcon(gearSixIcon);
+            if (level1Btn2 && level1Btn2.setIcon) level1Btn2.setIcon(arrowsClockwiseIcon);
+
+            // Size mode selector
+            const sizeButtons = document.querySelectorAll('.size-toggle-btn');
+
+            function updateComponentSizes(mode) {
+                const allPanels = document.querySelectorAll('t-pnl');
+                const allButtons = document.querySelectorAll('t-btn');
+                const allInputs = document.querySelectorAll('t-inp, t-textarea');
+                const allToggles = document.querySelectorAll('t-tog');
+                const allSliders = document.querySelectorAll('t-sld');
+                const allDropdowns = document.querySelectorAll('t-drp');
+
+                // Update panels
+                allPanels.forEach(panel => {
+                    if (mode === 'compact') {
+                        panel.setAttribute('compact', '');
+                    } else {
+                        panel.removeAttribute('compact');
+                    }
+                });
+
+                // Map mode to component size
+                const sizeMap = {
+                    'large': 'large',
+                    'standard': null, // default size
+                    'compact': 'small'
+                };
+
+                const componentSize = sizeMap[mode];
+
+                // Update all components
+                [...allButtons, ...allInputs, ...allToggles, ...allSliders, ...allDropdowns].forEach(component => {
+                    // Skip buttons in panel action slots - they're managed by the panel
+                    if (component.tagName === 'T-BTN' && component.closest('[slot="actions"]')) {
+                        return;
+                    }
+
+                    if (componentSize === null) {
+                        component.removeAttribute('size');
+                    } else {
+                        component.setAttribute('size', componentSize);
+                    }
+                });
+            }
+
+            sizeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active state
+                    sizeButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    // Update components
+                    const mode = btn.dataset.size;
+                    updateComponentSizes(mode);
+                });
+            });
+
+            // Footer close button functionality
+            if (footerCloseBtn) {
+                footerCloseBtn.addEventListener('click', () => {
+                    const panel = footerCloseBtn.closest('t-pnl');
+                    const footer = footerCloseBtn.closest('[slot="footer"]');
+                    if (footer) {
+                        footer.style.display = footer.style.display === 'none' ? 'flex' : 'none';
+                    }
+                });
+            }
+
+            // Volume slider display update
+            const volumeSlider = document.querySelector('t-sld[max="100"]');
+            const volumeDisplay = document.getElementById('volumeDisplay');
+            if (volumeSlider && volumeDisplay) {
+                volumeSlider.addEventListener('slider-change', (e) => {
+                    volumeDisplay.textContent = `${e.detail.value}%`;
+                });
+            }
+
+            // Test panel programmatic control
+            const textareaPanel = document.getElementById('textareaPanel');
+            if (textareaPanel) {
+                setTimeout(() => {
+                    console.log('Panel API test:', {
+                        isCollapsed: textareaPanel.collapsed,
+                        title: textareaPanel.title,
+                        variant: textareaPanel.variant
+                    });
+                }, 1000);
+            }
         });
     </script>
 </body>
