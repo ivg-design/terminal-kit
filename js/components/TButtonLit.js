@@ -238,7 +238,6 @@ export class TButton extends LitElement {
     .t-btn.is-loading {
       pointer-events: none;
       position: relative;
-      min-width: var(--button-min-width, 100px);
       /* Maintain full visibility during loading */
       opacity: 1 !important;
       color: var(--terminal-green, #00ff41) !important;
@@ -390,22 +389,88 @@ export class TButton extends LitElement {
       justify-content: center;
     }
 
-    /* Icon toggle states */
-    .t-btn--toggle.t-btn--icon.is-off {
-      background: transparent;
+    /* Icon toggle states - Primary variant */
+    /* OFF state: Filled button with icon cutout */
+    .t-btn--toggle.t-btn--primary.t-btn--icon.is-off {
+      background: var(--terminal-green, #00ff41);
+      border-color: var(--terminal-green, #00ff41);
     }
 
-    .t-btn--toggle.t-btn--icon.is-off svg {
-      fill: currentColor;
-    }
-
-    .t-btn--toggle.t-btn--icon.is-on {
-      background: currentColor;
-    }
-
-    .t-btn--toggle.t-btn--icon.is-on svg {
-      /* Icon becomes transparent to show background through */
+    .t-btn--toggle.t-btn--primary.t-btn--icon.is-off svg {
+      /* Icon cutout effect - shows dark background through */
       fill: var(--terminal-black, #0a0a0a);
+    }
+
+    .t-btn--toggle.t-btn--primary.t-btn--icon.is-off:hover:not(:disabled) {
+      background: var(--terminal-green-bright, #00ff66);
+      border-color: var(--terminal-green-bright, #00ff66);
+    }
+
+    .t-btn--toggle.t-btn--primary.t-btn--icon.is-off:hover:not(:disabled) svg {
+      fill: var(--terminal-black, #0a0a0a);
+    }
+
+    /* ON state: Outlined button with filled green icon */
+    .t-btn--toggle.t-btn--primary.t-btn--icon.is-on {
+      background: transparent;
+      border-color: var(--terminal-green, #00ff41);
+    }
+
+    .t-btn--toggle.t-btn--primary.t-btn--icon.is-on svg {
+      fill: var(--terminal-green, #00ff41);
+    }
+
+    .t-btn--toggle.t-btn--primary.t-btn--icon.is-on:hover:not(:disabled) {
+      background: var(--terminal-green-dark, #008820);
+      border-color: var(--terminal-green, #00ff41);
+    }
+
+    .t-btn--toggle.t-btn--primary.t-btn--icon.is-on:hover:not(:disabled) svg {
+      fill: white;
+    }
+
+    /* Icon toggle states - Secondary variant */
+    /* OFF state: Filled button with icon cutout and glow */
+    .t-btn--toggle.t-btn--secondary.t-btn--icon.is-off {
+      background: var(--terminal-green, #00ff41);
+      border-color: var(--terminal-green, #00ff41);
+      box-shadow: 0 0 15px var(--terminal-green-glow, rgba(0, 255, 65, 0.4));
+    }
+
+    .t-btn--toggle.t-btn--secondary.t-btn--icon.is-off svg {
+      /* Icon cutout effect */
+      fill: var(--terminal-black, #0a0a0a);
+    }
+
+    .t-btn--toggle.t-btn--secondary.t-btn--icon.is-off:hover:not(:disabled) {
+      background: var(--terminal-green-bright, #00ff66);
+      border-color: var(--terminal-green-bright, #00ff66);
+      box-shadow: 0 0 25px var(--terminal-green-glow, rgba(0, 255, 65, 0.6));
+    }
+
+    .t-btn--toggle.t-btn--secondary.t-btn--icon.is-off:hover:not(:disabled) svg {
+      fill: var(--terminal-black, #0a0a0a);
+    }
+
+    /* ON state: Outlined button with filled green icon */
+    .t-btn--toggle.t-btn--secondary.t-btn--icon.is-on {
+      background: transparent;
+      border-color: var(--terminal-green-dark, #009929);
+    }
+
+    .t-btn--toggle.t-btn--secondary.t-btn--icon.is-on svg {
+      fill: var(--terminal-green, #00ff41);
+    }
+
+    .t-btn--toggle.t-btn--secondary.t-btn--icon.is-on:hover:not(:disabled) {
+      background: transparent;
+      border-color: var(--terminal-green, #00ff41);
+      box-shadow: 0 0 20px var(--terminal-green-glow, rgba(0, 255, 65, 0.5)),
+                  inset 0 0 20px var(--terminal-green-glow, rgba(0, 255, 65, 0.1));
+    }
+
+    .t-btn--toggle.t-btn--secondary.t-btn--icon.is-on:hover:not(:disabled) svg {
+      fill: white;
     }
 
     /* ========================================
@@ -566,6 +631,9 @@ export class TButton extends LitElement {
 
     // Internal state
     this._icon = '';
+    this._fixedWidth = null;
+    this._originalContent = null;
+    this._preLoadingWidth = null;
   }
 
   connectedCallback() {
@@ -576,6 +644,8 @@ export class TButton extends LitElement {
     }
     // Apply custom colors if provided
     this._applyCustomColors();
+    // Calculate fixed width immediately for toggle buttons
+    this._updateFixedWidth();
   }
 
   _applyCustomColors() {
@@ -617,41 +687,78 @@ export class TButton extends LitElement {
     } : null;
   }
 
-  _setConsistentWidth() {
-    // Calculate the maximum width needed for toggle states
+  _calculateMaxTextWidth() {
+    // Only calculate for toggle buttons with text variations
+    if (this.variant !== 'toggle' || !this.textOn || !this.textOff) {
+      return null;
+    }
+
+    // Create a temporary element to measure text
+    const measurer = document.createElement('span');
+    measurer.style.cssText = `
+      position: absolute;
+      visibility: hidden;
+      white-space: nowrap;
+      font-family: var(--font-mono, 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace);
+      font-size: ${this.size === 'large' || this.size === 'lg' ? '13px' :
+                   this.size === 'small' || this.size === 'sm' ? '10px' : '11px'};
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 var(--spacing-md, 12px);
+    `;
+    document.body.appendChild(measurer);
+
+    // Measure both texts
+    measurer.textContent = this.textOff;
+    const offWidth = measurer.offsetWidth;
+
+    measurer.textContent = this.textOn;
+    const onWidth = measurer.offsetWidth;
+
+    document.body.removeChild(measurer);
+
+    // Add padding for button borders and internal spacing
+    const padding = this.size === 'large' || this.size === 'lg' ? 40 :
+                    this.size === 'small' || this.size === 'sm' ? 16 : 24;
+
+    return Math.max(offWidth, onWidth) + padding;
+  }
+
+  _updateFixedWidth() {
+    // For toggle buttons with text
     if (this.variant === 'toggle' && (this.textOn || this.textOff)) {
-      requestAnimationFrame(() => {
+      const maxWidth = this._calculateMaxTextWidth();
+      if (maxWidth) {
+        this._fixedWidth = `${maxWidth}px`;
+      }
+    }
+  }
+
+
+  willUpdate(changedProperties) {
+    // Capture width BEFORE loading state changes the render
+    if (changedProperties.has('loading')) {
+      const wasLoading = changedProperties.get('loading');
+
+      // About to enter loading state - capture current width
+      if (this.loading && !wasLoading && this.variant !== 'toggle') {
         const button = this.shadowRoot?.querySelector('.t-btn');
         if (button) {
-          // Store current state
-          const currentText = this.toggleState ? this.textOn : this.textOff;
-          const otherText = this.toggleState ? this.textOff : this.textOn;
-
-          // Temporarily measure both states
-          const span = button.querySelector('.t-btn__text');
-          if (span && otherText) {
-            // Get current width
-            const currentWidth = button.offsetWidth;
-
-            // Temporarily set other text to measure
-            const originalContent = span.textContent;
-            span.textContent = otherText;
-            const otherWidth = button.offsetWidth;
-            span.textContent = originalContent;
-
-            // Set minimum width to the larger of the two
-            const maxWidth = Math.max(currentWidth, otherWidth);
-            this.style.setProperty('--button-min-width', `${maxWidth}px`);
-          }
+          this._fixedWidth = `${button.offsetWidth}px`;
         }
-      });
+      }
+      // About to exit loading state - clear width
+      else if (!this.loading && wasLoading && this.variant !== 'toggle') {
+        this._fixedWidth = null;
+      }
     }
   }
 
   updated(changedProperties) {
-    // Ensure consistent button width for toggles and loading states
-    if ((this.variant === 'toggle' && (this.textOn || this.textOff)) || this.loading) {
-      this._setConsistentWidth();
+    // Recalculate fixed width when relevant properties change
+    if (changedProperties.has('variant') || changedProperties.has('textOn') ||
+        changedProperties.has('textOff') || changedProperties.has('size')) {
+      this._updateFixedWidth();
     }
 
     // Handle toggle color updates with proper fallbacks
@@ -689,9 +796,17 @@ export class TButton extends LitElement {
   render() {
     const classes = this._getButtonClasses();
 
+    // Apply fixed width inline for consistent sizing
+    const buttonStyles = {};
+    if (this._fixedWidth) {
+      buttonStyles.minWidth = this._fixedWidth;
+      buttonStyles.width = this._fixedWidth;
+    }
+
     return html`
       <button
         class=${classes}
+        style=${Object.entries(buttonStyles).map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${v}`).join('; ')}
         ?disabled=${this.disabled || this.loading}
         @click=${this._handleClick}
       >
@@ -835,6 +950,13 @@ export class TButton extends LitElement {
   }
 
   setLoading(loading) {
+    // Capture width before changing loading state
+    if (!this.loading && loading && this.variant !== 'toggle') {
+      const button = this.shadowRoot?.querySelector('.t-btn');
+      if (button) {
+        this._preLoadingWidth = button.getBoundingClientRect().width;
+      }
+    }
     this.loading = loading;
   }
 }

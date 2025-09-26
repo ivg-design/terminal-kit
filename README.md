@@ -4,12 +4,12 @@ A retro-futuristic web components library with terminal aesthetics. Build cyberp
 
 ## Features
 
-- 🎨 **Terminal Aesthetics** - Classic green-on-black terminal styling
-- ⚡ **Web Components** - Framework-agnostic, works everywhere
-- 🌙 **Shadow DOM** - Encapsulated styles, no conflicts
-- 🎯 **Zero Dependencies** - Pure vanilla JavaScript
-- 📦 **Modular** - Import only what you need
-- 🚀 **Performance** - Lightweight and fast
+- **Terminal Aesthetics** - Classic green-on-black terminal styling
+- **Web Components** - Framework-agnostic, works everywhere
+- **Shadow DOM** - Encapsulated styles, no conflicts
+- **Zero Dependencies** - Pure vanilla JavaScript
+- **Modular** - Import only what you need
+- **Performance** - Lightweight and fast
 
 ## Components
 

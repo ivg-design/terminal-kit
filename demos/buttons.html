@@ -103,10 +103,48 @@
             line-height: 1.5;
             white-space: pre;
         }
+
+        .breadcrumb {
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #242424;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: #00cc33;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .breadcrumb a {
+            color: #00cc33;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--terminal-green);
+        }
+
+        .breadcrumb-separator {
+            margin: 0 8px;
+            color: #333;
+        }
+
+        .breadcrumb-current {
+            color: var(--terminal-green);
+        }
     </style>
 </head>
 <body>
     <div class="demo-container">
+        <div class="breadcrumb">
+            <a href="../index.html">Terminal Kit</a>
+            <span class="breadcrumb-separator">›</span>
+            <a href="index.html">Demos</a>
+            <span class="breadcrumb-separator">›</span>
+            <span class="breadcrumb-current">Buttons</span>
+        </div>
+
         <h1>Terminal Buttons - Lit Components</h1>
 
         <div class="notice">
@@ -268,9 +306,12 @@ import { TButton } from './js/components/TButtonLit.js';
         import '../js/components/TButtonLit.js';
         import {
             gearSixIcon,
+            gearSixIconFill,
             floppyDiskIcon,
             playIcon,
-            pauseIcon
+            playIconFill,
+            pauseIcon,
+            pauseIconFill
         } from '../js/utils/phosphor-icons.js';
 
         // Wait for components to be defined
@@ -294,18 +335,20 @@ import { TButton } from './js/components/TButtonLit.js';
             }
 
             // Set up play/pause toggle button
+            // In OFF state: filled play icon with background cutout effect
+            // In ON state: filled pause icon on transparent background
             const playPauseBtn = document.getElementById('playPauseToggle');
             if (playPauseBtn) {
-                playPauseBtn.setAttribute('icon-off', playIcon);
-                playPauseBtn.setAttribute('icon-on', pauseIcon);
-                playPauseBtn.setIcon(playIcon);
+                playPauseBtn.setAttribute('icon-off', playIconFill);
+                playPauseBtn.setAttribute('icon-on', pauseIconFill);
+                playPauseBtn.setIcon(playIconFill);
             }
 
             // Set up secondary icon toggle button
             const secondaryIconBtn = document.getElementById('secondaryIconToggle');
             if (secondaryIconBtn) {
                 secondaryIconBtn.setAttribute('icon-off', gearSixIcon);
-                secondaryIconBtn.setAttribute('icon-on', gearSixIcon);
+                secondaryIconBtn.setAttribute('icon-on', gearSixIconFill);
                 secondaryIconBtn.setIcon(gearSixIcon);
             }
         });
