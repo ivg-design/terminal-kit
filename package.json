@@ -10,6 +10,9 @@
     "build": "vite build",
     "build:all": "npm run build && npm run docs:build",
     "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
     "docs:dev": "vitepress dev docs --port 5174",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
@@ -25,9 +28,12 @@
   "author": "IVG Design",
   "license": "MIT",
   "devDependencies": {
+    "@vitest/ui": "^2.1.0",
     "concurrently": "^9.2.1",
+    "happy-dom": "^15.11.0",
     "vite": "^7.1.5",
-    "vitepress": "^1.6.4"
+    "vitepress": "^1.6.4",
+    "vitest": "^2.1.0"
   },
   "dependencies": {
     "lit": "^3.3.1"

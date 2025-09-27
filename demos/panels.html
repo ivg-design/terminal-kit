@@ -6,6 +6,20 @@
     <title>Terminal Panels - Lit Components (Zero FOUC)</title>
 
     <style>
+        /* CRITICAL: Prevent FOUC by hiding undefined custom elements */
+        t-pnl:not(:defined),
+        t-btn:not(:defined),
+        t-inp:not(:defined),
+        t-tog:not(:defined),
+        t-sld:not(:defined),
+        t-drp:not(:defined),
+        t-clr:not(:defined),
+        t-ldr:not(:defined),
+        t-textarea:not(:defined) {
+            opacity: 0;
+            display: inline-block;
+        }
+
         /* Page styles only - components have embedded styles */
         :root {
             --terminal-black: #0a0a0a;
@@ -534,24 +548,23 @@
                 <t-ldr type="spinner" size="small"></t-ldr>
             </div>
 
-            <div slot="footer" style="display: flex; justify-content: space-between; width: 100%; padding: 10px;">
+            <div slot="footer" style="display: flex; justify-content: space-between; width: 100%;">
                 <span style="opacity: 0.7;">Footer content is optional</span>
-                <t-btn size="xs" type="icon" id="footerCloseBtn" title="Hide Footer"></t-btn>
             </div>
         </t-pnl>
     </div>
 
-    <!-- Include all components (mix of Lit and non-Lit for now) -->
+    <!-- ALL LIT COMPONENTS - Pure Lit Architecture -->
     <script type="module">
         import '../js/components/TPanelLit.js';
         import '../js/components/TButtonLit.js';
-        import '../js/components/TInput.js';
-        import '../js/components/TSlider.js';
-        import '../js/components/TToggle.js';
-        import '../js/components/TDropdown.js';
-        import '../js/components/TColorPicker.js';
-        import '../js/components/TLoader.js';
-        import '../js/components/TTextarea.js';
+        import '../js/components/TInputLit.js';
+        import '../js/components/TSliderLit.js';
+        import '../js/components/TToggleLit.js';
+        import '../js/components/TDropdownLit.js';
+        import '../js/components/TColorPickerLit.js';
+        import '../js/components/TLoaderLit.js';
+        import '../js/components/TTextareaLit.js';
         import {
             arrowsClockwiseIcon,
             gearSixIcon,
@@ -568,7 +581,6 @@
             const refreshBtn = document.getElementById('refreshBtn');
             const closeBtn = document.getElementById('closeBtn');
             const searchBtn = document.getElementById('searchBtn');
-            const footerCloseBtn = document.getElementById('footerCloseBtn');
             const level1Btn1 = document.getElementById('level1Btn1');
             const level1Btn2 = document.getElementById('level1Btn2');
 
@@ -576,7 +588,6 @@
             if (refreshBtn && refreshBtn.setIcon) refreshBtn.setIcon(arrowsClockwiseIcon);
             if (closeBtn && closeBtn.setIcon) closeBtn.setIcon(xIcon);
             if (searchBtn && searchBtn.setIcon) searchBtn.setIcon(magnifyingGlassIcon);
-            if (footerCloseBtn && footerCloseBtn.setIcon) footerCloseBtn.setIcon(xIcon);
             if (level1Btn1 && level1Btn1.setIcon) level1Btn1.setIcon(gearSixIcon);
             if (level1Btn2 && level1Btn2.setIcon) level1Btn2.setIcon(arrowsClockwiseIcon);
 
@@ -593,11 +604,17 @@
 
                 // Update panels
                 allPanels.forEach(panel => {
+                    // Remove both attributes first
+                    panel.removeAttribute('compact');
+                    panel.removeAttribute('large');
+
+                    // Then set the appropriate one
                     if (mode === 'compact') {
                         panel.setAttribute('compact', '');
-                    } else {
-                        panel.removeAttribute('compact');
+                    } else if (mode === 'large') {
+                        panel.setAttribute('large', '');
                     }
+                    // standard mode has neither attribute
                 });
 
                 // Map mode to component size
@@ -636,16 +653,6 @@
                 });
             });
 
-            // Footer close button functionality
-            if (footerCloseBtn) {
-                footerCloseBtn.addEventListener('click', () => {
-                    const panel = footerCloseBtn.closest('t-pnl');
-                    const footer = footerCloseBtn.closest('[slot="footer"]');
-                    if (footer) {
-                        footer.style.display = footer.style.display === 'none' ? 'flex' : 'none';
-                    }
-                });
-            }
 
             // Volume slider display update
             const volumeSlider = document.querySelector('t-sld[max="100"]');

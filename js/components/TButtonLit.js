@@ -6,6 +6,19 @@ import { LitElement, html, css } from 'lit';
  */
 export class TButton extends LitElement {
   static styles = css`
+    :host {
+      --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
+      --terminal-green: #00ff41;
+      --terminal-green-bright: #33ff66;
+      --terminal-green-dim: #00cc33;
+      --terminal-green-dark: #008820;
+      --terminal-gray-dark: #242424;
+      --terminal-gray-light: #333333;
+      --terminal-gray: #808080;
+      --spacing-md: 12px;
+      --spacing-sm: 8px;
+      --font-size-sm: 11px;
+    }
     /* ========================================
        HOST ELEMENT STYLES
        ======================================== */
@@ -351,8 +364,8 @@ export class TButton extends LitElement {
        ======================================== */
     svg {
       fill: currentColor;
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       flex-shrink: 0;
       display: block;
       /* Ensure perfect icon centering */
@@ -366,14 +379,14 @@ export class TButton extends LitElement {
 
     .t-btn--sm svg,
     .t-btn--small svg {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
     }
 
     .t-btn--lg svg,
     .t-btn--large svg {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
     }
 
     .t-btn__text {
