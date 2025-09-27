@@ -1,74 +1,62 @@
-/**
- * TerminalColorPicker Web Component using iro.js and Lit
- */
-
+// ============================================================
+// SECTION 1: IMPORTS (REQUIRED)
+// ============================================================
 import { LitElement, html, css } from 'lit';
-import { property, state } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import componentLogger from '../utils/ComponentLogger.js';
 import { paletteIcon, xIcon, floppyDiskIcon, trashIcon } from '../utils/phosphor-icons.js';
 import iro from '@jaames/iro';
 
-// Debug mode
-const DEBUG_MODE = window.TERMINAL_DEBUG || false;
-const log = (...args) => DEBUG_MODE && console.log('[ColorPicker]', ...args);
-const warn = (...args) => console.warn('[ColorPicker]', ...args);
-const error = (...args) => console.error('[ColorPicker]', ...args);
-
+// ============================================================
+// SECTION 2: COMPONENT CLASS DECLARATION (REQUIRED)
+// ============================================================
+/**
+ * @component TColorPicker
+ * @tagname t-clr
+ * @description Advanced color picker component with systematic element control, iro.js integration, persistent custom swatches, and multiple color format support (HEX, RGB, HSL). Supports flexible element ordering, three size variants, custom icons, and modal confirmation for destructive actions.
+ * @category Form Controls
+ * @since 1.0.0
+ * @example
+ * <t-clr
+ *   value="#00ff41ff"
+ *   label1="Theme"
+ *   label2="Color"
+ *   variant="large"
+ *   elements="icon,label,swatch,input"
+ *   show-clear-button>
+ * </t-clr>
+ */
 export class TColorPicker extends LitElement {
-	static get properties() {
-		return {
-			value: { type: String },
-			label1: { type: String },
-			label2: { type: String },
-			disabled: { type: Boolean },
-			variant: { type: String },
-			elements: { type: String },
-			customIcon: { type: String, attribute: 'custom-icon' },
-			showClearButton: { type: Boolean, attribute: 'show-clear-button' }
-		};
-	}
 
-	constructor() {
-		super();
-		log('Constructor called');
+	// ----------------------------------------------------------
+	// BLOCK 1: STATIC METADATA (REQUIRED)
+	// ----------------------------------------------------------
+	static tagName = 't-clr';
+	static version = '1.0.0';
+	static category = 'Form Controls';
 
-		// Initialize properties
-		this.value = '#00ff41ff'; // Default with alpha
-		this.label1 = 'Color';
-		this.label2 = 'Picker';
-		this.disabled = false;
-		this.variant = 'large'; // large | standard | compact
-		this.elements = 'icon,label,swatch,input'; // Comma-separated list of elements in order
-		this.customIcon = null;
-		this.showClearButton = false;
-
-		// Initialize state
-		this.colorPicker = null;
-		this.hueSlider = null;
-		this.alphaSlider = null;
-		this._syncingColor = false;
-		this.customSwatches = [];
-		this._initTimeout = null;
-		this._pickerId = null;
-		this._pendingColorUpdate = null;
-		this._currentMode = 'hex'; // hex, rgb, hsl
-		this._popoverElement = null;
-		this._isOpen = false;
-		this._colorChangeDebounce = null;
-
-		// Load custom swatches
-		this.loadCustomSwatches();
-	}
-
+	// ----------------------------------------------------------
+	// BLOCK 2: STATIC STYLES (REQUIRED - even if empty)
+	// ----------------------------------------------------------
 	static styles = css`
+		:host {
+			display: inline-block;
+			--t-clr-bg: var(--terminal-bg, #242424);
+			--t-clr-border: var(--terminal-border, #333333);
+			--t-clr-color: var(--terminal-green, #00cc33);
+			--t-clr-color-hover: var(--terminal-green-bright, #00ff41);
+			--t-clr-transition: var(--terminal-transition, all 0.2s ease);
+		}
+
 		.color-picker-wrapper {
 			display: flex;
 			align-items: center;
 			height: 48px;
-			background: #242424;
+			background: var(--t-clr-bg);
 			border: none;
 			position: relative;
-			transition: all 0.2s ease;
+			transition: var(--t-clr-transition);
 			width: fit-content;
 			outline: none;
 		}
@@ -85,7 +73,6 @@ export class TColorPicker extends LitElement {
 			gap: 4px;
 			padding: 0;
 		}
-
 
 		.color-picker-wrapper:focus {
 			outline: none;
@@ -108,9 +95,9 @@ export class TColorPicker extends LitElement {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			color: #00cc33;
+			color: var(--t-clr-color);
 			opacity: 0.7;
-			transition: all 0.2s ease;
+			transition: var(--t-clr-transition);
 		}
 
 		.color-picker-wrapper.standard .color-picker-icon {
@@ -125,7 +112,7 @@ export class TColorPicker extends LitElement {
 		}
 
 		.color-picker-wrapper:hover .color-picker-icon {
-			color: #00ff41;
+			color: var(--t-clr-color-hover);
 			opacity: 1;
 		}
 
@@ -149,12 +136,12 @@ export class TColorPicker extends LitElement {
 		}
 
 		.color-picker-label-line1 {
-			color: #00cc33;
+			color: var(--t-clr-color);
 			font-weight: normal;
 		}
 
 		.color-picker-label-line2 {
-			color: #00ff41;
+			color: var(--t-clr-color-hover);
 			font-weight: 500;
 		}
 
@@ -163,8 +150,8 @@ export class TColorPicker extends LitElement {
 			height: 48px;
 			min-width: 48px;
 			min-height: 48px;
-			border-left: 1px solid #333333;
-			border-right: 1px solid #333333;
+			border-left: 1px solid var(--t-clr-border);
+			border-right: 1px solid var(--t-clr-border);
 			position: relative;
 			cursor: pointer;
 			overflow: hidden;
@@ -199,8 +186,23 @@ export class TColorPicker extends LitElement {
 			opacity: 1;
 		}
 
-		.color-picker-wrapper.compact .color-picker-swatch {
-			width: 32px;
+		.color-picker-swatch-color {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 2;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.color-picker-swatch-color svg {
+			width: 24px;
+			height: 24px;
+			color: currentColor;
+			filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
 		}
 
 		.color-picker-swatch-compact {
@@ -211,7 +213,7 @@ export class TColorPicker extends LitElement {
 			border: none;
 			cursor: pointer;
 			position: relative;
-			transition: all 0.2s ease;
+			transition: var(--t-clr-transition);
 			flex-shrink: 0;
 		}
 
@@ -224,261 +226,217 @@ export class TColorPicker extends LitElement {
 			height: 100%;
 			background-image: linear-gradient(45deg, #999 25%, transparent 25%, transparent 75%, #999 75%, #999),
 				linear-gradient(45deg, #999 25%, transparent 25%, transparent 75%, #999 75%, #999);
-			background-size: 8px 8px;
-			background-position: 0 0, 4px 4px;
+			background-size: 4px 4px;
+			background-position: 0 0, 2px 2px;
 			background-color: #fff;
 			z-index: 1;
 			opacity: 0;
 			transition: opacity 0.2s ease;
 		}
 
-		.color-picker-swatch-xs.has-transparency::before {
+		.color-picker-swatch-compact.has-transparency::before {
 			opacity: 1;
 		}
 
-		.color-picker-swatch-xs .color-picker-swatch-color {
-			position: relative;
-			z-index: 2;
-		}
-
-		.color-picker-swatch-xs:hover {
-			box-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
-		}
-
-		.color-picker-swatch-color {
-			width: 100%;
-			height: 100%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			color: #fff;
-			font-size: 12px;
-			position: relative;
+		.color-picker-swatch-compact .color-picker-swatch-color {
 			z-index: 2;
 		}
 
 		.colorIO {
-			margin-left: 12px;
-			margin-right: 12px;
+			padding-left: 12px;
+			padding-right: 12px;
+			background: #0a0a0a;
+			height: 48px;
+			display: flex;
+			align-items: center;
+			border-left: 1px solid var(--t-clr-border);
+		}
+
+		.color-picker-wrapper.standard .colorIO {
+			height: 32px;
 		}
 
 		.color-picker-hex {
-			width: 80px;
-			height: 28px;
-			padding: 0 8px;
-			border: 1px solid #333333;
-			background: #1a1a1a;
-			color: #00ff41;
 			font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
 			font-size: 11px;
-			transition: all 0.2s ease;
+			background: transparent;
+			border: none;
+			color: var(--t-clr-color-hover);
+			width: 80px;
+			text-align: left;
+			outline: none;
+			font-weight: 500;
+			letter-spacing: 0.5px;
 		}
 
 		.color-picker-wrapper.compact .color-picker-hex {
 			width: 70px;
-			height: 20px;
-			padding: 0 6px;
 			font-size: 10px;
+		}
+
+		.color-picker-hex::selection {
+			background: var(--t-clr-color);
+			color: #000;
 		}
 
 		.color-picker-hex:focus {
 			outline: none;
-			border-color: #00cc33;
+			color: #ffffff;
 		}
 
-		.color-picker-wrapper.error .color-picker-hex {
-			border-color: #ff0041;
-			color: #ff0041;
-		}
-
-		/* Popover Styles */
-		:host {
-			--iro-color: #00ff41;
-		}
-
-		/* Global popover styles injected into document */
+		/* iro.js popover styling */
 		.iro-popover {
-			position: fixed !important;
-			background: #1a1a1a !important;
-			border: 1px solid #333333 !important;
-			border-radius: 4px !important;
-			padding: 12px !important;
-			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8) !important;
-			z-index: 10000 !important;
-			min-width: 300px !important;
+			position: absolute;
+			z-index: 10000;
+			background: #1a1a1a;
+			border: 1px solid var(--t-clr-border);
+			border-radius: 4px;
+			padding: 16px;
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+			display: none;
+			min-width: 240px;
 		}
 
-		.iro-picker-container {
-			display: flex !important;
-			gap: 16px !important;
-			align-items: flex-start !important;
+		.iro-popover.open {
+			display: block;
 		}
 
-		.iro-picker-main {
-			flex-shrink: 0 !important;
+		.iro-container {
+			margin-bottom: 12px;
 		}
 
-		.iro-sliders-vertical {
-			display: flex !important;
-			flex-direction: column !important;
-			gap: 12px !important;
+		.iro-format-buttons {
+			display: flex;
+			gap: 4px;
+			margin-bottom: 12px;
+			justify-content: center;
 		}
 
-		.iro-individual-slider {
-			display: flex !important;
-			justify-content: center !important;
+		.iro-format-btn {
+			background: #242424;
+			border: 1px solid var(--t-clr-border);
+			color: var(--t-clr-color);
+			padding: 4px 8px;
+			font-size: 10px;
+			text-transform: uppercase;
+			cursor: pointer;
+			transition: var(--t-clr-transition);
+			font-family: 'SF Mono', 'Monaco', monospace;
+			letter-spacing: 0.5px;
 		}
 
-		.iro-individual-slider .IroColorPicker {
-			background: transparent !important;
+		.iro-format-btn.active {
+			background: var(--t-clr-color);
+			color: #000;
+			border-color: var(--t-clr-color);
 		}
 
-		.iro-individual-slider .IroSlider {
-			width: 20px !important;
-			height: 80px !important;
-			border: none !important;
-			background: transparent !important;
-			border-radius: 4px !important;
-			overflow: hidden !important;
-		}
-
-		.iro-controls {
-			display: flex !important;
-			flex-direction: column !important;
-			gap: 12px !important;
-			min-width: 120px !important;
-		}
-
-		.iro-mode-selector {
-			display: flex !important;
-			gap: 4px !important;
-		}
-
-		.iro-mode-btn {
-			background: #242424 !important;
-			border: 1px solid #333333 !important;
-			color: #00cc33 !important;
-			padding: 4px 8px !important;
-			font-size: 10px !important;
-			border-radius: 2px !important;
-			cursor: pointer !important;
-			font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace !important;
-			transition: all 0.15s ease !important;
-			text-transform: uppercase !important;
-		}
-
-		.iro-mode-btn.active {
-			background: #00ff41 !important;
-			color: #0a0a0a !important;
-			border-color: #00ff41 !important;
-		}
-
-		.iro-mode-btn:hover:not(.active) {
-			border-color: #00cc33 !important;
-			color: #00ff41 !important;
-		}
-
-		.iro-color-input {
-			background: #0a0a0a !important;
-			border: 1px solid #333333 !important;
-			color: #00ff41 !important;
-			padding: 3px 4px !important;
-			border-radius: 2px !important;
-			font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace !important;
-			font-size: 9px !important;
-			width: 100% !important;
-			transition: all 0.2s ease !important;
-		}
-
-		.iro-color-input:focus {
-			outline: none !important;
-			border-color: #00cc33 !important;
-			box-shadow: none !important;
-		}
-
-		.iro-swatches-container {
-			display: flex !important;
-			flex-direction: column !important;
-			gap: 8px !important;
+		.iro-format-btn:hover:not(.active) {
+			border-color: var(--t-clr-color);
 		}
 
 		.iro-swatches {
-			display: grid !important;
-			grid-template-columns: repeat(5, 20px) !important;
-			gap: 4px !important;
-			max-height: 132px !important;
-			overflow-y: scroll !important;
-			align-content: start !important;
-			padding-right: 4px !important;
-			padding-bottom: 2px !important;
+			display: grid;
+			grid-template-columns: repeat(5, 1fr);
+			gap: 6px;
+			max-height: 120px;
+			overflow-y: auto;
+			margin-bottom: 12px;
+			padding: 4px;
 		}
 
 		.iro-swatches::-webkit-scrollbar {
-			width: 6px !important;
+			width: 6px;
 		}
 
 		.iro-swatches::-webkit-scrollbar-track {
-			background: #0a0a0a !important;
-			border-radius: 3px !important;
+			background: #0a0a0a;
+			border-radius: 3px;
 		}
 
 		.iro-swatches::-webkit-scrollbar-thumb {
-			background: #333333 !important;
-			border-radius: 3px !important;
+			background: var(--t-clr-border);
+			border-radius: 3px;
 		}
 
 		.iro-swatches::-webkit-scrollbar-thumb:hover {
-			background: #00cc33 !important;
-		}
-
-		.iro-swatch-wrapper {
-			position: relative !important;
-			width: 20px !important;
-			height: 20px !important;
+			background: var(--t-clr-color);
 		}
 
 		.iro-swatch {
-			width: 100% !important;
-			height: 100% !important;
-			border: 1px solid #333 !important;
-			border-radius: 2px !important;
-			cursor: pointer !important;
-			position: relative !important;
+			width: 28px;
+			height: 28px;
+			border: 1px solid var(--t-clr-border);
+			cursor: pointer;
+			position: relative;
+			transition: var(--t-clr-transition);
+			background-image: linear-gradient(45deg, #999 25%, transparent 25%, transparent 75%, #999 75%, #999),
+				linear-gradient(45deg, #999 25%, transparent 25%, transparent 75%, #999 75%, #999);
+			background-size: 4px 4px;
+			background-position: 0 0, 2px 2px;
+			background-color: #fff;
+		}
+
+		.iro-swatch-color {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
 		}
 
 		.iro-swatch:hover {
-			border-color: #00cc33 !important;
-			transform: scale(1.05) !important;
+			transform: scale(1.1);
+			border-color: var(--t-clr-color);
+		}
+
+		.iro-swatch.removable {
+			border-color: #ff0041;
 		}
 
 		.iro-swatch-remove {
-			position: absolute !important;
-			top: 0 !important;
-			left: 0 !important;
-			width: 100% !important;
-			height: 100% !important;
-			background: rgba(0, 0, 0, 0.7) !important;
-			color: #00ff41 !important;
-			border-radius: 2px !important;
-			display: none !important;
-			align-items: center !important;
-			justify-content: center !important;
-			font-size: 16px !important;
-			font-weight: bold !important;
-			cursor: pointer !important;
-			z-index: 10 !important;
+			position: absolute;
+			top: -4px;
+			right: -4px;
+			width: 14px;
+			height: 14px;
+			background: #ff0041;
+			border: 1px solid #000;
+			border-radius: 50%;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			z-index: 10;
 		}
 
-		.iro-swatch-wrapper.cmd-hover .iro-swatch-remove {
-			display: flex !important;
+		.iro-swatch.removable .iro-swatch-remove {
+			display: flex;
+		}
+
+		.iro-swatch-remove svg {
+			width: 8px;
+			height: 8px;
+			color: #fff;
+		}
+
+		.iro-actions {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.iro-actions-left {
+			display: flex;
+			gap: 4px;
 		}
 
 		.iro-save-icon,
 		.iro-close-icon,
 		.iro-clear-icon {
 			background: #242424 !important;
-			border: 1px solid #333333 !important;
-			color: #00cc33 !important;
+			border: 1px solid var(--t-clr-border) !important;
+			color: var(--t-clr-color) !important;
 			padding: 6px !important;
 			border-radius: 2px !important;
 			cursor: pointer !important;
@@ -488,14 +446,14 @@ export class TColorPicker extends LitElement {
 			width: 28px !important;
 			height: 28px !important;
 			flex-shrink: 0 !important;
-			transition: all 0.15s ease !important;
+			transition: var(--t-clr-transition) !important;
 		}
 
 		.iro-save-icon:hover,
 		.iro-close-icon:hover {
-			background: #00ff41 !important;
+			background: var(--t-clr-color-hover) !important;
 			color: #0a0a0a !important;
-			border-color: #00ff41 !important;
+			border-color: var(--t-clr-color-hover) !important;
 		}
 
 		.iro-clear-icon {
@@ -539,7 +497,7 @@ export class TColorPicker extends LitElement {
 
 		.iro-modal {
 			background: #1a1a1a !important;
-			border: 1px solid #333333 !important;
+			border: 1px solid var(--t-clr-border) !important;
 			border-radius: 4px !important;
 			padding: 20px !important;
 			min-width: 300px !important;
@@ -558,7 +516,7 @@ export class TColorPicker extends LitElement {
 		}
 
 		.iro-modal-message {
-			color: #00cc33 !important;
+			color: var(--t-clr-color) !important;
 			font-size: 12px !important;
 			margin-bottom: 20px !important;
 			line-height: 1.5 !important;
@@ -573,8 +531,8 @@ export class TColorPicker extends LitElement {
 
 		.iro-modal-btn {
 			background: #242424 !important;
-			border: 1px solid #333333 !important;
-			color: #00cc33 !important;
+			border: 1px solid var(--t-clr-border) !important;
+			color: var(--t-clr-color) !important;
 			padding: 8px 16px !important;
 			border-radius: 2px !important;
 			cursor: pointer !important;
@@ -582,12 +540,12 @@ export class TColorPicker extends LitElement {
 			text-transform: uppercase !important;
 			letter-spacing: 0.5px !important;
 			font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace !important;
-			transition: all 0.15s ease !important;
+			transition: var(--t-clr-transition) !important;
 		}
 
 		.iro-modal-btn:hover {
-			border-color: #00cc33 !important;
-			color: #00ff41 !important;
+			border-color: var(--t-clr-color) !important;
+			color: var(--t-clr-color-hover) !important;
 		}
 
 		.iro-modal-btn.error {
@@ -600,17 +558,399 @@ export class TColorPicker extends LitElement {
 			color: #0a0a0a !important;
 			border-color: #ff0041 !important;
 		}
-
-		.iro-swatches-actions {
-			display: flex !important;
-			flex-direction: column !important;
-			gap: 0 !important;
-		}
 	`;
 
+	// ----------------------------------------------------------
+	// BLOCK 3: REACTIVE PROPERTIES (REQUIRED)
+	// ----------------------------------------------------------
+
+	/**
+	 * @property {string} value - Current color value in hex8 format (with alpha channel)
+	 * @default '#00ff41ff'
+	 * @attribute value
+	 * @reflects false
+	 * @example
+	 * <t-clr value="#ff6b35ff"></t-clr>
+	 */
+	@property({ type: String })
+	value = '#00ff41ff';
+
+	/**
+	 * @property {string} label1 - First line of label text (displayed when 'label' element included)
+	 * @default 'Color'
+	 * @attribute label1
+	 * @reflects false
+	 * @example
+	 * <t-clr label1="Theme"></t-clr>
+	 */
+	@property({ type: String })
+	label1 = 'Color';
+
+	/**
+	 * @property {string} label2 - Second line of label text (displayed when 'label' element included)
+	 * @default 'Picker'
+	 * @attribute label2
+	 * @reflects false
+	 * @example
+	 * <t-clr label2="Primary"></t-clr>
+	 */
+	@property({ type: String })
+	label2 = 'Picker';
+
+	/**
+	 * @property {boolean} disabled - Disabled state (prevents interaction, dims component)
+	 * @default false
+	 * @attribute disabled
+	 * @reflects true
+	 * @example
+	 * <t-clr disabled></t-clr>
+	 */
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	/**
+	 * @property {('large'|'standard'|'compact')} variant - Size variant
+	 * @default 'large'
+	 * @attribute variant
+	 * @reflects true
+	 * @validation Must be 'large' (48px), 'standard' (32px), or 'compact' (minimal)
+	 * @example
+	 * <t-clr variant="standard"></t-clr>
+	 */
+	@property({ type: String, reflect: true })
+	variant = 'large';
+
+	/**
+	 * @property {string} elements - Comma-separated list of elements in render order. Available: icon, label, swatch (mandatory), input. Order matters!
+	 * @default 'icon,label,swatch,input'
+	 * @attribute elements
+	 * @reflects false
+	 * @validation Swatch is mandatory. Elements render in exact order specified.
+	 * @example
+	 * <t-clr elements="swatch,icon,label,input"></t-clr>
+	 * <t-clr elements="icon,swatch"></t-clr>
+	 */
+	@property({ type: String })
+	elements = 'icon,label,swatch,input';
+
+	/**
+	 * @property {boolean} showClearButton - Show trash button in picker for clearing all custom swatches (with modal confirmation)
+	 * @default false
+	 * @attribute show-clear-button
+	 * @reflects false
+	 * @example
+	 * <t-clr show-clear-button></t-clr>
+	 */
+	@property({ type: Boolean, attribute: 'show-clear-button' })
+	showClearButton = false;
+
+	// ----------------------------------------------------------
+	// BLOCK 4: INTERNAL STATE (PRIVATE - underscore prefix)
+	// ----------------------------------------------------------
+
+	/** @private */
+	_customIcon = null;
+
+	/** @private */
+	_colorPicker = null; // iro.js instance
+
+	/** @private */
+	_syncingColor = false;
+
+	/** @private */
+	_customSwatches = [];
+
+	/** @private */
+	_initTimeout = null;
+
+	/** @private */
+	_pickerId = null;
+
+	/** @private */
+	_pendingColorUpdate = null;
+
+	/** @private */
+	_currentMode = 'hex'; // hex | rgb | hsl
+
+	/** @private */
+	_popoverElement = null;
+
+	/** @private */
+	_isOpen = false;
+
+	/** @private */
+	_colorChangeDebounce = null;
+
+	/** @private */
+	_cmdKeyPressed = false;
+
+	/** @private */
+	_documentListeners = new Map();
+
+	/** @private */
+	_timers = new Set();
+
+	// ----------------------------------------------------------
+	// BLOCK 5: LOGGER INSTANCE (REQUIRED)
+	// ----------------------------------------------------------
+
+	/** @private */
+	_logger = null;
+
+	// ----------------------------------------------------------
+	// BLOCK 6: CONSTRUCTOR (REQUIRED)
+	// ----------------------------------------------------------
+	constructor() {
+		super();
+
+		// Initialize logger first
+		this._logger = componentLogger.for(TColorPicker.tagName);
+
+		// Log construction
+		this._logger.debug('Component constructed');
+
+		// Bind event handlers
+		this._handleKeyDown = this._handleKeyDown.bind(this);
+		this._handleKeyUp = this._handleKeyUp.bind(this);
+		this._handleDocumentClick = this._handleDocumentClick.bind(this);
+
+		// Generate unique ID for picker instance
+		this._pickerId = `picker-${Math.random().toString(36).substr(2, 9)}`;
+
+		// Load custom swatches
+		this._loadCustomSwatches();
+	}
+
+	// ----------------------------------------------------------
+	// BLOCK 7: LIFECYCLE METHODS (REQUIRED - in order)
+	// ----------------------------------------------------------
+
+	/**
+	 * Called when component is connected to DOM
+	 * @lifecycle
+	 */
+	connectedCallback() {
+		super.connectedCallback();
+		this._logger.info('Connected to DOM');
+
+		// Add document listeners
+		this._addDocumentListener('keydown', this._handleKeyDown);
+		this._addDocumentListener('keyup', this._handleKeyUp);
+		this._addDocumentListener('mousedown', this._handleDocumentClick);
+	}
+
+	/**
+	 * Called when component is disconnected from DOM
+	 * @lifecycle
+	 */
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		this._logger.info('Disconnected from DOM');
+
+		// Cleanup iro.js instance
+		if (this._colorPicker) {
+			this._colorPicker.off('color:change');
+			this._colorPicker.off('input:change');
+			this._colorPicker.off('color:init');
+			this._colorPicker = null;
+			this._logger.debug('Color picker instance cleaned up');
+		}
+
+		// Clear all timers
+		this._timers.forEach(id => clearTimeout(id));
+		this._timers.clear();
+		this._logger.debug('All timers cleared', { count: this._timers.size });
+
+		// Remove all document listeners
+		this._documentListeners.forEach((listeners, event) => {
+			listeners.forEach(({ handler, options }) => {
+				document.removeEventListener(event, handler, options);
+			});
+		});
+		this._documentListeners.clear();
+		this._logger.debug('All document listeners removed');
+
+		// Remove popover element
+		if (this._popoverElement && this._popoverElement.parentNode) {
+			this._popoverElement.parentNode.removeChild(this._popoverElement);
+			this._popoverElement = null;
+		}
+	}
+
+	/**
+	 * Called after first render
+	 * @lifecycle
+	 * @param {Map} changedProperties
+	 */
+	firstUpdated(changedProperties) {
+		super.firstUpdated(changedProperties);
+		this._logger.debug('First update complete', { changedProperties: Array.from(changedProperties.keys()) });
+
+		// Post-render setup - iro.js initialization happens when picker opens
+	}
+
+	/**
+	 * Called after every render
+	 * @lifecycle
+	 * @param {Map} changedProperties
+	 */
+	updated(changedProperties) {
+		super.updated(changedProperties);
+		this._logger.trace('Updated', { changedProperties: Array.from(changedProperties.keys()) });
+
+		// Sync color with iro.js if value changed externally
+		if (changedProperties.has('value') && !this._syncingColor && this._colorPicker) {
+			this._syncColorToIro();
+		}
+	}
+
+	// ----------------------------------------------------------
+	// BLOCK 8: PUBLIC API METHODS (REQUIRED SECTION)
+	// ----------------------------------------------------------
+
+	/**
+	 * Set custom Phosphor icon for the picker
+	 * @public
+	 * @param {string} iconSvg - SVG string of Phosphor icon
+	 * @returns {void}
+	 * @throws {Error} When iconSvg is not a valid string
+	 * @example
+	 * import { paintBucketIcon } from './utils/phosphor-icons.js';
+	 * picker.setIcon(paintBucketIcon);
+	 */
+	setIcon(iconSvg) {
+		this._logger.debug('setIcon called', { iconSvg: iconSvg?.substring(0, 50) });
+
+		if (typeof iconSvg !== 'string') {
+			const error = new Error('Icon must be a string');
+			this._logger.error('setIcon validation failed', { iconSvg, error });
+			throw error;
+		}
+
+		this._customIcon = iconSvg;
+		this.requestUpdate();
+	}
+
+	/**
+	 * Set color value programmatically
+	 * @public
+	 * @param {string} color - Color in hex format (with or without alpha)
+	 * @returns {void}
+	 * @fires TColorPicker#change
+	 * @example
+	 * picker.setValue('#ff6b35');
+	 * picker.setValue('#ff6b35ff');
+	 */
+	setValue(color) {
+		this._logger.debug('setValue called', { color });
+
+		this.value = color;
+		this._emitEvent('change', { value: this.value, color: this.value });
+	}
+
+	/**
+	 * Get current color value
+	 * @public
+	 * @returns {string} Current color in hex8 format
+	 * @example
+	 * const color = picker.getValue();
+	 */
+	getValue() {
+		this._logger.debug('getValue called', { value: this.value });
+		return this.value;
+	}
+
+	/**
+	 * Clear all custom swatches (with confirmation modal if UI is open)
+	 * @public
+	 * @returns {void}
+	 * @fires TColorPicker#swatches-cleared
+	 * @example
+	 * picker.clearAllCustomSwatches();
+	 */
+	clearAllCustomSwatches() {
+		this._logger.debug('clearAllCustomSwatches called');
+
+		this._customSwatches = [];
+		localStorage.removeItem('terminal-iro-swatches');
+		this._updateSwatchesDisplay();
+
+		this._logger.info('All custom swatches cleared');
+		this._emitEvent('swatches-cleared', {});
+	}
+
+	// ----------------------------------------------------------
+	// BLOCK 9: EVENT EMITTERS (REQUIRED SECTION)
+	// ----------------------------------------------------------
+
+	/**
+	 * Emit custom event
+	 * @private
+	 * @param {string} eventName
+	 * @param {Object} detail
+	 */
+	_emitEvent(eventName, detail = {}) {
+		this._logger.debug('Emitting event', { eventName, detail });
+
+		const event = new CustomEvent(eventName, {
+			detail,
+			bubbles: true,
+			composed: true
+		});
+
+		this.dispatchEvent(event);
+	}
+
+	/**
+	 * @event TColorPicker#change
+	 * @type {CustomEvent<{value: string, color: string}>}
+	 * @description Fired when color value changes (debounced to 250ms during drag)
+	 * @property {string} detail.value - Hex8 color value
+	 * @property {string} detail.color - Same as value (for compatibility)
+	 * @bubbles true
+	 * @composed true
+	 */
+
+	/**
+	 * @event TColorPicker#color-save
+	 * @type {CustomEvent<{color: string, timestamp: number}>}
+	 * @description Fired when user clicks save button in picker
+	 * @property {string} detail.color - Hex8 color value
+	 * @property {number} detail.timestamp - Unix timestamp
+	 * @bubbles true
+	 * @composed true
+	 */
+
+	/**
+	 * @event TColorPicker#swatches-updated
+	 * @type {CustomEvent<{swatches: string[]}>}
+	 * @description Fired when custom swatches array is modified
+	 * @property {string[]} detail.swatches - Array of hex color values
+	 * @bubbles true
+	 * @composed true
+	 */
+
+	/**
+	 * @event TColorPicker#swatches-cleared
+	 * @type {CustomEvent<{}>}
+	 * @description Fired when all custom swatches are cleared
+	 * @bubbles true
+	 * @composed true
+	 */
+
+	// ----------------------------------------------------------
+	// BLOCK 12: RENDER METHOD (REQUIRED)
+	// ----------------------------------------------------------
+
+	/**
+	 * Render component template
+	 * @returns {TemplateResult}
+	 */
 	render() {
+		this._logger.trace('Rendering');
+
 		const hasTransparency = this._hasTransparency();
-		const iconToUse = this.customIcon || paletteIcon;
+		const iconToUse = this._customIcon || paletteIcon;
 		const elementList = this.elements.split(',').map(e => e.trim());
 
 		// Build element templates based on variant
@@ -629,13 +969,13 @@ export class TColorPicker extends LitElement {
 			swatch: this.variant === 'compact' ? html`
 				<div class="color-picker-swatch-compact ${hasTransparency ? 'has-transparency' : ''}"
 					 data-color="${this.value}"
-					 @click=${this.showColorPicker}>
+					 @click=${this._showColorPicker}>
 					<div class="color-picker-swatch-color" style="background: ${this.value}"></div>
 				</div>
 			` : html`
 				<div class="color-picker-swatch ${hasTransparency ? 'has-transparency' : ''}"
 					 data-color="${this.value}"
-					 @click=${this.showColorPicker}>
+					 @click=${this._showColorPicker}>
 					<div class="color-picker-swatch-color" style="background: ${this.value}">
 						${this.disabled ? unsafeHTML(xIcon) : ''}
 					</div>
@@ -645,30 +985,32 @@ export class TColorPicker extends LitElement {
 				<input
 					type="text"
 					class="color-picker-hex"
-					.value="${this.value}"
-					placeholder="#000000"
-					maxlength="9"
+					.value=${this._formatColorForDisplay()}
+					@input=${this._handleInputChange}
+					@focus=${this._handleInputFocus}
+					@blur=${this._handleInputBlur}
+					?disabled=${this.disabled}
+					spellcheck="false"
 					autocomplete="off"
 					autocorrect="off"
 					autocapitalize="off"
-					spellcheck="false"
-					@input=${this._handleHexInput}
-					@blur=${this._validateHex}
+					maxlength="20"
 				/>
 			` : html`
 				<div class="colorIO">
 					<input
 						type="text"
 						class="color-picker-hex"
-						.value="${this.value}"
-						placeholder="#000000"
-						maxlength="9"
+						.value=${this._formatColorForDisplay()}
+						@input=${this._handleInputChange}
+						@focus=${this._handleInputFocus}
+						@blur=${this._handleInputBlur}
+						?disabled=${this.disabled}
+						spellcheck="false"
 						autocomplete="off"
 						autocorrect="off"
 						autocapitalize="off"
-						spellcheck="false"
-						@input=${this._handleHexInput}
-						@blur=${this._validateHex}
+						maxlength="20"
 					/>
 				</div>
 			`
@@ -686,236 +1028,374 @@ export class TColorPicker extends LitElement {
 		`;
 	}
 
-	firstUpdated() {
-		log('First updated - component rendered');
-		// Component is now properly rendered with Lit
+	// ----------------------------------------------------------
+	// BLOCK 13: PRIVATE HELPERS (LAST)
+	// ----------------------------------------------------------
+
+	/**
+	 * Add document event listener with tracking
+	 * @private
+	 */
+	_addDocumentListener(event, handler, options = {}) {
+		document.addEventListener(event, handler, options);
+
+		if (!this._documentListeners.has(event)) {
+			this._documentListeners.set(event, []);
+		}
+		this._documentListeners.get(event).push({ handler, options });
+
+		this._logger.trace('Document listener added', { event });
 	}
 
-	updated(changedProperties) {
-		if (changedProperties.has('value') && this.colorPicker) {
-			// Update color picker when value changes
-			if (this.value && this.value !== this.colorPicker.color.hex8String) {
-				try {
-					this.colorPicker.color.hex8String = this.value;
-				if (this.hueSlider) {
-					this.hueSlider.color.hex8String = this.value;
-				}
-				if (this.alphaSlider) {
-					this.alphaSlider.color.hex8String = this.value;
-				}
-				} catch (e) {
-					log('Error updating color:', e);
-				}
+	/**
+	 * Set timeout with tracking
+	 * @private
+	 */
+	_setTimeout(callback, delay) {
+		const id = setTimeout(() => {
+			this._timers.delete(id);
+			callback();
+		}, delay);
+		this._timers.add(id);
+		this._logger.trace('Timer registered', { id, delay });
+		return id;
+	}
+
+	/**
+	 * Clear tracked timeout
+	 * @private
+	 */
+	_clearTimeout(id) {
+		clearTimeout(id);
+		this._timers.delete(id);
+		this._logger.trace('Timer cleared', { id });
+	}
+
+	/**
+	 * Check if current color has transparency
+	 * @private
+	 */
+	_hasTransparency() {
+		if (this.value.length === 9) {
+			const alpha = parseInt(this.value.slice(7, 9), 16);
+			return alpha < 255;
+		}
+		return false;
+	}
+
+	/**
+	 * Format color for display based on current mode
+	 * @private
+	 */
+	_formatColorForDisplay() {
+		if (!this.value) return '';
+
+		try {
+			if (this._currentMode === 'hex') {
+				return this.value;
+			} else if (this._currentMode === 'rgb') {
+				return this._hexToRgbaString(this.value);
+			} else if (this._currentMode === 'hsl') {
+				return this._hexToHslaString(this.value);
+			}
+		} catch (e) {
+			this._logger.error('Error formatting color', { error: e, value: this.value });
+			return this.value;
+		}
+	}
+
+	/**
+	 * Convert hex to RGBA string
+	 * @private
+	 */
+	_hexToRgbaString(hex) {
+		const r = parseInt(hex.slice(1, 3), 16);
+		const g = parseInt(hex.slice(3, 5), 16);
+		const b = parseInt(hex.slice(5, 7), 16);
+		const a = hex.length === 9 ? (parseInt(hex.slice(7, 9), 16) / 255).toFixed(2) : '1';
+		return `rgba(${r}, ${g}, ${b}, ${a})`;
+	}
+
+	/**
+	 * Convert hex to HSLA string
+	 * @private
+	 */
+	_hexToHslaString(hex) {
+		const r = parseInt(hex.slice(1, 3), 16) / 255;
+		const g = parseInt(hex.slice(3, 5), 16) / 255;
+		const b = parseInt(hex.slice(5, 7), 16) / 255;
+		const a = hex.length === 9 ? (parseInt(hex.slice(7, 9), 16) / 255).toFixed(2) : '1';
+
+		const max = Math.max(r, g, b);
+		const min = Math.min(r, g, b);
+		let h, s, l = (max + min) / 2;
+
+		if (max === min) {
+			h = s = 0;
+		} else {
+			const d = max - min;
+			s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+			switch (max) {
+				case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+				case g: h = ((b - r) / d + 2) / 6; break;
+				case b: h = ((r - g) / d + 4) / 6; break;
 			}
 		}
+
+		h = Math.round(h * 360);
+		s = Math.round(s * 100);
+		l = Math.round(l * 100);
+
+		return `hsla(${h}, ${s}%, ${l}%, ${a})`;
 	}
 
-	_handleHexInput(e) {
-		this._debouncedHexInput(e.target.value);
-	}
+	/**
+	 * Handle input field changes
+	 * @private
+	 */
+	_handleInputChange(e) {
+		const input = e.target.value.trim();
+		this._logger.debug('Input change', { input });
 
-	_debouncedHexInput = this._debounce((value) => {
-		const formatted = this.formatHex(value);
-		if (this.isValidHex(formatted)) {
-			this.updateColor(formatted, false);
-			this.shadowRoot.querySelector('.color-picker-wrapper').classList.remove('error');
-		} else {
-			this.shadowRoot.querySelector('.color-picker-wrapper').classList.add('error');
+		try {
+			let hexValue = input;
+
+			// Parse RGB/HSL format
+			if (input.startsWith('rgba(') || input.startsWith('rgb(')) {
+				hexValue = this._rgbaToHex(input);
+			} else if (input.startsWith('hsla(') || input.startsWith('hsl(')) {
+				hexValue = this._hslaToHex(input);
+			}
+
+			// Validate hex
+			if (this._isValidHex(hexValue)) {
+				this._syncingColor = true;
+				this.value = hexValue;
+				if (this._colorPicker) {
+					this._colorPicker.color.hexString = hexValue;
+				}
+				this._syncingColor = false;
+				this._emitEvent('change', { value: this.value, color: this.value });
+			}
+		} catch (error) {
+			this._logger.warn('Invalid color input', { input, error });
 		}
-	}, 300);
-
-	_validateHex() {
-		const input = this.shadowRoot.querySelector('.color-picker-hex');
-		const value = this.formatHex(input.value);
-
-		if (this.isValidHex(value)) {
-			this.updateColor(value);
-			this.shadowRoot.querySelector('.color-picker-wrapper').classList.remove('error');
-		} else {
-			// Revert to last valid color
-			input.value = this.value;
-			this.shadowRoot.querySelector('.color-picker-wrapper').classList.remove('error');
-		}
 	}
 
-	showColorPicker() {
+	/**
+	 * Handle input focus
+	 * @private
+	 */
+	_handleInputFocus(e) {
+		e.target.select();
+	}
+
+	/**
+	 * Handle input blur
+	 * @private
+	 */
+	_handleInputBlur(e) {
+		// Reformat to current mode
+		e.target.value = this._formatColorForDisplay();
+	}
+
+	/**
+	 * Convert RGBA string to hex
+	 * @private
+	 */
+	_rgbaToHex(rgba) {
+		const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+		if (!match) throw new Error('Invalid RGBA format');
+
+		const r = parseInt(match[1]).toString(16).padStart(2, '0');
+		const g = parseInt(match[2]).toString(16).padStart(2, '0');
+		const b = parseInt(match[3]).toString(16).padStart(2, '0');
+		const a = match[4] ? Math.round(parseFloat(match[4]) * 255).toString(16).padStart(2, '0') : 'ff';
+
+		return `#${r}${g}${b}${a}`;
+	}
+
+	/**
+	 * Convert HSLA string to hex
+	 * @private
+	 */
+	_hslaToHex(hsla) {
+		const match = hsla.match(/hsla?\((\d+),\s*(\d+)%,\s*(\d+)%(?:,\s*([\d.]+))?\)/);
+		if (!match) throw new Error('Invalid HSLA format');
+
+		let h = parseInt(match[1]) / 360;
+		let s = parseInt(match[2]) / 100;
+		let l = parseInt(match[3]) / 100;
+		const a = match[4] ? Math.round(parseFloat(match[4]) * 255).toString(16).padStart(2, '0') : 'ff';
+
+		let r, g, b;
+
+		if (s === 0) {
+			r = g = b = l;
+		} else {
+			const hue2rgb = (p, q, t) => {
+				if (t < 0) t += 1;
+				if (t > 1) t -= 1;
+				if (t < 1/6) return p + (q - p) * 6 * t;
+				if (t < 1/2) return q;
+				if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+				return p;
+			};
+
+			const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+			const p = 2 * l - q;
+			r = hue2rgb(p, q, h + 1/3);
+			g = hue2rgb(p, q, h);
+			b = hue2rgb(p, q, h - 1/3);
+		}
+
+		r = Math.round(r * 255).toString(16).padStart(2, '0');
+		g = Math.round(g * 255).toString(16).padStart(2, '0');
+		b = Math.round(b * 255).toString(16).padStart(2, '0');
+
+		return `#${r}${g}${b}${a}`;
+	}
+
+	/**
+	 * Validate hex color format
+	 * @private
+	 */
+	_isValidHex(hex) {
+		return /^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/.test(hex);
+	}
+
+	/**
+	 * Show color picker popover
+	 * @private
+	 */
+	_showColorPicker(e) {
 		if (this.disabled) return;
-		if (this._isOpen) return;
 
-		// Create popover if it doesn't exist
-		if (!this._popoverElement) {
-			this.createPopover();
-		}
+		this._logger.debug('Showing color picker');
 
-		// Position popover
-		const swatch = this.variant === 'compact'
-			? this.shadowRoot.querySelector('.color-picker-swatch-compact')
-			: this.shadowRoot.querySelector('.color-picker-swatch');
-
-		if (swatch) {
-			// Append to body FIRST so elements are in DOM
-			if (!this._popoverElement.parentNode) {
-				document.body.appendChild(this._popoverElement);
-			}
-
-			const rect = swatch.getBoundingClientRect();
-			this._popoverElement.style.position = 'fixed';
-			this._popoverElement.style.top = `${rect.bottom + 10}px`;
-			this._popoverElement.style.left = `${rect.left}px`;
-			this._popoverElement.style.zIndex = '10000';
-			this._popoverElement.style.visibility = 'hidden';
-			this._popoverElement.style.display = 'block';
-
-			// Initialize iro.js (elements now in DOM)
-			if (!this.colorPicker) {
-				this.initializeColorPicker();
-			}
-
-			// Show popover AFTER initialization to prevent FOUC
-			requestAnimationFrame(() => {
-				this._popoverElement.style.visibility = 'visible';
-				this._popoverElement.classList.add('initialized');
-			});
-		}
-
-		this._isOpen = true;
-
-		// Add mousedown outside listener (not click/mouseup to avoid closing during drag)
-		setTimeout(() => {
-			document.addEventListener('mousedown', this.handleOutsideClick);
-		}, 100);
-	}
-
-	hideColorPicker() {
-		if (!this._isOpen) return;
-
-		if (this._popoverElement) {
-			this._popoverElement.style.display = 'none';
-			// Remove from DOM to prevent any leaking
-			if (this._popoverElement.parentNode) {
-				this._popoverElement.parentNode.removeChild(this._popoverElement);
-			}
-		}
-
-		this._isOpen = false;
-		document.removeEventListener('mousedown', this.handleOutsideClick);
-	}
-
-	handleOutsideClick = (e) => {
-		if (this._popoverElement && !this._popoverElement.contains(e.target) &&
-			!this.contains(e.target)) {
-			this.hideColorPicker();
-		}
-	}
-
-	createPopover() {
-		// Generate unique ID
-		if (!this._pickerId) {
-			this._pickerId = this._generateId();
-		}
-
-		// Inject global popover styles if not already injected
-		this._injectGlobalStyles();
-
-		// Create popover element with proper horizontal layout
-		this._popoverElement = document.createElement('div');
-		this._popoverElement.className = `iro-popover terminal-picker-${this._pickerId}`;
-		this._popoverElement.style.display = 'none'; // Hidden by default
-		this._popoverElement.innerHTML = `
-			<div class="iro-picker-container">
-				<div class="iro-picker-main" id="picker-${this._pickerId}"></div>
-				<div class="iro-controls">
-					<div class="iro-mode-selector">
-						<button class="iro-mode-btn active" data-mode="hex">HEXA</button>
-						<button class="iro-mode-btn" data-mode="rgb">RGBA</button>
-						<button class="iro-mode-btn" data-mode="hsl">HSLA</button>
-					</div>
-					<div class="iro-input-group">
-						<input type="text" class="iro-color-input" id="color-input-${this._pickerId}">
-					</div>
-					<div class="iro-swatches-container">
-						<div class="iro-swatches-row">
-							<div class="iro-swatches" id="swatches-${this._pickerId}"></div>
-							<div class="iro-swatches-actions">
-								<button class="iro-save-icon" id="save-btn-${this._pickerId}" title="Save to Swatches">
-									${floppyDiskIcon}
-								</button>
-								<button class="iro-close-icon" id="close-btn-${this._pickerId}" title="Close">
-									${xIcon}
-								</button>
-								${this.showClearButton ? `
-								<button class="iro-clear-icon" id="clear-btn-${this._pickerId}" title="Clear All Custom Swatches">
-									${trashIcon}
-								</button>
-								` : ''}
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		`;
-
-		// Don't append to body yet - will be done when shown
-
-		// Add event listeners for mode buttons
-		const modeButtons = this._popoverElement.querySelectorAll('.iro-mode-btn');
-		modeButtons.forEach(btn => {
-			btn.addEventListener('click', () => this.switchMode(btn.dataset.mode));
-		});
-
-		// Add save icon listener
-		const saveBtn = this._popoverElement.querySelector('.iro-save-icon');
-		if (saveBtn) {
-			saveBtn.addEventListener('click', () => this.saveCurrentColor());
-		}
-
-		// Add close icon listener
-		const closeBtn = this._popoverElement.querySelector('.iro-close-icon');
-		if (closeBtn) {
-			closeBtn.addEventListener('click', () => this.hideColorPicker());
-		}
-
-		// Add clear icon listener
-		const clearBtn = this._popoverElement.querySelector('.iro-clear-icon');
-		if (clearBtn) {
-			clearBtn.addEventListener('click', () => this.showClearConfirmation());
-		}
-
-		// Add input listener
-		const colorInput = this._popoverElement.querySelector('.iro-color-input');
-		if (colorInput) {
-			colorInput.addEventListener('input', (e) => this.handleColorInput(e.target.value));
-		}
-	}
-
-	initializeColorPicker() {
-		if (this.colorPicker || !this._popoverElement) return;
-
-		const pickerId = `picker-${this._pickerId}`;
-		const pickerElement = document.getElementById(pickerId);
-
-		if (!pickerElement) {
-			warn('Picker element not found');
+		if (this._isOpen) {
+			this._closeColorPicker();
 			return;
 		}
 
-		log('Initializing iro.js color picker');
+		// Create popover if not exists
+		if (!this._popoverElement) {
+			this._createPopover();
+		}
+
+		// Position popover
+		const rect = this.getBoundingClientRect();
+		this._popoverElement.style.top = `${rect.bottom + 8}px`;
+		this._popoverElement.style.left = `${rect.left}px`;
+
+		// Show popover
+		this._popoverElement.classList.add('open');
+		this._isOpen = true;
+
+		// Initialize iro.js if not already
+		if (!this._colorPicker) {
+			this._initializeColorPicker();
+		}
+
+		// Sync current color
+		this._syncColorToIro();
+
+		// Update swatches display
+		this._updateSwatchesDisplay();
+	}
+
+	/**
+	 * Close color picker popover
+	 * @private
+	 */
+	_closeColorPicker() {
+		if (!this._isOpen) return;
+
+		this._logger.debug('Closing color picker');
+
+		if (this._popoverElement) {
+			this._popoverElement.classList.remove('open');
+		}
+		this._isOpen = false;
+	}
+
+	/**
+	 * Create popover element
+	 * @private
+	 */
+	_createPopover() {
+		this._logger.debug('Creating popover element');
+
+		const popover = document.createElement('div');
+		popover.className = 'iro-popover';
+		popover.id = `popover-${this._pickerId}`;
+		popover.innerHTML = `
+			<div class="iro-format-buttons">
+				<button class="iro-format-btn active" data-mode="hex">HEXA</button>
+				<button class="iro-format-btn" data-mode="rgb">RGBA</button>
+				<button class="iro-format-btn" data-mode="hsl">HSLA</button>
+			</div>
+			<div class="iro-container" id="picker-${this._pickerId}"></div>
+			<div class="iro-swatches" id="swatches-${this._pickerId}"></div>
+			<div class="iro-actions">
+				<div class="iro-actions-left">
+					<div class="iro-save-icon" title="Save to swatches">${floppyDiskIcon}</div>
+					${this.showClearButton ? `<div class="iro-clear-icon" title="Clear all swatches">${trashIcon}</div>` : ''}
+				</div>
+				<div class="iro-close-icon" title="Close">${xIcon}</div>
+			</div>
+		`;
+
+		document.body.appendChild(popover);
+		this._popoverElement = popover;
+
+		// Add event listeners
+		const saveBtn = popover.querySelector('.iro-save-icon');
+		if (saveBtn) {
+			saveBtn.addEventListener('click', () => this._saveCurrentColor());
+		}
+
+		const closeBtn = popover.querySelector('.iro-close-icon');
+		if (closeBtn) {
+			closeBtn.addEventListener('click', () => this._closeColorPicker());
+		}
+
+		const clearBtn = popover.querySelector('.iro-clear-icon');
+		if (clearBtn) {
+			clearBtn.addEventListener('click', () => this._showClearConfirmation());
+		}
+
+		// Format buttons
+		const formatButtons = popover.querySelectorAll('.iro-format-btn');
+		formatButtons.forEach(btn => {
+			btn.addEventListener('click', () => {
+				const mode = btn.dataset.mode;
+				this._setColorMode(mode);
+				formatButtons.forEach(b => b.classList.remove('active'));
+				btn.classList.add('active');
+			});
+		});
+	}
+
+	/**
+	 * Initialize iro.js color picker
+	 * @private
+	 */
+	_initializeColorPicker() {
+		this._logger.debug('Initializing iro.js color picker');
+
+		const container = document.getElementById(`picker-${this._pickerId}`);
+		if (!container) {
+			this._logger.error('Color picker container not found');
+			return;
+		}
 
 		try {
-			// Parse initial color
-			const initialColor = this.value || '#00ff41ff';
-
-			// Create iro color picker with Box + Sliders in horizontal layout
-			this.colorPicker = new iro.ColorPicker(pickerElement, {
+			this._colorPicker = new iro.ColorPicker(container, {
 				width: 180,
-				color: initialColor,
+				color: this.value,
 				layoutDirection: 'horizontal',
-				borderWidth: 0,
-				borderColor: 'transparent',
-				handleRadius: 8,
-				handleColor: '#ffffff',
-				handleBorderColor: '#000000',
-				handleBorderWidth: 2,
 				layout: [
 					{
 						component: iro.ui.Box,
@@ -940,781 +1420,208 @@ export class TColorPicker extends LitElement {
 				]
 			});
 
-			// Set up event listeners
-			this.colorPicker.on('color:change', (color) => {
-				this.onColorChange(color);
+			// Bridge iro events to Lit events
+			this._colorPicker.on('color:change', (color) => {
+				this._handleIroColorChange(color);
 			});
 
-			// Update swatches
-			this.updateSwatchesDisplay();
-
-			// Update input with current color
-			this.updateColorInput();
-
-			// Add initialized classes to prevent FOUC
-			setTimeout(() => {
-				if (pickerElement) {
-					pickerElement.classList.add('initialized');
-				}
-			}, 50);
-
-		} catch (err) {
-			error('Error initializing iro.js:', err);
-			this.colorPicker = null;
+			this._logger.debug('Color picker initialized');
+		} catch (error) {
+			this._logger.error('Failed to initialize color picker', { error });
 		}
 	}
 
-	onColorChange(color) {
-		const hexValue = color.hex8String;
+	/**
+	 * Handle iro.js color change
+	 * @private
+	 */
+	_handleIroColorChange(color) {
+		if (this._syncingColor) return;
 
-		// Debounce color updates during drag (250ms = 4 times per second)
+		// Debounce updates during drag
 		if (this._colorChangeDebounce) {
-			clearTimeout(this._colorChangeDebounce);
+			this._clearTimeout(this._colorChangeDebounce);
 		}
 
-		this._colorChangeDebounce = setTimeout(() => {
-			this.updateColor(hexValue);
+		this._colorChangeDebounce = this._setTimeout(() => {
+			this._syncingColor = true;
+			this.value = color.hex8String;
+			this._syncingColor = false;
+
+			this._emitEvent('change', {
+				value: this.value,
+				color: this.value
+			});
+
 			this._colorChangeDebounce = null;
 		}, 250);
-
-		// Always update input immediately for visual feedback
-		this.updateColorInput();
 	}
 
-	updateColorInput() {
-		if (!this.colorPicker || !this._popoverElement) return;
+	/**
+	 * Sync color to iro.js
+	 * @private
+	 */
+	_syncColorToIro() {
+		if (!this._colorPicker || this._syncingColor) return;
 
-		const input = this._popoverElement.querySelector('.iro-color-input');
-		if (!input) return;
-
-		const color = this.colorPicker.color;
-		let value;
-
-		switch (this._currentMode) {
-			case 'rgb':
-				value = `rgba(${color.rgba.r}, ${color.rgba.g}, ${color.rgba.b}, ${(color.rgba.a).toFixed(2)})`;
-				break;
-			case 'hsl':
-				value = `hsla(${Math.round(color.hsla.h)}, ${Math.round(color.hsla.s)}%, ${Math.round(color.hsla.l)}%, ${(color.hsla.a).toFixed(2)})`;
-				break;
-			case 'hex':
-			default:
-				value = color.hex8String;
-				break;
-		}
-
-		input.value = value;
+		this._syncingColor = true;
+		this._colorPicker.color.hexString = this.value;
+		this._syncingColor = false;
 	}
 
-	handleColorInput(value) {
-		if (!this.colorPicker) return;
-
-		try {
-			// Try to set the color
-			this.colorPicker.color.set(value);
-			this.updateColor(this.colorPicker.color.hex8String);
-		} catch (e) {
-			// Invalid color format
-			log('Invalid color format:', value);
-		}
-	}
-
-	switchMode(mode) {
+	/**
+	 * Set color display mode
+	 * @private
+	 */
+	_setColorMode(mode) {
+		this._logger.debug('Setting color mode', { mode });
 		this._currentMode = mode;
 
-		// Update active button
-		const buttons = this._popoverElement.querySelectorAll('.iro-mode-btn');
-		buttons.forEach(btn => {
-			btn.classList.toggle('active', btn.dataset.mode === mode);
-		});
-
-		// Update input display
-		this.updateColorInput();
-	}
-
-	// Utility: Debounce function
-	_debounce(func, wait) {
-		let timeout;
-		return (...args) => {
-			clearTimeout(timeout);
-			timeout = setTimeout(() => func.apply(this, args), wait);
-		};
-	}
-
-	// Utility: Generate unique ID
-	_generateId(prefix = 'terminal') {
-		return `${prefix}-${Math.random().toString(36).substr(2, 9)}`;
-	}
-
-	// Check if color has transparency
-	_hasTransparency() {
-		if (!this.value || typeof this.value !== 'string') return false;
-		if (this.value.length === 9 && this.value.startsWith('#')) {
-			const alpha = this.value.substring(7, 9);
-			return alpha.toLowerCase() !== 'ff';
+		// Update input field in shadow root
+		const input = this.shadowRoot.querySelector('.color-picker-hex');
+		if (input) {
+			input.value = this._formatColorForDisplay();
 		}
-		return false;
 	}
 
-	// Inject global styles for popover (since it's outside shadow DOM)
-	_injectGlobalStyles() {
-		if (document.getElementById('iro-popover-styles')) return;
-
-		const style = document.createElement('style');
-		style.id = 'iro-popover-styles';
-		style.textContent = `
-			.iro-popover {
-				position: fixed !important;
-				background: #1a1a1a !important;
-				border: 1px solid #333333 !important;
-				border-radius: 4px !important;
-				padding: 12px !important;
-				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8) !important;
-				z-index: 10000 !important;
-				min-width: 300px !important;
-			}
-
-			.iro-picker-container {
-				display: flex !important;
-				flex-direction: row !important;
-				gap: 12px !important;
-				align-items: flex-start !important;
-			}
-
-			.iro-picker-main {
-				flex-shrink: 0 !important;
-			}
-
-			.iro-sliders-vertical {
-				flex-shrink: 0 !important;
-				display: flex !important;
-				flex-direction: column !important;
-				gap: 12px !important;
-				background: transparent !important;
-				align-items: center !important;
-				width: 20px !important;
-				min-height: 180px !important;
-			}
-
-			.iro-individual-slider {
-				display: flex !important;
-				justify-content: center !important;
-			}
-
-			.iro-individual-slider .IroColorPicker {
-				background: transparent !important;
-				height: 180px !important;
-			}
-
-			.iro-individual-slider .IroSlider {
-				width: 20px !important;
-				height: 180px !important;
-				border: none !important;
-				background: transparent !important;
-				border-radius: 4px !important;
-				overflow: hidden !important;
-				position: relative !important;
-			}
-
-			.iro-individual-slider .IroSliderGradient {
-				width: 100% !important;
-				height: 100% !important;
-				border-radius: 4px !important;
-			}
-
-			.iro-individual-slider .IroHandle {
-				position: absolute !important;
-				left: 50% !important;
-				transform: translateX(-50%) !important;
-				z-index: 10 !important;
-			}
-
-			.iro-controls {
-				display: flex !important;
-				flex-direction: column !important;
-				gap: 12px !important;
-				min-width: 120px !important;
-			}
-
-			.iro-mode-selector {
-				display: flex !important;
-				gap: 4px !important;
-			}
-
-			.iro-mode-btn {
-				background: #242424 !important;
-				border: 1px solid #333333 !important;
-				color: #00cc33 !important;
-				padding: 4px 8px !important;
-				font-size: 10px !important;
-				border-radius: 2px !important;
-				cursor: pointer !important;
-				font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace !important;
-				transition: all 0.15s ease !important;
-				text-transform: uppercase !important;
-			}
-
-			.iro-mode-btn.active {
-				background: #00ff41 !important;
-				color: #0a0a0a !important;
-				border-color: #00ff41 !important;
-			}
-
-			.iro-mode-btn:hover:not(.active) {
-				border-color: #00cc33 !important;
-				color: #00ff41 !important;
-			}
-
-			.iro-color-input {
-				background: #0a0a0a !important;
-				border: 1px solid #333333 !important;
-				color: #00ff41 !important;
-				padding: 3px 4px !important;
-				border-radius: 2px !important;
-				font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace !important;
-				font-size: 9px !important;
-				width: 100% !important;
-				transition: all 0.2s ease !important;
-			}
-
-			.iro-color-input:focus {
-				outline: none !important;
-				border-color: #00cc33 !important;
-				box-shadow: none !important;
-			}
-
-			.iro-swatches-container {
-				display: flex !important;
-				flex-direction: column !important;
-				gap: 8px !important;
-			}
-
-			.iro-swatches-row {
-				display: flex !important;
-				flex-direction: row !important;
-				gap: 8px !important;
-				align-items: flex-start !important;
-			}
-
-			.iro-swatches {
-				display: grid !important;
-				grid-template-columns: repeat(5, 20px) !important;
-				gap: 4px !important;
-				max-height: 132px !important;
-				overflow-y: scroll !important;
-				align-content: start !important;
-				flex: 1 !important;
-				padding-right: 4px !important;
-				padding-bottom: 2px !important;
-			}
-
-			.iro-swatches::-webkit-scrollbar {
-				width: 6px !important;
-			}
-
-			.iro-swatches::-webkit-scrollbar-track {
-				background: #0a0a0a !important;
-				border-radius: 3px !important;
-			}
-
-			.iro-swatches::-webkit-scrollbar-thumb {
-				background: #333333 !important;
-				border-radius: 3px !important;
-			}
-
-			.iro-swatches::-webkit-scrollbar-thumb:hover {
-				background: #00cc33 !important;
-			}
-
-			.iro-swatch-wrapper {
-				position: relative !important;
-				width: 20px !important;
-				height: 20px !important;
-			}
-
-			.iro-swatch {
-				width: 100% !important;
-				height: 100% !important;
-				border: 1px solid #333 !important;
-				border-radius: 2px !important;
-				cursor: pointer !important;
-				position: relative !important;
-			}
-
-			.iro-swatch:hover {
-				border-color: #00cc33 !important;
-				transform: scale(1.05) !important;
-			}
-
-			.iro-swatch-remove {
-				position: absolute !important;
-				top: 0 !important;
-				left: 0 !important;
-				width: 100% !important;
-				height: 100% !important;
-				background: rgba(0, 0, 0, 0.7) !important;
-				color: #00ff41 !important;
-				border-radius: 2px !important;
-				display: none !important;
-				align-items: center !important;
-				justify-content: center !important;
-				font-size: 16px !important;
-				font-weight: bold !important;
-				cursor: pointer !important;
-				z-index: 10 !important;
-			}
-
-			.iro-swatch-wrapper.cmd-hover .iro-swatch-remove {
-				display: flex !important;
-			}
-
-			.iro-save-icon,
-			.iro-close-icon,
-			.iro-clear-icon {
-				background: #242424 !important;
-				border: 1px solid #333333 !important;
-				color: #00cc33 !important;
-				padding: 6px !important;
-				border-radius: 2px !important;
-				cursor: pointer !important;
-				display: flex !important;
-				align-items: center !important;
-				justify-content: center !important;
-				flex-shrink: 0 !important;
-				width: 28px !important;
-				height: 28px !important;
-				transition: all 0.15s ease !important;
-			}
-
-			.iro-save-icon:hover,
-			.iro-close-icon:hover {
-				background: #00ff41 !important;
-				color: #0a0a0a !important;
-				border-color: #00ff41 !important;
-			}
-
-			.iro-clear-icon {
-				border-color: #ff0041 !important;
-				color: #ff0041 !important;
-			}
-
-			.iro-clear-icon:hover {
-				background: #ff0041 !important;
-				color: #0a0a0a !important;
-				border-color: #ff0041 !important;
-			}
-
-			.iro-close-icon {
-				margin-top: 4px !important;
-			}
-
-			.iro-clear-icon {
-				margin-top: 4px !important;
-			}
-
-			.iro-save-icon svg,
-			.iro-close-icon svg,
-			.iro-clear-icon svg {
-				width: 16px !important;
-				height: 16px !important;
-			}
-
-			.iro-modal-overlay {
-				position: fixed !important;
-				top: 0 !important;
-				left: 0 !important;
-				width: 100% !important;
-				height: 100% !important;
-				background: rgba(0, 0, 0, 0.8) !important;
-				z-index: 10001 !important;
-				display: flex !important;
-				align-items: center !important;
-				justify-content: center !important;
-			}
-
-			.iro-modal {
-				background: #1a1a1a !important;
-				border: 1px solid #333333 !important;
-				border-radius: 4px !important;
-				padding: 20px !important;
-				min-width: 300px !important;
-				max-width: 400px !important;
-				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8) !important;
-			}
-
-			.iro-modal-title {
-				color: #ff0041 !important;
-				font-size: 14px !important;
-				font-weight: 500 !important;
-				margin-bottom: 12px !important;
-				text-transform: uppercase !important;
-				letter-spacing: 0.5px !important;
-				font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace !important;
-			}
-
-			.iro-modal-message {
-				color: #00cc33 !important;
-				font-size: 12px !important;
-				margin-bottom: 20px !important;
-				line-height: 1.5 !important;
-				font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace !important;
-			}
-
-			.iro-modal-actions {
-				display: flex !important;
-				gap: 8px !important;
-				justify-content: flex-end !important;
-			}
-
-			.iro-modal-btn {
-				background: #242424 !important;
-				border: 1px solid #333333 !important;
-				color: #00cc33 !important;
-				padding: 8px 16px !important;
-				border-radius: 2px !important;
-				cursor: pointer !important;
-				font-size: 11px !important;
-				text-transform: uppercase !important;
-				letter-spacing: 0.5px !important;
-				font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace !important;
-				transition: all 0.15s ease !important;
-			}
-
-			.iro-modal-btn:hover {
-				border-color: #00cc33 !important;
-				color: #00ff41 !important;
-			}
-
-			.iro-modal-btn.error {
-				border-color: #ff0041 !important;
-				color: #ff0041 !important;
-			}
-
-			.iro-modal-btn.error:hover {
-				background: #ff0041 !important;
-				color: #0a0a0a !important;
-				border-color: #ff0041 !important;
-			}
-
-			.iro-swatches-actions {
-				display: flex !important;
-				flex-direction: column !important;
-				gap: 0 !important;
-			}
-
-			/* Clean iro.js styling - remove all unwanted borders and backgrounds */
-			.IroColorPicker {
-				background: transparent !important;
-				font-family: inherit !important;
-			}
-
-			.IroBox {
-				border: 1px solid #333333 !important;
-				border-radius: 3px !important;
-				box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3) !important;
-			}
-
-			.IroSlider {
-				border: none !important;
-				box-shadow: none !important;
-				border-radius: 4px !important;
-				background: transparent !important;
-				overflow: hidden !important;
-				position: relative !important;
-			}
-
-			.IroSlider::before {
-				content: '' !important;
-				position: absolute !important;
-				top: 0 !important;
-				left: 0 !important;
-				width: 100% !important;
-				height: 100% !important;
-				background-image: linear-gradient(45deg, #999 25%, transparent 25%, transparent 75%, #999 75%, #999),
-					linear-gradient(45deg, #999 25%, transparent 25%, transparent 75%, #999 75%, #999) !important;
-				background-size: 6px 6px !important;
-				background-position: 0 0, 3px 3px !important;
-				background-color: #fff !important;
-				z-index: 0 !important;
-				pointer-events: none !important;
-			}
-
-			.IroSliderGradient {
-				border-radius: 4px !important;
-				border: none !important;
-			}
-
-			.IroHandle {
-				stroke: #ffffff !important;
-				stroke-width: 2 !important;
-				fill: transparent !important;
-			}
-
-			.IroHandle > * {
-				fill: transparent !important;
-			}
-
-			.IroHandle:hover {
-				stroke: #00ff41 !important;
-			}
-
-			.IroHandle circle,
-			.IroHandle rect,
-			.IroHandle path {
-				fill: transparent !important;
-			}
-
-			.IroHandle circle {
-				r: 8 !important;
-			}
-		`;
-		document.head.appendChild(style);
-	}
-
-	updateColor(color, updateInput = true) {
-		const formatted = this.formatHex(color);
-
-		// Update internal state - this will trigger a re-render
-		this.value = formatted;
-
-		// Update iro picker if exists
-		if (this.colorPicker && this.colorPicker.color.hex8String !== formatted) {
-			try {
-				this.colorPicker.color.hex8String = formatted;
-				if (this.hueSlider) {
-					this.hueSlider.color.hex8String = formatted;
-				}
-				if (this.alphaSlider) {
-					this.alphaSlider.color.hex8String = formatted;
-				}
-			} catch (e) {
-				this._pendingColorUpdate = formatted;
-			}
-		}
-
-		// Emit events
-		const changeEvent = new CustomEvent('change', {
-			bubbles: true,
-			composed: true,
-			detail: {
-				color: formatted,
-				value: formatted
-			}
-		});
-		this.dispatchEvent(changeEvent);
-
-		// Also dispatch Lit-style event
-		this.dispatchEvent(new CustomEvent('color-change', {
-			bubbles: true,
-			composed: true,
-			detail: {
-				color: formatted,
-				value: formatted
-			}
-		}));
-	}
-
-	saveCurrentColor() {
-		if (!this.colorPicker) return;
-
-		const color = this.colorPicker.color.hex8String;
-		this.addColorToSwatches(color);
-
-		// Emit save event
-		this.dispatchEvent(new CustomEvent('color-save', {
-			bubbles: true,
-			composed: true,
-			detail: {
-				color: color,
-				timestamp: Date.now()
-			}
-		}));
-	}
-
-	addColorToSwatches(hex) {
-		// Check if color already exists
-		if (this.customSwatches.includes(hex)) {
+	/**
+	 * Save current color to swatches
+	 * @private
+	 */
+	_saveCurrentColor() {
+		this._logger.debug('Saving current color', { color: this.value });
+
+		// Check if already exists
+		if (this._customSwatches.includes(this.value)) {
+			this._logger.debug('Color already in swatches');
 			return;
 		}
 
 		// Add to custom swatches
-		this.customSwatches.unshift(hex);
+		this._customSwatches.push(this.value);
 
-		// Limit to 20 custom swatches
-		if (this.customSwatches.length > 20) {
-			this.customSwatches = this.customSwatches.slice(0, 20);
+		// Limit to 20
+		if (this._customSwatches.length > 20) {
+			this._customSwatches.shift();
 		}
 
 		// Save to localStorage
-		this.saveCustomSwatches();
+		localStorage.setItem('terminal-iro-swatches', JSON.stringify(this._customSwatches));
 
 		// Update display
-		this.updateSwatchesDisplay();
+		this._updateSwatchesDisplay();
+
+		// Emit event
+		this._emitEvent('color-save', {
+			color: this.value,
+			timestamp: Date.now()
+		});
+
+		this._emitEvent('swatches-updated', {
+			swatches: [...this._customSwatches]
+		});
 	}
 
-	updateSwatchesDisplay() {
+	/**
+	 * Load custom swatches from localStorage
+	 * @private
+	 */
+	_loadCustomSwatches() {
+		try {
+			const saved = localStorage.getItem('terminal-iro-swatches');
+			if (saved) {
+				this._customSwatches = JSON.parse(saved);
+				this._logger.debug('Loaded custom swatches', { count: this._customSwatches.length });
+			}
+		} catch (error) {
+			this._logger.error('Failed to load custom swatches', { error });
+			this._customSwatches = [];
+		}
+	}
+
+	/**
+	 * Update swatches display in popover
+	 * @private
+	 */
+	_updateSwatchesDisplay() {
 		if (!this._popoverElement) return;
 
-		const container = this._popoverElement.querySelector('.iro-swatches');
+		const container = this._popoverElement.querySelector(`#swatches-${this._pickerId}`);
 		if (!container) return;
 
 		// Default swatches
 		const defaultSwatches = [
-			'#00ff41ff', // Terminal green
-			'#ff0041ff', // Terminal red
-			'#0041ffff', // Terminal blue
-			'#ffcc00ff', // Terminal yellow
-			'#ff00ffff', // Terminal magenta
-			'#00ffffff', // Terminal cyan
-			'#ffffffff', // White
-			'#ccccccff', // Light gray
-			'#666666ff', // Medium gray
-			'#333333ff', // Dark gray
-			'#000000ff', // Black
+			'#00ff41ff', '#ff0041ff', '#0041ffff', '#ffcc00ff',
+			'#ff00ffff', '#00ffffff', '#ffffffff', '#ccccccff',
+			'#666666ff', '#333333ff', '#000000ff'
 		];
 
-		// Combine with custom swatches
-		const allSwatches = [...defaultSwatches, ...this.customSwatches];
+		const allSwatches = [...defaultSwatches, ...this._customSwatches];
 
-		// Clear container
-		container.innerHTML = '';
-
-		// Create swatch elements with wrapper for X overlay
-		allSwatches.forEach((color, index) => {
+		container.innerHTML = allSwatches.map((swatch, index) => {
 			const isCustom = index >= defaultSwatches.length;
-			const swatchWrapper = document.createElement('div');
-			swatchWrapper.className = 'iro-swatch-wrapper';
+			return `
+				<div class="iro-swatch ${isCustom && this._cmdKeyPressed ? 'removable' : ''}"
+					 data-color="${swatch}"
+					 data-index="${index}">
+					<div class="iro-swatch-color" style="background: ${swatch};"></div>
+					${isCustom && this._cmdKeyPressed ? `<div class="iro-swatch-remove">${xIcon}</div>` : ''}
+				</div>
+			`;
+		}).join('');
 
-			const swatch = document.createElement('div');
-			swatch.className = `iro-swatch ${isCustom ? 'custom' : 'default'}`;
-			swatch.style.backgroundColor = color;
-			swatch.title = isCustom ? 'Custom swatch - Click to apply, Cmd+Click to remove' : 'Click to apply';
+		// Add click listeners
+		container.querySelectorAll('.iro-swatch').forEach(swatch => {
+			swatch.addEventListener('click', (e) => {
+				const color = swatch.dataset.color;
+				const index = parseInt(swatch.dataset.index);
 
-			// Add X overlay for custom swatches
-			if (isCustom) {
-				const xOverlay = document.createElement('div');
-				xOverlay.className = 'iro-swatch-remove';
-				xOverlay.innerHTML = '×';
-				swatchWrapper.appendChild(xOverlay);
-			}
-
-			swatchWrapper.appendChild(swatch);
-
-			// Track cmd/ctrl key for visual feedback
-			if (isCustom) {
-				swatchWrapper.addEventListener('mouseenter', (e) => {
-					if (e.metaKey || e.ctrlKey) {
-						swatchWrapper.classList.add('cmd-hover');
-					}
-				});
-
-				swatchWrapper.addEventListener('mouseleave', () => {
-					swatchWrapper.classList.remove('cmd-hover');
-				});
-			}
-
-			swatchWrapper.addEventListener('click', (e) => {
-				e.stopPropagation();
-				if (e.metaKey || e.ctrlKey) {
-					if (isCustom) {
-						e.preventDefault();
-						this.removeColorFromSwatches(color);
-						// Don't close the picker
-						return false;
-					}
+				// Remove if CMD pressed and custom swatch
+				if (this._cmdKeyPressed && index >= defaultSwatches.length) {
+					this._removeCustomSwatch(index - defaultSwatches.length);
 				} else {
 					// Apply color
-					if (this.colorPicker) {
-						this.colorPicker.color.hex8String = color;
+					this._syncingColor = true;
+					this.value = color;
+					if (this._colorPicker) {
+						this._colorPicker.color.hexString = color;
 					}
-					this.updateColor(color);
+					this._syncingColor = false;
+					this._emitEvent('change', { value: this.value, color: this.value });
 				}
 			});
-
-			container.appendChild(swatchWrapper);
 		});
-
-		// Add global key listeners for CMD/Ctrl
-		if (!this._keyListenersAdded) {
-			this._keyListenersAdded = true;
-			document.addEventListener('keydown', (e) => {
-				if (e.metaKey || e.ctrlKey) {
-					document.body.classList.add('cmd-pressed');
-					// Update hover state for current element
-					const hoveredWrapper = this._popoverElement?.querySelector('.iro-swatch-wrapper:hover');
-					if (hoveredWrapper && hoveredWrapper.querySelector('.custom')) {
-						hoveredWrapper.classList.add('cmd-hover');
-					}
-				}
-			});
-
-			document.addEventListener('keyup', (e) => {
-				if (!e.metaKey && !e.ctrlKey) {
-					document.body.classList.remove('cmd-pressed');
-					// Remove all cmd-hover classes
-					this._popoverElement?.querySelectorAll('.cmd-hover').forEach(el => {
-						el.classList.remove('cmd-hover');
-					});
-				}
-			});
-		}
 	}
 
-	removeColorFromSwatches(color) {
-		const index = this.customSwatches.indexOf(color);
-		if (index > -1) {
-			this.customSwatches.splice(index, 1);
-			this.saveCustomSwatches();
-			this.updateSwatchesDisplay();
-		}
+	/**
+	 * Remove custom swatch by index
+	 * @private
+	 */
+	_removeCustomSwatch(index) {
+		this._logger.debug('Removing custom swatch', { index });
+
+		this._customSwatches.splice(index, 1);
+		localStorage.setItem('terminal-iro-swatches', JSON.stringify(this._customSwatches));
+		this._updateSwatchesDisplay();
+
+		this._emitEvent('swatches-updated', {
+			swatches: [...this._customSwatches]
+		});
 	}
 
-	loadCustomSwatches() {
-		try {
-			const saved = localStorage.getItem('terminal-iro-swatches');
-			if (saved) {
-				const parsed = JSON.parse(saved);
-				if (Array.isArray(parsed)) {
-					this.customSwatches = parsed.filter(c => this.isValidHex(c));
-				} else {
-					this.customSwatches = [];
-				}
-			} else {
-				this.customSwatches = [];
-			}
-		} catch (e) {
-			warn('Error loading custom swatches:', e);
-			this.customSwatches = [];
-		}
-	}
+	/**
+	 * Show clear confirmation modal
+	 * @private
+	 */
+	_showClearConfirmation() {
+		this._logger.debug('Showing clear confirmation modal');
 
-	saveCustomSwatches() {
-		try {
-			if (Array.isArray(this.customSwatches)) {
-				localStorage.setItem('terminal-iro-swatches', JSON.stringify(this.customSwatches));
-				this.dispatchEvent(new CustomEvent('swatches-updated', {
-					bubbles: true,
-					composed: true,
-					detail: { swatches: [...this.customSwatches] }
-				}));
-			}
-		} catch (e) {
-			warn('Error saving custom swatches:', e);
-		}
-	}
-
-	setIcon(iconSvg) {
-		this.customIcon = iconSvg;
-		this.requestUpdate();
-	}
-
-	showClearConfirmation() {
 		const modalOverlay = document.createElement('div');
 		modalOverlay.className = 'iro-modal-overlay';
 		modalOverlay.innerHTML = `
 			<div class="iro-modal">
 				<div class="iro-modal-title">Clear All Custom Swatches?</div>
-				<div class="iro-modal-message">This will permanently delete all ${this.customSwatches.length} custom swatch${this.customSwatches.length !== 1 ? 'es' : ''}. This action cannot be undone.</div>
+				<div class="iro-modal-message">This will permanently delete all ${this._customSwatches.length} custom swatch${this._customSwatches.length !== 1 ? 'es' : ''}. This action cannot be undone.</div>
 				<div class="iro-modal-actions">
 					<button class="iro-modal-btn" data-action="cancel">Cancel</button>
 					<button class="iro-modal-btn error" data-action="confirm">Clear All</button>
@@ -1744,157 +1651,56 @@ export class TColorPicker extends LitElement {
 		document.body.appendChild(modalOverlay);
 	}
 
-	clearAllCustomSwatches() {
-		this.customSwatches = [];
-		localStorage.removeItem('terminal-iro-swatches');
-		this.updateSwatchesDisplay();
-		log('All custom swatches cleared');
-		this.dispatchEvent(new CustomEvent('swatches-cleared', {
-			bubbles: true,
-			composed: true
-		}));
-	}
+	/**
+	 * Handle keydown events (CMD/Ctrl for swatch removal)
+	 * @private
+	 */
+	_handleKeyDown(e) {
+		if (e.key === 'Meta' || e.key === 'Control') {
+			this._cmdKeyPressed = true;
+			this._updateSwatchesDisplay();
+		}
 
-	cleanupColorPicker() {
-		if (this.colorPicker) {
-			try {
-				// iro.js doesn't have a destroy method, just null it
-				this.colorPicker = null;
-			} catch (e) {
-				warn('Error cleaning up color picker:', e);
-			}
-		}
-		if (this.hueSlider) {
-			try {
-				this.hueSlider = null;
-			} catch (e) {
-				warn('Error cleaning up hue slider:', e);
-			}
-		}
-		if (this.alphaSlider) {
-			try {
-				this.alphaSlider = null;
-			} catch (e) {
-				warn('Error cleaning up alpha slider:', e);
-			}
+		// Close on Escape
+		if (e.key === 'Escape' && this._isOpen) {
+			this._closeColorPicker();
 		}
 	}
 
-	onUnmount() {
-		// Clear timeouts
-		if (this._initTimeout) {
-			clearTimeout(this._initTimeout);
-			this._initTimeout = null;
-		}
-
-		// Remove popover
-		if (this._popoverElement && this._popoverElement.parentNode) {
-			this._popoverElement.parentNode.removeChild(this._popoverElement);
-			this._popoverElement = null;
-		}
-
-		// Clean up color picker
-		this.cleanupColorPicker();
-
-		// Remove listeners
-		document.removeEventListener('mousedown', this.handleOutsideClick);
-
-		// Reset state
-		this._pendingColorUpdate = null;
-		this._pickerId = null;
-		this._isOpen = false;
-	}
-
-	disconnectedCallback() {
-		this.onUnmount();
-		super.disconnectedCallback && super.disconnectedCallback();
-	}
-
-	// Override parent formatHex to always return 8-digit hex for iro.js
-	formatHex(color) {
-		if (!color || typeof color !== 'string') {
-			return this.value || '#00ff41ff';
-		}
-
-		// Clean up the color string
-		color = color.trim();
-
-		// Handle hex colors
-		if (color.startsWith('#')) {
-			// Remove # and clean
-			let hex = color.substring(1).replace(/[^0-9a-fA-F]/g, '');
-
-			// Handle different hex formats
-			if (hex.length === 3) {
-				// RGB -> RGBA
-				hex = hex.split('').map(c => c + c).join('') + 'ff';
-			} else if (hex.length === 4) {
-				// RGBA short -> RGBA full
-				hex = hex.split('').map(c => c + c).join('');
-			} else if (hex.length === 6) {
-				// RGB -> RGBA (add full opacity)
-				hex = hex + 'ff';
-			} else if (hex.length !== 8) {
-				// Invalid length, return default
-				return this.value || '#00ff41ff';
-			}
-
-			return '#' + hex.toLowerCase();
-		}
-
-		// For other formats, return as-is
-		return color;
-	}
-
-	// Override to check for 8-digit hex
-	isValidHex(color) {
-		if (!color || typeof color !== 'string') return false;
-
-		// Check hex format (must be 8 digits for RGBA)
-		if (color.startsWith('#')) {
-			const hex = color.substring(1);
-			return /^[0-9a-fA-F]{8}$/.test(hex);
-		}
-
-		// Could add RGB/HSL validation here if needed
-		return true;
-	}
-
-	// Public API
-	getValue() {
-		return this.value;
-	}
-
-	setValue(color) {
-		const formatted = this.formatHex(color);
-		if (this.isValidHex(formatted)) {
-			this.updateColor(formatted);
+	/**
+	 * Handle keyup events
+	 * @private
+	 */
+	_handleKeyUp(e) {
+		if (e.key === 'Meta' || e.key === 'Control') {
+			this._cmdKeyPressed = false;
+			this._updateSwatchesDisplay();
 		}
 	}
 
-	setLabels(label1, label2) {
-		this.label1 = label1;
-		this.label2 = label2;
-	}
+	/**
+	 * Handle document clicks (close picker when clicking outside)
+	 * @private
+	 */
+	_handleDocumentClick(e) {
+		if (!this._isOpen) return;
 
-	reset() {
-		this.setValue('#00ff41ff');
-	}
-
-	// Lit lifecycle method
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.onUnmount();
-	}
-
-	disable() {
-		this.disabled = true;
-	}
-
-	enable() {
-		this.disabled = false;
+		// Check if click is outside picker and popover
+		if (!this.contains(e.target) &&
+			(!this._popoverElement || !this._popoverElement.contains(e.target))) {
+			this._closeColorPicker();
+		}
 	}
 }
 
-// Register the component
-customElements.define('t-clr', TColorPicker);
+// ============================================================
+// SECTION 3: CUSTOM ELEMENT REGISTRATION (REQUIRED)
+// ============================================================
+if (!customElements.get(TColorPicker.tagName)) {
+	customElements.define(TColorPicker.tagName, TColorPicker);
+}
+
+// ============================================================
+// SECTION 4: EXPORT (REQUIRED)
+// ============================================================
+export default TColorPicker;
