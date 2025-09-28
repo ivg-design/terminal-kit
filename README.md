@@ -29,7 +29,7 @@ A retro-futuristic web components library with terminal aesthetics. Built with *
 - **TPanel** (`<t-pnl>`) - Collapsible panels with header, footer, and actions
 - **TButton** (`<t-btn>`) - Terminal-style buttons with size/variant options
 - **TInput** (`<t-inp>`) - Text inputs with validation
-- **TToggle** (`<t-tog>`) - Toggle switches
+- **TToggleLit** (`<t-tog>`) - Toggle switches and checkboxes with multiple variants
 - **TSlider** (`<t-sld>`) - Range sliders
 - **TDropdown** (`<t-drp>`) - Select dropdowns with search
 - **TColorPicker** (`<t-clr>`) - Color picker with swatches

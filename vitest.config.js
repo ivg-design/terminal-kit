@@ -24,7 +24,8 @@ export default defineConfig({
         'js/components/TPanelLit.js',
         'js/components/TColorPickerLit.js',
         'js/components/TButtonLit.js',
-        'js/components/TModalLit.js'
+        'js/components/TModalLit.js',
+        'js/components/TToggleLit.js'
       ],
       exclude: [
         'js/components/**/*.backup.js',

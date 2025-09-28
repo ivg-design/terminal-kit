@@ -174,60 +174,56 @@
                 <div class="demo-grid">
                     <div class="demo-item">
                         <span class="demo-label">Label + Toggle (Default)</span>
-                        <terminal-toggle id="toggle1" label="Auto-save" layout="label-toggle">
-                        </terminal-toggle>
+                        <t-tog id="toggle1" label="Auto-save">
+                        </t-tog>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Icon + Toggle</span>
-                        <terminal-toggle id="toggle-heart"
-                            layout="icon-toggle">
-                        </terminal-toggle>
+                        <t-tog id="toggle-heart" icon-on="♥" icon-off="♡">
+                        </t-tog>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Icon + Label + Toggle</span>
-                        <terminal-toggle id="toggle-notifications" label="Notifications"
-                            layout="icon-label-toggle">
-                        </terminal-toggle>
+                        <t-tog id="toggle-notifications" label="Notifications" icon-on="●" icon-off="○">
+                        </t-tog>
                     </div>
 
                     <div class="demo-item">
-                        <span class="demo-label">Switching Label/Icon</span>
-                        <terminal-toggle id="toggle-online" on-label="ONLINE" off-label="OFFLINE"
-                            layout="switching">
-                        </terminal-toggle>
+                        <span class="demo-label">Switching Label</span>
+                        <t-tog id="toggle-online" label-on="ONLINE" label-off="OFFLINE">
+                        </t-tog>
                     </div>
 
                     <div class="demo-item">
-                        <span class="demo-label">Icon-Only Switching</span>
-                        <terminal-toggle id="toggle-plus-minus"
-                            layout="icon-switching">
-                        </terminal-toggle>
+                        <span class="demo-label">Icon Switching</span>
+                        <t-tog id="toggle-plus-minus" icon-on="+" icon-off="-">
+                        </t-tog>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Small Size</span>
-                        <terminal-toggle label="Compact" size="small">
-                        </terminal-toggle>
+                        <t-tog label="Compact" size="small">
+                        </t-tog>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Large Size</span>
-                        <terminal-toggle label="Feature" size="large">
-                        </terminal-toggle>
+                        <t-tog label="Feature" size="large">
+                        </t-tog>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Checked State</span>
-                        <terminal-toggle label="Dark Mode" checked>
-                        </terminal-toggle>
+                        <t-tog label="Dark Mode" checked>
+                        </t-tog>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Disabled State</span>
-                        <terminal-toggle label="Locked" checked disabled>
-                        </terminal-toggle>
+                        <t-tog label="Locked" checked disabled>
+                        </t-tog>
                     </div>
 
                 </div>
@@ -236,42 +232,38 @@
                 <div class="demo-grid">
                     <div class="demo-item">
                         <span class="demo-label">Work / Personal</span>
-                        <terminal-toggle id="toggle-personal-work" on-label="PERSONAL" off-label="WORK"
-                            layout="switching" equal-states>
-                        </terminal-toggle>
+                        <t-tog id="toggle-personal-work" label-on="PERSONAL" label-off="WORK" equal-states>
+                        </t-tog>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">A / B Testing</span>
-                        <terminal-toggle on-label="VERSION B" off-label="VERSION A" layout="switching" equal-states>
-                        </terminal-toggle>
+                        <t-tog label-on="VERSION B" label-off="VERSION A" equal-states>
+                        </t-tog>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Dev / Prod</span>
-                        <terminal-toggle id="toggle-dev-prod" on-label="PRODUCTION" off-label="DEVELOPMENT"
-                            layout="icon-switching" equal-states>
-                        </terminal-toggle>
+                        <t-tog id="toggle-dev-prod" label-on="PRODUCTION" label-off="DEVELOPMENT" equal-states>
+                        </t-tog>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Light / Dark Theme</span>
-                        <terminal-toggle id="toggle-theme"
-                            layout="icon-toggle" equal-states>
-                        </terminal-toggle>
+                        <t-tog id="toggle-theme" label-on="DARK" label-off="LIGHT" equal-states>
+                        </t-tog>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">View Mode</span>
-                        <terminal-toggle id="toggle-view-mode" on-label="GRID" off-label="LIST"
-                            layout="icon-label-toggle" equal-states>
-                        </terminal-toggle>
+                        <t-tog id="toggle-view-mode" label-on="GRID" label-off="LIST" equal-states>
+                        </t-tog>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Compact Equal-State</span>
-                        <terminal-toggle on-label="OPT B" off-label="OPT A" layout="switching" size="small" equal-states>
-                        </terminal-toggle>
+                        <t-tog label-on="OPT B" label-off="OPT A" size="small" equal-states>
+                        </t-tog>
                     </div>
                 </div>
             </div>
@@ -288,28 +280,28 @@
                     <div class="demo-item">
                         <span class="demo-label">Default Checkbox</span>
                         <div style="display: flex; justify-content: flex-end; width: 100%;">
-                            <terminal-toggle variant="checkbox" label="Accept terms"></terminal-toggle>
+                            <t-tog variant="checkbox" label="Accept terms"></t-tog>
                         </div>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Checked State</span>
                         <div style="display: flex; justify-content: flex-end; width: 100%;">
-                            <terminal-toggle variant="checkbox" label="Subscribe to newsletter" checked></terminal-toggle>
+                            <t-tog variant="checkbox" label="Subscribe to newsletter" checked></t-tog>
                         </div>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Disabled State</span>
                         <div style="display: flex; justify-content: flex-end; width: 100%;">
-                            <terminal-toggle variant="checkbox" label="Premium feature" disabled></terminal-toggle>
+                            <t-tog variant="checkbox" label="Premium feature" disabled></t-tog>
                         </div>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Icon Checkbox</span>
                         <div style="display: flex; justify-content: flex-end; width: 100%;">
-                            <terminal-toggle variant="checkbox" layout="icon-label-toggle" label="Notifications" id="checkbox-notifications"></terminal-toggle>
+                            <t-tog variant="checkbox"  label="Notifications" id="checkbox-notifications"></t-tog>
                         </div>
                     </div>
                 </div>
@@ -319,39 +311,82 @@
                     <div class="demo-item">
                         <span class="demo-label">Features Selection</span>
                         <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; width: 100%;">
-                            <terminal-toggle variant="checkbox" label="Auto-save" checked></terminal-toggle>
-                            <terminal-toggle variant="checkbox" label="Dark mode" checked></terminal-toggle>
-                            <terminal-toggle variant="checkbox" label="Notifications"></terminal-toggle>
-                            <terminal-toggle variant="checkbox" label="Analytics"></terminal-toggle>
+                            <t-tog variant="checkbox" label="Auto-save" checked></t-tog>
+                            <t-tog variant="checkbox" label="Dark mode" checked></t-tog>
+                            <t-tog variant="checkbox" label="Notifications"></t-tog>
+                            <t-tog variant="checkbox" label="Analytics"></t-tog>
                         </div>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Permission Settings</span>
                         <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; width: 100%;">
-                            <terminal-toggle variant="checkbox" label="Read" checked></terminal-toggle>
-                            <terminal-toggle variant="checkbox" label="Write" checked></terminal-toggle>
-                            <terminal-toggle variant="checkbox" label="Execute"></terminal-toggle>
-                            <terminal-toggle variant="checkbox" label="Delete" disabled></terminal-toggle>
+                            <t-tog variant="checkbox" label="Read" checked></t-tog>
+                            <t-tog variant="checkbox" label="Write" checked></t-tog>
+                            <t-tog variant="checkbox" label="Execute"></t-tog>
+                            <t-tog variant="checkbox" label="Delete" disabled></t-tog>
                         </div>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Size Variants</span>
                         <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; width: 100%;">
-                            <terminal-toggle variant="checkbox" label="Small" size="small"></terminal-toggle>
-                            <terminal-toggle variant="checkbox" label="Default" size="default"></terminal-toggle>
-                            <terminal-toggle variant="checkbox" label="Large" size="large"></terminal-toggle>
+                            <t-tog variant="checkbox" label="Small" size="small"></t-tog>
+                            <t-tog variant="checkbox" label="Default" size="medium"></t-tog>
+                            <t-tog variant="checkbox" label="Large" size="large"></t-tog>
                         </div>
                     </div>
 
                     <div class="demo-item">
-                        <span class="demo-label">Error Checkboxes</span>
+                        <span class="demo-label">Color Variants</span>
                         <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; width: 100%;">
-                            <terminal-toggle variant="checkbox" error label="Invalid input" checked></terminal-toggle>
-                            <terminal-toggle variant="checkbox" error label="Failed validation"></terminal-toggle>
-                            <terminal-toggle variant="checkbox" error label="Error (small)" size="small" checked></terminal-toggle>
-                            <terminal-toggle variant="checkbox" error label="Error (large)" size="large" checked></terminal-toggle>
+                            <t-tog variant="checkbox" label="Default" checked></t-tog>
+                            <t-tog variant="checkbox" label="Error" color-scheme="error" checked></t-tog>
+                            <t-tog variant="checkbox" label="Warning" color-scheme="warning" checked></t-tog>
+                            <t-tog variant="checkbox" label="Success" color-scheme="success" checked></t-tog>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Alignment Options</h3>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Left Aligned (Checkbox-Label)</span>
+                        <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                            <t-tog variant="checkbox" label="Option 1" alignment="left" checked></t-tog>
+                            <t-tog variant="checkbox" label="Option 2" alignment="left"></t-tog>
+                            <t-tog variant="checkbox" label="Option 3" alignment="left" checked></t-tog>
+                            <t-tog variant="checkbox" label="Option 4" alignment="left"></t-tog>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Right Aligned (Label-Checkbox)</span>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; width: 100%;">
+                            <t-tog variant="checkbox" label="Setting A" alignment="right" checked></t-tog>
+                            <t-tog variant="checkbox" label="Setting B" alignment="right"></t-tog>
+                            <t-tog variant="checkbox" label="Setting C" alignment="right" checked></t-tog>
+                            <t-tog variant="checkbox" label="Setting D" alignment="right"></t-tog>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Mixed Color & Left Align</span>
+                        <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                            <t-tog variant="checkbox" label="Normal Item" alignment="left" checked></t-tog>
+                            <t-tog variant="checkbox" label="Error Item" alignment="left" color-scheme="error" checked></t-tog>
+                            <t-tog variant="checkbox" label="Warning Item" alignment="left" color-scheme="warning"></t-tog>
+                            <t-tog variant="checkbox" label="Success Item" alignment="left" color-scheme="success" checked></t-tog>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Mixed Color & Right Align</span>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; width: 100%;">
+                            <t-tog variant="checkbox" label="Task Complete" alignment="right" color-scheme="success" checked></t-tog>
+                            <t-tog variant="checkbox" label="Task Pending" alignment="right" color-scheme="warning" checked></t-tog>
+                            <t-tog variant="checkbox" label="Task Failed" alignment="right" color-scheme="error"></t-tog>
+                            <t-tog variant="checkbox" label="Task Inactive" alignment="right"></t-tog>
                         </div>
                     </div>
                 </div>
@@ -366,44 +401,56 @@
 
                 <div class="code-block">
                     <code>&lt;!-- Toggle switches --&gt;
-&lt;terminal-toggle label="Enable feature"&gt;&lt;/terminal-toggle&gt;
-&lt;terminal-toggle label="Auto-save" checked&gt;&lt;/terminal-toggle&gt;
+&lt;t-tog label="Enable feature"&gt;&lt;/t-tog&gt;
+&lt;t-tog label="Auto-save" checked&gt;&lt;/t-tog&gt;
 
 &lt;!-- Icon toggles --&gt;
-&lt;terminal-toggle layout="icon-toggle"&gt;&lt;/terminal-toggle&gt;
-&lt;terminal-toggle layout="icon-label-toggle" label="Notifications"&gt;&lt;/terminal-toggle&gt;
+&lt;t-tog icon-on="♥" icon-off="♡"&gt;&lt;/t-tog&gt;
+&lt;t-tog icon-on="●" icon-off="○" label="Notifications"&gt;&lt;/t-tog&gt;
 
 &lt;!-- Switching toggles --&gt;
-&lt;terminal-toggle layout="switching" on-label="ONLINE" off-label="OFFLINE"&gt;&lt;/terminal-toggle&gt;
-&lt;terminal-toggle layout="icon-switching"&gt;&lt;/terminal-toggle&gt;
+&lt;t-tog label-on="ON" label-off="OFF" label="Status"&gt;&lt;/t-tog&gt;
+&lt;t-tog icon-on="+" icon-off="-"&gt;&lt;/t-tog&gt;
 
 &lt;!-- Equal-state toggles --&gt;
-&lt;terminal-toggle layout="switching" equal-states on-label="WORK" off-label="PERSONAL"&gt;&lt;/terminal-toggle&gt;
+&lt;t-tog label-on="Mode A" label-off="Mode B" equal-states label="Mode"&gt;&lt;/t-tog&gt;
 
 &lt;!-- Sizes --&gt;
-&lt;terminal-toggle label="Small" size="small"&gt;&lt;/terminal-toggle&gt;
-&lt;terminal-toggle label="Large" size="large"&gt;&lt;/terminal-toggle&gt;
+&lt;t-tog label="Small" size="small"&gt;&lt;/t-tog&gt;
+&lt;t-tog label="Large" size="large"&gt;&lt;/t-tog&gt;
 
 &lt;!-- States --&gt;
-&lt;terminal-toggle label="Checked" checked&gt;&lt;/terminal-toggle&gt;
-&lt;terminal-toggle label="Disabled" disabled&gt;&lt;/terminal-toggle&gt;
+&lt;t-tog label="Checked" checked&gt;&lt;/t-tog&gt;
+&lt;t-tog label="Disabled" disabled&gt;&lt;/t-tog&gt;
 
 &lt;!-- Checkbox variant --&gt;
-&lt;terminal-toggle variant="checkbox" label="Option 1"&gt;&lt;/terminal-toggle&gt;
-&lt;terminal-toggle variant="checkbox" label="Option 2" checked&gt;&lt;/terminal-toggle&gt;
-&lt;terminal-toggle variant="checkbox" label="Option 3" disabled&gt;&lt;/terminal-toggle&gt;
+&lt;t-tog variant="checkbox" label="Option 1"&gt;&lt;/t-tog&gt;
+&lt;t-tog variant="checkbox" label="Option 2" checked&gt;&lt;/t-tog&gt;
+&lt;t-tog variant="checkbox" label="Option 3" disabled&gt;&lt;/t-tog&gt;
 
-&lt;!-- Error checkbox (shows X instead of checkmark) --&gt;
-&lt;terminal-toggle variant="checkbox" error label="Invalid" checked&gt;&lt;/terminal-toggle&gt;</code>
+&lt;!-- Colored checkboxes --&gt;
+&lt;t-tog variant="checkbox" label="Error" color-scheme="error" checked&gt;&lt;/t-tog&gt;
+&lt;t-tog variant="checkbox" label="Warning" color-scheme="warning" checked&gt;&lt;/t-tog&gt;
+&lt;t-tog variant="checkbox" label="Success" color-scheme="success" checked&gt;&lt;/t-tog&gt;
+
+&lt;!-- Alignment options --&gt;
+&lt;t-tog variant="checkbox" label="Left aligned" alignment="left"&gt;&lt;/t-tog&gt;
+&lt;t-tog variant="checkbox" label="Right aligned" alignment="right"&gt;&lt;/t-tog&gt;</code>
                 </div>
 
                 <div class="code-block">
                     <code>// JavaScript API
-const toggle = document.querySelector('terminal-toggle');
+const toggle = document.querySelector('t-tog');
 
 // Get/set checked state
 console.log(toggle.checked);
 toggle.checked = true;
+
+// Set color scheme
+toggle.colorScheme = 'error'; // or 'warning', 'success'
+
+// Set alignment
+toggle.alignment = 'left'; // or 'right'
 
 // Enable/disable
 toggle.disabled = true;
@@ -416,17 +463,15 @@ toggle.addEventListener('change', (e) =&gt; {
 
 // Setting icons programmatically
 toggle.setAttribute('icon', iconSVG);
-toggle.setAttribute('on-icon', onIconSVG);
-toggle.setAttribute('off-icon', offIconSVG);</code>
+toggle.setAttribute('icon-on', onIconSVG);
+toggle.setAttribute('icon-off', offIconSVG);</code>
                 </div>
             </div>
         </div>
 
         <!-- Import Components -->
         <script type="module">
-            import '../js/components/TerminalComponent.js';
-            import '../js/components/TerminalToggle.js';
-            import '../js/components/TerminalButton.js';
+            import '../js/components/TToggleLit.js';
             
             // Import all icons from phosphor-icons module
             import { 
@@ -460,38 +505,38 @@ toggle.setAttribute('off-icon', offIconSVG);</code>
                 
                 const toggleOnline = document.getElementById('toggle-online');
                 if (toggleOnline) {
-                    toggleOnline.setAttribute('on-icon', checkCircleIcon);
-                    toggleOnline.setAttribute('off-icon', xIcon);
+                    toggleOnline.setAttribute('icon-on', checkCircleIcon);
+                    toggleOnline.setAttribute('icon-off', xIcon);
                 }
                 
                 const togglePlusMinus = document.getElementById('toggle-plus-minus');
                 if (togglePlusMinus) {
-                    togglePlusMinus.setAttribute('on-icon', plusCircleIcon);
-                    togglePlusMinus.setAttribute('off-icon', minusCircleIcon);
+                    togglePlusMinus.setAttribute('icon-on', plusCircleIcon);
+                    togglePlusMinus.setAttribute('icon-off', minusCircleIcon);
                 }
                 
                 const togglePersonalWork = document.getElementById('toggle-personal-work');
                 if (togglePersonalWork) {
-                    togglePersonalWork.setAttribute('on-icon', userCircleIcon);
-                    togglePersonalWork.setAttribute('off-icon', briefcaseIcon);
+                    togglePersonalWork.setAttribute('icon-on', userCircleIcon);
+                    togglePersonalWork.setAttribute('icon-off', briefcaseIcon);
                 }
                 
                 const toggleDevProd = document.getElementById('toggle-dev-prod');
                 if (toggleDevProd) {
-                    toggleDevProd.setAttribute('on-icon', folderStarIcon);
-                    toggleDevProd.setAttribute('off-icon', keyboardIcon);
+                    toggleDevProd.setAttribute('icon-on', folderStarIcon);
+                    toggleDevProd.setAttribute('icon-off', keyboardIcon);
                 }
                 
                 const toggleTheme = document.getElementById('toggle-theme');
                 if (toggleTheme) {
-                    toggleTheme.setAttribute('on-icon', eyeClosedIcon);
-                    toggleTheme.setAttribute('off-icon', eyeIcon);
+                    toggleTheme.setAttribute('icon-on', eyeClosedIcon);
+                    toggleTheme.setAttribute('icon-off', eyeIcon);
                 }
                 
                 const toggleViewMode = document.getElementById('toggle-view-mode');
                 if (toggleViewMode) {
-                    toggleViewMode.setAttribute('on-icon', tableIcon);
-                    toggleViewMode.setAttribute('off-icon', slidersHorizontalIcon);
+                    toggleViewMode.setAttribute('icon-on', tableIcon);
+                    toggleViewMode.setAttribute('icon-off', slidersHorizontalIcon);
                 }
 
                 // Set icon for checkbox variant
@@ -504,9 +549,9 @@ toggle.setAttribute('off-icon', offIconSVG);</code>
             // Setup event listeners for demo purposes
             function setupEventListeners() {
                 // Add event listeners to all toggles
-                document.querySelectorAll('terminal-toggle').forEach(toggle => {
-                    toggle.addEventListener('change', (e) => {
-                        console.log('Toggle changed:', e.target.id || 'unnamed', 'to', e.target.checked);
+                document.querySelectorAll('t-tog').forEach(toggle => {
+                    toggle.addEventListener('toggle-change', (e) => {
+                        console.log('Toggle changed:', e.target.id || 'unnamed', 'to', e.detail.checked);
                     });
                 });
 
