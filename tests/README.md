@@ -293,13 +293,107 @@ npm run test:coverage
 ## Test Results Summary
 
 ```
-Test Files  3 passed (3)
-Tests       168 passed (168)
-Duration    ~650-700ms
+Test Files  4 passed (4)
+Tests       223 passed (223)
+Duration    ~900-1000ms
 ```
 
 - **TPanelLit:** 59 tests covering FULL profile compliance
 - **TColorPicker:** 52 tests covering BUNDLED-LIB profile compliance
+- **TModalLit:** 57 tests covering FULL profile compliance
+- **TTextareaLit:** 55 tests covering FORM-ADVANCED profile compliance
+
+---
+
+### TTextareaLit Component - 55 Tests (FORM-ADVANCED Profile)
+
+FORM-ADVANCED profile component with form participation, validation, and code editor features.
+
+#### 1. Manifest Completeness (5 tests)
+- ✅ Manifest structure (tagName, displayName, version)
+- ✅ All 9 properties documented
+- ✅ All 4 methods documented
+- ✅ All 4 events documented
+- ✅ No slots documented
+
+#### 2. Property Functionality (10 tests)
+- ✅ Correct default values for all properties
+- ✅ `placeholder`, `value`, `rows` properties work
+- ✅ `disabled`, `readonly`, `required` properties work
+- ✅ `maxlength`, `codeMode`, `showLineNumbers` properties work
+- ✅ Attribute reflection works for reflected properties
+
+#### 3. Method Functionality (5 tests)
+- ✅ All 4 public methods exist
+- ✅ `setValue()` sets the value
+- ✅ `getValue()` returns the value
+- ✅ `focus()` focuses the textarea
+- ✅ `blur()` blurs the textarea
+
+#### 4. Event Functionality (10 tests)
+- **textarea-input event (3 tests):**
+  - ✅ Fires on input
+  - ✅ Bubbles and is composed
+  - ✅ Includes correct detail structure
+
+- **textarea-change event (2 tests):**
+  - ✅ Fires on change
+  - ✅ Bubbles and is composed
+
+- **textarea-focus event (2 tests):**
+  - ✅ Fires on focus
+  - ✅ Bubbles and is composed
+
+- **textarea-blur event (2 tests):**
+  - ✅ Fires on blur
+  - ✅ Bubbles and is composed
+
+- **Event manifest validation (1 test):**
+  - ✅ All manifest events are tested
+
+#### 5. Form Participation (5 tests)
+- ✅ `formAssociated` set to true
+- ✅ ElementInternals initialized
+- ✅ `getValue()` returns form value
+- ✅ `setValue()` updates form value
+- ✅ Internals updated when value changes
+
+#### 6. Validation (4 tests)
+- ✅ Maxlength validation works
+- ✅ Rejects negative maxlength
+- ✅ Accepts null maxlength
+- ✅ Rejects zero maxlength
+
+#### 7. Rendering (8 tests)
+- ✅ Shadow DOM structure
+- ✅ Textarea element renders
+- ✅ Line numbers hidden by default
+- ✅ Line numbers shown when enabled
+- ✅ Container class applied correctly
+- ✅ Line numbers count updates with content
+- ✅ Disabled state applies
+- ✅ Readonly state applies
+
+#### 8. Code Editor Mode (6 tests)
+- ✅ Code mode enables correctly
+- ✅ Tab key for indentation
+- ✅ Shift+Tab for outdent
+- ✅ Enter for auto-indent
+- ✅ Ctrl/Cmd+/ for toggle comment
+- ✅ Ctrl/Cmd+D for duplicate line
+
+#### 9. Logging (2 tests)
+- ✅ Logger instance exists
+- ✅ All logger methods present
+
+#### Documentation
+📄 **API Documentation:** `docs/components/TTextareaLit.md`
+- Complete API reference with all properties, methods, events
+- 10+ code examples covering all use cases
+- IDE keyboard shortcuts guide
+- Form participation examples
+- Migration guide from old TerminalTextarea
+- Troubleshooting guide
 
 ---
 

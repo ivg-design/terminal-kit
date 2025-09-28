@@ -1,0 +1,190 @@
+/**
+ * Terminal Kit Theme for Prism.js
+ * Custom syntax highlighting theme matching Terminal Kit design system
+ * Colors inspired by classic terminal aesthetics
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #00ff41;
+	background: none;
+	font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: 0;
+	overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #0a0a0a;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+/* Comments - dim green */
+.token.comment,
+.token.block-comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #00cc33;
+	font-style: italic;
+}
+
+/* Punctuation - standard green */
+.token.punctuation {
+	color: #00ff41;
+}
+
+/* Keywords (const, let, function, if, for, etc.) - bright cyan */
+.token.keyword,
+.token.control,
+.token.directive,
+.token.unit,
+.token.statement {
+	color: #00d4ff;
+}
+
+/* Strings - yellow/gold */
+.token.string,
+.token.char,
+.token.attr-value,
+.token.template-string {
+	color: #ffcc00;
+}
+
+/* Functions - bright green */
+.token.function,
+.token.function-name,
+.token.method {
+	color: #00ff88;
+}
+
+/* Numbers and booleans - orange */
+.token.boolean,
+.token.number,
+.token.constant {
+	color: #ff9933;
+}
+
+/* Class names and types - bright purple */
+.token.class-name,
+.token.type-annotation,
+.token.maybe-class-name {
+	color: #cc99ff;
+}
+
+/* Properties and attributes - light cyan */
+.token.property,
+.token.attr-name {
+	color: #66ffcc;
+}
+
+/* HTML/XML tags - red/pink */
+.token.tag,
+.token.selector,
+.token.selector .class,
+.token.selector.class,
+.token.function-variable {
+	color: #ff3366;
+}
+
+/* Operators - bright green */
+.token.operator,
+.token.arrow,
+.token.assignment {
+	color: #00ff41;
+}
+
+/* Variables - standard green */
+.token.variable,
+.token.parameter {
+	color: #00ff41;
+}
+
+/* Regex - magenta */
+.token.regex,
+.token.important {
+	color: #ff00ff;
+}
+
+/* URLs and entities - cyan */
+.token.url,
+.token.entity {
+	color: #00ffff;
+}
+
+/* Built-ins - light blue */
+.token.builtin,
+.token.symbol {
+	color: #66ccff;
+}
+
+/* Namespace - dim */
+.token.namespace {
+	color: #00aa33;
+	opacity: 0.8;
+}
+
+/* Deleted/inserted (for diffs) */
+.token.deleted {
+	color: #ff3333;
+}
+
+.token.inserted {
+	color: #00ff41;
+}
+
+/* Bold/italic */
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+
+/* Selection */
+pre[class*="language-"]::-moz-selection,
+pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection,
+code[class*="language-"] ::-moz-selection {
+	background: #00ff4133;
+}
+
+pre[class*="language-"]::selection,
+pre[class*="language-"] ::selection,
+code[class*="language-"]::selection,
+code[class*="language-"] ::selection {
+	background: #00ff4133;
+}
