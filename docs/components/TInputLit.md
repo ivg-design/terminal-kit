@@ -54,6 +54,7 @@ This component was built from the ground up as Pure Lit because:
 | `label` | string | `''` | ✅ | Optional label above input |
 | `helperText` | string | `''` | ✅ | Optional helper text below input |
 | `icon` | string | `''` | ❌ | Optional icon SVG string |
+| `name` | string | `''` | ✅ | Form field name for native form submission |
 
 ### Property Details
 
@@ -109,6 +110,15 @@ Optional icon displayed on left side of input. Pass SVG string from `phosphor-ic
 ```javascript
 import { userIcon } from '../utils/phosphor-icons.js';
 input.icon = userIcon;
+```
+
+#### `name`
+Form field name for native form submission via ElementInternals API. Required for form participation:
+```html
+<form>
+  <t-inp name="username"></t-inp>
+  <t-inp name="email" type="email"></t-inp>
+</form>
 ```
 
 ---
@@ -224,6 +234,32 @@ Clear the input value.
 const input = document.querySelector('t-inp');
 input.clear();
 ```
+
+### Static Methods
+
+#### `static getPropertyValidation(propName)`
+Get validation configuration for a property. Used internally by the component for property validation.
+
+**Parameters:**
+- `propName` (string): Property name to get validation for
+
+**Returns:** (Object|undefined) Validation configuration with `validate` function
+
+**Example:**
+```javascript
+const validation = TInputLit.getPropertyValidation('type');
+if (validation) {
+  const result = validation.validate('invalid-type');
+  console.log(result.valid); // false
+  console.log(result.errors); // ['Invalid input type: invalid-type...']
+}
+```
+
+**Validated Properties:**
+- `type`: Ensures value is one of the valid input types
+- `min`: Validates min is less than max (for number type)
+- `max`: Validates max is greater than min (for number type)
+- `pattern`: Validates regex pattern is valid
 
 ---
 
@@ -576,7 +612,7 @@ const email = input.getValue();
 ```javascript
 input.addEventListener('input-error', (e) => {
   // Show error UI
-  showError(e.detail.error);
+  showError(e.detail.message);
 });
 
 input.addEventListener('input-valid', () => {
@@ -1137,11 +1173,12 @@ import './js/components/TInputLit.js';
 
 ## API Reference Summary
 
-### Properties (15)
-`type`, `placeholder`, `value`, `disabled`, `readonly`, `required`, `min`, `max`, `minlength`, `maxlength`, `pattern`, `autocomplete`, `label`, `helperText`, `icon`
+### Properties (16)
+`type`, `placeholder`, `value`, `disabled`, `readonly`, `required`, `min`, `max`, `minlength`, `maxlength`, `pattern`, `autocomplete`, `label`, `helperText`, `icon`, `name`
 
-### Methods (7)
-`setValue()`, `getValue()`, `focus()`, `blur()`, `validate()`, `setError()`, `clear()`
+### Methods (8)
+**Instance:** `setValue()`, `getValue()`, `focus()`, `blur()`, `validate()`, `setError()`, `clear()`
+**Static:** `getPropertyValidation()`
 
 ### Events (8)
 `input-value`, `input-change`, `input-error`, `input-valid`, `input-focus`, `input-blur`, `input-enter`, `input-clear`
