@@ -3,6 +3,11 @@ import { resolve } from 'path';
 
 export default defineConfig({
   base: '/',
+  resolve: {
+    alias: {
+      '@jaames/iro': resolve(__dirname, 'public/js/libs/iro.min.js')
+    }
+  },
   build: {
     outDir: 'dist',
     emptyOutDir: true,
