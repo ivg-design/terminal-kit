@@ -1,12 +1,10 @@
 /**
  * Base class for all Terminal UI Web Components
- * Now uses Shadow DOM with adoptedStyleSheets for proper encapsulation
- * without memory duplication
+ * DEPRECATED: Use Lit components instead (extend LitElement)
+ * This is kept temporarily for backward compatibility during migration
  */
 
 import componentLogger from '../utils/ComponentLogger.js';
-import { styleSheetManager, stylesReady } from '../utils/StyleSheetManager.js';
-import { initializeDSDComponent, hydrateDSDComponent } from '../utils/DSDUtils.js';
 
 export class TComponent extends HTMLElement {
 	constructor() {
@@ -15,63 +13,30 @@ export class TComponent extends HTMLElement {
 		// Set up component logger FIRST
 		this.log = componentLogger.for(this.constructor.name);
 
-		// Initialize DSD-aware shadow DOM
-		this._isDSD = initializeDSDComponent(this, (isDSD) => {
-			if (!isDSD) {
-				// No existing shadow root from DSD, create one
-				this.attachShadow({ mode: 'open' });
-				this.log.debug('Created shadow DOM (regular rendering)');
-			} else {
-				this.log.info('Using pre-rendered shadow DOM (DSD) ✓');
-			}
-		});
+		// Create shadow DOM
+		this.attachShadow({ mode: 'open' });
+		this.log.debug('Created shadow DOM');
 
 		this._props = {};
 		this._listeners = new Map();
 		this._initialized = false;
 		this._stylesAdopted = false;
 
-		// ONLY adopt styles for non-DSD components
-		// DSD components already have inline styles in their shadow DOM
-		if (!this._isDSD) {
-			// Check if we have inline styles in template
-			const hasInlineStyles = !!this.shadowRoot?.querySelector('style');
-			if (!hasInlineStyles) {
-				// Only adopt styles if no inline styles present
-				this.adoptComponentStyles();
-			} else {
-				this.log.info('Found inline styles in template, skipping adoptedStyleSheets');
-			}
-		} else {
-			this.log.info('Skipping adoptedStyleSheets for DSD component - using inline styles');
-		}
+		// MIGRATION NOTE: StyleSheetManager removed
+		// Legacy TComponent classes should be converted to Lit
+		this.log.warn(`${this.constructor.name} extends deprecated TComponent - migrate to Lit!`);
 	}
 
 	/**
-	 * Adopt stylesheets for this component
-	 * Uses shared CSSStyleSheet objects - NO duplication!
+	 * DEPRECATED: No-op during migration
+	 * Lit components handle their own styles
 	 */
 	adoptComponentStyles() {
-		// If styles are already initialized, adopt immediately
-		if (styleSheetManager && styleSheetManager.initialized) {
-			this._adoptStyles();
-		} else {
-			// Otherwise wait for styles to be ready
-			stylesReady.then(() => {
-				this._adoptStyles();
-			});
-		}
+		// Intentionally empty - remove StyleSheetManager dependency
 	}
 
 	_adoptStyles() {
-		if (this._stylesAdopted) return; // Don't adopt twice
-
-		const sheets = styleSheetManager.getComponentStyleSheets(this.constructor.name);
-		if (sheets.length > 0 && this.shadowRoot) {
-			this.shadowRoot.adoptedStyleSheets = sheets;
-			this._stylesAdopted = true;
-			this.log.debug(`Adopted ${sheets.length} stylesheets`);
-		}
+		// Intentionally empty - remove StyleSheetManager dependency
 	}
 
 	/**
@@ -169,11 +134,11 @@ export class TComponent extends HTMLElement {
 	 */
 	connectedCallback() {
 		this.log.debug('Connected to DOM', {
-			isDSD: this._isDSD,
+			isDSD: false,
 			id: this.id || this.getAttribute('name') || 'unnamed'
 		});
 
-		if (this._isDSD) {
+		if (false) {
 			// Component was server-rendered with DSD, hydrate instead of render
 			this.hydrate();
 		} else {
@@ -405,7 +370,7 @@ export class TComponent extends HTMLElement {
 
 		allComponents.forEach(element => {
 			// Check if it's a custom element (has a hyphen in tag name)
-			if (element.tagName.includes('-') && element._isDSD !== undefined) {
+			if (element.tagName.includes('-')) {
 				const tagName = element.tagName.toLowerCase();
 				stats.total++;
 
@@ -415,7 +380,7 @@ export class TComponent extends HTMLElement {
 
 				stats.byType[tagName].total++;
 
-				if (element._isDSD) {
+				if (false) {
 					stats.dsd++;
 					stats.byType[tagName].dsd++;
 				} else {

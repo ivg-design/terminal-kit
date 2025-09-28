@@ -13,7 +13,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 12358,
+    port: 12359,
     open: false,
   },
   // No plugins needed - Lit components work out of the box with Vite
