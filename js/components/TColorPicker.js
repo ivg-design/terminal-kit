@@ -2,7 +2,6 @@
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
 import { LitElement, html, css } from 'lit';
-import { property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import componentLogger from '../utils/ComponentLogger.js';
 import { paletteIcon, xIcon, floppyDiskIcon, trashIcon } from '../utils/phosphor-icons.js';
@@ -565,84 +564,83 @@ export class TColorPicker extends LitElement {
 	// ----------------------------------------------------------
 
 	/**
-	 * @property {string} value - Current color value in hex8 format (with alpha channel)
-	 * @default '#00ff41ff'
-	 * @attribute value
-	 * @reflects false
-	 * @example
-	 * <t-clr value="#ff6b35ff"></t-clr>
+	 * Static properties definition (Lit reactive properties)
+	 * Using static properties instead of decorators for better Vitest compatibility
 	 */
-	@property({ type: String })
-	value = '#00ff41ff';
+	static properties = {
+		/**
+		 * @property {string} value - Current color value in hex8 format (with alpha channel)
+		 * @default '#00ff41ff'
+		 * @attribute value
+		 * @reflects false
+		 * @example
+		 * <t-clr value="#ff6b35ff"></t-clr>
+		 */
+		value: { type: String },
 
-	/**
-	 * @property {string} label1 - First line of label text (displayed when 'label' element included)
-	 * @default 'Color'
-	 * @attribute label1
-	 * @reflects false
-	 * @example
-	 * <t-clr label1="Theme"></t-clr>
-	 */
-	@property({ type: String })
-	label1 = 'Color';
+		/**
+		 * @property {string} label1 - First line of label text (displayed when 'label' element included)
+		 * @default 'Color'
+		 * @attribute label1
+		 * @reflects false
+		 * @example
+		 * <t-clr label1="Theme"></t-clr>
+		 */
+		label1: { type: String },
 
-	/**
-	 * @property {string} label2 - Second line of label text (displayed when 'label' element included)
-	 * @default 'Picker'
-	 * @attribute label2
-	 * @reflects false
-	 * @example
-	 * <t-clr label2="Primary"></t-clr>
-	 */
-	@property({ type: String })
-	label2 = 'Picker';
+		/**
+		 * @property {string} label2 - Second line of label text (displayed when 'label' element included)
+		 * @default 'Picker'
+		 * @attribute label2
+		 * @reflects false
+		 * @example
+		 * <t-clr label2="Primary"></t-clr>
+		 */
+		label2: { type: String },
 
-	/**
-	 * @property {boolean} disabled - Disabled state (prevents interaction, dims component)
-	 * @default false
-	 * @attribute disabled
-	 * @reflects true
-	 * @example
-	 * <t-clr disabled></t-clr>
-	 */
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
+		/**
+		 * @property {boolean} disabled - Disabled state (prevents interaction, dims component)
+		 * @default false
+		 * @attribute disabled
+		 * @reflects true
+		 * @example
+		 * <t-clr disabled></t-clr>
+		 */
+		disabled: { type: Boolean, reflect: true },
 
-	/**
-	 * @property {('large'|'standard'|'compact')} variant - Size variant
-	 * @default 'large'
-	 * @attribute variant
-	 * @reflects true
-	 * @validation Must be 'large' (48px), 'standard' (32px), or 'compact' (minimal)
-	 * @example
-	 * <t-clr variant="standard"></t-clr>
-	 */
-	@property({ type: String, reflect: true })
-	variant = 'large';
+		/**
+		 * @property {('large'|'standard'|'compact')} variant - Size variant
+		 * @default 'large'
+		 * @attribute variant
+		 * @reflects true
+		 * @validation Must be 'large' (48px), 'standard' (32px), or 'compact' (minimal)
+		 * @example
+		 * <t-clr variant="standard"></t-clr>
+		 */
+		variant: { type: String, reflect: true },
 
-	/**
-	 * @property {string} elements - Comma-separated list of elements in render order. Available: icon, label, swatch (mandatory), input. Order matters!
-	 * @default 'icon,label,swatch,input'
-	 * @attribute elements
-	 * @reflects false
-	 * @validation Swatch is mandatory. Elements render in exact order specified.
-	 * @example
-	 * <t-clr elements="swatch,icon,label,input"></t-clr>
-	 * <t-clr elements="icon,swatch"></t-clr>
-	 */
-	@property({ type: String })
-	elements = 'icon,label,swatch,input';
+		/**
+		 * @property {string} elements - Comma-separated list of elements in render order. Available: icon, label, swatch (mandatory), input. Order matters!
+		 * @default 'icon,label,swatch,input'
+		 * @attribute elements
+		 * @reflects false
+		 * @validation Swatch is mandatory. Elements render in exact order specified.
+		 * @example
+		 * <t-clr elements="swatch,icon,label,input"></t-clr>
+		 * <t-clr elements="icon,swatch"></t-clr>
+		 */
+		elements: { type: String },
 
-	/**
-	 * @property {boolean} showClearButton - Show trash button in picker for clearing all custom swatches (with modal confirmation)
-	 * @default false
-	 * @attribute show-clear-button
-	 * @reflects false
-	 * @example
-	 * <t-clr show-clear-button></t-clr>
-	 */
-	@property({ type: Boolean, attribute: 'show-clear-button' })
-	showClearButton = false;
+		/**
+		 * @property {boolean} showClearButton - Show trash button in picker for clearing all custom swatches (with modal confirmation)
+		 * @default false
+		 * @attribute show-clear-button
+		 * @reflects false
+		 * @example
+		 * <t-clr show-clear-button></t-clr>
+		 */
+		showClearButton: { type: Boolean, attribute: 'show-clear-button' }
+	};
 
 	// ----------------------------------------------------------
 	// BLOCK 4: INTERNAL STATE (PRIVATE - underscore prefix)
@@ -708,6 +706,15 @@ export class TColorPicker extends LitElement {
 
 		// Log construction
 		this._logger.debug('Component constructed');
+
+		// Initialize reactive property default values
+		this.value = '#00ff41ff';
+		this.label1 = 'Color';
+		this.label2 = 'Picker';
+		this.disabled = false;
+		this.variant = 'large';
+		this.elements = 'icon,label,swatch,input';
+		this.showClearButton = false;
 
 		// Bind event handlers
 		this._handleKeyDown = this._handleKeyDown.bind(this);

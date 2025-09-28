@@ -79,6 +79,7 @@ class ComponentLogger {
 			warn: (...args) => this._log(name, 'WARN', ...args),
 			info: (...args) => this._log(name, 'INFO', ...args),
 			debug: (...args) => this._log(name, 'DEBUG', ...args),
+			trace: (...args) => this._log(name, 'DEBUG', ...args), // Alias for debug
 
 			// Performance helpers
 			time: (label) => this._time(name, label),
