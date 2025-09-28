@@ -97,7 +97,7 @@
         }
 
         /* Warning input special styling */
-        .warning-input-wrapper terminal-input input {
+        .warning-input-wrapper t-inp input {
             border-color: var(--terminal-yellow) !important;
             color: var(--terminal-yellow) !important;
         }
@@ -120,42 +120,42 @@
                 <!-- Character Counter -->
                 <div class="demo-item">
                     <span class="demo-label">Character Counter (Live)</span>
-                    <terminal-input id="charInput" type="text" placeholder="Type something..." maxlength="50"></terminal-input>
+                    <t-inp id="charInput" type="text" placeholder="Type something..." maxlength="50"></t-inp>
                     <div id="charCount" class="message info">0 / 50 characters</div>
                 </div>
 
                 <!-- Email Validation -->
                 <div class="demo-item">
                     <span class="demo-label">Email Validation (Live)</span>
-                    <terminal-input id="emailInput" type="email" placeholder="user@example.com"></terminal-input>
+                    <t-inp id="emailInput" type="email" placeholder="user@example.com"></t-inp>
                     <div id="emailMsg" class="message info">Enter a valid email address</div>
                 </div>
 
                 <!-- Dynamic Error -->
                 <div class="demo-item">
                     <span class="demo-label">Dynamic Error (type "error")</span>
-                    <terminal-input id="errorInput" type="text" placeholder="Type 'error' to trigger"></terminal-input>
+                    <t-inp id="errorInput" type="text" placeholder="Type 'error' to trigger"></t-inp>
                     <div id="errorMsg" class="message info">Type "error" to see error state</div>
                 </div>
 
                 <!-- URL Validation -->
                 <div class="demo-item">
                     <span class="demo-label">URL Validation (Live)</span>
-                    <terminal-input id="urlInput" type="url" placeholder="https://example.com"></terminal-input>
+                    <t-inp id="urlInput" type="url" placeholder="https://example.com"></t-inp>
                     <div id="urlMsg" class="message info">Enter a valid URL</div>
                 </div>
 
                 <!-- Pattern Validation -->
                 <div class="demo-item">
                     <span class="demo-label">Letters Only (Live)</span>
-                    <terminal-input id="patternInput" type="text" placeholder="Letters only" pattern="^[A-Za-z ]*$"></terminal-input>
+                    <t-inp id="patternInput" type="text" placeholder="Letters only" pattern="^[A-Za-z ]*$"></t-inp>
                     <div id="patternMsg" class="message info">Only letters allowed</div>
                 </div>
 
                 <!-- Number Range -->
                 <div class="demo-item">
                     <span class="demo-label">Number Range 0-100 (Live)</span>
-                    <terminal-input id="rangeInput" type="number" placeholder="0-100" min="0" max="100"></terminal-input>
+                    <t-inp id="rangeInput" type="number" placeholder="0-100" min="0" max="100"></t-inp>
                     <div id="rangeMsg" class="message info">Enter number between 0-100</div>
                 </div>
 
@@ -163,9 +163,9 @@
                 <div class="demo-item">
                     <span class="demo-label">Required Field</span>
                     <form id="reqForm" novalidate>
-                        <terminal-input id="reqInput" type="text" placeholder="Required field" required></terminal-input>
+                        <t-inp id="reqInput" type="text" placeholder="Required field" required></t-inp>
                         <div class="button-row">
-                            <terminal-button id="reqSubmit" variant="primary">Submit</terminal-button>
+                            <t-btn id="reqSubmit" variant="primary">Submit</t-btn>
                         </div>
                         <div id="reqMsg" class="message"></div>
                     </form>
@@ -174,7 +174,7 @@
                 <!-- Password Input -->
                 <div class="demo-item">
                     <span class="demo-label">Password with Toggle (Optional)</span>
-                    <terminal-input id="passwordInput" type="password" placeholder="Enter password (optional)" minlength="8"></terminal-input>
+                    <t-inp id="passwordInput" type="password" placeholder="Enter password (optional)" minlength="8"></t-inp>
                     <div id="passwordMsg" class="message info">Optional - minimum 8 characters if provided</div>
                 </div>
 
@@ -182,7 +182,7 @@
                 <div class="demo-item">
                     <span class="demo-label">Warning State</span>
                     <div class="warning-input-wrapper">
-                        <terminal-input id="warnInput" type="text" value="Warning value"></terminal-input>
+                        <t-inp id="warnInput" type="text" value="Warning value"></t-inp>
                     </div>
                     <div class="message warning">
                         <span id="warnIcon"></span> This value may cause issues
@@ -193,9 +193,8 @@
     </div>
 
     <script type="module">
-  import '../js/components/TerminalComponent.js';
-  import '../js/components/TerminalInput.js';
-  import '../js/components/TerminalButton.js';
+  import '../js/components/TInputLit.js';
+  import '../js/components/TButtonLit.js';
   import { warningIcon } from '../js/utils/phosphor-icons.js';
 
   window.addEventListener('DOMContentLoaded', () => {
