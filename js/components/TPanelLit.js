@@ -5,6 +5,7 @@ import { LitElement, html, css } from 'lit';
 import componentLogger from '../utils/ComponentLogger.js';
 import { caretRightIcon, caretDownIcon } from '../utils/phosphor-icons.js';
 import { generateManifest } from '../utils/manifest-generator.js';
+import { debounce } from '../utils/debounce.js';
 
 // ============================================
 // SECTION 2: COMPONENT CLASS
@@ -33,28 +34,30 @@ export class TPanelLit extends LitElement {
   static tagName = 't-pnl';
   static version = '1.0.0';
   static category = 'Layout';
+  static LOADING_TIMEOUT_MS = 30000;  // 30 seconds auto-timeout for loading state
 
   // ============================================
   // BLOCK 2: Static Styles
   // ============================================
   static styles = css`
     :host {
-      --terminal-black: #0a0a0a;
-      --terminal-black-light: #1a1a1a;
-      --terminal-green: #00ff41;
-      --terminal-green-bright: #33ff66;
-      --terminal-green-dim: #00cc33;
-      --terminal-green-dark: #008820;
-      --terminal-gray: #808080;
-      --terminal-gray-dark: #242424;
-      --terminal-gray-light: #333333;
-      --terminal-gray-medium: #2a2a2a;
-      --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
-      --font-size-sm: 11px;
-      --spacing-xs: 4px;
-      --spacing-sm: 8px;
-      --spacing-md: 12px;
-      --spacing-lg: 16px;
+      /* CSS Variables with fallbacks - allows global theming while preventing FOUC */
+      --terminal-black: var(--tk-black, #0a0a0a);
+      --terminal-black-light: var(--tk-black-light, #1a1a1a);
+      --terminal-green: var(--tk-green, #00ff41);
+      --terminal-green-bright: var(--tk-green-bright, #33ff66);
+      --terminal-green-dim: var(--tk-green-dim, #00cc33);
+      --terminal-green-dark: var(--tk-green-dark, #008820);
+      --terminal-gray: var(--tk-gray, #808080);
+      --terminal-gray-dark: var(--tk-gray-dark, #242424);
+      --terminal-gray-light: var(--tk-gray-light, #333333);
+      --terminal-gray-medium: var(--tk-gray-medium, #2a2a2a);
+      --font-mono: var(--tk-font-mono, 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace);
+      --font-size-sm: var(--tk-font-size-sm, 11px);
+      --spacing-xs: var(--tk-spacing-xs, 4px);
+      --spacing-sm: var(--tk-spacing-sm, 8px);
+      --spacing-md: var(--tk-spacing-md, 12px);
+      --spacing-lg: var(--tk-spacing-lg, 16px);
 
       position: relative;
       display: block;
@@ -357,26 +360,6 @@ export class TPanelLit extends LitElement {
       margin-right: var(--spacing-xs);
     }
 
-    :host([resizable]) {
-      resize: both;
-      overflow: auto;
-      min-width: 200px;
-      min-height: 100px;
-    }
-
-    :host([resizable]) .t-pnl {
-      height: 100%;
-    }
-
-    :host([draggable]) .t-pnl__header {
-      cursor: move;
-    }
-
-    :host([draggable][dragging]) {
-      opacity: 0.8;
-      z-index: 1000;
-    }
-
     @keyframes pulse {
       0%, 100% {
         opacity: 1;
@@ -473,22 +456,6 @@ export class TPanelLit extends LitElement {
     loading: { type: Boolean, reflect: true },
 
     /**
-     * @property {boolean} resizable - Enable panel resizing
-     * @default false
-     * @attribute resizable
-     * @reflects
-     */
-    resizable: { type: Boolean, reflect: true },
-
-    /**
-     * @property {boolean} draggable - Enable panel dragging
-     * @default false
-     * @attribute draggable
-     * @reflects
-     */
-    draggable: { type: Boolean, reflect: true },
-
-    /**
      * @property {string} icon - SVG icon string to display in header
      * @default ''
      * @attribute icon
@@ -507,24 +474,6 @@ export class TPanelLit extends LitElement {
   // ============================================
   // BLOCK 4: Internal State
   // ============================================
-
-  /**
-   * @private
-   * @type {number}
-   */
-  _dragStartX = 0;
-
-  /**
-   * @private
-   * @type {number}
-   */
-  _dragStartY = 0;
-
-  /**
-   * @private
-   * @type {boolean}
-   */
-  _dragging = false;
 
   /**
    * @private
@@ -564,24 +513,18 @@ export class TPanelLit extends LitElement {
     this._logger = componentLogger.for('TPanelLit');
     this._logger.debug('Component constructed');
 
-    // Initialize property defaults
-    this.title = '';
-    this.variant = 'standard';
-    this.collapsible = false;
-    this.collapsed = false;
-    this.compact = false;
-    this.large = false;
-    this.loading = false;
-    this.resizable = false;
-    this.draggable = false;
-    this.icon = '';
-    this.footerCollapsed = false;
+    if (this.title === undefined) this.title = '';
+    if (this.variant === undefined) this.variant = 'standard';
+    if (this.collapsible === undefined) this.collapsible = false;
+    if (this.collapsed === undefined) this.collapsed = false;
+    if (this.compact === undefined) this.compact = false;
+    if (this.large === undefined) this.large = false;
+    if (this.loading === undefined) this.loading = false;
+    if (this.icon === undefined) this.icon = '';
+    if (this.footerCollapsed === undefined) this.footerCollapsed = false;
 
     this._handleHeaderClick = this._handleHeaderClick.bind(this);
     this._handleHeaderKeydown = this._handleHeaderKeydown.bind(this);
-    this._handleMouseDown = this._handleMouseDown.bind(this);
-    this._handleMouseMove = this._handleMouseMove.bind(this);
-    this._handleMouseUp = this._handleMouseUp.bind(this);
   }
 
   // ============================================
@@ -594,10 +537,6 @@ export class TPanelLit extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this._logger.info('Connected to DOM');
-
-    if (this.draggable) {
-      this.addEventListener('mousedown', this._handleMouseDown);
-    }
   }
 
   /**
@@ -608,12 +547,6 @@ export class TPanelLit extends LitElement {
     this._logger.info('Disconnected from DOM');
 
     this._clearAllTimers();
-
-    if (this.draggable) {
-      this.removeEventListener('mousedown', this._handleMouseDown);
-      document.removeEventListener('mousemove', this._handleMouseMove);
-      document.removeEventListener('mouseup', this._handleMouseUp);
-    }
   }
 
   /**
@@ -626,9 +559,10 @@ export class TPanelLit extends LitElement {
 
     const actionsSlot = this.shadowRoot?.querySelector('slot[name="actions"]');
     if (actionsSlot) {
-      actionsSlot.addEventListener('slotchange', () => {
+      // Debounce to handle rapid slot changes (e.g., dynamic content updates)
+      actionsSlot.addEventListener('slotchange', debounce(() => {
         this._updateActionButtonSizes();
-      });
+      }, 50));
     }
 
     this._discoverNestedComponents();
@@ -775,17 +709,25 @@ export class TPanelLit extends LitElement {
    * @public
    * @param {Object} context - Context object from parent
    * @param {string} context.size - Parent size (compact, large, default)
-   * @param {string} context.theme - Parent theme variant
+   * @param {string} context.variant - Parent variant
    */
   receiveContext(context) {
+    if (!context || typeof context !== 'object') {
+      this._logger.warn('Invalid context received', { context });
+      return;
+    }
+
     this._logger.debug('Received context from parent', { context });
 
-    if (context.size) {
+    const validSizes = ['compact', 'large', 'default'];
+    if (context.size && validSizes.includes(context.size)) {
       if (context.size === 'compact' && !this.compact) {
         this.compact = true;
       } else if (context.size === 'large' && !this.large) {
         this.large = true;
       }
+    } else if (context.size) {
+      this._logger.warn('Invalid context size', { size: context.size, valid: validSizes });
     }
   }
 
@@ -992,11 +934,15 @@ export class TPanelLit extends LitElement {
     this._logger.debug('Rendering');
 
     const panelClasses = this._getPanelClasses();
+    const headerId = `panel-header-${this.id || Math.random().toString(36).substr(2, 9)}`;
+    const bodyId = `panel-body-${this.id || Math.random().toString(36).substr(2, 9)}`;
 
     return html`
-      <div class=${panelClasses}>
-        ${this._renderHeader()}
-        ${this._renderBody()}
+      <div class=${panelClasses}
+           role="region"
+           aria-labelledby=${this.variant !== 'headless' ? headerId : null}>
+        ${this._renderHeader(headerId, bodyId)}
+        ${this._renderBody(bodyId)}
         ${this._renderFooter()}
       </div>
     `;
@@ -1044,21 +990,27 @@ export class TPanelLit extends LitElement {
    * Render panel header
    *
    * @private
+   * @param {string} headerId - Unique ID for header
+   * @param {string} bodyId - Unique ID for body (for aria-controls)
    * @returns {TemplateResult|string}
    */
-  _renderHeader() {
+  _renderHeader(headerId, bodyId) {
     if (this.variant === 'headless') {
       return '';
     }
 
     return html`
       <div
+        id=${headerId}
         class="t-pnl__header"
         @click=${this._handleHeaderClick}
         @keydown=${this._handleHeaderKeydown}
         tabindex=${this.collapsible ? '0' : '-1'}
+        role=${this.collapsible ? 'button' : null}
+        aria-expanded=${this.collapsible ? String(!this.collapsed) : null}
+        aria-controls=${this.collapsible ? bodyId : null}
       >
-        ${this.collapsible ? this._renderCollapseButton() : ''}
+        ${this.collapsible ? this._renderCollapseButton(bodyId) : ''}
         <div class="t-pnl__title">
           ${this.icon ? html`<span class="t-pnl__title-icon" .innerHTML=${this.icon}></span>` : ''}
           ${this.title}
@@ -1074,9 +1026,10 @@ export class TPanelLit extends LitElement {
    * Render collapse button
    *
    * @private
+   * @param {string} bodyId - ID of body element for aria-controls
    * @returns {TemplateResult}
    */
-  _renderCollapseButton() {
+  _renderCollapseButton(bodyId) {
     const icon = this.collapsed ? caretRightIcon : caretDownIcon;
     return html`
       <button
@@ -1084,6 +1037,8 @@ export class TPanelLit extends LitElement {
         @click=${this._handleCollapseClick}
         tabindex="-1"
         aria-label=${this.collapsed ? 'Expand panel' : 'Collapse panel'}
+        aria-controls=${bodyId}
+        aria-expanded=${String(!this.collapsed)}
       >
         <span class="t-pnl__collapse-icon" .innerHTML=${icon}></span>
       </button>
@@ -1094,9 +1049,10 @@ export class TPanelLit extends LitElement {
    * Render panel body
    *
    * @private
+   * @param {string} bodyId - Unique ID for body element
    * @returns {TemplateResult|string}
    */
-  _renderBody() {
+  _renderBody(bodyId) {
     if (this.collapsed) {
       return '';
     }
@@ -1107,7 +1063,7 @@ export class TPanelLit extends LitElement {
     }
 
     return html`
-      <div class=${bodyClasses.join(' ')}>
+      <div id=${bodyId} class=${bodyClasses.join(' ')}>
         <slot></slot>
       </div>
     `;
@@ -1249,68 +1205,6 @@ export class TPanelLit extends LitElement {
   }
 
   /**
-   * Handle mouse down for drag
-   *
-   * @private
-   * @param {MouseEvent} e
-   */
-  _handleMouseDown(e) {
-    if (!this.draggable || !e.target.closest('.t-pnl__header')) {
-      return;
-    }
-
-    this._dragging = true;
-    this._dragStartX = e.clientX;
-    this._dragStartY = e.clientY;
-
-    this.style.position = 'fixed';
-    this.style.zIndex = '1000';
-    this.toggleAttribute('dragging', true);
-
-    document.addEventListener('mousemove', this._handleMouseMove);
-    document.addEventListener('mouseup', this._handleMouseUp);
-
-    e.preventDefault();
-
-    this._logger.debug('Drag started', { x: this._dragStartX, y: this._dragStartY });
-  }
-
-  /**
-   * Handle mouse move during drag
-   *
-   * @private
-   * @param {MouseEvent} e
-   */
-  _handleMouseMove(e) {
-    if (!this._dragging) return;
-
-    const deltaX = e.clientX - this._dragStartX;
-    const deltaY = e.clientY - this._dragStartY;
-
-    const rect = this.getBoundingClientRect();
-    this.style.left = `${rect.left + deltaX}px`;
-    this.style.top = `${rect.top + deltaY}px`;
-
-    this._dragStartX = e.clientX;
-    this._dragStartY = e.clientY;
-  }
-
-  /**
-   * Handle mouse up to end drag
-   *
-   * @private
-   */
-  _handleMouseUp() {
-    this._dragging = false;
-    this.toggleAttribute('dragging', false);
-
-    document.removeEventListener('mousemove', this._handleMouseMove);
-    document.removeEventListener('mouseup', this._handleMouseUp);
-
-    this._logger.debug('Drag ended', { left: this.style.left, top: this.style.top });
-  }
-
-  /**
    * Update slot visibility based on content
    *
    * @private
@@ -1352,6 +1246,11 @@ export class TPanelLit extends LitElement {
 
     if (buttons.length === 0) return;
 
+    // Wait for all nested buttons to be upgraded and ready
+    await Promise.all(
+      buttons.map(btn => btn.updateComplete || Promise.resolve())
+    );
+
     this._validateSlotContent('actions', buttons);
 
     let buttonSize = 'small';
@@ -1386,9 +1285,9 @@ export class TPanelLit extends LitElement {
     this._clearLoadingTimeout();
 
     this._loadingTimeout = this._setTimeout(() => {
-      this._logger.warn('Loading timeout reached (30s), auto-stopping');
+      this._logger.warn(`Loading timeout reached (${TPanelLit.LOADING_TIMEOUT_MS}ms), auto-stopping`);
       this.stopLoading();
-    }, 30000);
+    }, TPanelLit.LOADING_TIMEOUT_MS);
   }
 
   /**
@@ -1476,8 +1375,6 @@ export const TPanelManifest = generateManifest(TPanelLit, {
     compact: { description: 'Compact size variant (20px header)' },
     large: { description: 'Large size variant (36px header)' },
     loading: { description: 'Show loading state' },
-    resizable: { description: 'Enable panel resizing' },
-    draggable: { description: 'Enable panel dragging' },
     icon: { description: 'SVG icon string to display in header' },
     footerCollapsed: { description: 'Footer collapsed state' }
   },

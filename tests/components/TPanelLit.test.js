@@ -31,8 +31,6 @@ describe('TPanelLit', () => {
       expect(properties.compact).toBeDefined();
       expect(properties.large).toBeDefined();
       expect(properties.loading).toBeDefined();
-      expect(properties.resizable).toBeDefined();
-      expect(properties.draggable).toBeDefined();
       expect(properties.icon).toBeDefined();
       expect(properties.footerCollapsed).toBeDefined();
     });
@@ -121,20 +119,6 @@ describe('TPanelLit', () => {
       await panel.updateComplete;
       expect(panel.loading).toBe(true);
       expect(panel.hasAttribute('loading')).toBe(true);
-    });
-
-    it('resizable property should work', async () => {
-      panel.resizable = true;
-      await panel.updateComplete;
-      expect(panel.resizable).toBe(true);
-      expect(panel.hasAttribute('resizable')).toBe(true);
-    });
-
-    it('draggable property should work', async () => {
-      panel.draggable = true;
-      await panel.updateComplete;
-      expect(panel.draggable).toBe(true);
-      expect(panel.hasAttribute('draggable')).toBe(true);
     });
 
     it('icon property should work', async () => {
@@ -619,9 +603,13 @@ describe('TPanelLit', () => {
       newPanel.appendChild(nestedPanel);
       document.body.appendChild(newPanel);
 
+      // Wait for components to be fully upgraded and initialized
+      await customElements.whenDefined('t-pnl');
       await newPanel.updateComplete;
       await nestedPanel.updateComplete;
 
+      // Nested panel should have default compact value
+      expect(nestedPanel.compact).toBeDefined();
       expect(nestedPanel.compact).toBe(false);
 
       newPanel.compact = true;
