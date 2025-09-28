@@ -1,565 +1,1043 @@
+// ============================================================
+// SECTION 1: IMPORTS (REQUIRED)
+// ============================================================
 import { LitElement, html, css } from 'lit';
+import componentLogger from '../utils/ComponentLogger.js';
 
-export class TToggleLit extends LitElement {
-  static styles = css`
+// ============================================================
+// SECTION 2: COMPONENT CLASS DECLARATION (REQUIRED)
+// ============================================================
 /**
- * Toggle Component Styles
- * Terminal-themed toggle switch with label and icon
+ * @component TToggleLit
+ * @tagname t-tog
+ * @description Terminal-themed toggle switch/checkbox with label and icon support. Supports both switch and checkbox variants with form participation.
+ * @category Form Controls
+ * @since 1.0.0
+ * @example
+ * <t-tog label="Enable notifications" checked></t-tog>
+ * <t-tog variant="checkbox" label="I agree to terms"></t-tog>
  */
-
-/* Toggle Container */
-.terminal-toggle {
-	display: inline-flex;
-	align-items: center;
-	gap: var(--spacing-xs);
-	cursor: pointer;
-	user-select: none;
-	padding: var(--spacing-xs);
-	transition: all 0.2s ease;
-}
-
-.terminal-toggle:hover {
-	background: rgba(0, 255, 65, 0.05);
-}
-
-/* Toggle Switch */
-.toggle-switch {
-	position: relative;
-	width: 48px;
-	height: 24px;
-	background: var(--terminal-gray-dark);
-	border: 1px solid var(--terminal-gray-light);
-	cursor: pointer;
-	border-radius: 24px;
-	transition: all 0.3s ease;
-	flex-shrink: 0;
-}
-
-.toggle-switch::before {
-	content: '';
-	position: absolute;
-	top: 2px;
-	left: 2px;
-	width: 18px;
-	height: 18px;
-	border-radius: 50%;
-	background: var(--terminal-gray-light);
-	transition: all 0.3s ease;
-	box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-}
-
-/* Checkbox Variant */
-.toggle-checkbox {
-	position: relative;
-	width: 18px;
-	height: 18px;
-	background: var(--terminal-gray-dark);
-	border: 1px solid #666666;
-	cursor: pointer;
-	transition: all 0.3s ease;
-	flex-shrink: 0;
-}
-
-/* Checkbox sizes */
-.terminal-toggle.small .toggle-checkbox {
-	width: 14px;
-	height: 14px;
-}
-
-.terminal-toggle.large .toggle-checkbox {
-	width: 24px;
-	height: 24px;
-}
-
-.toggle-checkbox::after {
-	content: '';
-	position: absolute;
-	display: none;
-	left: 50%;
-	top: 50%;
-	width: 4px;
-	height: 8px;
-	border: solid var(--terminal-green);
-	border-width: 0 2px 2px 0;
-	transform: translate(-50%, -60%) rotate(45deg);
-}
-
-/* Adjust checkmark size for small checkbox */
-.terminal-toggle.small .toggle-checkbox::after {
-	width: 3px;
-	height: 6px;
-}
-
-/* Adjust checkmark size for large checkbox */
-.terminal-toggle.large .toggle-checkbox::after {
-	width: 6px;
-	height: 12px;
-	border-width: 0 3px 3px 0;
-}
-
-/* Checked State - Default ON/OFF style */
-.terminal-toggle.checked .toggle-switch {
-	background: var(--terminal-green-dark);
-	border-color: var(--terminal-green);
-}
-
-.terminal-toggle.checked .toggle-switch::before {
-	transform: translateX(24px);
-	background: var(--terminal-green);
-	box-shadow: 0 0 10px var(--terminal-green-glow);
-}
-
-/* Checked State - Checkbox */
-.terminal-toggle.checked .toggle-checkbox {
-	background: var(--terminal-green-dark);
-	border-color: var(--terminal-green);
-}
-
-.terminal-toggle.checked .toggle-checkbox::after {
-	display: block;
-}
-
-/* Checkbox hover */
-.terminal-toggle:hover .toggle-checkbox {
-	border-color: var(--terminal-green);
-	box-shadow: 0 0 5px var(--terminal-green-glow);
-}
-
-/* Checkbox disabled */
-.terminal-toggle.disabled .toggle-checkbox {
-	opacity: 0.5;
-	cursor: not-allowed;
-}
-
-/* Error variant checkbox */
-.terminal-toggle.error .toggle-checkbox {
-	border-color: #ff3333;
-}
-
-.terminal-toggle.error.checked .toggle-checkbox {
-	background: rgba(255, 51, 51, 0.1);
-	border-color: #ff3333;
-}
-
-/* Error checkbox X mark */
-.terminal-toggle.error .toggle-checkbox::after {
-	border: none;
-	width: 10px;
-	height: 2px;
-	background: #ff3333;
-	transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.terminal-toggle.error .toggle-checkbox::before {
-	content: '';
-	position: absolute;
-	display: none;
-	left: 50%;
-	top: 50%;
-	width: 10px;
-	height: 2px;
-	background: #ff3333;
-	transform: translate(-50%, -50%) rotate(-45deg);
-}
-
-/* Adjust X size for small error checkbox */
-.terminal-toggle.error.small .toggle-checkbox::after,
-.terminal-toggle.error.small .toggle-checkbox::before {
-	width: 8px;
-}
-
-/* Adjust X size for large error checkbox */
-.terminal-toggle.error.large .toggle-checkbox::after,
-.terminal-toggle.error.large .toggle-checkbox::before {
-	width: 14px;
-	height: 3px;
-}
-
-.terminal-toggle.error.checked .toggle-checkbox::after,
-.terminal-toggle.error.checked .toggle-checkbox::before {
-	display: block;
-}
-
-.terminal-toggle.error:hover .toggle-checkbox {
-	border-color: #ff6666;
-	box-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
-}
-
-/* Equal States Toggle - for work/personal, A/B choices */
-.terminal-toggle.equal-states .toggle-switch {
-	background: var(--terminal-gray-dark);
-	border: 1px solid var(--terminal-green);
-	/* box-shadow: 0 0 8px var(--terminal-green-glow); */
-}
-
-.terminal-toggle.equal-states .toggle-switch::before {
-	background: var(--terminal-green);
-	/* box-shadow: 0 0 8px var(--terminal-green-glow); */
-}
-
-.terminal-toggle.equal-states.checked .toggle-switch {
-	background: var(--terminal-green);
-	border: 1px solid var(--terminal-green);
-}
-
-.terminal-toggle.equal-states.checked .toggle-switch::before {
-	transform: translateX(24px);
-	background: rgb(5, 82, 0);
-	/* box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); */
-}
-
-/* Equal states icons - both bright */
-.terminal-toggle.equal-states .toggle-icon {
-	color: var(--terminal-green);
-}
-
-.terminal-toggle.equal-states.checked .toggle-icon {
-	color: var(--terminal-green);
-	transform: scale(1);
-}
-
-/* Equal states labels - both bright */
-.terminal-toggle.equal-states .toggle-label {
-	color: var(--terminal-green);
-}
-
-.terminal-toggle.equal-states.checked .toggle-label {
-	color: var(--terminal-green);
-}
-
-/* Toggle Label */
-.toggle-label {
-	font-size: var(--font-size-sm);
-	color: var(--terminal-green-dim);
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
-	transition: color 0.2s ease;
-}
-
-.terminal-toggle.checked .toggle-label {
-	color: var(--terminal-green);
-}
-
-/* Toggle Icon */
-.toggle-icon {
-	width: 16px;
-	height: 16px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: var(--terminal-green-dim);
-	transition: all 0.2s ease;
-}
-
-.toggle-icon svg {
-	width: 100%;
-	height: 100%;
-	fill: currentColor;
-}
-
-.terminal-toggle.checked .toggle-icon {
-	color: var(--terminal-green);
-	transform: scale(1.1);
-}
-
-/* Icon-only switching variant */
-.terminal-toggle.layout-icon-switching .toggle-icon {
-	min-width: 24px;
-	transition: all 0.3s ease;
-}
-
-.terminal-toggle.layout-icon-switching .toggle-label {
-	display: none;
-}
-
-/* Equal states switching - fixed size container */
-.terminal-toggle.equal-states.layout-switching,
-.terminal-toggle.equal-states.layout-icon-switching {
-	min-width: auto;
-}
-
-.terminal-toggle.equal-states .switching-icon {
-	color: var(--terminal-green) !important;
-}
-
-.terminal-toggle.equal-states .switching-label {
-	color: var(--terminal-green) !important;
-	font-weight: 600;
-}
-
-/* States Indicator */
-.toggle-states {
-	display: flex;
-	align-items: center;
-	gap: var(--spacing-xs);
-	font-size: var(--font-size-xs);
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
-}
-
-.toggle-state-off,
-.toggle-state-on {
-	color: var(--terminal-gray-text);
-	transition: color 0.2s ease;
-}
-
-.terminal-toggle:not(.checked) .toggle-state-off {
-	color: var(--terminal-green-dim);
-}
-
-.terminal-toggle.checked .toggle-state-on {
-	color: var(--terminal-green);
-}
-
-/* Disabled State */
-.terminal-toggle.disabled {
-	opacity: 0.5;
-	cursor: not-allowed;
-	pointer-events: none;
-}
-
-.terminal-toggle.disabled .toggle-switch {
-	background: var(--terminal-gray-darkest);
-	border-color: var(--terminal-gray-dark);
-}
-
-.terminal-toggle.disabled .toggle-label {
-	color: var(--terminal-gray-text);
-}
-
-/* Focus State */
-.terminal-toggle:focus-visible {
-	outline: 1px solid var(--terminal-green);
-	outline-offset: 2px;
-}
-
-/* Loading State */
-.terminal-toggle.loading .toggle-switch::before {
-	animation: togglePulse 1s ease-in-out infinite;
-}
-
-@keyframes togglePulse {
-
-	0%,
-	100% {
-		opacity: 1;
-	}
-
-	50% {
-		opacity: 0.5;
-	}
-}
-
-/* Size Variants */
-
-/* Small */
-.terminal-toggle.small .toggle-switch {
-	width: 36px;
-	height: 18px;
-}
-
-.terminal-toggle.small .toggle-switch::before {
-	width: 14px;
-	height: 14px;
-	top: 1px;
-	left: 1px;
-}
-
-.terminal-toggle.small.checked .toggle-switch::before {
-	transform: translateX(18px);
-}
-
-/* Small equal states adjustments */
-.terminal-toggle.small.equal-states .toggle-switch::before {
-	width: 12px;
-	height: 12px;
-	top: 2px;
-	left: 2px;
-}
-
-.terminal-toggle.small.equal-states.checked .toggle-switch::before {
-	transform: translateX(17px);
-}
-
-.terminal-toggle.small .toggle-label {
-	font-size: var(--font-size-xs);
-}
-
-.terminal-toggle.small .toggle-icon {
-	width: 14px;
-	height: 14px;
-}
-
-/* Large */
-.terminal-toggle.large .toggle-switch {
-	width: 60px;
-	height: 30px;
-}
-
-.terminal-toggle.large .toggle-switch::before {
-	width: 24px;
-	height: 24px;
-	top: 2px;
-	left: 2px;
-}
-
-.terminal-toggle.large.checked .toggle-switch::before {
-	transform: translateX(30px);
-}
-
-/* Large equal states adjustments */
-.terminal-toggle.large.equal-states .toggle-switch::before {
-	width: 22px;
-	height: 22px;
-	top: 2px;
-	left: 3px;
-}
-
-.terminal-toggle.large.equal-states.checked .toggle-switch::before {
-	transform: translateX(29px);
-}
-
-.terminal-toggle.large .toggle-label {
-	font-size: var(--font-size-md);
-}
-
-.terminal-toggle.large .toggle-icon {
-	width: 20px;
-	height: 20px;
-}
-
-/* Layout Variants */
-
-/* Label + Toggle (default) */
-/* Default layout, no special styles needed */
-
-/* Icon + Toggle */
-.terminal-toggle.layout-icon-toggle .toggle-label {
-	display: none;
-}
-
-/* Icon + Label + Toggle */
-
-
-/* Switching Mode - Fixed Width Container */
-/* .terminal-toggle.layout-switching {
-  min-width: 180px;
-} */
-
-.terminal-toggle.layout-switching .switching-icon,
-.terminal-toggle.layout-switching .switching-label {
-	transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.terminal-toggle.layout-switching .switching-label {
-	min-width: 60px;
-	text-align: center;
-}
-
-.terminal-toggle.layout-switching .switching-icon {
-	width: 20px;
-	height: 20px;
-}
-
-/* Vertical */
-.terminal-toggle.vertical {
-	flex-direction: column;
-	text-align: center;
-}
-
-/* Reverse */
-.terminal-toggle.reverse {
-	flex-direction: row-reverse;
-}
-
-/* Group of Toggles */
-.toggle-group {
-	display: flex;
-	flex-direction: column;
-	gap: var(--spacing-xs);
-	padding: var(--spacing-md);
-	background: var(--terminal-gray-darkest);
-	border: 1px solid var(--terminal-gray-light);
-}
-
-.toggle-group-title {
-	font-size: var(--font-size-sm);
-	text-transform: uppercase;
-	color: var(--terminal-green);
-	letter-spacing: 0.5px;
-	margin-bottom: var(--spacing-sm);
-	padding-bottom: var(--spacing-sm);
-	border-bottom: 1px solid var(--terminal-gray-light);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-	.terminal-toggle {
-		gap: var(--spacing-sm);
-		padding: var(--spacing-xs);
-	}
-
-	.toggle-label {
-		font-size: var(--font-size-xs);
-	}
-}
-
-@media (max-width: 480px) {
-	.terminal-toggle.responsive-stack {
-		flex-direction: column;
-		align-items: flex-start;
-	}
-
-	.toggle-switch {
-		width: 42px;
-		height: 22px;
-	}
-
-	.toggle-switch::before {
-		width: 16px;
-		height: 16px;
-	}
-
-	.terminal-toggle.checked .toggle-switch::before {
-		transform: translateX(20px);
-	}
-}
+export class TToggleLit extends LitElement {
+  // ----------------------------------------------------------
+  // BLOCK 1: STATIC METADATA (REQUIRED)
+  // ----------------------------------------------------------
+  static tagName = 't-tog';
+  static version = '1.0.0';
+  static category = 'Form Controls';
+
+  // ----------------------------------------------------------
+  // BLOCK 2: STATIC STYLES (REQUIRED)
+  // ----------------------------------------------------------
+  static styles = css`
+    /* Host Styles */
+    :host {
+      display: inline-block;
+      --t-tog-bg: var(--terminal-gray-dark, #1a1a1a);
+      --t-tog-border: var(--terminal-gray-light, #666666);
+      --t-tog-checked-bg: var(--terminal-green-dark, #005520);
+      --t-tog-checked-border: var(--terminal-green, #00ff41);
+      --t-tog-thumb: var(--terminal-gray-light, #666666);
+      --t-tog-thumb-checked: var(--terminal-green, #00ff41);
+      --t-tog-label: var(--terminal-green-dim, #00ff4180);
+      --t-tog-label-checked: var(--terminal-green, #00ff41);
+      --t-tog-glow: var(--terminal-green-glow, #00ff4133);
+      --t-tog-disabled-opacity: 0.5;
+    }
+
+    /* Container */
+    .terminal-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+      padding: 4px;
+      transition: opacity 0.2s ease;
+      position: relative;
+      min-width: 200px;
+    }
+
+    .terminal-toggle:hover .toggle-switch,
+    .terminal-toggle:hover .toggle-checkbox {
+      box-shadow: 0 0 8px var(--t-tog-glow);
+    }
+
+    .terminal-toggle:hover .toggle-icon {
+      filter: brightness(1.2);
+    }
+
+    /* Hidden native input for accessibility */
+    .native-input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      margin: 0;
+    }
+
+    /* Switch Variant */
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 24px;
+      background: var(--t-tog-bg);
+      border: 1px solid var(--t-tog-border);
+      cursor: pointer;
+      border-radius: 24px;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-switch::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--t-tog-thumb);
+      transform: translateY(-50%);
+      transition: all 0.3s ease;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Checkbox Variant */
+    .toggle-checkbox {
+      position: relative;
+      width: 18px;
+      height: 18px;
+      background: var(--t-tog-bg);
+      border: 1px solid var(--t-tog-border);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .toggle-checkbox::after {
+      content: '';
+      position: absolute;
+      display: none;
+      left: 50%;
+      top: 50%;
+      width: 4px;
+      height: 8px;
+      border: solid var(--t-tog-thumb-checked);
+      border-width: 0 2px 2px 0;
+      transform: translate(-50%, -60%) rotate(45deg);
+    }
+
+    /* Checked States */
+    .terminal-toggle.checked .toggle-switch {
+      background: var(--t-tog-checked-bg);
+      border-color: var(--t-tog-checked-border);
+    }
+
+    .terminal-toggle.checked .toggle-switch::before {
+      transform: translateY(-50%) translateX(24px);
+      background: var(--t-tog-thumb-checked);
+      box-shadow: 0 0 10px var(--t-tog-glow);
+    }
+
+    .terminal-toggle.checked .toggle-checkbox {
+      background: var(--t-tog-checked-bg);
+      border-color: var(--t-tog-checked-border);
+    }
+
+    .terminal-toggle.checked .toggle-checkbox::after {
+      display: block;
+    }
+
+    /* Label */
+    .toggle-label {
+      font-size: 14px;
+      color: var(--t-tog-label);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: color 0.2s ease, opacity 0.2s ease;
+      opacity: 0.6;
+      flex: 1 0 auto;
+      white-space: nowrap;
+    }
+
+    .terminal-toggle.checked .toggle-label {
+      color: var(--t-tog-label-checked);
+      opacity: 1;
+    }
+
+    /* Off state should be dimmer */
+    .terminal-toggle:not(.checked):not(.equal-states) .toggle-switch {
+      opacity: 0.8;
+    }
+
+    .terminal-toggle:not(.checked):not(.equal-states) .toggle-icon {
+      opacity: 0.6;
+    }
+
+    /* Label Position */
+    .terminal-toggle.label-left {
+      flex-direction: row-reverse;
+    }
+
+    /* Icons */
+    .toggle-icon {
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--t-tog-label);
+      transition: all 0.2s ease;
+      opacity: 0.6;
+    }
+
+    .toggle-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: currentColor;
+    }
+
+    .terminal-toggle.checked .toggle-icon {
+      color: var(--t-tog-label-checked);
+      transform: scale(1.1);
+      opacity: 1;
+    }
+
+    /* Equal States Mode - Both states should appear 'on' */
+    :host([equal-states]) .toggle-switch {
+      opacity: 1 !important;
+      background: var(--t-tog-checked-bg);
+      border-color: var(--t-tog-checked-border);
+    }
+
+    :host([equal-states]) .toggle-icon,
+    :host([equal-states]) .toggle-label {
+      opacity: 1 !important;
+      color: var(--t-tog-label-checked);
+    }
+
+    :host([equal-states]) .toggle-switch::before {
+      background: var(--t-tog-thumb-checked);
+      transform: translateY(-50%) translateX(0);
+    }
+
+    :host([equal-states]) .terminal-toggle.checked .toggle-switch {
+      background: var(--terminal-green, #00ff41);
+      border-color: var(--terminal-green, #00ff41);
+    }
+
+    :host([equal-states]) .terminal-toggle.checked .toggle-switch::before {
+      background: var(--terminal-bg, #0a0e27);
+      box-shadow: none;
+      transform: translateY(-50%) translateX(22px);
+    }
+
+    /* Color Schemes */
+    :host([color-scheme="error"]) {
+      --t-tog-checked-bg: #5c1a1a;
+      --t-tog-checked-border: #ff4136;
+      --t-tog-thumb-checked: #ff4136;
+      --t-tog-label-checked: #ff4136;
+      --t-tog-glow: rgba(255, 65, 54, 0.3);
+    }
+
+    :host([color-scheme="warning"]) {
+      --t-tog-checked-bg: #5c4a1a;
+      --t-tog-checked-border: #ffaa00;
+      --t-tog-thumb-checked: #ffaa00;
+      --t-tog-label-checked: #ffaa00;
+      --t-tog-glow: rgba(255, 170, 0, 0.3);
+    }
+
+    :host([color-scheme="success"]) {
+      --t-tog-checked-bg: var(--terminal-green-dark, #005520);
+      --t-tog-checked-border: var(--terminal-green, #00ff41);
+      --t-tog-thumb-checked: var(--terminal-green, #00ff41);
+      --t-tog-label-checked: var(--terminal-green, #00ff41);
+      --t-tog-glow: var(--terminal-green-glow, #00ff4133);
+    }
+
+    /* Checkbox Color Schemes */
+    :host([variant="checkbox"][color-scheme="error"]) .toggle-checkbox {
+      border-color: #ff4136;
+    }
+
+    :host([variant="checkbox"][color-scheme="error"]) .terminal-toggle.checked .toggle-checkbox {
+      background: #5c1a1a;
+      border-color: #ff4136;
+    }
+
+    :host([variant="checkbox"][color-scheme="error"]) .toggle-checkbox::after {
+      border-color: #ff4136;
+    }
+
+    :host([variant="checkbox"][color-scheme="warning"]) .toggle-checkbox {
+      border-color: #ffaa00;
+    }
+
+    :host([variant="checkbox"][color-scheme="warning"]) .terminal-toggle.checked .toggle-checkbox {
+      background: #5c4a1a;
+      border-color: #ffaa00;
+    }
+
+    :host([variant="checkbox"][color-scheme="warning"]) .toggle-checkbox::after {
+      border-color: #ffaa00;
+    }
+
+    /* Alignment Styles for Checkboxes */
+    :host([variant="checkbox"][alignment="left"]) .terminal-toggle {
+      justify-content: flex-start;
+      flex-direction: row;
+    }
+
+    :host([variant="checkbox"][alignment="right"]) .terminal-toggle {
+      justify-content: flex-end;
+      flex-direction: row;
+    }
+
+    :host([variant="checkbox"][alignment="right"]) .toggle-label {
+      text-align: right;
+      margin-right: 8px;
+      margin-left: 0;
+      order: 1;
+    }
+
+    :host([variant="checkbox"][alignment="right"]) .toggle-checkbox {
+      order: 2;
+      flex-shrink: 0;
+    }
+
+    /* Size Variants */
+    :host([size="small"]) .toggle-switch {
+      width: 36px;
+      height: 18px;
+    }
+
+    :host([size="small"]) .toggle-switch::before {
+      width: 14px;
+      height: 14px;
+      left: 2px;
+    }
+
+    :host([size="small"]) .terminal-toggle.checked .toggle-switch::before {
+      transform: translateY(-50%) translateX(18px);
+    }
+
+    :host([size="small"]) .toggle-checkbox {
+      width: 14px;
+      height: 14px;
+    }
+
+    :host([size="small"]) .toggle-checkbox::after {
+      width: 3px;
+      height: 6px;
+    }
+
+    :host([size="small"]) .toggle-label {
+      font-size: 12px;
+    }
+
+    :host([size="large"]) .toggle-switch {
+      width: 60px;
+      height: 30px;
+    }
+
+    :host([size="large"]) .toggle-switch::before {
+      width: 24px;
+      height: 24px;
+      left: 3px;
+    }
+
+    :host([size="large"]) .terminal-toggle.checked .toggle-switch::before {
+      transform: translateY(-50%) translateX(30px);
+    }
+
+    :host([size="large"]) .toggle-checkbox {
+      width: 24px;
+      height: 24px;
+    }
+
+    :host([size="large"]) .toggle-checkbox::after {
+      width: 6px;
+      height: 12px;
+      border-width: 0 3px 3px 0;
+    }
+
+    :host([size="large"]) .toggle-label {
+      font-size: 16px;
+    }
+
+    /* Disabled State */
+    :host([disabled]) .terminal-toggle {
+      opacity: var(--t-tog-disabled-opacity);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    :host([disabled]) .toggle-switch,
+    :host([disabled]) .toggle-checkbox {
+      background: var(--terminal-gray-darkest, #0a0a0a);
+      border-color: var(--terminal-gray-dark, #1a1a1a);
+    }
+
+    :host([disabled]) .toggle-label {
+      color: var(--terminal-gray-text, #808080);
+    }
+
+    /* Loading State */
+    :host([loading]) .toggle-switch::before,
+    :host([loading]) .toggle-checkbox::after {
+      animation: togglePulse 1s ease-in-out infinite;
+    }
+
+    @keyframes togglePulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    /* Focus State */
+    .terminal-toggle:focus-visible {
+      outline: 1px solid var(--t-tog-checked-border);
+      outline-offset: 2px;
+    }
+
+    /* Required State */
+    :host([required]) .toggle-label::after {
+      content: ' *';
+      color: var(--terminal-red, #ff4136);
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .terminal-toggle {
+        gap: 6px;
+        padding: 2px;
+      }
+
+      .toggle-label {
+        font-size: 12px;
+      }
+    }
   `;
 
+  // ----------------------------------------------------------
+  // BLOCK 3: REACTIVE PROPERTIES (REQUIRED)
+  // ----------------------------------------------------------
+  /**
+   * @property {string} label - Toggle label text
+   * @default ''
+   * @attribute label
+   * @reflects true
+   */
   static properties = {
-    label: { type: String },
-    checked: { type: Boolean },
-    size: { type: String }
+    /**
+     * @property {string} label - Toggle label text
+     * @default ''
+     * @attribute label
+     * @reflects true
+     */
+    label: { type: String, reflect: true },
+
+    /**
+     * @property {string} labelOn - Label text for checked state
+     * @default ''
+     * @attribute label-on
+     */
+    labelOn: { type: String, attribute: 'label-on' },
+
+    /**
+     * @property {string} labelOff - Label text for unchecked state
+     * @default ''
+     * @attribute label-off
+     */
+    labelOff: { type: String, attribute: 'label-off' },
+
+    /**
+     * @property {boolean} checked - Toggle checked state
+     * @default false
+     * @attribute checked
+     * @reflects true
+     */
+    checked: { type: Boolean, reflect: true },
+
+    /**
+     * @property {boolean} disabled - Toggle disabled state
+     * @default false
+     * @attribute disabled
+     * @reflects true
+     */
+    disabled: { type: Boolean, reflect: true },
+
+    /**
+     * @property {('switch'|'checkbox')} variant - Toggle variant style
+     * @default 'switch'
+     * @attribute variant
+     * @reflects true
+     */
+    variant: { type: String, reflect: true },
+
+    /**
+     * @property {('left'|'right')} labelPosition - Label position relative to toggle
+     * @default 'right'
+     * @attribute label-position
+     * @reflects true
+     */
+    labelPosition: { type: String, reflect: true, attribute: 'label-position' },
+
+    /**
+     * @property {('left'|'right')} alignment - Checkbox group alignment
+     * @default 'left'
+     * @attribute alignment
+     * @reflects true
+     */
+    alignment: { type: String, reflect: true },
+
+    /**
+     * @property {string} iconOn - Icon HTML/SVG for checked state
+     * @default ''
+     * @attribute icon-on
+     */
+    iconOn: { type: String, attribute: 'icon-on' },
+
+    /**
+     * @property {string} iconOff - Icon HTML/SVG for unchecked state
+     * @default ''
+     * @attribute icon-off
+     */
+    iconOff: { type: String, attribute: 'icon-off' },
+
+    /**
+     * @property {('small'|'medium'|'large')} size - Toggle size
+     * @default 'medium'
+     * @attribute size
+     * @reflects true
+     */
+    size: { type: String, reflect: true },
+
+    /**
+     * @property {boolean} loading - Toggle loading state
+     * @default false
+     * @attribute loading
+     * @reflects true
+     */
+    loading: { type: Boolean, reflect: true },
+
+    /**
+     * @property {boolean} required - Toggle required field state
+     * @default false
+     * @attribute required
+     * @reflects true
+     */
+    required: { type: Boolean, reflect: true },
+
+    /**
+     * @property {boolean} equalStates - Both states equally prominent
+     * @default false
+     * @attribute equal-states
+     * @reflects true
+     */
+    equalStates: { type: Boolean, reflect: true, attribute: 'equal-states' },
+
+    /**
+     * @property {('error'|'warning'|'success')} colorScheme - Color variant
+     * @default ''
+     * @attribute color-scheme
+     * @reflects true
+     */
+    colorScheme: { type: String, reflect: true, attribute: 'color-scheme' }
   };
+
+  // ----------------------------------------------------------
+  // BLOCK 4: INTERNAL STATE (PRIVATE)
+  // ----------------------------------------------------------
+  /** @private */
+  _internals = null;
+
+  /** @private */
+  _isAnimating = false;
+
+  // ----------------------------------------------------------
+  // BLOCK 5: LOGGER INSTANCE (REQUIRED)
+  // ----------------------------------------------------------
+  /** @private */
+  _logger = null;
+
+  // ----------------------------------------------------------
+  // BLOCK 6: CONSTRUCTOR (REQUIRED)
+  // ----------------------------------------------------------
+  static formAssociated = true;
 
   constructor() {
     super();
+
+    // Initialize logger first
+    this._logger = componentLogger.for('TToggleLit');
+    this._logger.debug('Component constructed');
+
+    // Initialize property defaults
     this.label = '';
+    this.labelOn = '';
+    this.labelOff = '';
     this.checked = false;
-    this.size = '';
+    this.disabled = false;
+    this.variant = 'switch';
+    this.labelPosition = 'right';
+    this.alignment = 'left';
+    this.iconOn = '';
+    this.iconOff = '';
+    this.size = 'medium';
+    this.loading = false;
+    this.required = false;
+    this.equalStates = false;
+    this.colorScheme = '';
+
+    // Initialize ElementInternals for form participation
+    if (this.attachInternals) {
+      this._internals = this.attachInternals();
+      this._internals.ariaRole = 'switch';
+    }
   }
 
+  // ----------------------------------------------------------
+  // BLOCK 7: LIFECYCLE METHODS (REQUIRED - in order)
+  // ----------------------------------------------------------
+  /**
+   * Called when component is connected to DOM
+   * @lifecycle
+   */
+  connectedCallback() {
+    super.connectedCallback();
+    this._logger.debug('Connected to DOM');
+
+    // Set initial form value
+    if (this._internals) {
+      this._internals.setFormValue(this.checked ? 'on' : 'off');
+      this._updateValidity();
+    }
+  }
+
+  /**
+   * Called when component is disconnected from DOM
+   * @lifecycle
+   */
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._logger.debug('Disconnected from DOM');
+
+    // Component doesn't have timers or document listeners to clean up
+  }
+
+  /**
+   * Called after first render
+   * @lifecycle
+   * @param {Map} changedProperties
+   */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+    this._logger.debug('First update complete', { changedProperties });
+
+    // Set ARIA attributes
+    if (this._internals) {
+      this._internals.ariaChecked = String(this.checked);
+      this._internals.ariaDisabled = String(this.disabled);
+      this._internals.ariaRequired = String(this.required);
+    }
+  }
+
+  /**
+   * Called after every render
+   * @lifecycle
+   * @param {Map} changedProperties
+   */
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    this._logger.trace('Updated', { changedProperties });
+
+    // Validate enum properties
+    for (const [name, oldValue] of changedProperties) {
+      if (TToggleLit.getPropertyValidation(name)) {
+        this._validateProperty(name, this[name]);
+      }
+    }
+
+    // Update form value when checked changes
+    if (changedProperties.has('checked') && this._internals) {
+      this._internals.setFormValue(this.checked ? 'on' : 'off');
+      this._internals.ariaChecked = String(this.checked);
+      this._updateValidity();
+    }
+
+    // Update ARIA attributes
+    if (changedProperties.has('disabled') && this._internals) {
+      this._internals.ariaDisabled = String(this.disabled);
+    }
+
+    if (changedProperties.has('required') && this._internals) {
+      this._internals.ariaRequired = String(this.required);
+      this._updateValidity();
+    }
+  }
+
+  // ----------------------------------------------------------
+  // BLOCK 8: PUBLIC API METHODS (REQUIRED SECTION)
+  // ----------------------------------------------------------
+  /**
+   * Toggle the checked state
+   * @public
+   * @returns {boolean} New checked state
+   * @fires TToggleLit#toggle-change
+   * @example
+   * const newState = toggle.toggle();
+   */
+  toggle() {
+    this._logger.debug('toggle() called');
+
+    if (this.disabled || this.loading) {
+      this._logger.warn('Toggle blocked', { disabled: this.disabled, loading: this.loading });
+      return this.checked;
+    }
+
+    this.checked = !this.checked;
+    this._emitEvent('toggle-change', { checked: this.checked });
+
+    return this.checked;
+  }
+
+  /**
+   * Set toggle to checked state
+   * @public
+   * @fires TToggleLit#toggle-change
+   * @example
+   * toggle.check();
+   */
+  check() {
+    this._logger.debug('check() called');
+
+    if (this.disabled || this.loading) {
+      this._logger.warn('Check blocked', { disabled: this.disabled, loading: this.loading });
+      return;
+    }
+
+    if (!this.checked) {
+      this.checked = true;
+      this._emitEvent('toggle-change', { checked: this.checked });
+    }
+  }
+
+  /**
+   * Set toggle to unchecked state
+   * @public
+   * @fires TToggleLit#toggle-change
+   * @example
+   * toggle.uncheck();
+   */
+  uncheck() {
+    this._logger.debug('uncheck() called');
+
+    if (this.disabled || this.loading) {
+      this._logger.warn('Uncheck blocked', { disabled: this.disabled, loading: this.loading });
+      return;
+    }
+
+    if (this.checked) {
+      this.checked = false;
+      this._emitEvent('toggle-change', { checked: this.checked });
+    }
+  }
+
+  /**
+   * Set the value (for form participation)
+   * @public
+   * @param {boolean|string} value - The value to set ('on', 'off', true, false)
+   * @example
+   * toggle.setValue(true);
+   * toggle.setValue('on');
+   */
+  setValue(value) {
+    this._logger.debug('setValue() called', { value });
+
+    const newChecked = value === true || value === 'on' || value === 'true';
+    if (this.checked !== newChecked) {
+      this.checked = newChecked;
+      this._emitEvent('toggle-change', { checked: this.checked });
+    }
+  }
+
+  /**
+   * Get the current value (for form participation)
+   * @public
+   * @returns {string} 'on' if checked, 'off' if unchecked
+   * @example
+   * const value = toggle.getValue(); // 'on' or 'off'
+   */
+  getValue() {
+    const value = this.checked ? 'on' : 'off';
+    this._logger.debug('getValue() called', { value });
+    return value;
+  }
+
+  /**
+   * Focus the toggle element
+   * @public
+   * @example
+   * toggle.focus();
+   */
+  focus() {
+    this._logger.debug('focus() called');
+    const input = this.shadowRoot.querySelector('.native-input');
+    if (input) {
+      input.focus();
+    }
+  }
+
+  /**
+   * Blur the toggle element
+   * @public
+   * @example
+   * toggle.blur();
+   */
+  blur() {
+    this._logger.debug('blur() called');
+    const input = this.shadowRoot.querySelector('.native-input');
+    if (input) {
+      input.blur();
+    }
+  }
+
+  // ----------------------------------------------------------
+  // BLOCK 9: EVENT EMITTERS (REQUIRED SECTION)
+  // ----------------------------------------------------------
+  /**
+   * Emit custom event
+   * @private
+   * @param {string} eventName
+   * @param {Object} detail
+   */
+  _emitEvent(eventName, detail = {}) {
+    this._logger.debug('Emitting event', { eventName, detail });
+
+    const event = new CustomEvent(eventName, {
+      detail,
+      bubbles: true,
+      composed: true
+    });
+
+    this.dispatchEvent(event);
+  }
+
+  /**
+   * @event TToggleLit#toggle-change
+   * @type {CustomEvent<{checked: boolean}>}
+   * @description Fired when toggle state changes
+   * @property {boolean} detail.checked - New checked state
+   * @bubbles true
+   * @composed true
+   * @example
+   * toggle.addEventListener('toggle-change', (e) => {
+   *   console.log('Toggle changed:', e.detail.checked);
+   * });
+   */
+
+  // ----------------------------------------------------------
+  // BLOCK 10: NESTING SUPPORT (NOT REQUIRED - Not a container)
+  // ----------------------------------------------------------
+  // Not applicable for toggle component
+
+  // ----------------------------------------------------------
+  // BLOCK 11: VALIDATION (OPTIONAL - For enum properties)
+  // ----------------------------------------------------------
+  /**
+   * Get validation rules for a property
+   * @private
+   * @param {string} propName - Property name to validate
+   * @returns {Array<string>|null} - Valid values for enum properties
+   */
+  static getPropertyValidation(propName) {
+    const validations = {
+      variant: ['switch', 'checkbox'],
+      size: ['small', 'medium', 'large'],
+      alignment: ['left', 'right'],
+      labelPosition: ['left', 'right'],
+      colorScheme: ['', 'error', 'warning', 'success']
+    };
+    return validations[propName] || null;
+  }
+
+  /**
+   * Validate property value
+   * @private
+   * @param {string} name - Property name
+   * @param {*} value - Property value
+   * @returns {boolean} - Whether the value is valid
+   */
+  _validateProperty(name, value) {
+    const validValues = TToggleLit.getPropertyValidation(name);
+    if (!validValues) return true;
+
+    const isValid = validValues.includes(value);
+    if (!isValid) {
+      this._logger.warn(`Invalid value for ${name}:`, { value, validValues });
+    }
+    return isValid;
+  }
+
+  // ----------------------------------------------------------
+  // BLOCK 12: RENDER METHOD (REQUIRED)
+  // ----------------------------------------------------------
+  /**
+   * Render component template
+   * @returns {TemplateResult}
+   */
   render() {
+    this._logger.trace('Rendering');
+
+    const classes = [
+      'terminal-toggle',
+      this.checked ? 'checked' : '',
+      this.labelPosition === 'left' ? 'label-left' : '',
+      this.equalStates ? 'equal-states' : ''
+    ].filter(Boolean).join(' ');
+
+    const currentIcon = this.checked ? this.iconOn : this.iconOff;
+
+    // Determine which label to show
+    let currentLabel = this.label;
+    if (this.labelOn && this.labelOff) {
+      currentLabel = this.checked ? this.labelOn : this.labelOff;
+    }
+
+    // For right-aligned checkboxes: render order is label, then checkbox
+    if (this.variant === 'checkbox' && this.alignment === 'right') {
+      return html`
+        <label class="${classes}" @keydown=${this._handleKeyDown}>
+          <input
+            type="checkbox"
+            class="native-input"
+            .checked=${this.checked}
+            ?disabled=${this.disabled}
+            ?required=${this.required}
+            @change=${this._handleChange}
+            @focus=${this._handleFocus}
+            @blur=${this._handleBlur}
+            tabindex="0"
+            aria-label=${currentLabel || 'Toggle'}
+          />
+
+          ${currentIcon ? html`
+            <span class="toggle-icon" .innerHTML=${currentIcon}></span>
+          ` : ''}
+
+          ${currentLabel ? html`
+            <span class="toggle-label">${currentLabel}</span>
+          ` : ''}
+
+          <span class="toggle-checkbox"></span>
+        </label>
+      `;
+    }
+
+    // Default layout
     return html`
-      <div class="toggle-wrapper" @click=${this._handleClick}>
-        <div class="toggle-box ${this.checked ? 'checked' : ''}"></div>
-        ${this.label ? html`<span class="toggle-label">${this.label}</span>` : ''}
-      </div>
+      <label class="${classes}" @keydown=${this._handleKeyDown}>
+        <input
+          type="checkbox"
+          class="native-input"
+          .checked=${this.checked}
+          ?disabled=${this.disabled}
+          ?required=${this.required}
+          @change=${this._handleChange}
+          @focus=${this._handleFocus}
+          @blur=${this._handleBlur}
+          tabindex="0"
+          aria-label=${currentLabel || 'Toggle'}
+        />
+
+        ${currentIcon ? html`
+          <span class="toggle-icon" .innerHTML=${currentIcon}></span>
+        ` : ''}
+
+        ${this.variant === 'checkbox' ? html`
+          <span class="toggle-checkbox"></span>
+        ` : html`
+          <span class="toggle-switch"></span>
+        `}
+
+        ${currentLabel ? html`
+          <span class="toggle-label">${currentLabel}</span>
+        ` : ''}
+      </label>
     `;
   }
 
-  _handleClick() {
-    this.checked = !this.checked;
-    this.dispatchEvent(new CustomEvent('toggle-change', {
-      detail: { checked: this.checked },
-      bubbles: true,
-      composed: true
-    }));
+  // ----------------------------------------------------------
+  // BLOCK 13: PRIVATE HELPERS (LAST)
+  // ----------------------------------------------------------
+  /** @private */
+  _handleChange(e) {
+    this._logger.debug('Handle change', { checked: e.target.checked });
+
+    if (this.disabled || this.loading) {
+      e.preventDefault();
+      return;
+    }
+
+    this.checked = e.target.checked;
+    this._emitEvent('toggle-change', { checked: this.checked });
+  }
+
+  /** @private */
+  _handleKeyDown(e) {
+    if (this.disabled || this.loading) {
+      return;
+    }
+
+    // Handle space key
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      this.toggle();
+    }
+  }
+
+  /** @private */
+  _handleFocus() {
+    this._logger.trace('Focus received');
+  }
+
+  /** @private */
+  _handleBlur() {
+    this._logger.trace('Focus lost');
+  }
+
+  /** @private */
+  _updateValidity() {
+    if (!this._internals) return;
+
+    // For toggle, we might validate required state
+    if (this.required && !this.checked) {
+      this._internals.setValidity(
+        { valueMissing: true },
+        'Please check this box to continue'
+      );
+    } else {
+      this._internals.setValidity({});
+    }
   }
 }
 
-if (!customElements.get('t-tog')) {
-  customElements.define('t-tog', TToggleLit);
+// ============================================================
+// SECTION 3: CUSTOM ELEMENT REGISTRATION (REQUIRED)
+// ============================================================
+if (!customElements.get(TToggleLit.tagName)) {
+  customElements.define(TToggleLit.tagName, TToggleLit);
 }
 
+// ============================================================
+// SECTION 4: EXPORTS (REQUIRED)
+// ============================================================
 export default TToggleLit;

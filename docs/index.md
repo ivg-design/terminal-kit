@@ -29,7 +29,7 @@ Welcome to the Terminal UI Components documentation. This library provides a col
 ### Form Components
 - [TerminalInput](components/TerminalInput.md) - Text input field with comprehensive validation
 - [TerminalTextarea](components/TerminalTextarea.md) - Multi-line text input with optional line numbers
-- [TerminalToggle](components/TerminalToggle.md) - Toggle switch and checkbox variants
+- [TToggleLit](components/TToggleLit.md) - Toggle switch and checkbox variants with extensive customization
 - [TerminalSlider](components/TerminalSlider.md) - Range slider with multiple display modes
 - [TerminalDropdown](components/TerminalDropdown.md) - Dropdown selector with search and tree support
 - [TerminalColorPicker](components/TerminalColorPicker.md) - Color picker with swatches and custom colors

@@ -33,7 +33,7 @@ If you see references to:
 - [TDropdownLit](./components/TerminalDropdown.md) - Nested dropdown with search
 - [TColorPickerLit](./components/TerminalColorPicker.md) - Color selection component
 - [TSliderLit](./components/TerminalSlider.md) - Range slider component
-- [TToggleLit](./components/TerminalToggle.md) - Toggle switch component
+- [TToggleLit](./components/TToggleLit.md) - Toggle switch and checkbox component ✅ **CURRENT**
 - [TTextareaLit](./components/TerminalTextarea.md) - Multiline text input
 - [TLoaderLit](./components/TerminalLoader.md) - Loading indicators
 

@@ -25,6 +25,7 @@ export default defineConfig({
         'js/components/TColorPickerLit.js',
         'js/components/TButtonLit.js',
         'js/components/TModalLit.js',
+        'js/components/TToggleLit.js',
         'js/components/TDropdownLit.js'
       ],
       exclude: [
