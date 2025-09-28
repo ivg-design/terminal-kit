@@ -4,6 +4,7 @@
 import { LitElement, html, css } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import componentLogger from '../utils/ComponentLogger.js';
+import { generateManifest } from '../utils/manifest-generator.js';
 import {
   caretDownIcon,
   caretRightIcon,
@@ -18,18 +19,30 @@ import {
 // SECTION 2: COMPONENT CLASS
 // ============================================
 /**
- * @component TDropdownLit
+ * @class TDropdownLit
+ * @extends {LitElement}
  * @tagname t-drp
- * @description Nested dropdown with tree structure, search, and folder navigation
+ * @description Advanced dropdown component with hierarchical tree structure, search functionality, and folder navigation. Supports nested folders, file metadata, and customizable icons.
  * @category Form Controls
  * @since 1.0.0
  * @example
+ * // Basic usage
  * <t-drp
- *   placeholder="Select..."
- *   search="true"
- *   icons="true"
- *   @change="${(e) => console.log(e.detail.value)}"
+ *   placeholder="Select an item"
+ *   searchable="true"
+ *   show-icons="true"
  * ></t-drp>
+ *
+ * @example
+ * // With data and event handling
+ * const dropdown = document.querySelector('t-drp');
+ * dropdown.loadData({
+ *   folders: { 'Documents': { files: ['file1.txt', 'file2.txt'] }},
+ *   files: ['readme.md']
+ * });
+ * dropdown.addEventListener('dropdown-change', (e) => {
+ *   console.log('Selected:', e.detail.value);
+ * });
  */
 export class TDropdownLit extends LitElement {
   // ============================================
@@ -422,51 +435,81 @@ export class TDropdownLit extends LitElement {
   // ============================================
 
   /**
-   * @property {string} placeholder - Placeholder text
-   * @default 'Select...'
-   * @attribute placeholder
-   * @reflects true
+   * Component reactive properties configuration
+   * @static
+   * @type {Object}
    */
   static properties = {
+    /** @property {string} placeholder - Placeholder text shown when no value selected @default 'Select...' */
     placeholder: { type: String, reflect: true },
+
+    /** @property {boolean} disabled - Whether the dropdown is disabled @default false */
     disabled: { type: Boolean, reflect: true },
-    value: { type: String },
-    width: { type: String },
+
+    /** @property {string} value - Currently selected value @default '' */
+    value: { type: String, reflect: true },
+
+    /** @property {string} width - Dropdown width (CSS value) @default '300px' */
+    width: { type: String, reflect: true },
+
+    /** @property {boolean} searchable - Enable search functionality @default true */
     searchable: { type: Boolean, reflect: true },
+
+    /** @property {boolean} showIcons - Show file/folder icons @default true */
     showIcons: { type: Boolean, reflect: true },
+
+    /** @property {Array} options - Array of options (strings or objects with value/label) @default [] */
     options: { type: Array },
+
+    /** @property {boolean} compact - Compact display mode @default false */
     compact: { type: Boolean, reflect: true },
+
+    /** @property {Object} data - Tree structure data {folders: {}, files: []} @default null */
     data: { type: Object },
+
+    /** @property {Object} metadata - File metadata mapping @default {} */
     metadata: { type: Object },
 
-    // Internal state
+    /** @property {boolean} isOpen - Dropdown open state @default false */
+    isOpen: { type: Boolean, reflect: true },
+
+    // Internal state properties (not reflected to attributes)
+    /** @private {boolean} _isOpen - Internal open state */
     _isOpen: { type: Boolean, state: true },
+    /** @private {string} _searchTerm - Current search term */
     _searchTerm: { type: String, state: true },
+    /** @private {Object} _folderStates - Folder expand/collapse states */
     _folderStates: { type: Object, state: true },
-    _selectedValue: { type: String, state: true }
+    /** @private {string} _selectedValue - Internal selected value */
+    _selectedValue: { type: String, state: true },
+    /** @private {Object} _data - Internal data structure */
+    _data: { type: Object, state: true },
+    /** @private {Object} _metadata - Internal metadata mapping */
+    _metadata: { type: Object, state: true }
   };
+
 
   // ============================================
   // BLOCK 4: Internal State
   // ============================================
 
-  /** @private */
+  /** @private {number|null} Search debounce timer ID */
   _searchDebounceTimer = null;
 
-  /** @private */
+  /** @private {boolean} Whether component has been initialized */
   _initialized = false;
 
-  /** @private */
+  /** @private {Set<number>} Collection of timer IDs for cleanup */
   _timers = new Set();
 
-  /** @private */
+  /** @private {Map<string, Function>} Document event listeners for cleanup */
   _documentListeners = new Map();
 
   // ============================================
   // BLOCK 5: Logger Instance
   // ============================================
 
-  /** @private */
+  /** @private {Object|null} Component logger instance */
   _logger = null;
 
   // ============================================
@@ -490,6 +533,7 @@ export class TDropdownLit extends LitElement {
     this.compact = false;
     this.data = null;
     this.metadata = {};
+    this.isOpen = false;
 
     // Initialize internal state
     this._isOpen = false;
@@ -500,6 +544,8 @@ export class TDropdownLit extends LitElement {
     this._initialized = false;
     this._timers = new Set();
     this._documentListeners = new Map();
+    this._data = null;
+    this._metadata = {};
 
     // Bind event handlers
     this._handleOutsideClick = this._handleOutsideClick.bind(this);
@@ -511,7 +557,9 @@ export class TDropdownLit extends LitElement {
   // ============================================
 
   /**
-   * @lifecycle
+   * Called when the element is added to the document's DOM
+   * @override
+   * @returns {void}
    */
   connectedCallback() {
     super.connectedCallback();
@@ -545,7 +593,9 @@ export class TDropdownLit extends LitElement {
   }
 
   /**
-   * @lifecycle
+   * Called when the element is removed from the document's DOM
+   * @override
+   * @returns {void}
    */
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -569,8 +619,10 @@ export class TDropdownLit extends LitElement {
   }
 
   /**
-   * @lifecycle
-   * @param {Map} changedProperties
+   * Called after the component's first render
+   * @override
+   * @param {PropertyValues} changedProperties - Map of changed properties
+   * @returns {void}
    */
   firstUpdated(changedProperties) {
     super.firstUpdated?.(changedProperties);
@@ -580,8 +632,10 @@ export class TDropdownLit extends LitElement {
   }
 
   /**
-   * @lifecycle
-   * @param {Map} changedProperties
+   * Called after the component updates
+   * @override
+   * @param {PropertyValues} changedProperties - Map of changed properties
+   * @returns {void}
    */
   updated(changedProperties) {
     super.updated?.(changedProperties);
@@ -591,8 +645,10 @@ export class TDropdownLit extends LitElement {
   }
 
   /**
-   * @lifecycle
-   * @param {Map} changedProperties
+   * Called before the component updates
+   * @override
+   * @param {PropertyValues} changedProperties - Map of changed properties
+   * @returns {void}
    */
   willUpdate(changedProperties) {
     if (changedProperties.has('width')) {
@@ -600,6 +656,46 @@ export class TDropdownLit extends LitElement {
     }
     if (changedProperties.has('value')) {
       this._selectedValue = this.value;
+    }
+    if (changedProperties.has('options')) {
+      // Convert options to data structure and extract metadata
+      if (Array.isArray(this.options) && this.options.length > 0) {
+        const files = [];
+        const metadata = {};
+
+        this.options.forEach((opt) => {
+          if (typeof opt === 'string') {
+            files.push(opt);
+          } else if (opt && typeof opt === 'object') {
+            const fileKey = opt.value || opt.label;
+            if (fileKey) {
+              files.push(fileKey);
+              // Extract metadata
+              if (opt.description || opt.label) {
+                metadata[fileKey] = {
+                  label: opt.label,
+                  description: opt.description
+                };
+              }
+            }
+          }
+        });
+
+        this._data = { files };
+        this.data = this._data;
+        this._metadata = metadata;
+        this.metadata = metadata;
+      }
+    }
+    if (changedProperties.has('isOpen')) {
+      const wasOpen = this._isOpen;
+      this._isOpen = this.isOpen;
+      // Fire events when isOpen changes via property
+      if (!wasOpen && this.isOpen) {
+        this._emitEvent('dropdown-open', {});
+      } else if (wasOpen && !this.isOpen) {
+        this._emitEvent('dropdown-close', {});
+      }
     }
     if (changedProperties.has('compact')) {
       if (this.compact) {
@@ -621,6 +717,7 @@ export class TDropdownLit extends LitElement {
   loadData(data) {
     this._logger.debug('loadData called', { data });
     this.data = data;
+    this._data = data;
     this.requestUpdate();
   }
 
@@ -632,6 +729,7 @@ export class TDropdownLit extends LitElement {
   setMetadata(metadata) {
     this._logger.debug('setMetadata called', { metadata });
     this.metadata = metadata;
+    this._metadata = metadata;
     this.requestUpdate();
   }
 
@@ -666,6 +764,7 @@ export class TDropdownLit extends LitElement {
     this._logger.debug('open called');
     if (!this.disabled && !this._isOpen) {
       this._isOpen = true;
+      this.isOpen = true;
       this._emitEvent('dropdown-open', {});
 
       // Focus search input when opened
@@ -687,6 +786,7 @@ export class TDropdownLit extends LitElement {
     this._logger.debug('close called');
     if (this._isOpen) {
       this._isOpen = false;
+      this.isOpen = false;
       this._searchTerm = '';
       this._emitEvent('dropdown-close', {});
     }
@@ -712,7 +812,26 @@ export class TDropdownLit extends LitElement {
     this._searchTerm = '';
     this._folderStates = {};
     this._isOpen = false;
+    this.isOpen = false;
     this.requestUpdate();
+  }
+
+  /**
+   * Open dropdown (alias for open)
+   * @public
+   * @fires dropdown-open
+   */
+  openDropdown() {
+    return this.open();
+  }
+
+  /**
+   * Close dropdown (alias for close)
+   * @public
+   * @fires dropdown-close
+   */
+  closeDropdown() {
+    return this.close();
   }
 
   /**
@@ -734,15 +853,37 @@ export class TDropdownLit extends LitElement {
     this.requestUpdate();
   }
 
+  /**
+   * Count animations (files) in a folder recursively
+   * @private
+   * @param {Object} folder - Folder object
+   * @returns {number} Number of files
+   */
+  _countAnimations(folder) {
+    let count = 0;
+
+    if (folder.files && Array.isArray(folder.files)) {
+      count += folder.files.length;
+    }
+
+    if (folder.folders && typeof folder.folders === 'object') {
+      for (const subfolder of Object.values(folder.folders)) {
+        count += this._countAnimations(subfolder);
+      }
+    }
+
+    return count;
+  }
+
   // ============================================
   // BLOCK 9: Event Emitters
   // ============================================
   /**
-   * Emit custom event
+   * Emit custom event with bubbling and composition
    * @private
-   * @param {string} eventName - Event name
-   * @param {Object} detail - Event detail
-   * @fires {eventName}
+   * @param {string} eventName - Name of the event to emit
+   * @param {Object} detail - Event detail object
+   * @returns {void}
    */
   _emitEvent(eventName, detail) {
     this._logger.debug('Emitting event', { eventName, detail });
@@ -800,6 +941,38 @@ export class TDropdownLit extends LitElement {
 
           if (value && !/^\d+(?:px|%|em|rem)?$/.test(value)) {
             errors.push('Width must be a valid CSS unit');
+          }
+
+          return {
+            valid: errors.length === 0,
+            errors
+          };
+        }
+      },
+      options: {
+        required: false,
+        validate: (value) => {
+          const errors = [];
+
+          if (!Array.isArray(value)) {
+            errors.push('Options must be an array');
+            return { valid: false, errors };
+          }
+
+          for (let index = 0; index < value.length; index++) {
+            const opt = value[index];
+            if (typeof opt === 'string') {
+              // String options are valid
+              continue;
+            }
+            if (typeof opt === 'object' && opt !== null) {
+              // Object options must have value or label
+              if (opt.value !== undefined || opt.label !== undefined) {
+                continue;
+              }
+            }
+            // Invalid option
+            errors.push(`Invalid option at index ${index}`);
           }
 
           return {
@@ -877,12 +1050,19 @@ export class TDropdownLit extends LitElement {
   _renderTree() {
     const data = this._getFilteredData();
 
-    if (!data) {
+    // Check if there's no data at all
+    if (!data || (!data.files && !data.folders)) {
+      // If we're searching and found nothing, show "No matching items"
+      if (this._searchTerm) {
+        return html`<div class="no-results">No matching items</div>`;
+      }
+      // Otherwise show "No data available"
       return html`<div class="no-results">No data available</div>`;
     }
 
+    // Check if search returned no results
     if (this._searchTerm && !this._hasResults(data)) {
-      return html`<div class="no-results">No matching results found</div>`;
+      return html`<div class="no-results">No matching items</div>`;
     }
 
     return html`${this._renderNode(data, '')}`;
@@ -1102,23 +1282,34 @@ export class TDropdownLit extends LitElement {
    * Select file
    * @private
    * @param {string} filePath - File path
+   * @param {string} displayName - Display name (optional)
+   * @param {Object} metadata - File metadata (optional)
    * @fires change
    */
-  _selectFile(filePath) {
+  _selectFile(filePath, displayName, metadata) {
     this._selectedValue = filePath;
     this.value = filePath;
     this._isOpen = false;
+    this.isOpen = false;
 
-    this._emitEvent('dropdown-change', {
+    const detail = {
       value: filePath,
-      option: { value: filePath, metadata: this.metadata?.[filePath] }
-    });
+      option: { value: filePath, metadata: metadata || this.metadata?.[filePath] }
+    };
+
+    // Add displayName if provided
+    if (displayName) {
+      detail.displayName = displayName;
+    }
+
+    this._emitEvent('dropdown-change', detail);
   }
 
   /**
-   * Handle search input
+   * Handle search input with debouncing
    * @private
-   * @param {Event} e - Input event
+   * @param {InputEvent} e - Input event from search field
+   * @returns {void}
    */
   _handleSearch(e) {
     const value = e.target.value;
@@ -1135,18 +1326,20 @@ export class TDropdownLit extends LitElement {
   }
 
   /**
-   * Handle container click
+   * Handle clicks within the dropdown container
    * @private
-   * @param {Event} e - Click event
+   * @param {MouseEvent} e - Click event from container
+   * @returns {void}
    */
   _handleContainerClick(e) {
     e.stopPropagation();
   }
 
   /**
-   * Handle outside click
+   * Handle clicks outside the dropdown to close it
    * @private
-   * @param {Event} e - Click event
+   * @param {MouseEvent} e - Click event from document
+   * @returns {void}
    */
   _handleOutsideClick(e) {
     if (!this.contains(e.target)) {
@@ -1246,3 +1439,98 @@ export default TDropdownLit;
  * @bubbles
  * @composed
  */
+
+// ============================================
+// MANIFEST EXPORT
+// ============================================
+export const TDropdownManifest = generateManifest(TDropdownLit, {
+  tagName: 't-drp',
+  displayName: 'Dropdown',
+  description: 'Nested dropdown with tree structure, search, and folder navigation',
+  version: '1.0.0',
+  properties: {
+    placeholder: { description: 'Placeholder text' },
+    disabled: { description: 'Disabled state' },
+    value: { description: 'Current selected value' },
+    width: { description: 'Dropdown width' },
+    searchable: { description: 'Enable search functionality' },
+    showIcons: { description: 'Show file/folder icons' },
+    options: { description: 'Array of options' },
+    compact: { description: 'Compact mode' },
+    data: { description: 'Tree structure data' },
+    metadata: { description: 'Metadata for files' },
+    isOpen: { description: 'Open state' }
+  },
+  methods: {
+    loadData: {
+      description: 'Load tree structure data',
+      parameters: [{ name: 'data', type: 'object' }],
+      returns: 'void'
+    },
+    setMetadata: {
+      description: 'Set metadata for files',
+      parameters: [{ name: 'metadata', type: 'object' }],
+      returns: 'void'
+    },
+    setValue: {
+      description: 'Set dropdown value',
+      parameters: [{ name: 'value', type: 'string' }],
+      returns: 'void'
+    },
+    getValue: {
+      description: 'Get current value',
+      parameters: [],
+      returns: 'string'
+    },
+    open: {
+      description: 'Open dropdown',
+      parameters: [],
+      returns: 'void'
+    },
+    close: {
+      description: 'Close dropdown',
+      parameters: [],
+      returns: 'void'
+    },
+    toggle: {
+      description: 'Toggle dropdown state',
+      parameters: [],
+      returns: 'void'
+    },
+    reset: {
+      description: 'Reset dropdown state',
+      parameters: [],
+      returns: 'void'
+    },
+    openDropdown: {
+      description: 'Open dropdown (alias for open)',
+      parameters: [],
+      returns: 'void'
+    },
+    closeDropdown: {
+      description: 'Close dropdown (alias for close)',
+      parameters: [],
+      returns: 'void'
+    },
+    setOptions: {
+      description: 'Set dropdown options',
+      parameters: [{ name: 'options', type: 'array' }],
+      returns: 'void'
+    }
+  },
+  events: {
+    'dropdown-change': {
+      description: 'Fires when selection changes',
+      detail: { value: 'string', option: 'object' }
+    },
+    'dropdown-open': {
+      description: 'Fires when dropdown opens',
+      detail: {}
+    },
+    'dropdown-close': {
+      description: 'Fires when dropdown closes',
+      detail: {}
+    }
+  },
+  slots: {}
+});

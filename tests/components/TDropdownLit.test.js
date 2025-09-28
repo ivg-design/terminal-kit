@@ -29,7 +29,7 @@ describe('TDropdownLit', () => {
       expect(properties.options).toBeDefined();
       expect(properties.searchable).toBeDefined();
       expect(properties.disabled).toBeDefined();
-      expect(properties.open).toBeDefined();
+      expect(properties.isOpen).toBeDefined();
       expect(properties.width).toBeDefined();
       expect(properties.showIcons).toBeDefined();
     });
@@ -98,10 +98,10 @@ describe('TDropdownLit', () => {
     });
 
     it('open property should work', async () => {
-      dropdown.open = true;
+      dropdown.isOpen = true;
       await dropdown.updateComplete;
-      expect(dropdown.open).toBe(true);
-      expect(dropdown.hasAttribute('open')).toBe(true);
+      expect(dropdown.isOpen).toBe(true);
+      expect(dropdown.hasAttribute('isopen')).toBe(true);
     });
 
     it('width property should work', async () => {
@@ -141,7 +141,7 @@ describe('TDropdownLit', () => {
     it('openDropdown() should open dropdown', async () => {
       dropdown.openDropdown();
       await dropdown.updateComplete;
-      expect(dropdown.open).toBe(true);
+      expect(dropdown.isOpen).toBe(true);
     });
 
     it('openDropdown() should not open when disabled', async () => {
@@ -149,27 +149,27 @@ describe('TDropdownLit', () => {
       await dropdown.updateComplete;
       dropdown.openDropdown();
       await dropdown.updateComplete;
-      expect(dropdown.open).toBe(false);
+      expect(dropdown.isOpen).toBe(false);
     });
 
     it('closeDropdown() should close dropdown', async () => {
-      dropdown.open = true;
+      dropdown.isOpen = true;
       await dropdown.updateComplete;
       dropdown.closeDropdown();
       await dropdown.updateComplete;
-      expect(dropdown.open).toBe(false);
+      expect(dropdown.isOpen).toBe(false);
     });
 
     it('toggle() should toggle open state', async () => {
-      expect(dropdown.open).toBe(false);
+      expect(dropdown.isOpen).toBe(false);
 
       dropdown.toggle();
       await dropdown.updateComplete;
-      expect(dropdown.open).toBe(true);
+      expect(dropdown.isOpen).toBe(true);
 
       dropdown.toggle();
       await dropdown.updateComplete;
-      expect(dropdown.open).toBe(false);
+      expect(dropdown.isOpen).toBe(false);
     });
 
     it('toggle() should not toggle when disabled', async () => {
@@ -177,7 +177,7 @@ describe('TDropdownLit', () => {
       await dropdown.updateComplete;
       dropdown.toggle();
       await dropdown.updateComplete;
-      expect(dropdown.open).toBe(false);
+      expect(dropdown.isOpen).toBe(false);
     });
 
     it('setOptions() should update options', async () => {
@@ -256,7 +256,7 @@ describe('TDropdownLit', () => {
         dropdown.addEventListener('dropdown-open', resolve, { once: true });
       });
 
-      dropdown.open = true;
+      dropdown.isOpen = true;
       await dropdown.updateComplete;
 
       const event = await eventPromise;
@@ -266,7 +266,7 @@ describe('TDropdownLit', () => {
     });
 
     it('should fire dropdown-close event when closed', async () => {
-      dropdown.open = true;
+      dropdown.isOpen = true;
       await dropdown.updateComplete;
 
       const eventPromise = new Promise(resolve => {
@@ -300,7 +300,7 @@ describe('TDropdownLit', () => {
       const openPromise = new Promise(resolve => {
         dropdown.addEventListener('dropdown-open', resolve, { once: true });
       });
-      dropdown.open = true;
+      dropdown.isOpen = true;
       await dropdown.updateComplete;
       const openEvent = await openPromise;
       expect(openEvent.bubbles).toBe(true);
@@ -387,7 +387,7 @@ describe('TDropdownLit', () => {
 
     it('should show search when searchable', async () => {
       dropdown.searchable = true;
-      dropdown.open = true;
+      dropdown.isOpen = true;
       await dropdown.updateComplete;
       const search = dropdown.shadowRoot.querySelector('.dropdown-search-wrapper');
       expect(search).toBeDefined();
@@ -395,7 +395,7 @@ describe('TDropdownLit', () => {
 
     it('should hide search when not searchable', async () => {
       dropdown.searchable = false;
-      dropdown.open = true;
+      dropdown.isOpen = true;
       await dropdown.updateComplete;
       const search = dropdown.shadowRoot.querySelector('.dropdown-search-wrapper');
       expect(search).toBeNull();
@@ -409,14 +409,14 @@ describe('TDropdownLit', () => {
     });
 
     it('should apply active class when open', async () => {
-      dropdown.open = true;
+      dropdown.isOpen = true;
       await dropdown.updateComplete;
       const button = dropdown.shadowRoot.querySelector('.nested-dropdown-button');
       expect(button.classList.contains('active')).toBe(true);
     });
 
     it('should hide panel when not open', async () => {
-      dropdown.open = false;
+      dropdown.isOpen = false;
       await dropdown.updateComplete;
       const panel = dropdown.shadowRoot.querySelector('.nested-dropdown-panel');
       expect(panel.classList.contains('hidden')).toBe(true);
@@ -432,7 +432,7 @@ describe('TDropdownLit', () => {
         files: []
       };
       dropdown.loadData(data);
-      dropdown.open = true;
+      dropdown.isOpen = true;
       await dropdown.updateComplete;
 
       const folder = dropdown.shadowRoot.querySelector('.tree-folder');
@@ -445,7 +445,7 @@ describe('TDropdownLit', () => {
         files: ['test1.riv', 'test2.riv']
       };
       dropdown.loadData(data);
-      dropdown.open = true;
+      dropdown.isOpen = true;
       await dropdown.updateComplete;
 
       const files = dropdown.shadowRoot.querySelectorAll('.tree-file');
@@ -456,7 +456,7 @@ describe('TDropdownLit', () => {
       const data = { files: ['test.riv'] };
       dropdown.loadData(data);
       dropdown.showIcons = true;
-      dropdown.open = true;
+      dropdown.isOpen = true;
       await dropdown.updateComplete;
 
       const fileIcon = dropdown.shadowRoot.querySelector('.file-icon');
@@ -467,7 +467,7 @@ describe('TDropdownLit', () => {
       const data = { files: ['test.riv'] };
       dropdown.loadData(data);
       dropdown.showIcons = false;
-      dropdown.open = true;
+      dropdown.isOpen = true;
       await dropdown.updateComplete;
 
       const fileIcon = dropdown.shadowRoot.querySelector('.file-icon');
@@ -565,7 +565,7 @@ describe('TDropdownLit', () => {
       };
       dropdown.loadData(data);
       dropdown.searchable = true;
-      dropdown.open = true;
+      dropdown.isOpen = true;
       dropdown._searchTerm = 'animation';
       await dropdown.updateComplete;
 
@@ -579,7 +579,7 @@ describe('TDropdownLit', () => {
       };
       dropdown.loadData(data);
       dropdown.searchable = true;
-      dropdown.open = true;
+      dropdown.isOpen = true;
       dropdown._searchTerm = 'nonexistent';
       await dropdown.updateComplete;
 
@@ -590,7 +590,7 @@ describe('TDropdownLit', () => {
 
     it('should clear search on close', async () => {
       dropdown.searchable = true;
-      dropdown.open = true;
+      dropdown.isOpen = true;
       dropdown._searchTerm = 'test';
       await dropdown.updateComplete;
 
@@ -611,7 +611,7 @@ describe('TDropdownLit', () => {
         }
       };
       dropdown.loadData(data);
-      dropdown.open = true;
+      dropdown.isOpen = true;
       await dropdown.updateComplete;
 
       expect(dropdown._folderStates['TestFolder']).toBeFalsy();
