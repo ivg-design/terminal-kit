@@ -1,10 +1,30 @@
 import { LitElement, html, css } from 'lit';
+import componentLogger from '../utils/ComponentLogger.js';
 
 /**
- * Terminal Button Component - Built with Lit
- * Zero FOUC, fully encapsulated styles, reactive properties
+ * @component TButtonLit
+ * @tagname t-btn
+ * @description Terminal-styled button component with variants, loading states, and toggle functionality. Supports multiple button types (text, icon, icon-text), sizes, variants, and includes built-in loading indicators.
+ * @category Form Controls
+ * @since 1.0.0
+ * @example
+ * <t-btn variant="primary">Click Me</t-btn>
+ * @example
+ * <t-btn variant="toggle" icon-on="✓" icon-off="✗">Toggle</t-btn>
+ * @example
+ * <t-btn type="icon" icon="★" size="large"></t-btn>
  */
 export class TButton extends LitElement {
+  // ============================================================
+  // BLOCK 1: STATIC METADATA
+  // ============================================================
+  static tagName = 't-btn';
+  static version = '1.0.0';
+  static category = 'Form Controls';
+
+  // ============================================================
+  // BLOCK 2: STATIC STYLES
+  // ============================================================
   static styles = css`
     :host {
       --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
@@ -19,19 +39,13 @@ export class TButton extends LitElement {
       --spacing-sm: 8px;
       --font-size-sm: 11px;
     }
-    /* ========================================
-       HOST ELEMENT STYLES
-       ======================================== */
     :host {
-      /* Component inherits CSS variables from page design system */
       display: inline-flex;
       vertical-align: middle;
       height: 28px;
       line-height: 28px;
-      /* Default toggle colors */
       --toggle-color-off: var(--terminal-green-dim, #00cc33);
       --toggle-color-on: var(--terminal-green, #00ff41);
-      /* Default backgrounds/shadows based on green */
       --toggle-bg-hover-off: rgba(0, 255, 65, 0.1);
       --toggle-bg-on: rgba(0, 255, 65, 0.2);
       --toggle-bg-hover-on: rgba(0, 255, 65, 0.3);
@@ -56,9 +70,6 @@ export class TButton extends LitElement {
       line-height: 36px;
     }
 
-    /* ========================================
-       BASE BUTTON
-       ======================================== */
     .t-btn {
       height: 100%;
       width: 100%;
@@ -101,9 +112,6 @@ export class TButton extends LitElement {
       cursor: not-allowed;
     }
 
-    /* ========================================
-       BUTTON VARIANTS
-       ======================================== */
     .t-btn--primary {
       border-color: var(--terminal-green, #00ff41);
     }
@@ -177,9 +185,6 @@ export class TButton extends LitElement {
       border-color: var(--terminal-green, #00ff41);
     }
 
-    /* ========================================
-       BUTTON TYPES
-       ======================================== */
     .t-btn--icon-text {
       padding: 0 var(--spacing-md);
     }
@@ -207,9 +212,6 @@ export class TButton extends LitElement {
       padding: 0;
     }
 
-    /* ========================================
-       BUTTON SIZES
-       ======================================== */
     .t-btn--xs {
       height: 100%;
       min-width: 16px;
@@ -225,7 +227,6 @@ export class TButton extends LitElement {
       color: var(--terminal-green-bright, #00ff66);
     }
 
-    /* XS buttons can only be icon-only */
     .t-btn--xs .t-btn__text {
       display: none;
     }
@@ -245,13 +246,9 @@ export class TButton extends LitElement {
       font-size: 13px;
     }
 
-    /* ========================================
-       LOADING STATE
-       ======================================== */
     .t-btn.is-loading {
       pointer-events: none;
       position: relative;
-      /* Maintain full visibility during loading */
       opacity: 1 !important;
       color: var(--terminal-green, #00ff41) !important;
     }
@@ -260,14 +257,10 @@ export class TButton extends LitElement {
       border-color: var(--terminal-green, #00ff41) !important;
     }
 
-    /* ========================================
-       TOGGLE BUTTON
-       ======================================== */
     .t-btn--toggle {
       transition: all 0.3s ease;
     }
 
-    /* Primary toggle (clean like primary button) */
     .t-btn--toggle.t-btn--primary.is-off {
       color: var(--terminal-green, #00ff41);
       border-color: var(--terminal-green, #00ff41);
@@ -275,7 +268,6 @@ export class TButton extends LitElement {
     }
 
     .t-btn--toggle.t-btn--primary.is-off:hover:not(:disabled) {
-      /* Like primary button hover */
       background: var(--terminal-green-dark, #008820);
       color: white;
       border-color: var(--terminal-green, #00ff41);
@@ -290,14 +282,12 @@ export class TButton extends LitElement {
     }
 
     .t-btn--toggle.t-btn--primary.is-on:hover:not(:disabled) {
-      /* Darker green on hover when ON */
       color: white;
       border-color: var(--terminal-green-bright, #00ff66);
       background: #006618;
       box-shadow: none;
     }
 
-    /* Secondary toggle (subtle theme like secondary button) */
     .t-btn--toggle.t-btn--secondary.is-off {
       color: var(--terminal-green, #00ff41);
       border-color: var(--terminal-green-dark, #009929);
@@ -305,7 +295,6 @@ export class TButton extends LitElement {
     }
 
     .t-btn--toggle.t-btn--secondary.is-off:hover:not(:disabled) {
-      /* Like secondary button hover */
       background: transparent;
       color: white;
       border-color: var(--terminal-green, #00ff41);
@@ -322,7 +311,6 @@ export class TButton extends LitElement {
     }
 
     .t-btn--toggle.t-btn--secondary.is-on:hover:not(:disabled) {
-      /* Stronger glow when ON and hovering */
       color: white;
       border-color: var(--terminal-green-bright, #00ff66);
       background: transparent;
@@ -330,7 +318,6 @@ export class TButton extends LitElement {
                   inset 0 0 30px var(--terminal-green-glow, rgba(0, 255, 65, 0.2));
     }
 
-    /* Custom color toggle (solid colors, no blur) */
     .t-btn--toggle.t-btn--custom.is-off {
       color: var(--toggle-color-off);
       border-color: var(--toggle-color-off);
@@ -338,7 +325,6 @@ export class TButton extends LitElement {
     }
 
     .t-btn--toggle.t-btn--custom.is-off:hover:not(:disabled) {
-      /* Use black text on light backgrounds like yellow */
       color: var(--toggle-text-hover-off, black);
       border-color: var(--toggle-color-off);
       background: var(--toggle-color-off);
@@ -359,16 +345,12 @@ export class TButton extends LitElement {
       box-shadow: 0 0 5px var(--toggle-shadow-hover-on);
     }
 
-    /* ========================================
-       BUTTON PARTS
-       ======================================== */
     svg {
       fill: currentColor;
       width: 18px;
       height: 18px;
       flex-shrink: 0;
       display: block;
-      /* Ensure perfect icon centering */
       vertical-align: middle;
     }
 
@@ -395,22 +377,18 @@ export class TButton extends LitElement {
       vertical-align: middle;
     }
 
-    /* Icon container styling for perfect centering */
     .t-btn span:first-child:has(svg) {
       display: inline-flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* Icon toggle states - Primary variant */
-    /* OFF state: Filled button with icon cutout */
     .t-btn--toggle.t-btn--primary.t-btn--icon.is-off {
       background: var(--terminal-green, #00ff41);
       border-color: var(--terminal-green, #00ff41);
     }
 
     .t-btn--toggle.t-btn--primary.t-btn--icon.is-off svg {
-      /* Icon cutout effect - shows dark background through */
       fill: var(--terminal-black, #0a0a0a);
     }
 
@@ -423,7 +401,6 @@ export class TButton extends LitElement {
       fill: var(--terminal-black, #0a0a0a);
     }
 
-    /* ON state: Outlined button with filled green icon */
     .t-btn--toggle.t-btn--primary.t-btn--icon.is-on {
       background: transparent;
       border-color: var(--terminal-green, #00ff41);
@@ -442,8 +419,6 @@ export class TButton extends LitElement {
       fill: white;
     }
 
-    /* Icon toggle states - Secondary variant */
-    /* OFF state: Filled button with icon cutout and glow */
     .t-btn--toggle.t-btn--secondary.t-btn--icon.is-off {
       background: var(--terminal-green, #00ff41);
       border-color: var(--terminal-green, #00ff41);
@@ -451,7 +426,6 @@ export class TButton extends LitElement {
     }
 
     .t-btn--toggle.t-btn--secondary.t-btn--icon.is-off svg {
-      /* Icon cutout effect */
       fill: var(--terminal-black, #0a0a0a);
     }
 
@@ -465,7 +439,6 @@ export class TButton extends LitElement {
       fill: var(--terminal-black, #0a0a0a);
     }
 
-    /* ON state: Outlined button with filled green icon */
     .t-btn--toggle.t-btn--secondary.t-btn--icon.is-on {
       background: transparent;
       border-color: var(--terminal-green-dark, #009929);
@@ -486,9 +459,6 @@ export class TButton extends LitElement {
       fill: white;
     }
 
-    /* ========================================
-       LOADER ANIMATIONS
-       ======================================== */
     .btn-loader {
       display: inline-flex;
       align-items: center;
@@ -604,16 +574,131 @@ export class TButton extends LitElement {
     }
   `;
 
+  // ============================================================
+  // BLOCK 3: REACTIVE PROPERTIES
+  // ============================================================
+
+  /**
+   * @property {('primary'|'secondary'|'danger'|'success'|'warning'|'info'|'toggle')} variant - Button visual variant
+   * @default 'primary'
+   * @attribute variant
+   * @reflects true
+   * @example
+   * <t-btn variant="danger">Delete</t-btn>
+   */
+  /**
+   * @property {('text'|'icon'|'icon-text')} type - Button content type
+   * @default 'text'
+   * @attribute type
+   * @reflects true
+   * @example
+   * <t-btn type="icon" icon="★"></t-btn>
+   */
+  /**
+   * @property {string} size - Button size (xs, small, medium, large, or empty string for default)
+   * @default ''
+   * @attribute size
+   * @reflects true
+   * @example
+   * <t-btn size="large">Big Button</t-btn>
+   */
+  /**
+   * @property {boolean} disabled - Disable button interactions
+   * @default false
+   * @attribute disabled
+   * @reflects true
+   * @example
+   * <t-btn disabled>Can't Click</t-btn>
+   */
+  /**
+   * @property {string} icon - SVG icon content for the button
+   * @default ''
+   * @attribute icon
+   * @example
+   * <t-btn icon="<svg>...</svg>">Button</t-btn>
+   */
+  /**
+   * @property {boolean} loading - Show loading indicator
+   * @default false
+   * @attribute loading
+   * @reflects true
+   * @example
+   * <t-btn loading>Processing...</t-btn>
+   */
+  /**
+   * @property {('spinner'|'dots'|'bars')} loaderType - Type of loading indicator
+   * @default 'spinner'
+   * @attribute loader-type
+   * @example
+   * <t-btn loading loader-type="dots">Loading</t-btn>
+   */
+  /**
+   * @property {string} loaderColor - Custom color for loader (CSS color value)
+   * @default ''
+   * @attribute loader-color
+   * @example
+   * <t-btn loading loader-color="#ff0000">Loading</t-btn>
+   */
+  /**
+   * @property {boolean} toggleState - Current state for toggle variant
+   * @default false
+   * @attribute toggle-state
+   * @reflects true
+   * @example
+   * <t-btn variant="toggle" toggle-state="true">On</t-btn>
+   */
+  /**
+   * @property {string} iconOn - Icon to show when toggle is ON
+   * @default ''
+   * @attribute icon-on
+   * @example
+   * <t-btn variant="toggle" icon-on="✓" icon-off="✗">Toggle</t-btn>
+   */
+  /**
+   * @property {string} iconOff - Icon to show when toggle is OFF
+   * @default ''
+   * @attribute icon-off
+   * @example
+   * <t-btn variant="toggle" icon-on="✓" icon-off="✗">Toggle</t-btn>
+   */
+  /**
+   * @property {string} colorOn - Custom color when toggle is ON
+   * @default ''
+   * @attribute color-on
+   * @example
+   * <t-btn variant="toggle" color-on="#00ff00" color-off="#ff0000">Toggle</t-btn>
+   */
+  /**
+   * @property {string} colorOff - Custom color when toggle is OFF
+   * @default ''
+   * @attribute color-off
+   * @example
+   * <t-btn variant="toggle" color-on="#00ff00" color-off="#ff0000">Toggle</t-btn>
+   */
+  /**
+   * @property {string} textOn - Text to show when toggle is ON
+   * @default ''
+   * @attribute text-on
+   * @example
+   * <t-btn variant="toggle" text-on="Enabled" text-off="Disabled">Toggle</t-btn>
+   */
+  /**
+   * @property {string} textOff - Text to show when toggle is OFF
+   * @default ''
+   * @attribute text-off
+   * @example
+   * <t-btn variant="toggle" text-on="Enabled" text-off="Disabled">Toggle</t-btn>
+   */
   static properties = {
-    variant: { type: String },
-    type: { type: String },
-    size: { type: String },
-    disabled: { type: Boolean },
+    variant: { type: String, reflect: true },
+    type: { type: String, reflect: true },
+    size: { type: String, reflect: true },
+    disabled: { type: Boolean, reflect: true },
     icon: { type: String },
-    loading: { type: Boolean },
+    loading: { type: Boolean, reflect: true },
     loaderType: { type: String, attribute: 'loader-type' },
     loaderColor: { type: String, attribute: 'loader-color' },
-    toggleState: { type: Boolean, attribute: 'toggle-state' },
+    toggleState: { type: Boolean, attribute: 'toggle-state', reflect: true },
     iconOn: { type: String, attribute: 'icon-on' },
     iconOff: { type: String, attribute: 'icon-off' },
     colorOn: { type: String, attribute: 'color-on' },
@@ -622,10 +707,53 @@ export class TButton extends LitElement {
     textOff: { type: String, attribute: 'text-off' }
   };
 
+  // ============================================================
+  // BLOCK 4: INTERNAL STATE
+  // ============================================================
+
+  /**
+   * @private
+   * @type {string}
+   */
+  _icon = '';
+
+  /**
+   * @private
+   * @type {string|null}
+   */
+  _fixedWidth = null;
+
+  /**
+   * @private
+   * @type {string|null}
+   */
+  _originalContent = null;
+
+  /**
+   * @private
+   * @type {string|null}
+   */
+  _preLoadingWidth = null;
+
+  // ============================================================
+  // BLOCK 5: LOGGER INSTANCE
+  // ============================================================
+
+  /**
+   * @private
+   * @type {Object}
+   */
+  _logger = componentLogger.for('TButton');
+
+  // ============================================================
+  // BLOCK 6: CONSTRUCTOR
+  // ============================================================
+
   constructor() {
     super();
 
-    // Initialize properties
+    this._logger.debug('Component constructed');
+
     this.variant = 'primary';
     this.type = 'text';
     this.size = 'default';
@@ -641,140 +769,82 @@ export class TButton extends LitElement {
     this.colorOff = '';
     this.textOn = '';
     this.textOff = '';
-
-    // Internal state
-    this._icon = '';
-    this._fixedWidth = null;
-    this._originalContent = null;
-    this._preLoadingWidth = null;
   }
 
+  // ============================================================
+  // BLOCK 7: LIFECYCLE METHODS
+  // ============================================================
+
+  /**
+   * Called when component is connected to DOM
+   * @lifecycle
+   */
   connectedCallback() {
     super.connectedCallback();
-    // Set initial icon if provided
+    this._logger.info('Connected to DOM');
+
     if (this.icon) {
       this._icon = this.icon;
     }
-    // Apply custom colors if provided
     this._applyCustomColors();
-    // Calculate fixed width immediately for toggle buttons
     this._updateFixedWidth();
   }
 
-  _applyCustomColors() {
-    // Apply OFF state colors
-    if (this.colorOff) {
-      this.style.setProperty('--toggle-color-off', this.colorOff);
-      // Set OFF state backgrounds based on colorOff
-      const colorOffRgb = this._hexToRgb(this.colorOff);
-      if (colorOffRgb) {
-        // Determine text color for hover based on brightness
-        const brightness = (colorOffRgb.r * 299 + colorOffRgb.g * 587 + colorOffRgb.b * 114) / 1000;
-        this.style.setProperty('--toggle-text-hover-off', brightness > 128 ? 'black' : 'white');
-        this.style.setProperty('--toggle-bg-hover-off', `rgba(${colorOffRgb.r}, ${colorOffRgb.g}, ${colorOffRgb.b}, 0.2)`);
-        this.style.setProperty('--toggle-shadow-off', `rgba(${colorOffRgb.r}, ${colorOffRgb.g}, ${colorOffRgb.b}, 0.3)`);
-      }
-    }
-
-    // Apply ON state colors
-    if (this.colorOn) {
-      this.style.setProperty('--toggle-color-on', this.colorOn);
-      // Set ON state backgrounds based on colorOn
-      const colorOnRgb = this._hexToRgb(this.colorOn);
-      if (colorOnRgb) {
-        this.style.setProperty('--toggle-bg-on', `rgba(${colorOnRgb.r}, ${colorOnRgb.g}, ${colorOnRgb.b}, 0.2)`);
-        this.style.setProperty('--toggle-bg-hover-on', `rgba(${colorOnRgb.r}, ${colorOnRgb.g}, ${colorOnRgb.b}, 0.3)`);
-        this.style.setProperty('--toggle-shadow-on', `rgba(${colorOnRgb.r}, ${colorOnRgb.g}, ${colorOnRgb.b}, 0.3)`);
-        this.style.setProperty('--toggle-shadow-hover-on', `rgba(${colorOnRgb.r}, ${colorOnRgb.g}, ${colorOnRgb.b}, 0.5)`);
-      }
-    }
+  /**
+   * Called when component is disconnected from DOM
+   * @lifecycle
+   */
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._logger.info('Disconnected from DOM');
   }
 
-  _hexToRgb(hex) {
-    // Convert hex color to RGB
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
+  /**
+   * Called after first render
+   * @lifecycle
+   * @param {Map} changedProperties
+   */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+    this._logger.debug('First update complete', { changedProperties });
   }
 
-  _calculateMaxTextWidth() {
-    // Only calculate for toggle buttons with text variations
-    if (this.variant !== 'toggle' || !this.textOn || !this.textOff) {
-      return null;
-    }
-
-    // Create a temporary element to measure text
-    const measurer = document.createElement('span');
-    measurer.style.cssText = `
-      position: absolute;
-      visibility: hidden;
-      white-space: nowrap;
-      font-family: var(--font-mono, 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace);
-      font-size: ${this.size === 'large' || this.size === 'lg' ? '13px' :
-                   this.size === 'small' || this.size === 'sm' ? '10px' : '11px'};
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 0 var(--spacing-md, 12px);
-    `;
-    document.body.appendChild(measurer);
-
-    // Measure both texts
-    measurer.textContent = this.textOff;
-    const offWidth = measurer.offsetWidth;
-
-    measurer.textContent = this.textOn;
-    const onWidth = measurer.offsetWidth;
-
-    document.body.removeChild(measurer);
-
-    // Add padding for button borders and internal spacing
-    const padding = this.size === 'large' || this.size === 'lg' ? 40 :
-                    this.size === 'small' || this.size === 'sm' ? 16 : 24;
-
-    return Math.max(offWidth, onWidth) + padding;
-  }
-
-  _updateFixedWidth() {
-    // For toggle buttons with text
-    if (this.variant === 'toggle' && (this.textOn || this.textOff)) {
-      const maxWidth = this._calculateMaxTextWidth();
-      if (maxWidth) {
-        this._fixedWidth = `${maxWidth}px`;
-      }
-    }
-  }
-
-
+  /**
+   * Called before component updates
+   * @lifecycle
+   * @param {Map} changedProperties
+   */
   willUpdate(changedProperties) {
-    // Capture width BEFORE loading state changes the render
     if (changedProperties.has('loading')) {
       const wasLoading = changedProperties.get('loading');
 
-      // About to enter loading state - capture current width
       if (this.loading && !wasLoading && this.variant !== 'toggle') {
         const button = this.shadowRoot?.querySelector('.t-btn');
         if (button) {
           this._fixedWidth = `${button.offsetWidth}px`;
         }
       }
-      // About to exit loading state - clear width
       else if (!this.loading && wasLoading && this.variant !== 'toggle') {
         this._fixedWidth = null;
       }
     }
   }
 
+  /**
+   * Called after component updates
+   * @lifecycle
+   * @param {Map} changedProperties
+   */
   updated(changedProperties) {
-    // Recalculate fixed width when relevant properties change
+    this._logger.trace('Updated', {
+      changedProperties: Array.from(changedProperties.keys())
+    });
+
     if (changedProperties.has('variant') || changedProperties.has('textOn') ||
         changedProperties.has('textOff') || changedProperties.has('size')) {
       this._updateFixedWidth();
     }
 
-    // Handle toggle color updates with proper fallbacks
     if (changedProperties.has('colorOn') || changedProperties.has('colorOff')) {
       if (!this.colorOff) {
         this.style.removeProperty('--toggle-color-off');
@@ -791,10 +861,8 @@ export class TButton extends LitElement {
       }
     }
 
-    // Handle toggle icon updates
     if (this.variant === 'toggle') {
       if (changedProperties.has('toggleState') || changedProperties.has('iconOn') || changedProperties.has('iconOff')) {
-        // Update icon based on toggle state
         if (this.iconOn && this.iconOff) {
           const newIcon = this.toggleState ? this.iconOn : this.iconOff;
           if (this._icon !== newIcon) {
@@ -806,10 +874,163 @@ export class TButton extends LitElement {
     }
   }
 
+  // ============================================================
+  // BLOCK 8: PUBLIC API METHODS
+  // ============================================================
+
+  /**
+   * Programmatically click the button
+   * @public
+   * @returns {void}
+   * @fires TButton#button-click
+   * @example
+   * button.click();
+   */
+  click() {
+    this._logger.debug('click called');
+    const btn = this.shadowRoot.querySelector('.t-btn');
+    if (btn && !this.disabled && !this.loading) {
+      btn.click();
+    }
+  }
+
+  /**
+   * Focus the button
+   * @public
+   * @returns {void}
+   * @example
+   * button.focus();
+   */
+  focus() {
+    this._logger.debug('focus called');
+    const btn = this.shadowRoot.querySelector('.t-btn');
+    if (btn) {
+      btn.focus();
+    }
+  }
+
+  /**
+   * Blur the button
+   * @public
+   * @returns {void}
+   * @example
+   * button.blur();
+   */
+  blur() {
+    this._logger.debug('blur called');
+    const btn = this.shadowRoot.querySelector('.t-btn');
+    if (btn) {
+      btn.blur();
+    }
+  }
+
+  /**
+   * Set the button icon
+   * @public
+   * @param {string} iconSvg - SVG icon markup
+   * @returns {void}
+   * @example
+   * button.setIcon('<svg>...</svg>');
+   */
+  setIcon(iconSvg) {
+    this._logger.debug('setIcon called', { iconSvg });
+    this._icon = iconSvg;
+    this.requestUpdate();
+  }
+
+  /**
+   * Set the button text
+   * @public
+   * @param {string} text - Button text content
+   * @returns {void}
+   * @example
+   * button.setText('New Text');
+   */
+  setText(text) {
+    this._logger.debug('setText called', { text });
+    this.innerHTML = text;
+  }
+
+  /**
+   * Set the loading state
+   * @public
+   * @param {boolean} loading - Loading state
+   * @returns {void}
+   * @example
+   * button.setLoading(true);
+   */
+  setLoading(loading) {
+    this._logger.debug('setLoading called', { loading });
+    if (!this.loading && loading && this.variant !== 'toggle') {
+      const button = this.shadowRoot?.querySelector('.t-btn');
+      if (button) {
+        this._preLoadingWidth = button.getBoundingClientRect().width;
+      }
+    }
+    this.loading = loading;
+  }
+
+  // ============================================================
+  // BLOCK 9: EVENT EMITTERS
+  // ============================================================
+
+  /**
+   * Emit custom event
+   * @private
+   * @param {string} name - Event name
+   * @param {Object} detail - Event detail object
+   * @returns {void}
+   */
+  _emitEvent(name, detail = {}) {
+    this._logger.debug('Emitting event', { name, detail });
+    const event = new CustomEvent(name, {
+      detail,
+      bubbles: true,
+      composed: true
+    });
+    this.dispatchEvent(event);
+  }
+
+  /**
+   * @event TButton#button-click
+   * @type {CustomEvent<{button: HTMLElement}>}
+   * @description Fired when button is clicked
+   * @property {HTMLElement} detail.button - Button element that was clicked
+   * @bubbles true
+   * @composed true
+   * @example
+   * button.addEventListener('button-click', (e) => {
+   *   console.log('Clicked:', e.detail.button);
+   * });
+   */
+
+  /**
+   * @event TButton#toggle-change
+   * @type {CustomEvent<{state: boolean}>}
+   * @description Fired when toggle state changes
+   * @property {boolean} detail.state - New toggle state
+   * @bubbles true
+   * @composed true
+   * @example
+   * button.addEventListener('toggle-change', (e) => {
+   *   console.log('Toggle state:', e.detail.state);
+   * });
+   */
+
+  // ============================================================
+  // BLOCK 12: RENDER METHOD
+  // ============================================================
+
+  /**
+   * Render component template
+   * @returns {TemplateResult}
+   * @slot - Default slot for button text content
+   */
   render() {
+    this._logger.trace('Rendering');
+
     const classes = this._getButtonClasses();
 
-    // Apply fixed width inline for consistent sizing
     const buttonStyles = {};
     if (this._fixedWidth) {
       buttonStyles.minWidth = this._fixedWidth;
@@ -828,36 +1049,124 @@ export class TButton extends LitElement {
     `;
   }
 
+  // ============================================================
+  // BLOCK 13: PRIVATE HELPERS
+  // ============================================================
+
+  /**
+   * @private
+   */
+  _applyCustomColors() {
+    if (this.colorOff) {
+      this.style.setProperty('--toggle-color-off', this.colorOff);
+      const colorOffRgb = this._hexToRgb(this.colorOff);
+      if (colorOffRgb) {
+        const brightness = (colorOffRgb.r * 299 + colorOffRgb.g * 587 + colorOffRgb.b * 114) / 1000;
+        this.style.setProperty('--toggle-text-hover-off', brightness > 128 ? 'black' : 'white');
+        this.style.setProperty('--toggle-bg-hover-off', `rgba(${colorOffRgb.r}, ${colorOffRgb.g}, ${colorOffRgb.b}, 0.2)`);
+        this.style.setProperty('--toggle-shadow-off', `rgba(${colorOffRgb.r}, ${colorOffRgb.g}, ${colorOffRgb.b}, 0.3)`);
+      }
+    }
+
+    if (this.colorOn) {
+      this.style.setProperty('--toggle-color-on', this.colorOn);
+      const colorOnRgb = this._hexToRgb(this.colorOn);
+      if (colorOnRgb) {
+        this.style.setProperty('--toggle-bg-on', `rgba(${colorOnRgb.r}, ${colorOnRgb.g}, ${colorOnRgb.b}, 0.2)`);
+        this.style.setProperty('--toggle-bg-hover-on', `rgba(${colorOnRgb.r}, ${colorOnRgb.g}, ${colorOnRgb.b}, 0.3)`);
+        this.style.setProperty('--toggle-shadow-on', `rgba(${colorOnRgb.r}, ${colorOnRgb.g}, ${colorOnRgb.b}, 0.3)`);
+        this.style.setProperty('--toggle-shadow-hover-on', `rgba(${colorOnRgb.r}, ${colorOnRgb.g}, ${colorOnRgb.b}, 0.5)`);
+      }
+    }
+  }
+
+  /**
+   * @private
+   */
+  _hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
+  }
+
+  /**
+   * @private
+   */
+  _calculateMaxTextWidth() {
+    if (this.variant !== 'toggle' || !this.textOn || !this.textOff) {
+      return null;
+    }
+
+    const measurer = document.createElement('span');
+    measurer.style.cssText = `
+      position: absolute;
+      visibility: hidden;
+      white-space: nowrap;
+      font-family: var(--font-mono, 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace);
+      font-size: ${this.size === 'large' || this.size === 'lg' ? '13px' :
+                   this.size === 'small' || this.size === 'sm' ? '10px' : '11px'};
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 var(--spacing-md, 12px);
+    `;
+    document.body.appendChild(measurer);
+
+    measurer.textContent = this.textOff;
+    const offWidth = measurer.offsetWidth;
+
+    measurer.textContent = this.textOn;
+    const onWidth = measurer.offsetWidth;
+
+    document.body.removeChild(measurer);
+
+    const padding = this.size === 'large' || this.size === 'lg' ? 40 :
+                    this.size === 'small' || this.size === 'sm' ? 16 : 24;
+
+    return Math.max(offWidth, onWidth) + padding;
+  }
+
+  /**
+   * @private
+   */
+  _updateFixedWidth() {
+    if (this.variant === 'toggle' && (this.textOn || this.textOff)) {
+      const maxWidth = this._calculateMaxTextWidth();
+      if (maxWidth) {
+        this._fixedWidth = `${maxWidth}px`;
+      }
+    }
+  }
+
+  /**
+   * @private
+   */
   _getButtonClasses() {
     const classes = ['t-btn'];
 
-    // Add variant class
     if (this.variant) {
       classes.push(`t-btn--${this.variant}`);
 
-      // For toggles, add variant-specific class or custom class
       if (this.variant === 'toggle') {
         if (this.colorOn || this.colorOff) {
           classes.push('t-btn--custom');
         } else {
-          // Default to primary if no variant specified
           const toggleVariant = this.getAttribute('toggle-variant') || 'primary';
           classes.push(`t-btn--${toggleVariant}`);
         }
       }
     }
 
-    // Add type class
     if (this.type) {
       classes.push(`t-btn--${this.type}`);
     }
 
-    // Add size class
     if (this.size && this.size !== 'default') {
       classes.push(`t-btn--${this.size}`);
     }
 
-    // Add state classes
     if (this.loading) {
       classes.push('is-loading');
     }
@@ -869,18 +1178,18 @@ export class TButton extends LitElement {
     return classes.join(' ');
   }
 
+  /**
+   * @private
+   */
   _renderContent() {
-    // For XS size, always render as icon-only if icon is present
     if (this.size === 'xs' && this._icon) {
       return html`<span .innerHTML=${this._icon}></span>`;
     }
 
-    // Icon only button
     if (this.type === 'icon' && this._icon) {
       return html`<span .innerHTML=${this._icon}></span>`;
     }
 
-    // Icon + text button
     if (this.type === 'icon-text' && this._icon) {
       return html`
         <span .innerHTML=${this._icon}></span>
@@ -888,26 +1197,28 @@ export class TButton extends LitElement {
       `;
     }
 
-    // Toggle button with icon switching
     if (this.variant === 'toggle' && this._icon && this.type === 'icon') {
       return html`<span .innerHTML=${this._icon}></span>`;
     }
 
-    // Text only button (default)
     return html`${this._getToggleText()}`;
   }
 
+  /**
+   * @private
+   */
   _getToggleText() {
-    // For toggle buttons with text-on/text-off, change text based on state
     if (this.variant === 'toggle' && (this.textOn || this.textOff)) {
       return this.toggleState
         ? (this.textOn || html`<slot></slot>`)
         : (this.textOff || html`<slot></slot>`);
     }
-    // Default to slot content
     return html`<slot></slot>`;
   }
 
+  /**
+   * @private
+   */
   _renderLoader() {
     switch (this.loaderType) {
       case 'dots':
@@ -934,48 +1245,26 @@ export class TButton extends LitElement {
     }
   }
 
+  /**
+   * @private
+   */
   _handleClick(e) {
     if (this.disabled || this.loading) {
       e.preventDefault();
       return;
     }
 
-    // Handle toggle state
+    this._logger.debug('Button clicked');
+
+    this._emitEvent('button-click', { button: e.target });
+
     if (this.variant === 'toggle') {
       this.toggleState = !this.toggleState;
-      this.dispatchEvent(new CustomEvent('toggle-change', {
-        detail: { state: this.toggleState },
-        bubbles: true,
-        composed: true
-      }));
+      this._emitEvent('toggle-change', { state: this.toggleState });
     }
-  }
-
-  // Public API methods for compatibility with existing code
-  setIcon(iconSvg) {
-    this._icon = iconSvg;
-    this.requestUpdate();
-  }
-
-  setText(text) {
-    // Update the slot content
-    this.innerHTML = text;
-  }
-
-  setLoading(loading) {
-    // Capture width before changing loading state
-    if (!this.loading && loading && this.variant !== 'toggle') {
-      const button = this.shadowRoot?.querySelector('.t-btn');
-      if (button) {
-        this._preLoadingWidth = button.getBoundingClientRect().width;
-      }
-    }
-    this.loading = loading;
   }
 }
 
-// Register the custom element
 customElements.define('t-btn', TButton);
 
-// Export for use
 export default TButton;
