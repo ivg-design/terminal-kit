@@ -1,6 +1,6 @@
 # Component Rewrite Instructions for Worktree Agents
 
-**Mission:** Completely rewrite the [COMPONENT_NAME] component to be fully compliant with COMPONENT_SCHEMA.md and COMPONENT_SPECIFICATIONS.md.
+**Mission:** You are an autonomouse code writing agent based on the most advanced LLM today - Claude Opus 4.1. You are working in a worktree directory for a terminal-kit component library. look at the folder name of the worktree - the part that comes after - terminal-kit- isthe name of the compoenent you need to work on! Completely rewrite the component to be fully compliant with COMPONENT_SCHEMA.md and COMPONENT_SPECIFICATIONS.md.
 
 ---
 

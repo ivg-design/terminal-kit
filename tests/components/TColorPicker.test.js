@@ -67,9 +67,9 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
     });
 
     it('should update variant property', async () => {
-      element.variant = 'minimal';
+      element.variant = 'compact';
       await element.updateComplete;
-      expect(element.variant).toBe('minimal');
+      expect(element.variant).toBe('compact');
     });
 
     it('should update label properties', async () => {
@@ -81,9 +81,9 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
     });
 
     it('should reflect variant attribute', async () => {
-      element.variant = 'minimal';
+      element.variant = 'compact';
       await element.updateComplete;
-      expect(element.getAttribute('variant')).toBe('minimal');
+      expect(element.getAttribute('variant')).toBe('compact');
     });
 
     it('should reflect disabled attribute', async () => {
@@ -109,10 +109,10 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
     });
 
     it('should render with correct variant class', async () => {
-      element.variant = 'minimal';
+      element.variant = 'compact';
       await element.updateComplete;
       const wrapper = element.shadowRoot.querySelector('.color-picker-wrapper');
-      expect(wrapper.classList.contains('minimal')).toBe(true);
+      expect(wrapper.classList.contains('compact')).toBe(true);
     });
 
     it('should render disabled state', async () => {
@@ -214,12 +214,34 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
     });
 
     it('should handle variant validation', async () => {
-      const validVariants = ['large', 'minimal'];
+      const validVariants = ['large', 'standard', 'compact'];
       for (const variant of validVariants) {
         element.variant = variant;
         await element.updateComplete;
         expect(element.variant).toBe(variant);
       }
+    });
+
+    it('should validate variant property', () => {
+      const validation = TColorPicker.getPropertyValidation('variant');
+      expect(validation).toBeDefined();
+      expect(validation.validate('large').valid).toBe(true);
+      expect(validation.validate('standard').valid).toBe(true);
+      expect(validation.validate('compact').valid).toBe(true);
+      expect(validation.validate('invalid').valid).toBe(false);
+    });
+
+    it('should validate value property', () => {
+      const validation = TColorPicker.getPropertyValidation('value');
+      expect(validation).toBeDefined();
+      expect(validation.validate('#ff0000').valid).toBe(true);
+      expect(validation.validate('#ff0000ff').valid).toBe(true);
+      expect(validation.validate('invalid').valid).toBe(false);
+    });
+
+    it('should return null for unknown property validation', () => {
+      const validation = TColorPicker.getPropertyValidation('unknown');
+      expect(validation).toBeNull();
     });
   });
 
@@ -454,6 +476,18 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       element._customSwatches = ['#ff0000', '#00ff00'];
       element.clearAllCustomSwatches();
       expect(element._customSwatches.length).toBe(0);
+    });
+
+    it('should have receiveContext method', () => {
+      expect(element.receiveContext).toBeDefined();
+      expect(typeof element.receiveContext).toBe('function');
+    });
+
+    it('should accept context from parent', () => {
+      const context = { size: 'large', variant: 'standard' };
+      expect(() => {
+        element.receiveContext(context);
+      }).not.toThrow();
     });
   });
 

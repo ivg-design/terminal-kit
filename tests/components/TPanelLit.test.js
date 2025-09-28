@@ -659,4 +659,51 @@ describe('TPanelLit', () => {
       expect(panel._logger.error).toBeDefined();
     });
   });
+
+  describe('Animation State', () => {
+    it('should apply collapsed class with transition', async () => {
+      panel.collapsible = true;
+      panel.collapsed = false;
+      await panel.updateComplete;
+
+      let panelEl = panel.shadowRoot.querySelector('.t-pnl');
+      expect(panelEl.classList.contains('t-pnl--collapsed')).toBe(false);
+
+      panel.collapsed = true;
+      await panel.updateComplete;
+
+      panelEl = panel.shadowRoot.querySelector('.t-pnl');
+      expect(panelEl.classList.contains('t-pnl--collapsed')).toBe(true);
+    });
+
+    it('should apply collapsed class when toggling', async () => {
+      panel.collapsible = true;
+      await panel.updateComplete;
+
+      panel.toggleCollapse();
+      await panel.updateComplete;
+
+      const panelEl = panel.shadowRoot.querySelector('.t-pnl');
+      expect(panelEl.classList.contains('t-pnl--collapsed')).toBe(true);
+    });
+
+    it('should apply loading class during loading state', async () => {
+      panel.loading = true;
+      await panel.updateComplete;
+
+      const panelEl = panel.shadowRoot.querySelector('.t-pnl');
+      expect(panelEl.classList.contains('t-pnl--loading')).toBe(true);
+    });
+
+    it('should remove loading class when loading stops', async () => {
+      panel.loading = true;
+      await panel.updateComplete;
+
+      panel.loading = false;
+      await panel.updateComplete;
+
+      const panelEl = panel.shadowRoot.querySelector('.t-pnl');
+      expect(panelEl.classList.contains('t-pnl--loading')).toBe(false);
+    });
+  });
 });

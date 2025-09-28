@@ -969,12 +969,76 @@ export class TColorPicker extends LitElement {
 	 */
 
 	// ----------------------------------------------------------
+	// BLOCK 10: NESTING SUPPORT (Minimal - not a container)
+	// ----------------------------------------------------------
+
+	/**
+	 * Receive context from parent component (no-op for color picker)
+	 * @public
+	 * @param {Object} context - Context object from parent
+	 */
+	receiveContext(context) {
+		this._logger.debug('Received context (no-op for color picker)', { context });
+	}
+
+	// ----------------------------------------------------------
+	// BLOCK 11: VALIDATION
+	// ----------------------------------------------------------
+
+	/**
+	 * Validate property value
+	 * @private
+	 * @param {string} propName - Property name to validate
+	 * @param {*} value - Value to validate
+	 * @returns {boolean} True if valid
+	 */
+	_validateProperty(propName, value) {
+		const validation = this.constructor.getPropertyValidation(propName);
+		if (!validation) return true;
+
+		const result = validation.validate(value);
+		if (!result.valid) {
+			this._logger.warn('Property validation failed', {
+				propName,
+				value,
+				errors: result.errors
+			});
+		}
+		return result.valid;
+	}
+
+	/**
+	 * Get validation rules for a property
+	 * @static
+	 * @param {string} propName - Property name
+	 * @returns {Object|null} Validation object or null
+	 */
+	static getPropertyValidation(propName) {
+		const validations = {
+			variant: {
+				validate: (value) => ({
+					valid: ['large', 'standard', 'compact'].includes(value),
+					errors: value ? [`Invalid variant: ${value}. Must be 'large', 'standard', or 'compact'`] : ['Variant is required']
+				})
+			},
+			value: {
+				validate: (value) => ({
+					valid: /^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/.test(value),
+					errors: value ? [`Invalid hex color: ${value}`] : ['Color value is required']
+				})
+			}
+		};
+		return validations[propName] || null;
+	}
+
+	// ----------------------------------------------------------
 	// BLOCK 12: RENDER METHOD (REQUIRED)
 	// ----------------------------------------------------------
 
 	/**
 	 * Render component template
 	 * @returns {TemplateResult}
+	 * @slot - No slots (self-contained component)
 	 */
 	render() {
 		this._logger.trace('Rendering');
