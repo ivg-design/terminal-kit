@@ -227,54 +227,60 @@
                 <div class="demo-column">
                     <div class="demo-item">
                         <span class="demo-label">Basic Dropdown with Nested Folders & Search</span>
-                        <terminal-dropdown id="dropdown1" placeholder="Select animation...">
-                        </terminal-dropdown>
+                        <t-drp id="dropdown1" placeholder="Select animation...">
+                        </t-drp>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Flat List (No Folders)</span>
-                        <terminal-dropdown id="dropdownFlat" placeholder="Select option...">
-                        </terminal-dropdown>
+                        <t-drp id="dropdownFlat" placeholder="Select option...">
+                        </t-drp>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Without Icons</span>
-                        <terminal-dropdown id="dropdownIcons" placeholder="Select option..." icons="false">
-                        </terminal-dropdown>
+                        <t-drp id="dropdownIcons" placeholder="Select option..." icons="false">
+                        </t-drp>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Without Search Bar</span>
-                        <terminal-dropdown id="dropdownNoSearch" placeholder="Select option..." search="false">
-                        </terminal-dropdown>
+                        <t-drp id="dropdownNoSearch" placeholder="Select option..." search="false">
+                        </t-drp>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Compact Size</span>
+                        <t-drp id="dropdownCompact" placeholder="Select option..." compact="true">
+                        </t-drp>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Disabled State</span>
-                        <terminal-dropdown placeholder="Disabled dropdown" disabled>
-                        </terminal-dropdown>
+                        <t-drp placeholder="Disabled dropdown" disabled>
+                        </t-drp>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Wide Dropdown (600px)</span>
-                        <terminal-dropdown id="dropdownWide" placeholder="Select from a wide dropdown..." width="600px">
-                        </terminal-dropdown>
+                        <t-drp id="dropdownWide" placeholder="Select from a wide dropdown..." width="600px">
+                        </t-drp>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Narrow Dropdown (200px)</span>
-                        <terminal-dropdown id="dropdownNarrow" placeholder="Select..." width="200px">
-                        </terminal-dropdown>
+                        <t-drp id="dropdownNarrow" placeholder="Select..." width="200px">
+                        </t-drp>
                     </div>
                 </div>
 
                 <div class="code-block">
                     <code>// Default width (300px)<br>
-&lt;terminal-dropdown id="dropdown1" placeholder="Select animation..."&gt;&lt;/terminal-dropdown&gt;<br><br>
+&lt;t-drp id="dropdown1" placeholder="Select animation..."&gt;&lt;/t-drp&gt;<br><br>
 // Custom width<br>
-&lt;terminal-dropdown width="400px" placeholder="Wide dropdown..."&gt;&lt;/terminal-dropdown&gt;<br><br>
+&lt;t-drp width="400px" placeholder="Wide dropdown..."&gt;&lt;/t-drp&gt;<br><br>
 // Disabled state<br>
-&lt;terminal-dropdown disabled placeholder="Disabled..."&gt;&lt;/terminal-dropdown&gt;</code>
+&lt;t-drp disabled placeholder="Disabled..."&gt;&lt;/t-drp&gt;</code>
                 </div>
             </div>
 
@@ -284,8 +290,7 @@
         
 
         <script type="module">
-            import '../js/components/TerminalComponent.js';
-            import '../js/components/TerminalDropdown.js';
+            import '../js/components/TDropdownLit.js';
 
             // Dropdown Demo Data
             const demoData = {
@@ -366,8 +371,9 @@
             const dropdowns = [
                 { id: 'dropdown1', label: 'Basic Dropdown' },
                 { id: 'dropdownFlat', label: 'Flat List' },
-                { id: 'dropdownIcons', label: 'With Icons' },
+                { id: 'dropdownIcons', label: 'Without Icons' },
                 { id: 'dropdownNoSearch', label: 'Without Search' },
+                { id: 'dropdownCompact', label: 'Compact Size' },
                 { id: 'dropdownWide', label: 'Wide Dropdown' },
                 { id: 'dropdownNarrow', label: 'Narrow Dropdown' }
             ];
@@ -393,7 +399,7 @@
                         if (dropdown.loadData) {
                             // Use flat data for flat dropdown, nested for others
                             const dataToLoad = id === 'dropdownFlat' ? flatData : demoData;
-                            dropdown.loadData({ structure: dataToLoad });
+                            dropdown.loadData(dataToLoad);
 
                             // Add metadata for some dropdowns
                             if (id === 'dropdown1' || id === 'dropdownWide') {
@@ -407,7 +413,6 @@
 
                             // Configure dropdown-specific settings
                             if (id === 'dropdownIcons') {
-                                // Icons are on by default
                                 dropdown.setMetadata({
                                     'knight.riv': { description: 'Knight with custom icon', icon: '⚔️' },
                                     'wizard.riv': { description: 'Wizard with custom icon', icon: '🧙' },
