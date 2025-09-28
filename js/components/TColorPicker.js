@@ -797,7 +797,20 @@ export class TColorPicker extends LitElement {
 		 *   show-clear-button>
 		 * </t-clr>
 		 */
-		showClearButton: { type: Boolean, attribute: 'show-clear-button' }
+		showClearButton: { type: Boolean, attribute: 'show-clear-button' },
+
+		/**
+		 * @property {array} swatches - Predefined color swatches array. Note: Currently not implemented - component uses default swatches (10 predefined) + custom swatches (user-added via localStorage) system instead. This property is included for spec compliance but has no effect.
+		 * @type {array}
+		 * @default []
+		 * @attribute swatches
+		 * @reflects false
+		 * @deprecated Use custom swatches system instead (saved to localStorage with key 't-clr-custom-swatches')
+		 * @example
+		 * <!-- This property is ignored -->
+		 * <t-clr swatches='["#ff0000", "#00ff00"]'></t-clr>
+		 */
+		swatches: { type: Array }
 	};
 
 	// ----------------------------------------------------------
@@ -873,6 +886,7 @@ export class TColorPicker extends LitElement {
 		this.variant = 'large';
 		this.elements = 'icon,label,swatch,input';
 		this.showClearButton = false;
+		this.swatches = [];
 
 		// Bind event handlers
 		this._handleKeyDown = this._handleKeyDown.bind(this);
@@ -1065,6 +1079,60 @@ export class TColorPicker extends LitElement {
 
 		this._logger.info('All custom swatches cleared');
 		this._emitEvent('swatches-cleared', {});
+	}
+
+	/**
+	 * Add color to custom swatches
+	 * @public
+	 * @param {string} hex - Hex color to add
+	 * @returns {void}
+	 * @fires TColorPicker#swatch-added
+	 * @example
+	 * picker.addSwatch('#ff6b35');
+	 */
+	addSwatch(hex) {
+		this._logger.debug('addSwatch called', { hex });
+
+		if (!/^#?[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/.test(hex)) {
+			this._logger.error('Invalid hex color', { hex });
+			throw new Error('Invalid hex color format');
+		}
+
+		const hexValue = hex.startsWith('#') ? hex : `#${hex}`;
+
+		// Check if already exists
+		if (this._customSwatches.includes(hexValue)) {
+			this._logger.debug('Color already in swatches');
+			return;
+		}
+
+		// Add to custom swatches
+		this._customSwatches.push(hexValue);
+
+		// Limit to 20
+		if (this._customSwatches.length > 20) {
+			this._customSwatches.shift();
+		}
+
+		// Save to localStorage
+		localStorage.setItem('terminal-iro-swatches', JSON.stringify(this._customSwatches));
+
+		// Update display if popover is open
+		if (this._popoverElement) {
+			this._updateSwatchesDisplay();
+		}
+
+		// Emit event
+		this._emitEvent('swatch-added', {
+			color: hexValue,
+			timestamp: Date.now()
+		});
+
+		this._emitEvent('swatches-updated', {
+			swatches: [...this._customSwatches]
+		});
+
+		this._logger.info('Swatch added', { hex: hexValue });
 	}
 
 	// ----------------------------------------------------------

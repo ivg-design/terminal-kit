@@ -478,6 +478,21 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       expect(element._customSwatches.length).toBe(0);
     });
 
+    it('should add swatch with hex color', () => {
+      element.addSwatch('#ff6b35');
+      expect(element._customSwatches).toContain('#ff6b35');
+    });
+
+    it('should add swatch without hash prefix', () => {
+      element.addSwatch('00aaff');
+      expect(element._customSwatches).toContain('#00aaff');
+    });
+
+    it('should throw error for invalid hex color', () => {
+      expect(() => element.addSwatch('invalid')).toThrow('Invalid hex color format');
+      expect(() => element.addSwatch('#zzz')).toThrow('Invalid hex color format');
+    });
+
     it('should have receiveContext method', () => {
       expect(element.receiveContext).toBeDefined();
       expect(typeof element.receiveContext).toBe('function');
