@@ -13,7 +13,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { TColorPicker } from '../../js/components/TColorPicker.js';
+import { TColorPicker, TColorPickerManifest } from '../../js/components/TColorPickerLit.js';
 
 describe('TColorPicker - BUNDLED-LIB Tests', () => {
   let element;
@@ -34,6 +34,51 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       element.parentNode.removeChild(element);
     }
     element = null;
+  });
+
+  // ========================================
+  // SUITE 0: Manifest Completeness
+  // ========================================
+  describe('Manifest Completeness', () => {
+    it('should have a valid manifest', () => {
+      expect(TColorPickerManifest).toBeDefined();
+      expect(TColorPickerManifest.tagName).toBe('t-clr');
+      expect(TColorPickerManifest.displayName).toBe('Color Picker');
+      expect(TColorPickerManifest.version).toBe('1.0.0');
+    });
+
+    it('should document all 8 properties', () => {
+      const { properties } = TColorPickerManifest;
+
+      expect(properties.value).toBeDefined();
+      expect(properties.label1).toBeDefined();
+      expect(properties.label2).toBeDefined();
+      expect(properties.disabled).toBeDefined();
+      expect(properties.variant).toBeDefined();
+      expect(properties.elements).toBeDefined();
+      expect(properties.showClearButton).toBeDefined();
+      expect(properties.swatches).toBeDefined();
+    });
+
+    it('should document all 5 methods', () => {
+      const { methods } = TColorPickerManifest;
+
+      expect(methods.setIcon).toBeDefined();
+      expect(methods.setValue).toBeDefined();
+      expect(methods.getValue).toBeDefined();
+      expect(methods.clearAllCustomSwatches).toBeDefined();
+      expect(methods.addSwatch).toBeDefined();
+    });
+
+    it('should document all 5 events', () => {
+      const { events } = TColorPickerManifest;
+
+      expect(events['change']).toBeDefined();
+      expect(events['color-save']).toBeDefined();
+      expect(events['swatch-added']).toBeDefined();
+      expect(events['swatches-updated']).toBeDefined();
+      expect(events['swatches-cleared']).toBeDefined();
+    });
   });
 
   // ========================================

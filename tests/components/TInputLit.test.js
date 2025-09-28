@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import TInputLit from '../../js/components/TInputLit.js';
+import { TInputLit, TInputManifest } from '../../js/components/TInputLit.js';
 
 describe('TInputLit', () => {
   let input;
@@ -14,7 +14,69 @@ describe('TInputLit', () => {
   });
 
   // ============================================================
-  // 1. PROPERTY FUNCTIONALITY (15 tests)
+  // 1. MANIFEST COMPLETENESS
+  // ============================================================
+  describe('Manifest Completeness', () => {
+    it('should have a valid manifest', () => {
+      expect(TInputManifest).toBeDefined();
+      expect(TInputManifest.tagName).toBe('t-inp');
+      expect(TInputManifest.displayName).toBe('Input');
+      expect(TInputManifest.version).toBe('1.0.0');
+    });
+
+    it('should document all 15 properties', () => {
+      const { properties } = TInputManifest;
+
+      expect(properties.type).toBeDefined();
+      expect(properties.placeholder).toBeDefined();
+      expect(properties.value).toBeDefined();
+      expect(properties.disabled).toBeDefined();
+      expect(properties.readonly).toBeDefined();
+      expect(properties.required).toBeDefined();
+      expect(properties.min).toBeDefined();
+      expect(properties.max).toBeDefined();
+      expect(properties.minlength).toBeDefined();
+      expect(properties.maxlength).toBeDefined();
+      expect(properties.pattern).toBeDefined();
+      expect(properties.autocomplete).toBeDefined();
+      expect(properties.label).toBeDefined();
+      expect(properties.helperText).toBeDefined();
+      expect(properties.icon).toBeDefined();
+    });
+
+    it('should document all 7 methods', () => {
+      const { methods } = TInputManifest;
+
+      expect(methods.setValue).toBeDefined();
+      expect(methods.getValue).toBeDefined();
+      expect(methods.focus).toBeDefined();
+      expect(methods.blur).toBeDefined();
+      expect(methods.validate).toBeDefined();
+      expect(methods.setError).toBeDefined();
+      expect(methods.clear).toBeDefined();
+    });
+
+    it('should document all 8 events', () => {
+      const { events } = TInputManifest;
+
+      expect(events['input-value']).toBeDefined();
+      expect(events['input-change']).toBeDefined();
+      expect(events['input-error']).toBeDefined();
+      expect(events['input-valid']).toBeDefined();
+      expect(events['input-focus']).toBeDefined();
+      expect(events['input-blur']).toBeDefined();
+      expect(events['input-enter']).toBeDefined();
+      expect(events['input-clear']).toBeDefined();
+    });
+
+    it('should have no slots', () => {
+      const { slots } = TInputManifest;
+      expect(Object.keys(slots).length).toBe(0);
+    });
+  });
+
+  // ============================================================
+  // 2. PROPERTY FUNCTIONALITY (15 tests)
   // ============================================================
   describe('Property Functionality', () => {
     it('should have correct default values', () => {

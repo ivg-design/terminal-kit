@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { TButton } from '../../js/components/TButtonLit.js';
+import { TButton, TButtonManifest } from '../../js/components/TButtonLit.js';
 
 describe('TButtonLit', () => {
   let button;
@@ -11,6 +11,58 @@ describe('TButtonLit', () => {
 
   afterEach(() => {
     button.remove();
+  });
+
+  describe('Manifest Completeness', () => {
+    it('should have a valid manifest', () => {
+      expect(TButtonManifest).toBeDefined();
+      expect(TButtonManifest.tagName).toBe('t-btn');
+      expect(TButtonManifest.displayName).toBe('Button');
+      expect(TButtonManifest.version).toBe('1.0.0');
+    });
+
+    it('should document all 15 properties', () => {
+      const { properties } = TButtonManifest;
+
+      expect(properties.variant).toBeDefined();
+      expect(properties.type).toBeDefined();
+      expect(properties.size).toBeDefined();
+      expect(properties.disabled).toBeDefined();
+      expect(properties.icon).toBeDefined();
+      expect(properties.loading).toBeDefined();
+      expect(properties.loaderType).toBeDefined();
+      expect(properties.loaderColor).toBeDefined();
+      expect(properties.toggleState).toBeDefined();
+      expect(properties.iconOn).toBeDefined();
+      expect(properties.iconOff).toBeDefined();
+      expect(properties.colorOn).toBeDefined();
+      expect(properties.colorOff).toBeDefined();
+      expect(properties.textOn).toBeDefined();
+      expect(properties.textOff).toBeDefined();
+    });
+
+    it('should document all 6 methods', () => {
+      const { methods } = TButtonManifest;
+
+      expect(methods.click).toBeDefined();
+      expect(methods.focus).toBeDefined();
+      expect(methods.blur).toBeDefined();
+      expect(methods.setIcon).toBeDefined();
+      expect(methods.setText).toBeDefined();
+      expect(methods.setLoading).toBeDefined();
+    });
+
+    it('should document all 2 events', () => {
+      const { events } = TButtonManifest;
+
+      expect(events['button-click']).toBeDefined();
+      expect(events['toggle-change']).toBeDefined();
+    });
+
+    it('should document slots', () => {
+      const { slots } = TButtonManifest;
+      expect(slots['']).toBeDefined();
+    });
   });
 
   describe('Static Metadata', () => {

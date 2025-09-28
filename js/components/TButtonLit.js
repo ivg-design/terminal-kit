@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import componentLogger from '../utils/ComponentLogger.js';
+import { generateManifest } from '../utils/manifest-generator.js';
 
 /**
  * @component TButtonLit
@@ -1266,5 +1267,60 @@ export class TButton extends LitElement {
 }
 
 customElements.define('t-btn', TButton);
+
+export const TButtonManifest = generateManifest(TButton, {
+  tagName: 't-btn',
+  displayName: 'Button',
+  description: 'Terminal-styled button component with variants, loading states, and toggle functionality. Supports multiple button types (text, icon, icon-text), sizes, variants, and includes built-in loading indicators.',
+  version: '1.0.0',
+  category: 'Form Controls',
+  methods: {
+    click: {
+      description: 'Programmatically click the button',
+      parameters: [],
+      returns: 'void'
+    },
+    focus: {
+      description: 'Focus the button',
+      parameters: [],
+      returns: 'void'
+    },
+    blur: {
+      description: 'Blur the button',
+      parameters: [],
+      returns: 'void'
+    },
+    setIcon: {
+      description: 'Set the button icon',
+      parameters: [{ name: 'iconSvg', type: 'string', description: 'SVG icon markup' }],
+      returns: 'void'
+    },
+    setText: {
+      description: 'Set the button text',
+      parameters: [{ name: 'text', type: 'string', description: 'Button text content' }],
+      returns: 'void'
+    },
+    setLoading: {
+      description: 'Set the loading state',
+      parameters: [{ name: 'loading', type: 'boolean', description: 'Loading state' }],
+      returns: 'void'
+    }
+  },
+  events: {
+    'button-click': {
+      detail: '{button: HTMLElement}',
+      description: 'Fired when button is clicked'
+    },
+    'toggle-change': {
+      detail: '{state: boolean}',
+      description: 'Fired when toggle state changes'
+    }
+  },
+  slots: {
+    '': {
+      description: 'Default slot for button text content'
+    }
+  }
+});
 
 export default TButton;

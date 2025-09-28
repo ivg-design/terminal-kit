@@ -36,7 +36,7 @@
 ComponentName.js
 │
 ├─ SECTION 1: IMPORTS
-│  └─ Import Lit, decorators, logger, utilities
+│  └─ Import Lit, logger, utilities (NO decorators)
 │
 ├─ SECTION 2: COMPONENT CLASS
 │  │  [JSDoc: @component, @tagname, @description, @category, @since, @example]
@@ -50,7 +50,7 @@ ComponentName.js
 │  │  └─ css`` template (all component styles)
 │  │
 │  ├─ BLOCK 3: Reactive Properties
-│  │  └─ @property decorated properties
+│  │  └─ static properties = { ... } (NO @property decorators)
 │  │     [JSDoc: @property, @default, @attribute, @reflects, @validation, @example]
 │  │
 │  ├─ BLOCK 4: Internal State
@@ -162,7 +162,7 @@ ComponentName.test.js (co-located)
 |-------|------|--------------|-------|--------|
 | 1 | Static Metadata | ALL | No | No |
 | 2 | Static Styles | ALL | No | No |
-| 3 | Reactive Properties | ALL | ✅ @property, @default, @attribute | No |
+| 3 | Reactive Properties | ALL | ✅ static properties object, JSDoc comments | No |
 | 4 | Internal State | ALL | ✅ @private | No |
 | 5 | Logger Instance | ALL | ✅ @private | N/A (this IS the logger) |
 | 6 | Constructor | ALL | No | ✅ debug on construct |
@@ -188,6 +188,7 @@ ComponentName.test.js (co-located)
 When rewriting a component, verify:
 
 - [ ] All 13 blocks present in correct order
+- [ ] All properties defined in static properties = {} object (NO decorators)
 - [ ] Every public property has JSDoc with @property, @default, @attribute
 - [ ] Every public method has JSDoc with @public, @param, @returns, @fires
 - [ ] Every event has JSDoc with @event, @type, @description, @property
@@ -466,6 +467,12 @@ If validation fails, component degrades gracefully with warnings.
 ### 6. Observable Behavior
 All state changes, events, and errors are logged through unified system.
 
+### 7. NO DECORATORS - Use Static Properties
+**CRITICAL**: Do NOT use `@property` decorators. Use `static properties = {}` instead.
+- Decorators require transpilation and are not native JavaScript
+- Static properties work directly in browsers and Node.js without build tools
+- All Terminal Kit components MUST use static properties for consistency
+
 ---
 
 ## The Inviolate Schema
@@ -477,8 +484,8 @@ All state changes, events, and errors are logged through unified system.
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
 import { LitElement, html, css } from 'lit';
-import { property } from 'lit/decorators.js';
-import { ComponentLogger } from '../utils/component-logger.js';
+import componentLogger from '../utils/ComponentLogger.js';
+import { generateManifest } from '../utils/manifest-generator.js';
 import { ValidationMixin } from '../utils/validation-mixin.js';
 // ... other imports
 
@@ -519,16 +526,22 @@ export class ComponentName extends LitElement {
    * @attribute title
    * @reflects true
    */
-  @property({ type: String, reflect: true })
-  title = '';
+  static properties = {
+    /**
+     * @property {string} title - Component title
+     * @default ''
+     * @attribute title
+     * @reflects true
+     */
+    title: { type: String, reflect: true },
 
-  /**
-   * @property {('variant1'|'variant2')} variant - Component variant
-   * @default 'variant1'
-   * @attribute variant
-   */
-  @property({ type: String })
-  variant = 'variant1';
+    /**
+     * @property {('variant1'|'variant2')} variant - Component variant
+     * @default 'variant1'
+     * @attribute variant
+     */
+    variant: { type: String }
+  };
 
   // ... more properties
 
@@ -556,8 +569,9 @@ export class ComponentName extends LitElement {
     // Log construction
     this._logger.debug('Component constructed');
 
-    // Initialize properties (if not using decorators)
-    this._initializeProperties();
+    // Initialize property defaults
+    this.title = '';
+    this.variant = 'variant1';
 
     // Bind event handlers
     this._bindEventHandlers();
@@ -1953,30 +1967,38 @@ export class TPanelLit extends LitElement {
  * @example
  * <t-pnl title="My Panel"></t-pnl>
  */
-@property({ type: String, reflect: true })
-title = '';
+static properties = {
+  /**
+   * @property {string} title - Panel title displayed in header
+   * @default ''
+   * @attribute title
+   * @reflects true
+   * @validation Must be string with max 100 characters
+   * @example
+   * <t-pnl title="My Panel"></t-pnl>
+   */
+  title: { type: String, reflect: true },
 
-/**
- * @property {('standard'|'headless')} variant - Panel variant
- * @default 'standard'
- * @attribute variant
- * @validation Must be 'standard' or 'headless'
- * @example
- * <t-pnl variant="headless"></t-pnl>
- */
-@property({ type: String })
-variant = 'standard';
+  /**
+   * @property {('standard'|'headless')} variant - Panel variant
+   * @default 'standard'
+   * @attribute variant
+   * @validation Must be 'standard' or 'headless'
+   * @example
+   * <t-pnl variant="headless"></t-pnl>
+   */
+  variant: { type: String },
 
-/**
- * @property {boolean} collapsible - Enable collapse functionality
- * @default false
- * @attribute collapsible
- * @reflects true
- * @example
- * <t-pnl collapsible></t-pnl>
- */
-@property({ type: Boolean, reflect: true })
-collapsible = false;
+  /**
+   * @property {boolean} collapsible - Enable collapse functionality
+   * @default false
+   * @attribute collapsible
+   * @reflects true
+   * @example
+   * <t-pnl collapsible></t-pnl>
+   */
+  collapsible: { type: Boolean, reflect: true }
+};
 ```
 
 ### Method Documentation
@@ -2788,8 +2810,8 @@ generateManifests();
 
 ```javascript
 import { LitElement, html, css } from 'lit';
-import { property } from 'lit/decorators.js';
-import { ComponentLogger } from '../utils/component-logger.js';
+import componentLogger from '../utils/ComponentLogger.js';
+import { generateManifest } from '../utils/manifest-generator.js';
 import { caretRightIcon, caretDownIcon } from '../utils/phosphor-icons.js';
 
 /**
@@ -2827,25 +2849,30 @@ export class TPanelLit extends LitElement {
    * @attribute title
    * @reflects true
    */
-  @property({ type: String, reflect: true })
-  title = '';
+  static properties = {
+    /**
+     * @property {string} title - Panel title displayed in header
+     * @default ''
+     * @attribute title
+     * @reflects true
+     */
+    title: { type: String, reflect: true },
 
-  /**
-   * @property {('standard'|'headless')} variant - Panel variant
-   * @default 'standard'
-   * @attribute variant
-   */
-  @property({ type: String })
-  variant = 'standard';
+    /**
+     * @property {('standard'|'headless')} variant - Panel variant
+     * @default 'standard'
+     * @attribute variant
+     */
+    variant: { type: String },
 
-  /**
-   * @property {boolean} collapsible - Enable collapse/expand functionality
-   * @default false
-   * @attribute collapsible
-   * @reflects true
-   */
-  @property({ type: Boolean, reflect: true })
-  collapsible = false;
+    /**
+     * @property {boolean} collapsible - Enable collapse/expand functionality
+     * @default false
+     * @attribute collapsible
+     * @reflects true
+     */
+    collapsible: { type: Boolean, reflect: true }
+  };
 
   // ... more properties
 

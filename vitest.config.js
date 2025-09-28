@@ -22,7 +22,7 @@ export default defineConfig({
       reportsDirectory: './coverage',
       include: [
         'js/components/TPanelLit.js',
-        'js/components/TColorPicker.js',
+        'js/components/TColorPickerLit.js',
         'js/components/TButtonLit.js',
         'js/components/TModalLit.js'
       ],

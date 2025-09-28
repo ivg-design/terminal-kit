@@ -1199,48 +1199,7 @@ export const TTextareaManifest = generateManifest(TTextareaLit, {
 // ============================================================
 // SECTION 4: MANIFEST EXPORT
 // ============================================================
-
-/**
- * Component manifest for TTextareaLit
- * @type {Object}
- */
-export const TTextareaManifest = {
-  tagName: 't-textarea',
-  displayName: 'Textarea',
-  description: 'Multiline text input with code editor features including syntax highlighting, line numbers, and IDE shortcuts',
-  version: '1.0.0',
-  category: 'Form Controls',
-  profile: 'FORM-ADVANCED',
-  properties: {
-    placeholder: { type: 'String', default: '', description: 'Placeholder text' },
-    value: { type: 'String', default: '', description: 'Current value' },
-    rows: { type: 'Number', default: 4, description: 'Number of visible rows' },
-    disabled: { type: 'Boolean', default: false, description: 'Disabled state' },
-    readonly: { type: 'Boolean', default: false, description: 'Read-only state' },
-    required: { type: 'Boolean', default: false, description: 'Required for form submission' },
-    maxlength: { type: 'Number', default: null, description: 'Maximum character length' },
-    codeMode: { type: 'Boolean', default: false, description: 'Enable code editor features' },
-    showLineNumbers: { type: 'Boolean', default: false, description: 'Show line numbers' },
-    resize: { type: 'String', default: 'vertical', description: 'Resize behavior' },
-    language: { type: 'String', default: null, description: 'Syntax highlighting language' }
-  },
-  methods: {
-    setValue: { params: ['value'], returns: 'void', description: 'Set textarea value' },
-    getValue: { params: [], returns: 'string', description: 'Get current value' },
-    focus: { params: [], returns: 'void', description: 'Focus the textarea' },
-    blur: { params: [], returns: 'void', description: 'Blur the textarea' },
-    selectAll: { params: [], returns: 'void', description: 'Select all text' },
-    clear: { params: [], returns: 'void', description: 'Clear the textarea' },
-    receiveContext: { params: ['context'], returns: 'void', description: 'Receive context from parent' },
-    getContext: { params: [], returns: 'Object', description: 'Get current context' }
-  },
-  events: {
-    'textarea-input': { detail: '{value: string}', description: 'Fired on input' },
-    'textarea-change': { detail: '{value: string}', description: 'Fired on change' },
-    'textarea-focus': { detail: '{}', description: 'Fired on focus' },
-    'textarea-blur': { detail: '{}', description: 'Fired on blur' }
-  }
-};
+// Manifest is already generated at line 1140 using generateManifest()
 
 // ============================================================
 // SECTION 5: EXPORTS

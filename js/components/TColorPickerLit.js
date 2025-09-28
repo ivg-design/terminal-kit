@@ -4,6 +4,7 @@
 import { LitElement, html, css } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import componentLogger from '../utils/ComponentLogger.js';
+import { generateManifest } from '../utils/manifest-generator.js';
 import { paletteIcon, xIcon, floppyDiskIcon, trashIcon } from '../utils/phosphor-icons.js';
 import iro from '@jaames/iro';
 
@@ -2156,6 +2157,93 @@ if (!customElements.get(TColorPicker.tagName)) {
 }
 
 // ============================================================
-// SECTION 4: EXPORT (REQUIRED)
+// SECTION 4: MANIFEST EXPORT (REQUIRED)
+// ============================================================
+
+/**
+ * Component manifest for TColorPicker
+ * @type {Object}
+ */
+export const TColorPickerManifest = generateManifest(TColorPicker, {
+	tagName: 't-clr',
+	displayName: 'Color Picker',
+	description: 'Advanced color picker component with iro.js integration, persistent custom swatches, and multiple color format support (HEXA, RGBA, HSLA)',
+	version: '1.0.0',
+	category: 'Form Controls',
+	profile: 'FORM-ADVANCED',
+	properties: {
+		value: { description: 'Current color value in hex8 format (with alpha channel)' },
+		label1: { description: 'First line of label text' },
+		label2: { description: 'Second line of label text' },
+		disabled: { description: 'Disabled state' },
+		variant: {
+			description: 'Size variant controlling height and spacing',
+			enum: ['large', 'standard', 'compact']
+		},
+		elements: { description: 'Comma-separated list of elements to render in order' },
+		showClearButton: { description: 'Controls visibility of "Clear All Swatches" button' },
+		swatches: { description: 'Predefined color swatches array (currently not implemented)' }
+	},
+	methods: {
+		setIcon: {
+			params: ['iconSvg'],
+			returns: 'void',
+			description: 'Set custom Phosphor icon for the picker'
+		},
+		setValue: {
+			params: ['color'],
+			returns: 'void',
+			description: 'Set color value programmatically'
+		},
+		getValue: {
+			params: [],
+			returns: 'string',
+			description: 'Get current color value in hex8 format'
+		},
+		clearAllCustomSwatches: {
+			params: [],
+			returns: 'void',
+			description: 'Clear all custom swatches with confirmation modal if UI is open'
+		},
+		addSwatch: {
+			params: ['hex'],
+			returns: 'void',
+			description: 'Add color to custom swatches'
+		}
+	},
+	events: {
+		'change': {
+			detail: '{value: string, color: string}',
+			description: 'Fired when color value changes (250ms debounced during drag)'
+		},
+		'color-save': {
+			detail: '{color: string, timestamp: number}',
+			description: 'Fired when user clicks save button in picker'
+		},
+		'swatch-added': {
+			detail: '{color: string, timestamp: number}',
+			description: 'Fired when a new swatch is added to custom swatches'
+		},
+		'swatches-updated': {
+			detail: '{swatches: string[]}',
+			description: 'Fired when custom swatches array is modified'
+		},
+		'swatches-cleared': {
+			detail: '{}',
+			description: 'Fired when all custom swatches are cleared'
+		}
+	},
+	slots: {},
+	cssProperties: {
+		'--t-clr-bg': { description: 'Background color (default: var(--terminal-bg, #242424))' },
+		'--t-clr-border': { description: 'Border color (default: var(--terminal-border, #333333))' },
+		'--t-clr-color': { description: 'Primary color (default: var(--terminal-green, #00cc33))' },
+		'--t-clr-color-hover': { description: 'Hover color (default: var(--terminal-green-bright, #00ff41))' },
+		'--t-clr-transition': { description: 'Transition timing (default: var(--terminal-transition, all 0.2s ease))' }
+	}
+});
+
+// ============================================================
+// SECTION 5: EXPORT (REQUIRED)
 // ============================================================
 export default TColorPicker;

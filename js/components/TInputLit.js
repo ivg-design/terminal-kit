@@ -2,8 +2,8 @@
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
 import { LitElement, html, css } from 'lit';
-import { property } from 'lit/decorators.js';
-import { ComponentLogger } from '../utils/component-logger.js';
+import componentLogger from '../utils/ComponentLogger.js';
+import { generateManifest } from '../utils/manifest-generator.js';
 import {
   eyeIcon,
   eyeClosedIcon,
@@ -305,139 +305,126 @@ export class TInputLit extends LitElement {
   // ----------------------------------------------------------
   // BLOCK 3: REACTIVE PROPERTIES (REQUIRED)
   // ----------------------------------------------------------
+  static properties = {
+    /**
+     * @property {('text'|'password'|'email'|'number'|'search'|'tel'|'url')} type - Input type
+     * @default 'text'
+     * @attribute type
+     * @reflects true
+     */
+    type: { type: String, reflect: true },
 
-  /**
-   * @property {('text'|'password'|'email'|'number'|'search'|'tel'|'url')} type - Input type
-   * @default 'text'
-   * @attribute type
-   * @reflects true
-   */
-  @property({ type: String, reflect: true })
-  type = 'text';
+    /**
+     * @property {string} placeholder - Placeholder text
+     * @default ''
+     * @attribute placeholder
+     * @reflects true
+     */
+    placeholder: { type: String, reflect: true },
 
-  /**
-   * @property {string} placeholder - Placeholder text
-   * @default ''
-   * @attribute placeholder
-   * @reflects true
-   */
-  @property({ type: String, reflect: true })
-  placeholder = '';
+    /**
+     * @property {string} value - Input value
+     * @default ''
+     * @attribute value
+     */
+    value: { type: String },
 
-  /**
-   * @property {string} value - Input value
-   * @default ''
-   * @attribute value
-   */
-  @property({ type: String })
-  value = '';
+    /**
+     * @property {boolean} disabled - Disabled state
+     * @default false
+     * @attribute disabled
+     * @reflects true
+     */
+    disabled: { type: Boolean, reflect: true },
 
-  /**
-   * @property {boolean} disabled - Disabled state
-   * @default false
-   * @attribute disabled
-   * @reflects true
-   */
-  @property({ type: Boolean, reflect: true })
-  disabled = false;
+    /**
+     * @property {boolean} readonly - Readonly state
+     * @default false
+     * @attribute readonly
+     * @reflects true
+     */
+    readonly: { type: Boolean, reflect: true },
 
-  /**
-   * @property {boolean} readonly - Readonly state
-   * @default false
-   * @attribute readonly
-   * @reflects true
-   */
-  @property({ type: Boolean, reflect: true })
-  readonly = false;
+    /**
+     * @property {boolean} required - Required field
+     * @default false
+     * @attribute required
+     * @reflects true
+     */
+    required: { type: Boolean, reflect: true },
 
-  /**
-   * @property {boolean} required - Required field
-   * @default false
-   * @attribute required
-   * @reflects true
-   */
-  @property({ type: Boolean, reflect: true })
-  required = false;
+    /**
+     * @property {number} min - Minimum value (number type only)
+     * @default null
+     * @attribute min
+     * @reflects true
+     */
+    min: { type: Number, reflect: true },
 
-  /**
-   * @property {number} min - Minimum value (number type only)
-   * @default null
-   * @attribute min
-   * @reflects true
-   */
-  @property({ type: Number, reflect: true })
-  min = null;
+    /**
+     * @property {number} max - Maximum value (number type only)
+     * @default null
+     * @attribute max
+     * @reflects true
+     */
+    max: { type: Number, reflect: true },
 
-  /**
-   * @property {number} max - Maximum value (number type only)
-   * @default null
-   * @attribute max
-   * @reflects true
-   */
-  @property({ type: Number, reflect: true })
-  max = null;
+    /**
+     * @property {number} minlength - Minimum length
+     * @default null
+     * @attribute minlength
+     * @reflects true
+     */
+    minlength: { type: Number, reflect: true },
 
-  /**
-   * @property {number} minlength - Minimum length
-   * @default null
-   * @attribute minlength
-   * @reflects true
-   */
-  @property({ type: Number, reflect: true })
-  minlength = null;
+    /**
+     * @property {number} maxlength - Maximum length
+     * @default null
+     * @attribute maxlength
+     * @reflects true
+     */
+    maxlength: { type: Number, reflect: true },
 
-  /**
-   * @property {number} maxlength - Maximum length
-   * @default null
-   * @attribute maxlength
-   * @reflects true
-   */
-  @property({ type: Number, reflect: true })
-  maxlength = null;
+    /**
+     * @property {string} pattern - Regex validation pattern
+     * @default null
+     * @attribute pattern
+     * @reflects true
+     */
+    pattern: { type: String, reflect: true },
 
-  /**
-   * @property {string} pattern - Regex validation pattern
-   * @default null
-   * @attribute pattern
-   * @reflects true
-   */
-  @property({ type: String, reflect: true })
-  pattern = null;
+    /**
+     * @property {string} autocomplete - Autocomplete attribute
+     * @default 'off'
+     * @attribute autocomplete
+     * @reflects true
+     */
+    autocomplete: { type: String, reflect: true },
 
-  /**
-   * @property {string} autocomplete - Autocomplete attribute
-   * @default 'off'
-   * @attribute autocomplete
-   * @reflects true
-   */
-  @property({ type: String, reflect: true })
-  autocomplete = 'off';
+    /**
+     * @property {string} label - Optional label above input
+     * @default ''
+     * @attribute label
+     * @reflects true
+     */
+    label: { type: String, reflect: true },
 
-  /**
-   * @property {string} label - Optional label above input
-   * @default ''
-   * @attribute label
-   * @reflects true
-   */
-  @property({ type: String, reflect: true })
-  label = '';
+    /**
+     * @property {string} helperText - Optional helper text below input
+     * @default ''
+     * @attribute helper-text
+     * @reflects true
+     */
+    helperText: { type: String, reflect: true, attribute: 'helper-text' },
 
-  /**
-   * @property {string} helperText - Optional helper text below input
-   * @default ''
-   * @attribute helper-text
-   * @reflects true
-   */
-  @property({ type: String, reflect: true, attribute: 'helper-text' })
-  helperText = '';
+    /**
+     * @property {string} icon - Optional icon (SVG string)
+     * @default ''
+     * @attribute icon
+     */
+    icon: { type: String }
+  };
 
-  /**
-   * @property {string} icon - Optional icon (SVG string)
-   * @default ''
-   * @attribute icon
-   */
-  @property({ type: String })
-  icon = '';
 
   // ----------------------------------------------------------
   // BLOCK 4: INTERNAL STATE (PRIVATE - underscore prefix)
@@ -466,8 +453,25 @@ export class TInputLit extends LitElement {
   constructor() {
     super();
 
+    // Initialize default property values
+    this.type = 'text';
+    this.placeholder = '';
+    this.value = '';
+    this.disabled = false;
+    this.readonly = false;
+    this.required = false;
+    this.min = null;
+    this.max = null;
+    this.minlength = null;
+    this.maxlength = null;
+    this.pattern = null;
+    this.autocomplete = 'off';
+    this.label = '';
+    this.helperText = '';
+    this.icon = '';
+
     // Initialize logger
-    this._logger = new ComponentLogger(TInputLit.tagName, this);
+    this._logger = componentLogger.for(TInputLit.tagName);
     this._logger.debug('Component constructed');
 
     // Initialize ElementInternals for form participation
@@ -690,7 +694,7 @@ export class TInputLit extends LitElement {
     }
 
     if (hasError) {
-      this._emitEvent('input-error', { message });
+      this._emitEvent('input-error', { error: message });
     } else {
       this._emitEvent('input-valid', { value: this.value });
     }
@@ -754,9 +758,9 @@ export class TInputLit extends LitElement {
 
   /**
    * @event TInputLit#input-error
-   * @type {CustomEvent<{message: string}>}
+   * @type {CustomEvent<{error: string}>}
    * @description Fired when validation fails
-   * @property {string} detail.message - Error message
+   * @property {string} detail.error - Error message
    * @bubbles true
    * @composed true
    */
@@ -1163,6 +1167,43 @@ if (!customElements.get(TInputLit.tagName)) {
 }
 
 // ============================================================
-// SECTION 4: EXPORT (REQUIRED)
+// SECTION 4: MANIFEST EXPORT (REQUIRED)
+// ============================================================
+
+/**
+ * Component manifest for TInputLit
+ * @type {Object}
+ */
+export const TInputManifest = generateManifest(TInputLit, {
+  tagName: 't-inp',
+  displayName: 'Input',
+  description: 'Form input control with validation, type-specific features, and native form participation',
+  version: '1.0.0',
+  category: 'Form Controls',
+  profile: 'FORM-ADVANCED',
+  methods: {
+    setValue: { params: ['value'], returns: 'void' },
+    getValue: { params: [], returns: 'string' },
+    focus: { params: [], returns: 'void' },
+    blur: { params: [], returns: 'void' },
+    validate: { params: [], returns: 'boolean' },
+    setError: { params: ['hasError', 'message'], returns: 'void' },
+    clear: { params: [], returns: 'void' }
+  },
+  events: {
+    'input-value': { detail: '{value: string}', description: 'Fired on every keystroke' },
+    'input-change': { detail: '{value: string}', description: 'Fired on blur or Enter key' },
+    'input-error': { detail: '{error: string}', description: 'Fired when validation fails' },
+    'input-valid': { detail: '{value: string}', description: 'Fired when validation passes' },
+    'input-focus': { detail: '{}', description: 'Fired when input receives focus' },
+    'input-blur': { detail: '{}', description: 'Fired when input loses focus' },
+    'input-enter': { detail: '{value: string}', description: 'Fired when Enter key is pressed' },
+    'input-clear': { detail: '{}', description: 'Fired when search input is cleared' }
+  },
+  slots: {}
+});
+
+// ============================================================
+// SECTION 5: EXPORT (REQUIRED)
 // ============================================================
 export default TInputLit;
