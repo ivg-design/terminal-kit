@@ -9,10 +9,12 @@
     <link rel="stylesheet" href="../css/theme/terminal.css">
     <link rel="stylesheet" href="../css/components/form.css">
 
+    <!-- Prism.js Terminal Kit theme -->
+    <link rel="stylesheet" href="../public/js/libs/prismjs/prism-terminal-kit.css">
+
     <!-- Web Components -->
     <script type="module">
-        import '../js/components/TerminalComponent.js';
-        import '../js/components/TerminalTextarea.js';
+        import '../js/components/TTextareaLit.js';
     </script>
 
     <style>
@@ -245,91 +247,166 @@
         <h1>Terminal Textarea Component</h1>
 
         <div class="component-section">
-            <h2 class="component-title">Basic Textarea Variants</h2>
+            <h2 class="component-title">Resize Control</h2>
             <p class="component-description">
-                Multiline text input with configurable rows, resize options, and states.
+                Control how users can resize textareas with the resize property.
             </p>
 
             <div class="demo-grid">
                 <div class="demo-item">
-                    <span class="demo-label">Basic Textarea</span>
-                    <terminal-textarea
-                        placeholder="Enter your text here..."
-                        rows="5">
-                    </terminal-textarea>
+                    <span class="demo-label">Resize Both (default)</span>
+                    <t-textarea
+                        placeholder="Drag corner to resize width & height..."
+                        rows="4">
+                    </t-textarea>
                 </div>
 
                 <div class="demo-item">
-                    <span class="demo-label">Pre-filled Content</span>
-                    <terminal-textarea
-                        value="This textarea comes with pre-filled content.
-You can edit this text.
-Multiple lines are supported."
-                        rows="5">
-                    </terminal-textarea>
+                    <span class="demo-label">Resize Vertical Only</span>
+                    <t-textarea
+                        placeholder="Only height resizing..."
+                        rows="4"
+                        resize="vertical">
+                    </t-textarea>
                 </div>
 
                 <div class="demo-item">
-                    <span class="demo-label">Large Textarea</span>
-                    <terminal-textarea
-                        placeholder="Large textarea for longer content..."
-                        rows="10">
-                    </terminal-textarea>
+                    <span class="demo-label">Resize Horizontal Only</span>
+                    <t-textarea
+                        placeholder="Only width resizing..."
+                        rows="4"
+                        resize="horizontal">
+                    </t-textarea>
                 </div>
 
                 <div class="demo-item">
-                    <span class="demo-label">Small Textarea</span>
-                    <terminal-textarea
-                        placeholder="Compact textarea..."
-                        rows="3">
-                    </terminal-textarea>
+                    <span class="demo-label">No Resize (fixed)</span>
+                    <t-textarea
+                        placeholder="Cannot be resized at all..."
+                        rows="4"
+                        resize="none">
+                    </t-textarea>
                 </div>
 
                 <div class="demo-item">
-                    <span class="demo-label">Read-only Textarea</span>
-                    <terminal-textarea
+                    <span class="demo-label">Read-only (no resize)</span>
+                    <t-textarea
                         value="This content is read-only.
-You cannot edit it."
+You cannot edit or resize it."
                         readonly
-                        rows="5">
-                    </terminal-textarea>
+                        rows="3">
+                    </t-textarea>
                 </div>
 
                 <div class="demo-item">
-                    <span class="demo-label">Disabled Textarea</span>
-                    <terminal-textarea
+                    <span class="demo-label">Disabled (no resize)</span>
+                    <t-textarea
                         value="This textarea is disabled"
                         disabled
-                        rows="5">
-                    </terminal-textarea>
-                </div>
-
-                <div class="demo-item">
-                    <span class="demo-label">Non-resizable</span>
-                    <terminal-textarea
-                        placeholder="This textarea cannot be resized"
-                        resizable="false"
-                        rows="5">
-                    </terminal-textarea>
-                </div>
-
-                <div class="demo-item">
-                    <span class="demo-label">With Size Constraints</span>
-                    <terminal-textarea
-                        placeholder="Min: 200px, Max: 400px height"
-                        rows="6"
-                        min-height="200px"
-                        max-height="400px">
-                    </terminal-textarea>
+                        rows="3">
+                    </t-textarea>
                 </div>
             </div>
 
             <div class="code-block">
-                <code>&lt;terminal-textarea placeholder="Enter text..." rows="5"&gt;&lt;/terminal-textarea&gt;</code>
-                <code>&lt;terminal-textarea value="Pre-filled content" rows="5"&gt;&lt;/terminal-textarea&gt;</code>
-                <code>&lt;terminal-textarea readonly rows="5"&gt;&lt;/terminal-textarea&gt;</code>
-                <code>&lt;terminal-textarea resizable="false" rows="5"&gt;&lt;/terminal-textarea&gt;</code>
-                <code>&lt;terminal-textarea min-height="200px" max-height="400px"&gt;&lt;/terminal-textarea&gt;</code>
+                <code>&lt;t-textarea resize="both" rows="4"&gt;&lt;/t-textarea&gt;</code>
+                <code>&lt;t-textarea resize="vertical" rows="4"&gt;&lt;/t-textarea&gt;</code>
+                <code>&lt;t-textarea resize="horizontal" rows="4"&gt;&lt;/t-textarea&gt;</code>
+                <code>&lt;t-textarea resize="none" rows="4"&gt;&lt;/t-textarea&gt;</code>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <h2 class="component-title">Programmatic Size Control</h2>
+            <p class="component-description">
+                Dynamically change textarea size based on user actions or application state.
+            </p>
+
+            <div class="demo-item full-width">
+                <span class="demo-label">Size Presets</span>
+                <div class="button-row">
+                    <button class="terminal-button" onclick="setSizePreset('compact')">
+                        Compact (2 rows)
+                    </button>
+                    <button class="terminal-button" onclick="setSizePreset('standard')">
+                        Standard (4 rows)
+                    </button>
+                    <button class="terminal-button" onclick="setSizePreset('large')">
+                        Large (8 rows)
+                    </button>
+                    <button class="terminal-button" onclick="setSizePreset('full')">
+                        Full (15 rows)
+                    </button>
+                </div>
+                <t-textarea
+                    id="programmaticSize"
+                    placeholder="Click buttons above to change my size..."
+                    rows="4"
+                    resize="none">
+                </t-textarea>
+            </div>
+
+            <div class="code-block">
+                <code>// Programmatically set textarea size</code>
+                <code>const textarea = document.getElementById('myTextarea');</code>
+                <code>textarea.rows = 8;  // Change to 8 rows</code>
+                <code></code>
+                <code>// Or set via function</code>
+                <code>function setSize(rows) {</code>
+                <code>  textarea.rows = rows;</code>
+                <code>}</code>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <h2 class="component-title">Min/Max Resize Constraints</h2>
+            <p class="component-description">
+                Control the minimum and maximum size users can resize textareas using CSS custom properties.
+            </p>
+
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Constrained Height (100px - 400px)</span>
+                    <t-textarea
+                        placeholder="Resize vertically - constrained between 100-400px..."
+                        rows="4"
+                        resize="vertical"
+                        style="--textarea-min-height: 100px; --textarea-max-height: 400px;">
+                    </t-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Constrained Width (200px - 600px)</span>
+                    <t-textarea
+                        placeholder="Resize horizontally - constrained between 200-600px..."
+                        rows="4"
+                        resize="horizontal"
+                        style="--textarea-min-width: 200px; --textarea-max-width: 600px;">
+                    </t-textarea>
+                </div>
+
+                <div class="demo-item full-width">
+                    <span class="demo-label">Both Dimensions Constrained</span>
+                    <t-textarea
+                        placeholder="Resize both - width: 300-800px, height: 150-500px..."
+                        rows="6"
+                        resize="both"
+                        style="--textarea-min-width: 300px; --textarea-max-width: 800px; --textarea-min-height: 150px; --textarea-max-height: 500px;">
+                    </t-textarea>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;t-textarea</code>
+                <code>  resize="vertical"</code>
+                <code>  style="--textarea-min-height: 100px; --textarea-max-height: 400px;"&gt;</code>
+                <code>&lt;/t-textarea&gt;</code>
+                <code></code>
+                <code>&lt;t-textarea</code>
+                <code>  resize="both"</code>
+                <code>  style="--textarea-min-width: 300px; --textarea-max-width: 800px;</code>
+                <code>         --textarea-min-height: 150px; --textarea-max-height: 500px;"&gt;</code>
+                <code>&lt;/t-textarea&gt;</code>
             </div>
         </div>
 
@@ -347,13 +424,12 @@ You cannot edit it."
                         <span class="shortcut-key">Tab</span><span>Insert tab / Indent selection</span>
                         <span class="shortcut-key">Shift+Tab</span><span>Outdent current line or selection</span>
                         <span class="shortcut-key">Enter</span><span>Auto-indent new line</span>
-                        <span class="shortcut-key">Ctrl/Cmd + /</span><span>Toggle line comment</span>
                         <span class="shortcut-key">Ctrl/Cmd + D</span><span>Duplicate current line</span>
                     </div>
                 </div>
-                <terminal-textarea
+                <t-textarea
                     id="codeEditor"
-                    line-numbers
+                    show-line-numbers code-mode
                     placeholder="// Enter your code here..."
                     rows="15"
                     min-height="300px"
@@ -376,13 +452,13 @@ You cannot edit it."
 // Test the function
 console.log(fibonacci(10)); // Output: 55
 console.log(fibonacci(20)); // Output: 6765">
-                </terminal-textarea>
+                </t-textarea>
                 <div class="button-row">
-                    <button class="terminal-button" onclick="document.getElementById('codeEditor').toggleLineNumbers()">
+                    <button class="terminal-button" onclick="const e=document.getElementById('codeEditor'); e.showLineNumbers=!e.showLineNumbers;">
                         Toggle Line Numbers
                     </button>
-                    <button class="terminal-button" onclick="document.getElementById('codeEditor').selectAll()">
-                        Select All
+                    <button class="terminal-button" onclick="document.getElementById('codeEditor').focus()">
+                        Focus Editor
                     </button>
                     <button class="terminal-button" onclick="copyToClipboard()">
                         Copy to Clipboard
@@ -390,45 +466,145 @@ console.log(fibonacci(20)); // Output: 6765">
                 </div>
             </div>
 
+
+            <div class="code-block">
+                <code>&lt;t-textarea show-line-numbers code-mode rows="15"&gt;&lt;/t-textarea&gt;</code>
+                <code>&lt;t-textarea code-mode rows="10"&gt;&lt;/t-textarea&gt;</code>
+                <code>// Toggle line numbers programmatically</code>
+                <code>textarea.toggleLineNumbers();</code>
+                <code>textarea.setLineNumbers(true);</code>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <h2 class="component-title">Syntax Highlighting</h2>
+            <p class="component-description">
+                Live syntax highlighting with Prism.js. Type code and see it highlighted in real-time using the Terminal Kit color scheme.
+            </p>
+
+            <div class="info-box">
+                <strong>Supported Languages:</strong> JavaScript, HTML, CSS, and more. Set the language property to enable syntax highlighting.
+            </div>
+
             <div class="demo-grid">
-                <div class="demo-item">
-                    <span class="demo-label">Code Editor without Line Numbers</span>
-                    <terminal-textarea
-                        code-editor
-                        placeholder="// Code editor mode without line numbers"
-                        rows="8"
-                        value="// IDE shortcuts still work here
-const greeting = 'Hello, World!';
-console.log(greeting);">
-                    </terminal-textarea>
+                <div class="demo-item full-width">
+                    <span class="demo-label">JavaScript with Syntax Highlighting</span>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label for="jsLang">Language:</label>
+                            <select id="jsLang" onchange="document.getElementById('jsEditor').language = this.value">
+                                <option value="javascript">JavaScript</option>
+                                <option value="markup">HTML</option>
+                                <option value="css">CSS</option>
+                                <option value="none">Plain Text</option>
+                            </select>
+                        </div>
+                        <button class="terminal-button" onclick="const e=document.getElementById('jsEditor'); e.showLineNumbers=!e.showLineNumbers;">
+                            Toggle Line Numbers
+                        </button>
+                    </div>
+                    <t-textarea
+                        id="jsEditor"
+                        code-mode
+                        show-line-numbers
+                        language="javascript"
+                        rows="15"
+                        value="function fibonacci(n) {
+  if (n <= 1) return n;
+
+  let prev = 0;
+  let curr = 1;
+
+  for (let i = 2; i <= n; i++) {
+    const temp = curr;
+    curr = prev + curr;
+    prev = temp;
+  }
+
+  return curr;
+}
+
+// Test the function
+console.log(fibonacci(10)); // Output: 55
+console.log(fibonacci(20)); // Output: 6765">
+                    </t-textarea>
                 </div>
 
-                <div class="demo-item">
-                    <span class="demo-label">JSON Editor</span>
-                    <terminal-textarea
-                        id="jsonEditor"
-                        line-numbers
-                        placeholder="// Enter JSON data..."
-                        rows="8"
-                        value='{
-  "name": "Terminal UI",
-  "version": "1.0.0",
-  "components": [
-    "Button",
-    "Input",
-    "Textarea"
-  ]
-}'>
-                    </terminal-textarea>
+                <div class="demo-item full-width">
+                    <span class="demo-label">HTML with Syntax Highlighting</span>
+                    <div class="button-row">
+                        <button class="terminal-button" onclick="const e=document.getElementById('htmlEditor'); e.showLineNumbers=!e.showLineNumbers;">
+                            Toggle Line Numbers
+                        </button>
+                    </div>
+                    <t-textarea
+                        id="htmlEditor"
+                        code-mode
+                        show-line-numbers
+                        language="markup"
+                        rows="12"
+                        value="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+  <meta charset=&quot;UTF-8&quot;>
+  <title>Hello World</title>
+</head>
+<body>
+  <div class=&quot;container&quot;>
+    <h1>Welcome to Terminal Kit</h1>
+    <button onclick=&quot;handleClick()&quot;>Click Me</button>
+  </div>
+</body>
+</html>">
+                    </t-textarea>
+                </div>
+
+                <div class="demo-item full-width">
+                    <span class="demo-label">CSS with Syntax Highlighting</span>
+                    <div class="button-row">
+                        <button class="terminal-button" onclick="const e=document.getElementById('cssEditor'); e.showLineNumbers=!e.showLineNumbers;">
+                            Toggle Line Numbers
+                        </button>
+                    </div>
+                    <t-textarea
+                        id="cssEditor"
+                        code-mode
+                        show-line-numbers
+                        language="css"
+                        rows="12"
+                        value=".container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.btn-primary {
+  background: #00ff41;
+  color: #0a0a0a;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+}">
+                    </t-textarea>
                 </div>
             </div>
 
             <div class="code-block">
-                <code>&lt;terminal-textarea line-numbers rows="15"&gt;&lt;/terminal-textarea&gt;</code>
-                <code>&lt;terminal-textarea code-editor rows="10"&gt;&lt;/terminal-textarea&gt;</code>
-                <code>// Toggle line numbers programmatically</code>
-                <code>textarea.toggleLineNumbers();</code>
-                <code>textarea.setLineNumbers(true);</code>
+                <code>&lt;t-textarea code-mode show-line-numbers language="javascript" rows="15"&gt;&lt;/t-textarea&gt;</code>
+                <code>&lt;t-textarea code-mode language="markup" rows="10"&gt;&lt;/t-textarea&gt;</code>
+                <code>&lt;t-textarea code-mode language="css" rows="10"&gt;&lt;/t-textarea&gt;</code>
+                <code></code>
+                <code>// Programmatically change language</code>
+                <code>textarea.language = 'javascript';</code>
+                <code>textarea.language = 'none'; // Disable highlighting</code>
             </div>
         </div>
 
@@ -441,11 +617,11 @@ console.log(greeting);">
             <div class="demo-grid">
                 <div class="demo-item">
                     <span class="demo-label">Character Counter</span>
-                    <terminal-textarea
+                    <t-textarea
                         id="charCounter"
                         placeholder="Type something (max 280 chars)..."
                         rows="6">
-                    </terminal-textarea>
+                    </t-textarea>
                     <div id="charCount" style="text-align: right; margin-top: 5px; color: var(--terminal-green-dim); font-size: 11px;">
                         0 / 280 characters
                     </div>
@@ -453,66 +629,12 @@ console.log(greeting);">
 
                 <div class="demo-item">
                     <span class="demo-label">Auto-growing Textarea</span>
-                    <terminal-textarea
+                    <t-textarea
                         id="autoGrow"
                         placeholder="This textarea grows as you type..."
-                        rows="3">
-                    </terminal-textarea>
-                </div>
-
-                <div class="demo-item">
-                    <span class="demo-label">Markdown Editor</span>
-                    <terminal-textarea
-                        id="markdownEditor"
-                        placeholder="# Enter Markdown
-Type **bold** or *italic* text..."
-                        rows="8">
-                    </terminal-textarea>
-                </div>
-
-                <div class="demo-item">
-                    <span class="demo-label">SQL Query Editor</span>
-                    <terminal-textarea
-                        id="sqlEditor"
-                        line-numbers
-                        placeholder="-- Enter SQL query"
-                        rows="8"
-                        value="SELECT
-  users.name,
-  COUNT(orders.id) as order_count
-FROM users
-LEFT JOIN orders ON users.id = orders.user_id
-WHERE users.created_at > '2024-01-01'
-GROUP BY users.id
-ORDER BY order_count DESC;">
-                    </terminal-textarea>
-                </div>
-            </div>
-
-            <h3>Note-taking Application</h3>
-            <div class="demo-item full-width">
-                <div style="display: flex; gap: 20px;">
-                    <div style="flex: 1;">
-                        <span class="demo-label">Write Note</span>
-                        <terminal-textarea
-                            id="noteEditor"
-                            placeholder="Write your note here..."
-                            rows="10">
-                        </terminal-textarea>
-                        <div class="button-row">
-                            <button class="terminal-button primary" onclick="saveNote()">Save Note</button>
-                            <button class="terminal-button" onclick="clearNote()">Clear</button>
-                        </div>
-                    </div>
-                    <div style="flex: 1;">
-                        <span class="demo-label">Saved Notes</span>
-                        <terminal-textarea
-                            id="savedNotes"
-                            readonly
-                            rows="10"
-                            value="Your saved notes will appear here...">
-                        </terminal-textarea>
-                    </div>
+                        rows="2"
+                        resize="none">
+                    </t-textarea>
                 </div>
             </div>
         </div>
@@ -536,27 +658,27 @@ ORDER BY order_count DESC;">
 
         // Add event listeners to all textareas
         document.addEventListener('DOMContentLoaded', () => {
-            const textareas = document.querySelectorAll('terminal-textarea');
+            const textareas = document.querySelectorAll('t-textarea');
             textareas.forEach((textarea) => {
                 const id = textarea.id || textarea.getAttribute('placeholder')?.substring(0, 20) || 'Textarea';
 
-                textarea.addEventListener('input', (e) => {
+                textarea.addEventListener('textarea-input', (e) => {
                     const value = e.detail?.value || '';
                     const preview = value.substring(0, 50);
-                    logEvent(id, 'input', { preview: preview + (value.length > 50 ? '...' : '') });
+                    logEvent(id, 'textarea-input', { preview: preview + (value.length > 50 ? '...' : '') });
                 });
 
-                textarea.addEventListener('change', (e) => {
+                textarea.addEventListener('textarea-change', (e) => {
                     const value = e.detail?.value || '';
-                    logEvent(id, 'change', { length: value.length });
+                    logEvent(id, 'textarea-change', { length: value.length });
                 });
 
-                textarea.addEventListener('focus', () => {
-                    logEvent(id, 'focus');
+                textarea.addEventListener('textarea-focus', () => {
+                    logEvent(id, 'textarea-focus');
                 });
 
-                textarea.addEventListener('blur', () => {
-                    logEvent(id, 'blur');
+                textarea.addEventListener('textarea-blur', () => {
+                    logEvent(id, 'textarea-blur');
                 });
             });
 
@@ -566,7 +688,7 @@ ORDER BY order_count DESC;">
             const maxChars = 280;
 
             if (charCounter && charCount) {
-                charCounter.addEventListener('input', (e) => {
+                charCounter.addEventListener('textarea-input', (e) => {
                     const length = e.detail.value.length;
                     charCount.textContent = `${length} / ${maxChars} characters`;
 
@@ -583,10 +705,10 @@ ORDER BY order_count DESC;">
             // Auto-growing textarea
             const autoGrow = document.getElementById('autoGrow');
             if (autoGrow) {
-                autoGrow.addEventListener('input', (e) => {
+                autoGrow.addEventListener('textarea-input', (e) => {
                     const lines = e.detail.value.split('\n').length;
                     const newRows = Math.max(3, Math.min(lines + 1, 15)); // Min 3, max 15 rows
-                    autoGrow.setRows(newRows);
+                    autoGrow.rows = newRows;
                 });
             }
 
@@ -598,7 +720,7 @@ ORDER BY order_count DESC;">
         async function copyToClipboard() {
             const codeEditor = document.getElementById('codeEditor');
             if (codeEditor) {
-                const text = codeEditor.getValue();
+                const text = codeEditor.value;
                 try {
                     await navigator.clipboard.writeText(text);
                     logEvent('CodeEditor', 'copied to clipboard');
@@ -608,33 +730,28 @@ ORDER BY order_count DESC;">
             }
         }
 
-        // Note-taking functions
-        let notes = [];
+        // Programmatic size control
+        function setSizePreset(preset) {
+            const textarea = document.getElementById('programmaticSize');
+            if (!textarea) return;
 
-        function saveNote() {
-            const noteEditor = document.getElementById('noteEditor');
-            const savedNotes = document.getElementById('savedNotes');
+            const presets = {
+                compact: 2,
+                standard: 4,
+                large: 8,
+                full: 15
+            };
 
-            if (noteEditor && savedNotes) {
-                const note = noteEditor.getValue();
-                if (note.trim()) {
-                    const timestamp = new Date().toLocaleString();
-                    notes.push(`[${timestamp}]\n${note}\n`);
-                    savedNotes.setValue(notes.join('\n' + '='.repeat(40) + '\n'));
-                    noteEditor.setValue('');
-                    logEvent('Notes', 'saved', { length: note.length });
-                }
-            }
+            textarea.rows = presets[preset] || 4;
+            logEvent('ProgrammaticSize', `Size changed to ${preset}`, { rows: presets[preset] });
         }
 
-        function clearNote() {
-            const noteEditor = document.getElementById('noteEditor');
-            if (noteEditor) {
-                noteEditor.setValue('');
-                noteEditor.focus();
-                logEvent('Notes', 'cleared');
-            }
-        }
     </script>
+
+    <!-- Prism.js core and language components (local files) -->
+    <script src="../public/js/libs/prismjs/prism.js"></script>
+    <script src="../public/js/libs/prismjs/prism-markup.min.js"></script>
+    <script src="../public/js/libs/prismjs/prism-css.min.js"></script>
+    <script src="../public/js/libs/prismjs/prism-javascript.min.js"></script>
 </body>
 </html>
