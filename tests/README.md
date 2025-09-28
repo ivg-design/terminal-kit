@@ -293,13 +293,16 @@ npm run test:coverage
 ## Test Results Summary
 
 ```
-Test Files  3 passed (3)
-Tests       168 passed (168)
-Duration    ~650-700ms
+Test Files  5 passed (5)
+Tests       311 passed (311)
+Duration    ~700-750ms
 ```
 
-- **TPanelLit:** 59 tests covering FULL profile compliance
+- **TPanelLit:** 63 tests covering FULL profile compliance
 - **TColorPicker:** 52 tests covering BUNDLED-LIB profile compliance
+- **TModalLit:** 57 tests covering FULL profile compliance
+- **TDropdownLit:** 55 tests covering FORM profile compliance
+- **TButtonLit:** 84 tests covering CORE profile compliance
 
 ---
 
@@ -396,5 +399,94 @@ FULL profile component with complete lifecycle, nesting, validation, and complex
 - Migration guide from old TerminalModal
 - Accessibility, performance, and best practices
 - Troubleshooting guide
+
+---
+
+### TDropdownLit Component - 55 Tests (FORM Profile)
+
+FORM profile component with folder/file structure, search, validation, and form participation.
+
+#### 1. Manifest Completeness (4 tests)
+- ✅ Manifest structure (tagName, displayName, version)
+- ✅ All 8 properties documented
+- ✅ All 8 methods documented
+- ✅ All 3 events documented
+
+#### 2. Property Functionality (8 tests)
+- ✅ All properties work correctly
+- ✅ Attribute reflection works
+- ✅ Default values correct
+
+**Properties Tested:**
+- `placeholder` - Button text when no selection
+- `value` - Selected value (file path)
+- `options` - Simple options array
+- `searchable` - Enable search filter
+- `disabled` - Disabled state
+- `open` - Dropdown open state
+- `width` - Component width
+- `showIcons` - Show folder/file icons
+
+#### 3. Method Functionality (10 tests)
+- ✅ `setValue()` - Updates value
+- ✅ `getValue()` - Returns current value
+- ✅ `openDropdown()` - Opens dropdown (respects disabled state)
+- ✅ `closeDropdown()` - Closes dropdown
+- ✅ `toggle()` - Toggles open/close
+- ✅ `setOptions()` - Updates options array
+- ✅ `loadData()` - Loads folder structure
+- ✅ `reset()` - Clears selection and state
+
+#### 4. Event Functionality (4 tests)
+- **dropdown-change event:**
+  - ✅ Fires on file selection with correct detail
+
+- **dropdown-open event:**
+  - ✅ Fires when dropdown opens
+
+- **dropdown-close event:**
+  - ✅ Fires when dropdown closes
+
+- ✅ All events have `bubbles: true` and `composed: true`
+
+#### 5. Validation (4 tests)
+- ✅ Options array validation
+- ✅ Simple string options accepted
+- ✅ Object options with value/label accepted
+- ✅ Invalid structures rejected
+
+#### 6. Rendering (13 tests)
+- ✅ Component, button, and panel render
+- ✅ Search shows/hides based on searchable property
+- ✅ Disabled class applies correctly
+- ✅ Active class when open
+- ✅ Panel hides when not open
+- ✅ Folder structure renders
+- ✅ Files render
+- ✅ Icons show/hide based on showIcons
+
+#### 7. Cleanup Patterns (3 tests)
+- ✅ Document listeners removed on disconnect
+- ✅ Timers cleared on disconnect
+- ✅ Multiple disconnects handled safely
+
+#### 8. Logging (1 test)
+- ✅ Logger instance with all methods (error, warn, info, debug, trace)
+
+#### 9. Data Conversion (3 tests)
+- ✅ Simple string options convert to file structure
+- ✅ Object options convert to file structure
+- ✅ Metadata extracted from options
+
+#### 10. Search Functionality (3 tests)
+- ✅ Files filtered by search term
+- ✅ No results message shown
+- ✅ Search cleared on close
+
+#### 11. Folder Functionality (2 tests)
+- ✅ Folder expand/collapse toggle
+- ✅ Recursive file counting
+
+📄 **API Documentation:** See component JSDoc for full API reference
 
 ---
