@@ -8,7 +8,6 @@
 
         <!-- Load CSS -->
         <link rel="stylesheet" href="../css/theme/terminal.css">
-        <link rel="stylesheet" href="../css/components/modal.css">
         <link rel="stylesheet" href="../css/components/buttons.css">
         <link rel="stylesheet" href="../css/components/form.css">
 
@@ -197,23 +196,23 @@
                     <div class="demo-item">
                         <span class="demo-label">Small & Medium Modals</span>
                         <div class="button-row">
-                            <terminal-button variant="primary" onclick="showModal('modal-sm')">Small Modal</terminal-button>
-                            <terminal-button variant="secondary" onclick="showModal('modal-md')">Medium Modal</terminal-button>
+                            <t-btn variant="primary" onclick="showModal('modal-sm')">Small Modal</t-btn>
+                            <t-btn variant="secondary" onclick="showModal('modal-md')">Medium Modal</t-btn>
                         </div>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Large & Extra Large</span>
                         <div class="button-row">
-                            <terminal-button variant="success" onclick="showModal('modal-lg')">Large Modal</terminal-button>
-                            <terminal-button variant="warning" onclick="showModal('modal-xl')">XL Modal</terminal-button>
+                            <t-btn variant="success" onclick="showModal('modal-lg')">Large Modal</t-btn>
+                            <t-btn variant="warning" onclick="showModal('modal-xl')">XL Modal</t-btn>
                         </div>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Full Screen</span>
                         <div class="button-row">
-                            <terminal-button variant="danger" onclick="showModal('modal-full')">Full Screen</terminal-button>
+                            <t-btn variant="danger" onclick="showModal('modal-full')">Full Screen</t-btn>
                         </div>
                     </div>
                 </div>
@@ -230,22 +229,22 @@
                     <div class="demo-item">
                         <span class="demo-label">Single Column</span>
                         <div class="button-row">
-                            <terminal-button variant="primary" onclick="showModal('modal-single')">Single Layout</terminal-button>
+                            <t-btn variant="primary" onclick="showModal('modal-single')">Single Layout</t-btn>
                         </div>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Two Column</span>
                         <div class="button-row">
-                            <terminal-button variant="secondary" onclick="showModal('modal-2col')">2-Column Layout</terminal-button>
+                            <t-btn variant="secondary" onclick="showModal('modal-2col')">2-Column Layout</t-btn>
                         </div>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Complex Layouts</span>
                         <div class="button-row">
-                            <terminal-button variant="success" onclick="showModal('modal-2x2')">2x2 Grid</terminal-button>
-                            <terminal-button variant="warning" onclick="showModal('modal-1-2-1')">1-2-1 Layout</terminal-button>
+                            <t-btn variant="success" onclick="showModal('modal-2x2')">2x2 Grid</t-btn>
+                            <t-btn variant="warning" onclick="showModal('modal-1-2-1')">1-2-1 Layout</t-btn>
                         </div>
                     </div>
                 </div>
@@ -262,8 +261,8 @@
                     <div class="demo-item">
                         <span class="demo-label">Confirmation Dialogs</span>
                         <div class="button-row">
-                            <terminal-button variant="danger" onclick="showModal('modal-confirm')">Delete Confirm</terminal-button>
-                            <terminal-button variant="warning" onclick="showModal('modal-warning')">Warning Dialog</terminal-button>
+                            <t-btn variant="danger" onclick="showModal('modal-confirm')">Delete Confirm</t-btn>
+                            <t-btn variant="warning" onclick="showModal('modal-warning')">Warning Dialog</t-btn>
                         </div>
                     </div>
                 </div>
@@ -272,25 +271,25 @@
             <!-- Modal Instances -->
 
             <!-- Small Modal -->
-            <terminal-modal id="modal-sm" size="sm" title="Small Modal">
+            <t-mdl id="modal-sm" size="small" title="Small Modal">
                 <p>This is a small modal perfect for simple messages or confirmations.</p>
                 <div style="margin-top: 20px;">
-                    <terminal-button variant="primary" onclick="hideModal('modal-sm')">OK</terminal-button>
-                    <terminal-button variant="secondary" onclick="hideModal('modal-sm')" style="margin-left: 10px;">Cancel</terminal-button>
+                    <t-btn variant="primary" onclick="hideModal('modal-sm')">OK</t-btn>
+                    <t-btn variant="secondary" onclick="hideModal('modal-sm')" style="margin-left: 10px;">Cancel</t-btn>
                 </div>
-            </terminal-modal>
+            </t-mdl>
 
             <!-- Medium Modal -->
-            <terminal-modal id="modal-md" size="md" title="Medium Modal">
+            <t-mdl id="modal-md" size="medium" title="Medium Modal">
                 <p>This medium-sized modal provides more space for content while remaining focused.</p>
                 <p>It's perfect for forms, lists, or moderate amounts of information.</p>
                 <div style="margin-top: 20px;">
-                    <terminal-button variant="primary" onclick="hideModal('modal-md')">Close</terminal-button>
+                    <t-btn variant="primary" onclick="hideModal('modal-md')">Close</t-btn>
                 </div>
-            </terminal-modal>
+            </t-mdl>
 
             <!-- Large Modal -->
-            <terminal-modal id="modal-lg" size="lg" title="Large Modal">
+            <t-mdl id="modal-lg" size="large" title="Large Modal">
                 <p>Large modals provide substantial space for complex content, detailed forms, or rich media.</p>
                 <p>They're ideal when you need to present a lot of information without overwhelming the user.</p>
                 <div style="background: #1a1a1a; padding: 15px; margin: 15px 0; border: 1px solid #333;">
@@ -298,13 +297,13 @@
                     <p>This could contain tables, detailed forms, or other complex layouts.</p>
                 </div>
                 <div style="margin-top: 20px;">
-                    <terminal-button variant="success" onclick="hideModal('modal-lg')">Save</terminal-button>
-                    <terminal-button variant="secondary" onclick="hideModal('modal-lg')" style="margin-left: 10px;">Cancel</terminal-button>
+                    <t-btn variant="success" onclick="hideModal('modal-lg')">Save</t-btn>
+                    <t-btn variant="secondary" onclick="hideModal('modal-lg')" style="margin-left: 10px;">Cancel</t-btn>
                 </div>
-            </terminal-modal>
+            </t-mdl>
 
             <!-- Extra Large Modal -->
-            <terminal-modal id="modal-xl" size="xl" title="Extra Large Modal">
+            <t-mdl id="modal-xl" size="xlarge" title="Extra Large Modal">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div>
                         <h4 style="color: #00ff41; margin-bottom: 10px;">Left Column</h4>
@@ -322,13 +321,13 @@
                     </div>
                 </div>
                 <div style="margin-top: 20px;">
-                    <terminal-button variant="primary" onclick="hideModal('modal-xl')">Apply</terminal-button>
-                    <terminal-button variant="secondary" onclick="hideModal('modal-xl')" style="margin-left: 10px;">Cancel</terminal-button>
+                    <t-btn variant="primary" onclick="hideModal('modal-xl')">Apply</t-btn>
+                    <t-btn variant="secondary" onclick="hideModal('modal-xl')" style="margin-left: 10px;">Cancel</t-btn>
                 </div>
-            </terminal-modal>
+            </t-mdl>
 
             <!-- Full Screen Modal -->
-            <terminal-modal id="modal-full" size="full" title="Full Screen Modal">
+            <t-mdl id="modal-full" size="full" title="Full Screen Modal">
                 <p>Full screen modals take over the entire viewport for immersive experiences.</p>
                 <p>Perfect for editors, detailed workflows, or when you need maximum space.</p>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0;">
@@ -346,14 +345,14 @@
                     </div>
                 </div>
                 <div style="margin-top: 30px;">
-                    <terminal-button variant="success" onclick="hideModal('modal-full')">Save & Close</terminal-button>
-                    <terminal-button variant="danger" onclick="hideModal('modal-full')" style="margin-left: 10px;">Discard</terminal-button>
+                    <t-btn variant="success" onclick="hideModal('modal-full')">Save & Close</t-btn>
+                    <t-btn variant="danger" onclick="hideModal('modal-full')" style="margin-left: 10px;">Discard</t-btn>
                 </div>
-            </terminal-modal>
+            </t-mdl>
 
             <!-- Single Layout Modal -->
-            <terminal-modal id="modal-single" layout="single" title="Single Column Layout">
-                <div>
+            <t-mdl id="modal-single" layout="single" title="Single Column Layout">
+                <div slot="default">
                     <h4 style="color: #00ff41; margin-bottom: 15px;">Single Column Content</h4>
                     <p>This modal uses a single column layout, perfect for focused content like articles, forms, or messages.</p>
                     <div style="background: #1a1a1a; padding: 20px; margin: 15px 0; border: 1px solid #333;">
@@ -361,36 +360,34 @@
                         <p>Each element stacks naturally in a single column.</p>
                     </div>
                     <div style="margin-top: 20px;">
-                        <terminal-button variant="primary" onclick="hideModal('modal-single')">Close</terminal-button>
+                        <t-btn variant="primary" onclick="hideModal('modal-single')">Close</t-btn>
                     </div>
                 </div>
-            </terminal-modal>
+            </t-mdl>
 
             <!-- Two Column Layout Modal -->
-            <terminal-modal id="modal-2col" layout="2-column" title="Two Column Layout">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div>
-                        <h4 style="color: #00ff41; margin-bottom: 10px;">Left Column</h4>
-                        <p>Two column layouts are great for side-by-side comparisons or related content.</p>
-                        <div style="background: #1a1a1a; padding: 15px; margin: 10px 0; border: 1px solid #333;">
-                            <p>Left content area</p>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 style="color: #00ff41; margin-bottom: 10px;">Right Column</h4>
-                        <p>Each column can contain different types of content while maintaining visual balance.</p>
-                        <div style="background: #1a1a1a; padding: 15px; margin: 10px 0; border: 1px solid #333;">
-                            <p>Right content area</p>
-                        </div>
+            <t-mdl id="modal-2col" layout="2-column" title="Two Column Layout">
+                <div slot="left">
+                    <h4 style="color: #00ff41; margin-bottom: 10px;">Left Column</h4>
+                    <p>Two column layouts are great for side-by-side comparisons or related content.</p>
+                    <div style="background: #1a1a1a; padding: 15px; margin: 10px 0; border: 1px solid #333;">
+                        <p>Left content area</p>
                     </div>
                 </div>
-                <div style="margin-top: 20px;">
-                    <terminal-button variant="primary" onclick="hideModal('modal-2col')">Close</terminal-button>
+                <div slot="right">
+                    <h4 style="color: #00ff41; margin-bottom: 10px;">Right Column</h4>
+                    <p>Each column can contain different types of content while maintaining visual balance.</p>
+                    <div style="background: #1a1a1a; padding: 15px; margin: 10px 0; border: 1px solid #333;">
+                        <p>Right content area</p>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <t-btn variant="primary" onclick="hideModal('modal-2col')">Close</t-btn>
+                    </div>
                 </div>
-            </terminal-modal>
+            </t-mdl>
 
             <!-- 2x2 Grid Layout Modal -->
-            <terminal-modal id="modal-2x2" layout="2x2" title="2x2 Grid Layout" size="lg">
+            <t-mdl id="modal-2x2" layout="2x2" title="2x2 Grid Layout" size="large">
                 <div slot="top-left" style="background: #1a1a1a; padding: 15px; border: 1px solid #333; height: 100%; box-sizing: border-box;">
                     <h5 style="color: #00ff41; margin-bottom: 8px;">Top Left</h5>
                     <p>Grid cell content</p>
@@ -407,32 +404,30 @@
                     <h5 style="color: #00ff41; margin-bottom: 8px;">Bottom Right</h5>
                     <p>Grid cell content</p>
                 </div>
-            </terminal-modal>
+            </t-mdl>
 
             <!-- 1-2-1 Layout Modal -->
-            <terminal-modal id="modal-1-2-1" layout="1-2-1" title="1-2-1 Layout" size="lg">
-                <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 15px;">
-                    <div style="background: #1a1a1a; padding: 15px; border: 1px solid #333;">
-                        <h5 style="color: #00ff41; margin-bottom: 8px;">Sidebar</h5>
-                        <p>Navigation or tools</p>
-                    </div>
-                    <div style="background: #1a1a1a; padding: 15px; border: 1px solid #333;">
-                        <h5 style="color: #00ff41; margin-bottom: 8px;">Main Content</h5>
-                        <p>The primary content area takes up more space in this layout.</p>
-                        <p>Perfect for editor-style interfaces with sidebars.</p>
-                    </div>
-                    <div style="background: #1a1a1a; padding: 15px; border: 1px solid #333;">
-                        <h5 style="color: #00ff41; margin-bottom: 8px;">Properties</h5>
-                        <p>Settings or details</p>
+            <t-mdl id="modal-1-2-1" layout="1-2-1" title="1-2-1 Layout" size="large">
+                <div slot="left" style="background: #1a1a1a; padding: 15px; border: 1px solid #333;">
+                    <h5 style="color: #00ff41; margin-bottom: 8px;">Sidebar</h5>
+                    <p>Navigation or tools</p>
+                </div>
+                <div slot="center" style="background: #1a1a1a; padding: 15px; border: 1px solid #333;">
+                    <h5 style="color: #00ff41; margin-bottom: 8px;">Main Content</h5>
+                    <p>The primary content area takes up more space in this layout.</p>
+                    <p>Perfect for editor-style interfaces with sidebars.</p>
+                </div>
+                <div slot="right" style="background: #1a1a1a; padding: 15px; border: 1px solid #333;">
+                    <h5 style="color: #00ff41; margin-bottom: 8px;">Properties</h5>
+                    <p>Settings or details</p>
+                    <div style="margin-top: 20px;">
+                        <t-btn variant="primary" onclick="hideModal('modal-1-2-1')">Close</t-btn>
                     </div>
                 </div>
-                <div style="margin-top: 20px;">
-                    <terminal-button variant="primary" onclick="hideModal('modal-1-2-1')">Close</terminal-button>
-                </div>
-            </terminal-modal>
+            </t-mdl>
 
             <!-- Confirmation Modal -->
-            <terminal-modal id="modal-confirm" title="⚠ Confirm Deletion" size="sm" style="--terminal-green: #ff3333; --terminal-green-dim: #cc2222;">
+            <t-mdl id="modal-confirm" title="⚠ Confirm Deletion" size="small" style="--terminal-green: #ff3333; --terminal-green-dim: #cc2222;">
                 <div style="background: rgba(255, 51, 51, 0.1); border: 1px solid #ff3333; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span style="color: #ff3333; font-size: 20px;">⚠</span>
@@ -441,13 +436,13 @@
                 </div>
                 <p style="color: #ff6b6b;">Are you sure you want to delete this item? All associated data will be permanently removed.</p>
                 <div style="margin-top: 20px;">
-                    <terminal-button variant="danger" onclick="handleDelete()">Delete</terminal-button>
-                    <terminal-button variant="secondary" onclick="hideModal('modal-confirm')" style="margin-left: 10px;">Cancel</terminal-button>
+                    <t-btn variant="danger" onclick="handleDelete()">Delete</t-btn>
+                    <t-btn variant="secondary" onclick="hideModal('modal-confirm')" style="margin-left: 10px;">Cancel</t-btn>
                 </div>
-            </terminal-modal>
+            </t-mdl>
 
             <!-- Warning Modal -->
-            <terminal-modal id="modal-warning" title="⚠ Warning" size="md" style="--terminal-green: #ffd700; --terminal-green-dim: #ccaa00;">
+            <t-mdl id="modal-warning" title="⚠ Warning" size="medium" style="--terminal-green: #ffd700; --terminal-green-dim: #ccaa00;">
                 <div style="background: rgba(255, 215, 0, 0.1); border: 1px solid #ffd700; padding: 20px; margin-bottom: 20px; border-radius: 4px;">
                     <div style="display: flex; align-items: flex-start; gap: 15px;">
                         <div style="color: #ffd700; font-size: 24px;">⚠</div>
@@ -459,11 +454,11 @@
                     </div>
                 </div>
                 <div style="margin-top: 20px;">
-                    <terminal-button variant="primary" onclick="handleSave()">Save Changes</terminal-button>
-                    <terminal-button variant="danger" onclick="handleDiscard()" style="margin-left: 10px;">Discard</terminal-button>
-                    <terminal-button variant="secondary" onclick="hideModal('modal-warning')" style="margin-left: 10px;">Cancel</terminal-button>
+                    <t-btn variant="primary" onclick="handleSave()">Save Changes</t-btn>
+                    <t-btn variant="danger" onclick="handleDiscard()" style="margin-left: 10px;">Discard</t-btn>
+                    <t-btn variant="secondary" onclick="hideModal('modal-warning')" style="margin-left: 10px;">Cancel</t-btn>
                 </div>
-            </terminal-modal>
+            </t-mdl>
 
             <!-- Code Examples -->
             <div class="demo-section">
@@ -474,23 +469,23 @@
 
                 <div class="code-example">
                     <pre>&lt;!-- Basic modal with different sizes --&gt;
-&lt;terminal-modal id="my-modal" size="md" title="Modal Title"&gt;
+&lt;t-mdl id="my-modal" size="medium" title="Modal Title"&gt;
     &lt;p&gt;Modal content goes here...&lt;/p&gt;
     &lt;div style="margin-top: 20px;"&gt;
-        &lt;terminal-button variant="primary"&gt;Action&lt;/terminal-button&gt;
-        &lt;terminal-button variant="secondary"&gt;Cancel&lt;/terminal-button&gt;
+        &lt;t-btn variant="primary"&gt;Action&lt;/t-btn&gt;
+        &lt;t-btn variant="secondary"&gt;Cancel&lt;/t-btn&gt;
     &lt;/div&gt;
-&lt;/terminal-modal&gt;
+&lt;/t-mdl&gt;
 
-&lt;!-- Different sizes: sm, md, lg, xl, full --&gt;
-&lt;terminal-modal size="sm" title="Small"&gt;...&lt;/terminal-modal&gt;
-&lt;terminal-modal size="lg" title="Large"&gt;...&lt;/terminal-modal&gt;
-&lt;terminal-modal size="full" title="Full Screen"&gt;...&lt;/terminal-modal&gt;
+&lt;!-- Different sizes: small, medium, large, xlarge, full --&gt;
+&lt;t-mdl size="small" title="Small"&gt;...&lt;/t-mdl&gt;
+&lt;t-mdl size="large" title="Large"&gt;...&lt;/t-mdl&gt;
+&lt;t-mdl size="full" title="Full Screen"&gt;...&lt;/t-mdl&gt;
 
 &lt;!-- Different layouts --&gt;
-&lt;terminal-modal layout="single" title="Single Column"&gt;...&lt;/terminal-modal&gt;
-&lt;terminal-modal layout="2-column" title="Two Columns"&gt;...&lt;/terminal-modal&gt;
-&lt;terminal-modal layout="2x2" title="Grid Layout"&gt;...&lt;/terminal-modal&gt;</pre>
+&lt;t-mdl layout="single" title="Single Column"&gt;...&lt;/t-mdl&gt;
+&lt;t-mdl layout="2-column" title="Two Columns"&gt;...&lt;/t-mdl&gt;
+&lt;t-mdl layout="2x2" title="Grid Layout"&gt;...&lt;/t-mdl&gt;</pre>
                 </div>
 
                 <div class="code-example">
@@ -500,18 +495,37 @@ const modal = document.querySelector('#my-modal');
 // Show/hide modal
 modal.show();
 modal.hide();
+modal.toggle();
 
-// Check if modal is open
-if (modal.isOpen()) {
+// Close with preventable event
+modal.close(); // Fires modal-before-close (can be prevented)
+
+// Loading state
+modal.showLoading();
+modal.hideLoading();
+
+// Check if modal is visible
+if (modal.visible) {
     // Modal is currently visible
 }
 
 // Listen to modal events
-modal.addEventListener('modal-opened', () =&gt; {
-    console.log('Modal opened');
+modal.addEventListener('modal-show', () =&gt; {
+    console.log('Modal shown');
 });
 
-modal.addEventListener('modal-closed', () =&gt; {
+modal.addEventListener('modal-hide', () =&gt; {
+    console.log('Modal hidden');
+});
+
+modal.addEventListener('modal-before-close', (e) =&gt; {
+    // Prevent closing if needed
+    if (hasUnsavedChanges) {
+        e.preventDefault();
+    }
+});
+
+modal.addEventListener('modal-close', () =&gt; {
     console.log('Modal closed');
 });
 
@@ -529,10 +543,9 @@ function hideModal(modalId) {
 
         <!-- Import Components -->
         <script type="module">
-            import '../js/components/TerminalComponent.js';
-            import '../js/components/TerminalModal.js';
-            import '../js/components/TerminalButton.js';
-            import '../js/components/TerminalInput.js';
+            import '../js/components/TModalLit.js';
+            import '../js/components/TButtonLit.js';
+            import '../js/components/TInputLit.js';
 
             // Global helper functions
             window.showModal = (modalId) => {
