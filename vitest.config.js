@@ -23,7 +23,8 @@ export default defineConfig({
       include: [
         'js/components/TPanelLit.js',
         'js/components/TColorPicker.js',
-        'js/components/TButtonLit.js'
+        'js/components/TButtonLit.js',
+        'js/components/TModalLit.js'
       ],
       exclude: [
         'js/components/**/*.backup.js',

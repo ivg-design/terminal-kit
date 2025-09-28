@@ -36,7 +36,7 @@ This component was migrated from a hybrid Declarative Shadow DOM + StyleSheetMan
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
 | `title` | string | `''` | Panel header title |
-| `variant` | string | `'standard'` | Panel variant: 'standard', 'control', 'slide', 'headless' |
+| `variant` | string | `'standard'` | Panel variant: 'standard', 'headless' |
 | `collapsible` | boolean | `false` | Whether panel can collapse |
 | `collapsed` | boolean | `false` | Current collapsed state |
 | `compact` | boolean | `false` | Compact mode (20px header) |
@@ -51,8 +51,6 @@ This component was migrated from a hybrid Declarative Shadow DOM + StyleSheetMan
 
 #### `variant`
 - **'standard'**: Default panel with header and border decorations `[ title ]`
-- **'control'**: Compact control panel style
-- **'slide'**: Slide-in panel from right side
 - **'headless'**: No header, just content container
 
 #### Size Modes
@@ -79,11 +77,11 @@ Collapses the panel.
 panel.collapse();
 ```
 
-#### `toggle()`
+#### `toggleCollapse()`
 Toggles panel collapsed state.
 
 ```javascript
-panel.toggle();
+panel.toggleCollapse();
 ```
 
 #### `setLoading(loading: boolean)`
@@ -104,30 +102,37 @@ panel.setTitle('New Title');
 
 ### Footer Methods
 
-#### `collapseFooter()`
-Collapses the footer (slides down out of view).
+#### `toggleFooterCollapse()`
+Toggles the footer collapsed state (slides down when collapsed, up when expanded).
+
+**Returns:** `boolean` - New footer collapsed state
 
 ```javascript
-panel.collapseFooter();
-```
-
-#### `expandFooter()`
-Expands the footer (slides up into view).
-
-```javascript
-panel.expandFooter();
+const footerCollapsed = panel.toggleFooterCollapse();
+console.log('Footer collapsed:', footerCollapsed);
 ```
 
 ## Events
 
-### `panel-toggle`
+### `panel-collapsed`
 Fired when panel is collapsed or expanded.
 
 **Detail:** `{ collapsed: boolean }`
 
 ```javascript
-panel.addEventListener('panel-toggle', (e) => {
+panel.addEventListener('panel-collapsed', (e) => {
   console.log('Panel collapsed:', e.detail.collapsed);
+});
+```
+
+### `panel-footer-collapsed`
+Fired when panel footer is collapsed or expanded via `toggleFooterCollapse()`.
+
+**Detail:** `{ footerCollapsed: boolean }`
+
+```javascript
+panel.addEventListener('panel-footer-collapsed', (e) => {
+  console.log('Footer collapsed:', e.detail.footerCollapsed);
 });
 ```
 
