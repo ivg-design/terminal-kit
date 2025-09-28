@@ -13,18 +13,125 @@ import iro from '@jaames/iro';
 /**
  * @component TColorPicker
  * @tagname t-clr
- * @description Advanced color picker component with systematic element control, iro.js integration, persistent custom swatches, and multiple color format support (HEX, RGB, HSL). Supports flexible element ordering, three size variants, custom icons, and modal confirmation for destructive actions.
+ * @description Advanced color picker component with iro.js integration, persistent custom swatches, and multiple color format support (HEXA, RGBA, HSLA). Features a horizontal popover layout with live color updates, bidirectional input, format switching, and modal confirmation for destructive actions. Supports flexible element ordering, three size variants, and custom icons.
  * @category Form Controls
  * @since 1.0.0
- * @example
+ *
+ * @features
+ * - **iro.js Integration**: Professional color picker with square gradient box, hue slider, and alpha slider
+ * - **Live Updates**: Color values update 4x per second (250ms) during drag operations
+ * - **Bidirectional Input**: Read and write color values directly in hex, rgba, or hsla format
+ * - **Format Switching**: Toggle between HEXA, RGBA, and HSLA display modes
+ * - **Persistent Swatches**: Custom swatches saved to localStorage, merged with 10 default swatches
+ * - **Flexible Layout**: Order and include/exclude elements: icon, label, swatch (mandatory), input
+ * - **Three Size Variants**: Large (48px), Standard (32px), Compact (minimal)
+ * - **Smart Positioning**: Popover appears next to triggering element, accounting for page scroll
+ * - **Keyboard Shortcuts**: CMD+Click to remove custom swatches
+ * - **Modal Confirmation**: Safe deletion of all custom swatches with confirmation dialog
+ *
+ * @picker-layout
+ * The popover displays in a horizontal two-column grid layout:
+ *
+ * **Left Column (Picker):**
+ * - Square color box (180x180px) with gradient selection
+ * - Hue slider (20px wide, vertical)
+ * - Alpha slider (20px wide, vertical)
+ *
+ * **Right Column (Controls - 180px wide):**
+ * 1. Format buttons (HEXA/RGBA/HSLA) - 9px font, equal width
+ * 2. Color input field - bidirectional, left-aligned, 11px font
+ * 3. Swatches grid (5 columns, 20px swatches, 4px gaps, scrollable with styled scrollbar)
+ * 4. Action buttons (vertical stack):
+ *    - Save swatch (green, floppy disk icon)
+ *    - Close picker (X icon)
+ *    - Clear all swatches (red, trash icon - only if show-clear-button enabled)
+ *
+ * @element-options
+ * Available elements for the `elements` attribute (order matters):
+ *
+ * - **icon** - Palette icon (24px, terminal green, 70% opacity)
+ * - **label** - Two-line label (label1/label2, 10px uppercase, right-aligned)
+ * - **swatch** - Color preview box (MANDATORY, opens picker on click)
+ * - **input** - Hex color input field (80px, monospace, read-only)
+ *
+ * The swatch element is mandatory and must be included. Elements render in the exact order specified.
+ *
+ * @size-variants
+ * - **large** (default): 48px height, 12px padding, 24px icons
+ * - **standard**: 32px height, 8px padding, 16px icons
+ * - **compact**: Minimal height, transparent background, 20px swatch only
+ *
+ * @color-formats
+ * The picker supports three color format display modes:
+ *
+ * - **HEXA**: #RRGGBBAA (e.g., #00ff41ff)
+ * - **RGBA**: rgba(r, g, b, a) (e.g., rgba(0, 255, 65, 1))
+ * - **HSLA**: hsla(h, s%, l%, a) (e.g., hsla(135, 100%, 50%, 1))
+ *
+ * Format switching only affects display - internal value always stored as hex8.
+ *
+ * @swatches-system
+ * - **Default Swatches**: 10 predefined colors (green, red, blue, yellow, magenta, cyan, white, grays)
+ * - **Custom Swatches**: User-added colors saved to localStorage with key `t-clr-custom-swatches`
+ * - **Add Swatch**: Click floppy disk icon to save current color
+ * - **Remove Swatch**: CMD+Click on custom swatch (not default swatches)
+ * - **Clear All**: Click trash icon (requires show-clear-button) with modal confirmation
+ * - **Grid Layout**: 5 columns, 20px swatches, 4px gaps, styled scrollbar (6px, green thumb)
+ *
+ * @keyboard-interactions
+ * - **CMD+Click**: Remove custom swatch (custom swatches only, not default swatches)
+ * - **ESC**: Close picker (handled by document click outside)
+ *
+ * @events
+ * - **change**: Fired when color value changes (250ms debounced)
+ *   - detail: { value: string, color: string }
+ *
+ * @css-variables
+ * - **--t-clr-bg**: Background color (default: var(--terminal-bg, #242424))
+ * - **--t-clr-border**: Border color (default: var(--terminal-border, #333333))
+ * - **--t-clr-color**: Primary color (default: var(--terminal-green, #00cc33))
+ * - **--t-clr-color-hover**: Hover color (default: var(--terminal-green-bright, #00ff41))
+ * - **--t-clr-transition**: Transition timing (default: var(--terminal-transition, all 0.2s ease))
+ *
+ * @external-dependencies
+ * - **@jaames/iro**: iro.js color picker library
+ * - **Phosphor Icons**: paletteIcon, xIcon, floppyDiskIcon, trashIcon
+ * - **Global CSS**: css/components/t-clr-iro.css (must be linked in HTML)
+ *
+ * @global-css-requirement
+ * The popover is appended to document.body (light DOM) and requires global CSS:
+ * ```html
+ * <link rel="stylesheet" href="css/components/t-clr-iro.css">
+ * ```
+ *
+ * @example Basic usage
+ * <t-clr value="#00ff41ff"></t-clr>
+ *
+ * @example Full configuration
  * <t-clr
- *   value="#00ff41ff"
+ *   value="#ff6b35ff"
  *   label1="Theme"
- *   label2="Color"
+ *   label2="Primary"
  *   variant="large"
  *   elements="icon,label,swatch,input"
  *   show-clear-button>
  * </t-clr>
+ *
+ * @example Custom element order
+ * <t-clr elements="swatch,icon,input"></t-clr>
+ * <t-clr elements="icon,swatch"></t-clr>
+ * <t-clr elements="label,swatch,input"></t-clr>
+ *
+ * @example Size variants
+ * <t-clr variant="large"></t-clr>
+ * <t-clr variant="standard"></t-clr>
+ * <t-clr variant="compact"></t-clr>
+ *
+ * @example Disabled state
+ * <t-clr disabled></t-clr>
+ *
+ * @example With clear button
+ * <t-clr show-clear-button></t-clr>
  */
 export class TColorPicker extends LitElement {
 
@@ -569,75 +676,126 @@ export class TColorPicker extends LitElement {
 	 */
 	static properties = {
 		/**
-		 * @property {string} value - Current color value in hex8 format (with alpha channel)
+		 * @property {string} value - Current color value in hex8 format (with alpha channel). Always stored as 8-character hex with alpha (#RRGGBBAA). Display format changes based on selected mode (HEXA/RGBA/HSLA) but internal storage remains hex8.
+		 * @type {string}
 		 * @default '#00ff41ff'
 		 * @attribute value
 		 * @reflects false
 		 * @example
 		 * <t-clr value="#ff6b35ff"></t-clr>
+		 * <t-clr value="#00ff4180"></t-clr> <!-- 50% opacity -->
 		 */
 		value: { type: String },
 
 		/**
-		 * @property {string} label1 - First line of label text (displayed when 'label' element included)
+		 * @property {string} label1 - First line of label text. Only displayed when 'label' is included in the elements attribute. Renders above label2 in uppercase, right-aligned, 10px font size, terminal green color.
+		 * @type {string}
 		 * @default 'Color'
 		 * @attribute label1
 		 * @reflects false
 		 * @example
-		 * <t-clr label1="Theme"></t-clr>
+		 * <t-clr label1="Theme" elements="icon,label,swatch"></t-clr>
+		 * <t-clr label1="Background" label2="Primary"></t-clr>
 		 */
 		label1: { type: String },
 
 		/**
-		 * @property {string} label2 - Second line of label text (displayed when 'label' element included)
+		 * @property {string} label2 - Second line of label text. Only displayed when 'label' is included in the elements attribute. Renders below label1 in uppercase, right-aligned, 10px font size, bright terminal green color (500 weight).
+		 * @type {string}
 		 * @default 'Picker'
 		 * @attribute label2
 		 * @reflects false
 		 * @example
-		 * <t-clr label2="Primary"></t-clr>
+		 * <t-clr label2="Primary" elements="icon,label,swatch"></t-clr>
+		 * <t-clr label1="Theme" label2="Accent"></t-clr>
 		 */
 		label2: { type: String },
 
 		/**
-		 * @property {boolean} disabled - Disabled state (prevents interaction, dims component)
+		 * @property {boolean} disabled - Disabled state. When true, component becomes non-interactive with 25% opacity, grayscale filter, and pointer-events disabled. Affects all elements including popover trigger.
+		 * @type {boolean}
 		 * @default false
 		 * @attribute disabled
 		 * @reflects true
 		 * @example
 		 * <t-clr disabled></t-clr>
+		 * <t-clr disabled value="#ff6b35ff"></t-clr>
 		 */
 		disabled: { type: Boolean, reflect: true },
 
 		/**
-		 * @property {('large'|'standard'|'compact')} variant - Size variant
+		 * @property {('large'|'standard'|'compact')} variant - Size variant controlling height and spacing of component elements.
+		 * @type {string}
 		 * @default 'large'
 		 * @attribute variant
 		 * @reflects true
-		 * @validation Must be 'large' (48px), 'standard' (32px), or 'compact' (minimal)
+		 * @validation Must be one of: 'large', 'standard', 'compact'
+		 * @details
+		 * - **large**: 48px height, 12px padding, 24px icons (default)
+		 * - **standard**: 32px height, 8px padding, 16px icons
+		 * - **compact**: Minimal height, transparent background, 20px swatch only
 		 * @example
+		 * <t-clr variant="large"></t-clr>
 		 * <t-clr variant="standard"></t-clr>
+		 * <t-clr variant="compact"></t-clr>
 		 */
 		variant: { type: String, reflect: true },
 
 		/**
-		 * @property {string} elements - Comma-separated list of elements in render order. Available: icon, label, swatch (mandatory), input. Order matters!
+		 * @property {string} elements - Comma-separated list of elements to render in exact order specified. Available elements: icon, label, swatch (mandatory), input. Elements render left-to-right in the order listed.
+		 * @type {string}
 		 * @default 'icon,label,swatch,input'
 		 * @attribute elements
 		 * @reflects false
-		 * @validation Swatch is mandatory. Elements render in exact order specified.
+		 * @validation Swatch element is mandatory and must be included. Other elements are optional.
+		 * @details
+		 * **Available Elements:**
+		 * - **icon**: Palette icon (24px, terminal green, 70% opacity)
+		 * - **label**: Two-line label (label1/label2 properties, 10px uppercase)
+		 * - **swatch**: Color preview box (MANDATORY - opens picker on click)
+		 * - **input**: Hex color input field (80px, monospace, read-only in component)
+		 *
+		 * **Order Matters**: Elements render in the exact order specified from left to right.
 		 * @example
+		 * <!-- Default order -->
+		 * <t-clr elements="icon,label,swatch,input"></t-clr>
+		 *
+		 * <!-- Swatch first -->
 		 * <t-clr elements="swatch,icon,label,input"></t-clr>
+		 *
+		 * <!-- Minimal: icon and swatch only -->
 		 * <t-clr elements="icon,swatch"></t-clr>
+		 *
+		 * <!-- Label and swatch only -->
+		 * <t-clr elements="label,swatch"></t-clr>
+		 *
+		 * <!-- All elements in reverse -->
+		 * <t-clr elements="input,swatch,label,icon"></t-clr>
 		 */
 		elements: { type: String },
 
 		/**
-		 * @property {boolean} showClearButton - Show trash button in picker for clearing all custom swatches (with modal confirmation)
+		 * @property {boolean} showClearButton - Controls visibility of "Clear All Swatches" button in picker popover. When enabled, displays a red trash icon button below save/close buttons that triggers a confirmation modal before deleting all custom swatches. Default swatches are never deleted.
+		 * @type {boolean}
 		 * @default false
 		 * @attribute show-clear-button
 		 * @reflects false
+		 * @details
+		 * - **Button Location**: Bottom of action button stack in picker popover
+		 * - **Button Style**: Red background (#ff0041), trash icon, 24px square
+		 * - **Confirmation Modal**: Shows count of swatches to be deleted with Cancel/Clear All buttons
+		 * - **Affects**: Only custom swatches (saved to localStorage), not default 10 swatches
+		 * - **Storage Key**: Clears 't-clr-custom-swatches' from localStorage
 		 * @example
+		 * <!-- Enable clear button -->
 		 * <t-clr show-clear-button></t-clr>
+		 *
+		 * <!-- Full example with clear button -->
+		 * <t-clr
+		 *   value="#00ff41ff"
+		 *   elements="icon,label,swatch,input"
+		 *   show-clear-button>
+		 * </t-clr>
 		 */
 		showClearButton: { type: Boolean, attribute: 'show-clear-button' }
 	};
@@ -1378,10 +1536,12 @@ export class TColorPicker extends LitElement {
 			this._createPopover();
 		}
 
-		// Position popover
+		// Position popover next to the element
 		const rect = this.getBoundingClientRect();
-		this._popoverElement.style.top = `${rect.bottom + 8}px`;
-		this._popoverElement.style.left = `${rect.left}px`;
+		const scrollY = window.scrollY || window.pageYOffset;
+		const scrollX = window.scrollX || window.pageXOffset;
+		this._popoverElement.style.top = `${rect.bottom + scrollY + 8}px`;
+		this._popoverElement.style.left = `${rect.left + scrollX}px`;
 
 		// Show popover
 		this._popoverElement.classList.add('open');
@@ -1425,19 +1585,22 @@ export class TColorPicker extends LitElement {
 		popover.className = 'iro-popover';
 		popover.id = `popover-${this._pickerId}`;
 		popover.innerHTML = `
-			<div class="iro-format-buttons">
-				<button class="iro-format-btn active" data-mode="hex">HEXA</button>
-				<button class="iro-format-btn" data-mode="rgb">RGBA</button>
-				<button class="iro-format-btn" data-mode="hsl">HSLA</button>
-			</div>
 			<div class="iro-container" id="picker-${this._pickerId}"></div>
-			<div class="iro-swatches" id="swatches-${this._pickerId}"></div>
-			<div class="iro-actions">
-				<div class="iro-actions-left">
-					<div class="iro-save-icon" title="Save to swatches">${floppyDiskIcon}</div>
-					${this.showClearButton ? `<div class="iro-clear-icon" title="Clear all swatches">${trashIcon}</div>` : ''}
+			<div class="iro-controls">
+				<div class="iro-format-buttons">
+					<button class="iro-format-btn active" data-mode="hex">HEXA</button>
+					<button class="iro-format-btn" data-mode="rgb">RGBA</button>
+					<button class="iro-format-btn" data-mode="hsl">HSLA</button>
 				</div>
-				<div class="iro-close-icon" title="Close">${xIcon}</div>
+				<input type="text" class="iro-hex-input" value="${this.value}" />
+				<div class="iro-swatches-container">
+					<div class="iro-swatches" id="swatches-${this._pickerId}"></div>
+					<div class="iro-actions">
+						<div class="iro-save-icon" title="Save to swatches">${floppyDiskIcon}</div>
+						<div class="iro-close-icon" title="Close">${xIcon}</div>
+						${this.showClearButton ? `<div class="iro-clear-icon" title="Clear all swatches">${trashIcon}</div>` : ''}
+					</div>
+				</div>
 			</div>
 		`;
 
@@ -1470,6 +1633,24 @@ export class TColorPicker extends LitElement {
 				btn.classList.add('active');
 			});
 		});
+
+		// Hex input - bidirectional sync
+		const hexInput = popover.querySelector('.iro-hex-input');
+		if (hexInput) {
+			hexInput.addEventListener('input', (e) => {
+				const value = e.target.value.trim();
+				// Validate hex format
+				if (/^#?[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/.test(value)) {
+					const hexValue = value.startsWith('#') ? value : `#${value}`;
+					this.value = hexValue;
+					if (this._colorPicker) {
+						this._syncingColor = true;
+						this._colorPicker.color.hexString = hexValue;
+						this._syncingColor = false;
+					}
+				}
+			});
+		}
 	}
 
 	/**
@@ -1516,7 +1697,12 @@ export class TColorPicker extends LitElement {
 
 			// Bridge iro events to Lit events
 			this._colorPicker.on('color:change', (color) => {
-				this._handleIroColorChange(color);
+				this._handleIroColorChange(color, false);
+			});
+
+			// Handle live updates during drag
+			this._colorPicker.on('input:change', (color) => {
+				this._handleIroColorChange(color, true);
 			});
 
 			this._logger.debug('Color picker initialized');
@@ -1529,10 +1715,29 @@ export class TColorPicker extends LitElement {
 	 * Handle iro.js color change
 	 * @private
 	 */
-	_handleIroColorChange(color) {
+	_handleIroColorChange(color, isLiveUpdate = false) {
 		if (this._syncingColor) return;
 
-		// Debounce updates during drag
+		// Update input field immediately during live updates
+		if (isLiveUpdate) {
+			// Debounce live updates to 4x per second (250ms)
+			if (this._liveUpdateDebounce) {
+				this._clearTimeout(this._liveUpdateDebounce);
+			}
+
+			this._liveUpdateDebounce = this._setTimeout(() => {
+				if (this._popoverElement) {
+					const hexInput = this._popoverElement.querySelector('.iro-hex-input');
+					if (hexInput) {
+						hexInput.value = this._formatColorForMode(this._currentMode || 'hex');
+					}
+				}
+				this._liveUpdateDebounce = null;
+			}, 250);
+			return;
+		}
+
+		// Debounce final updates
 		if (this._colorChangeDebounce) {
 			this._clearTimeout(this._colorChangeDebounce);
 		}
@@ -1540,6 +1745,15 @@ export class TColorPicker extends LitElement {
 		this._colorChangeDebounce = this._setTimeout(() => {
 			this._syncingColor = true;
 			this.value = color.hex8String;
+
+			// Update input field with current mode format
+			if (this._popoverElement) {
+				const hexInput = this._popoverElement.querySelector('.iro-hex-input');
+				if (hexInput) {
+					hexInput.value = this._formatColorForMode(this._currentMode || 'hex');
+				}
+			}
+
 			this._syncingColor = false;
 
 			this._emitEvent('change', {
@@ -1571,10 +1785,39 @@ export class TColorPicker extends LitElement {
 		this._logger.debug('Setting color mode', { mode });
 		this._currentMode = mode;
 
+		// Update popover input field
+		if (this._popoverElement) {
+			const input = this._popoverElement.querySelector('.iro-hex-input');
+			if (input && this._colorPicker) {
+				input.value = this._formatColorForMode(mode);
+			}
+		}
+
 		// Update input field in shadow root
 		const input = this.shadowRoot.querySelector('.color-picker-hex');
 		if (input) {
 			input.value = this._formatColorForDisplay();
+		}
+	}
+
+	/**
+	 * Format color value according to mode
+	 * @private
+	 */
+	_formatColorForMode(mode) {
+		if (!this._colorPicker) return this.value;
+
+		const color = this._colorPicker.color;
+
+		switch (mode) {
+			case 'hex':
+				return color.hex8String;
+			case 'rgb':
+				return `rgba(${color.rgba.r}, ${color.rgba.g}, ${color.rgba.b}, ${color.rgba.a})`;
+			case 'hsl':
+				return `hsla(${Math.round(color.hsla.h)}, ${Math.round(color.hsla.s)}%, ${Math.round(color.hsla.l)}%, ${color.hsla.a})`;
+			default:
+				return color.hex8String;
 		}
 	}
 
@@ -1680,6 +1923,15 @@ export class TColorPicker extends LitElement {
 					if (this._colorPicker) {
 						this._colorPicker.color.hexString = color;
 					}
+
+					// Update input field with current mode format
+					if (this._popoverElement) {
+						const hexInput = this._popoverElement.querySelector('.iro-hex-input');
+						if (hexInput) {
+							hexInput.value = this._formatColorForMode(this._currentMode || 'hex');
+						}
+					}
+
 					this._syncingColor = false;
 					this._emitEvent('change', { value: this.value, color: this.value });
 				}

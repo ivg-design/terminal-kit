@@ -1,0 +1,332 @@
+/**
+ * TColorPicker - iro.js Popover Styles
+ * Global styles for light DOM elements (popover appended to document.body)
+ */
+
+.iro-popover {
+	position: absolute;
+	z-index: 10000;
+	background: #1a1a1a;
+	border: 1px solid #00ff41;
+	border-radius: 4px;
+	padding: 16px;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+	display: none;
+	min-width: 400px;
+}
+
+.iro-popover.open {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 16px;
+}
+
+.iro-container {
+	grid-row: 1 / -1;
+	height: 180px;
+	display: flex;
+	align-items: flex-start;
+}
+
+/* Override iro.js internal spacing */
+.iro-container .IroColorPicker {
+	margin: 0 !important;
+	height: 180px !important;
+}
+
+.iro-container .IroSlider {
+	margin: 0 !important;
+	margin-left: 8px !important;
+}
+
+.iro-container .IroBox {
+	margin: 0 !important;
+}
+
+.iro-controls {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	width: 180px;
+	height: 180px;
+	align-items: stretch;
+}
+
+.iro-format-buttons {
+	display: flex;
+	gap: 4px;
+}
+
+.iro-format-btn {
+	flex: 1;
+	background: #242424;
+	border: 1px solid #333333;
+	color: #00cc33;
+	padding: 5px 8px;
+	font-size: 9px;
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	font-family: 'SF Mono', 'Monaco', monospace;
+	letter-spacing: 0.3px;
+}
+
+.iro-format-btn.active {
+	background: #00cc33;
+	color: #000;
+	border-color: #00cc33;
+}
+
+.iro-format-btn:hover:not(.active) {
+	border-color: #00cc33;
+}
+
+.iro-hex-input {
+	width: 100%;
+	background: #0a0a0a;
+	border: 1px solid #333333;
+	color: #00ff41;
+	padding: 5px 8px;
+	font-size: 11px;
+	font-family: 'SF Mono', 'Monaco', monospace;
+	letter-spacing: 0.5px;
+	text-align: left;
+	outline: none;
+}
+
+.iro-hex-input:focus {
+	border-color: #00ff41;
+}
+
+.iro-swatches-container {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 4px;
+	align-items: start;
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
+}
+
+.iro-swatches {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 4px;
+	grid-auto-rows: min-content;
+	overflow-y: auto;
+	height: 100%;
+	padding: 2px;
+}
+
+.iro-swatches::-webkit-scrollbar {
+	width: 6px;
+}
+
+.iro-swatches::-webkit-scrollbar-track {
+	background: #0a0a0a;
+	border-radius: 0;
+	border: 1px solid #333333;
+}
+
+.iro-swatches::-webkit-scrollbar-thumb {
+	background: #00cc33;
+	border-radius: 0;
+}
+
+.iro-swatches::-webkit-scrollbar-thumb:hover {
+	background: #00ff41;
+}
+
+.iro-swatch {
+	width: 20px;
+	height: 20px;
+	border: 1px solid #333333;
+	cursor: pointer;
+	position: relative;
+	transition: all 0.2s ease;
+	background-image: linear-gradient(45deg, #999 25%, transparent 25%, transparent 75%, #999 75%, #999),
+		linear-gradient(45deg, #999 25%, transparent 25%, transparent 75%, #999 75%, #999);
+	background-size: 4px 4px;
+	background-position: 0 0, 2px 2px;
+	background-color: #fff;
+}
+
+.iro-swatch-color {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.iro-swatch:hover {
+	transform: scale(1.1);
+	border-color: #00cc33;
+}
+
+.iro-swatch.removable {
+	border-color: #ff0041;
+}
+
+.iro-swatch-remove {
+	position: absolute;
+	top: -4px;
+	right: -4px;
+	width: 14px;
+	height: 14px;
+	background: #ff0041;
+	border: 1px solid #000;
+	border-radius: 50%;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	z-index: 10;
+}
+
+.iro-swatch.removable .iro-swatch-remove {
+	display: flex;
+}
+
+.iro-swatch-remove svg {
+	width: 8px;
+	height: 8px;
+	color: #fff;
+}
+
+.iro-actions {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+}
+
+.iro-save-icon,
+.iro-close-icon,
+.iro-clear-icon {
+	background: #242424;
+	border: 1px solid #333333;
+	color: #00cc33;
+	padding: 4px;
+	border-radius: 2px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	flex-shrink: 0;
+	transition: all 0.2s ease;
+}
+
+.iro-save-icon {
+	background: #00cc33;
+	color: #000;
+	border-color: #00cc33;
+}
+
+.iro-save-icon:hover {
+	background: #00ff41;
+	border-color: #00ff41;
+}
+
+.iro-close-icon:hover {
+	background: #00ff41;
+	color: #0a0a0a;
+	border-color: #00ff41;
+}
+
+.iro-clear-icon {
+	background: #ff0041;
+	border-color: #ff0041;
+	color: #fff;
+}
+
+.iro-clear-icon:hover {
+	background: #ff1155;
+	border-color: #ff1155;
+}
+
+.iro-save-icon svg,
+.iro-close-icon svg,
+.iro-clear-icon svg {
+	width: 14px;
+	height: 14px;
+}
+
+.iro-modal-overlay {
+	position: fixed !important;
+	top: 0 !important;
+	left: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+	background: rgba(0, 0, 0, 0.8) !important;
+	z-index: 10001 !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.iro-modal {
+	background: #1a1a1a !important;
+	border: 1px solid #333333 !important;
+	border-radius: 4px !important;
+	padding: 20px !important;
+	min-width: 300px !important;
+	max-width: 400px !important;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8) !important;
+}
+
+.iro-modal-title {
+	color: #ff0041 !important;
+	font-size: 14px !important;
+	font-weight: 500 !important;
+	margin-bottom: 12px !important;
+	text-transform: uppercase !important;
+	letter-spacing: 0.5px !important;
+	font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace !important;
+}
+
+.iro-modal-message {
+	color: #00cc33 !important;
+	font-size: 12px !important;
+	margin-bottom: 20px !important;
+	line-height: 1.5 !important;
+	font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace !important;
+}
+
+.iro-modal-actions {
+	display: flex !important;
+	gap: 8px !important;
+	justify-content: flex-end !important;
+}
+
+.iro-modal-btn {
+	background: #242424 !important;
+	border: 1px solid #333333 !important;
+	color: #00cc33 !important;
+	padding: 8px 16px !important;
+	border-radius: 2px !important;
+	cursor: pointer !important;
+	font-size: 11px !important;
+	text-transform: uppercase !important;
+	letter-spacing: 0.5px !important;
+	font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace !important;
+	transition: all 0.2s ease !important;
+}
+
+.iro-modal-btn:hover {
+	border-color: #00cc33 !important;
+	color: #00ff41 !important;
+}
+
+.iro-modal-btn.error {
+	border-color: #ff0041 !important;
+	color: #ff0041 !important;
+}
+
+.iro-modal-btn.error:hover {
+	background: #ff0041 !important;
+	color: #0a0a0a !important;
+	border-color: #ff0041 !important;
+}
