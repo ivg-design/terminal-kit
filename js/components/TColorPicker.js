@@ -818,9 +818,9 @@ export class TColorPicker extends LitElement {
 	/**
 	 * Set custom Phosphor icon for the picker
 	 * @public
-	 * @param {string} iconSvg - SVG string of Phosphor icon
+	 * @param {string} iconSvg - SVG string of Phosphor icon (must be a valid SVG element)
 	 * @returns {void}
-	 * @throws {Error} When iconSvg is not a valid string
+	 * @throws {Error} When iconSvg is not a valid string or not a valid SVG
 	 * @example
 	 * import { paintBucketIcon } from './utils/phosphor-icons.js';
 	 * picker.setIcon(paintBucketIcon);
@@ -832,6 +832,29 @@ export class TColorPicker extends LitElement {
 			const error = new Error('Icon must be a string');
 			this._logger.error('setIcon validation failed', { iconSvg, error });
 			throw error;
+		}
+
+		// Validate that the string is a valid SVG element
+		const trimmed = iconSvg.trim();
+		if (!trimmed.startsWith('<svg') || !trimmed.includes('</svg>')) {
+			const error = new Error('Icon must be a valid SVG element starting with <svg> and ending with </svg>');
+			this._logger.error('setIcon validation failed - not a valid SVG', { iconSvg: trimmed.substring(0, 100) });
+			throw error;
+		}
+
+		// Additional XSS protection: check for script tags or event handlers
+		const dangerousPatterns = [
+			/<script/i,
+			/javascript:/i,
+			/on\w+\s*=/i  // onclick, onerror, onload, etc.
+		];
+
+		for (const pattern of dangerousPatterns) {
+			if (pattern.test(iconSvg)) {
+				const error = new Error('Icon contains potentially unsafe content (scripts or event handlers)');
+				this._logger.error('setIcon validation failed - unsafe content detected', { pattern: pattern.source });
+				throw error;
+			}
 		}
 
 		this._customIcon = iconSvg;

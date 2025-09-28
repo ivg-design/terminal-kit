@@ -17,7 +17,13 @@ export default defineConfig({
         'js/components/**/*.backup.js',
         'node_modules/**',
         'test/**'
-      ]
+      ],
+      thresholds: {
+        lines: 80,
+        functions: 80,
+        branches: 75,
+        statements: 80
+      }
     },
     testTimeout: 10000,
     silent: false
