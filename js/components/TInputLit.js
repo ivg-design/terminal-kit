@@ -2,7 +2,8 @@
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
 import { LitElement, html, css } from 'lit';
-import componentLogger from '../utils/ComponentLogger.js';
+import { property } from 'lit/decorators.js';
+import { ComponentLogger } from '../utils/component-logger.js';
 import {
   eyeIcon,
   eyeClosedIcon,
@@ -311,119 +312,132 @@ export class TInputLit extends LitElement {
    * @attribute type
    * @reflects true
    */
-  static properties = {
-    type: { type: String, reflect: true },
+  @property({ type: String, reflect: true })
+  type = 'text';
 
-    /**
-     * @property {string} placeholder - Placeholder text
-     * @default ''
-     * @attribute placeholder
-     * @reflects true
-     */
-    placeholder: { type: String, reflect: true },
+  /**
+   * @property {string} placeholder - Placeholder text
+   * @default ''
+   * @attribute placeholder
+   * @reflects true
+   */
+  @property({ type: String, reflect: true })
+  placeholder = '';
 
-    /**
-     * @property {string} value - Input value
-     * @default ''
-     * @attribute value
-     */
-    value: { type: String },
+  /**
+   * @property {string} value - Input value
+   * @default ''
+   * @attribute value
+   */
+  @property({ type: String })
+  value = '';
 
-    /**
-     * @property {boolean} disabled - Disabled state
-     * @default false
-     * @attribute disabled
-     * @reflects true
-     */
-    disabled: { type: Boolean, reflect: true },
+  /**
+   * @property {boolean} disabled - Disabled state
+   * @default false
+   * @attribute disabled
+   * @reflects true
+   */
+  @property({ type: Boolean, reflect: true })
+  disabled = false;
 
-    /**
-     * @property {boolean} readonly - Readonly state
-     * @default false
-     * @attribute readonly
-     * @reflects true
-     */
-    readonly: { type: Boolean, reflect: true },
+  /**
+   * @property {boolean} readonly - Readonly state
+   * @default false
+   * @attribute readonly
+   * @reflects true
+   */
+  @property({ type: Boolean, reflect: true })
+  readonly = false;
 
-    /**
-     * @property {boolean} required - Required field
-     * @default false
-     * @attribute required
-     * @reflects true
-     */
-    required: { type: Boolean, reflect: true },
+  /**
+   * @property {boolean} required - Required field
+   * @default false
+   * @attribute required
+   * @reflects true
+   */
+  @property({ type: Boolean, reflect: true })
+  required = false;
 
-    /**
-     * @property {number} min - Minimum value (number type only)
-     * @default null
-     * @attribute min
-     * @reflects true
-     */
-    min: { type: Number, reflect: true },
+  /**
+   * @property {number} min - Minimum value (number type only)
+   * @default null
+   * @attribute min
+   * @reflects true
+   */
+  @property({ type: Number, reflect: true })
+  min = null;
 
-    /**
-     * @property {number} max - Maximum value (number type only)
-     * @default null
-     * @attribute max
-     * @reflects true
-     */
-    max: { type: Number, reflect: true },
+  /**
+   * @property {number} max - Maximum value (number type only)
+   * @default null
+   * @attribute max
+   * @reflects true
+   */
+  @property({ type: Number, reflect: true })
+  max = null;
 
-    /**
-     * @property {number} minlength - Minimum length
-     * @default null
-     * @attribute minlength
-     * @reflects true
-     */
-    minlength: { type: Number, reflect: true },
+  /**
+   * @property {number} minlength - Minimum length
+   * @default null
+   * @attribute minlength
+   * @reflects true
+   */
+  @property({ type: Number, reflect: true })
+  minlength = null;
 
-    /**
-     * @property {number} maxlength - Maximum length
-     * @default null
-     * @attribute maxlength
-     * @reflects true
-     */
-    maxlength: { type: Number, reflect: true },
+  /**
+   * @property {number} maxlength - Maximum length
+   * @default null
+   * @attribute maxlength
+   * @reflects true
+   */
+  @property({ type: Number, reflect: true })
+  maxlength = null;
 
-    /**
-     * @property {string} pattern - Regex validation pattern
-     * @default null
-     * @attribute pattern
-     * @reflects true
-     */
-    pattern: { type: String, reflect: true },
+  /**
+   * @property {string} pattern - Regex validation pattern
+   * @default null
+   * @attribute pattern
+   * @reflects true
+   */
+  @property({ type: String, reflect: true })
+  pattern = null;
 
-    /**
-     * @property {string} autocomplete - Autocomplete attribute
-     * @default 'off'
-     * @attribute autocomplete
-     * @reflects true
-     */
-    autocomplete: { type: String, reflect: true },
+  /**
+   * @property {string} autocomplete - Autocomplete attribute
+   * @default 'off'
+   * @attribute autocomplete
+   * @reflects true
+   */
+  @property({ type: String, reflect: true })
+  autocomplete = 'off';
 
-    /**
-     * @property {string} label - Optional label above input
-     * @default ''
-     * @attribute label
-     * @reflects true
-     */
-    label: { type: String, reflect: true },
+  /**
+   * @property {string} label - Optional label above input
+   * @default ''
+   * @attribute label
+   * @reflects true
+   */
+  @property({ type: String, reflect: true })
+  label = '';
 
-    /**
-     * @property {string} helperText - Optional helper text below input
-     * @default ''
-     * @attribute helper-text
-     * @reflects true
-     */
-    helperText: { type: String, reflect: true, attribute: 'helper-text' },
+  /**
+   * @property {string} helperText - Optional helper text below input
+   * @default ''
+   * @attribute helper-text
+   * @reflects true
+   */
+  @property({ type: String, reflect: true, attribute: 'helper-text' })
+  helperText = '';
 
-    /**
-     * @property {string} icon - Optional icon (SVG string)
-     * @default ''
-     * @attribute icon
-     */
-    icon: { type: String },
-  };
+  /**
+   * @property {string} icon - Optional icon (SVG string)
+   * @default ''
+   * @attribute icon
+   */
+  @property({ type: String })
+  icon = '';
 
   // ----------------------------------------------------------
   // BLOCK 4: INTERNAL STATE (PRIVATE - underscore prefix)
@@ -444,7 +458,7 @@ export class TInputLit extends LitElement {
   // BLOCK 5: LOGGER INSTANCE (REQUIRED)
   // ----------------------------------------------------------
   /** @private */
-  _logger = componentLogger.for('TInputLit');
+  _logger = null;
 
   // ----------------------------------------------------------
   // BLOCK 6: CONSTRUCTOR (REQUIRED)
@@ -453,24 +467,8 @@ export class TInputLit extends LitElement {
     super();
 
     // Initialize logger
+    this._logger = new ComponentLogger(TInputLit.tagName, this);
     this._logger.debug('Component constructed');
-
-    // Initialize properties
-    this.type = 'text';
-    this.placeholder = '';
-    this.value = '';
-    this.disabled = false;
-    this.readonly = false;
-    this.required = false;
-    this.min = null;
-    this.max = null;
-    this.minlength = null;
-    this.maxlength = null;
-    this.pattern = null;
-    this.autocomplete = 'off';
-    this.label = '';
-    this.helperText = '';
-    this.icon = '';
 
     // Initialize ElementInternals for form participation
     if (this.attachInternals) {
@@ -692,7 +690,7 @@ export class TInputLit extends LitElement {
     }
 
     if (hasError) {
-      this._emitEvent('input-error', { error: message });
+      this._emitEvent('input-error', { message });
     } else {
       this._emitEvent('input-valid', { value: this.value });
     }
@@ -756,9 +754,9 @@ export class TInputLit extends LitElement {
 
   /**
    * @event TInputLit#input-error
-   * @type {CustomEvent<{error: string}>}
+   * @type {CustomEvent<{message: string}>}
    * @description Fired when validation fails
-   * @property {string} detail.error - Error message
+   * @property {string} detail.message - Error message
    * @bubbles true
    * @composed true
    */
@@ -808,6 +806,70 @@ export class TInputLit extends LitElement {
   // ----------------------------------------------------------
   // BLOCK 11: VALIDATION (REQUIRED)
   // ----------------------------------------------------------
+
+  /**
+   * Get property validation for a given property name
+   * @static
+   * @param {string} propName - Property name to validate
+   * @returns {Object|undefined} Validation configuration
+   */
+  static getPropertyValidation(propName) {
+    const validators = {
+      type: {
+        validate: (value) => {
+          const validTypes = ['text', 'password', 'email', 'number', 'search', 'tel', 'url'];
+          const valid = validTypes.includes(value);
+          return {
+            valid,
+            errors: valid ? [] : [`Invalid input type: ${value}. Must be one of: ${validTypes.join(', ')}`]
+          };
+        }
+      },
+      min: {
+        validate: (value, context) => {
+          if (context.type !== 'number') return { valid: true, errors: [] };
+          if (context.max !== null && value > context.max) {
+            return { valid: false, errors: ['Min value must be less than max'] };
+          }
+          return { valid: true, errors: [] };
+        }
+      },
+      max: {
+        validate: (value, context) => {
+          if (context.type !== 'number') return { valid: true, errors: [] };
+          if (context.min !== null && value < context.min) {
+            return { valid: false, errors: ['Max value must be greater than min'] };
+          }
+          return { valid: true, errors: [] };
+        }
+      },
+      pattern: {
+        validate: (value) => {
+          if (!value) return { valid: true, errors: [] };
+          try {
+            new RegExp(value);
+            return { valid: true, errors: [] };
+          } catch (e) {
+            return { valid: false, errors: ['Invalid regular expression pattern'] };
+          }
+        }
+      }
+    };
+    return validators[propName];
+  }
+
+  /**
+   * Validate a property value
+   * @private
+   * @param {string} propName - Property name
+   * @param {*} value - Property value
+   * @returns {Object} Validation result
+   */
+  _validateProperty(propName, value) {
+    const validation = TInputLit.getPropertyValidation(propName);
+    if (!validation) return { valid: true, errors: [] };
+    return validation.validate(value, this);
+  }
 
   /**
    * Validate email format
