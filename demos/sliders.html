@@ -7,7 +7,7 @@
 
     <!-- Core styles -->
     <link rel="stylesheet" href="../css/theme/terminal.css">
-    <link rel="stylesheet" href="../css/components/slider.css">
+    <link rel="stylesheet" href="../css/components/t-sld.css">
     
 
     <style>
@@ -188,54 +188,77 @@
             <div class="demo-grid">
                 <div class="demo-item">
                     <span class="demo-label">Default Stepped (5s)</span>
-                    <terminal-slider id="slider1" min="0" max="100" value="50" step="5" label="Volume">
-                    </terminal-slider>
+                    <t-sld id="slider1" min="0" max="100" value="50" step="5" label="Volume">
+                    </t-sld>
                 </div>
-                
+
                 <div class="demo-item">
                     <span class="demo-label">Smooth Continuous</span>
-                    <terminal-slider min="0" max="1" value="0.75" step="0.01" label="Opacity" smooth>
-                    </terminal-slider>
+                    <t-sld min="0" max="1" value="0.75" step="0.01" label="Opacity" smooth>
+                    </t-sld>
                 </div>
-                
+
                 <div class="demo-item">
                     <span class="demo-label">With Input Field</span>
-                    <terminal-slider min="0" max="200" value="100" step="10" label="Zoom" variant="with-input">
-                    </terminal-slider>
+                    <t-sld min="0" max="200" value="100" step="10" label="Zoom" show-input>
+                    </t-sld>
                 </div>
-                
+
                 <div class="demo-item">
-                    <span class="demo-label">Value in Thumb</span>
-                    <terminal-slider min="0" max="100" value="65" step="5" label="Progress" variant="value-in-thumb">
-                    </terminal-slider>
+                    <span class="demo-label">With Output Display</span>
+                    <t-sld min="-100" max="100" value="0" step="10" label="Balance" show-output>
+                    </t-sld>
                 </div>
-                
+
+                <div class="demo-item">
+                    <span class="demo-label">Value in Thumb (0-100)</span>
+                    <t-sld min="0" max="100" value="65" step="5" label="Progress" show-value-in-thumb>
+                    </t-sld>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Value in Thumb (Large Range)</span>
+                    <t-sld min="0" max="10000" value="5000" step="100" label="Credits" show-value-in-thumb>
+                    </t-sld>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Minimal Style</span>
+                    <t-sld min="-50" max="50" value="0" step="5" label="Adjust" minimal show-value-in-thumb>
+                    </t-sld>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Dark Green Fill</span>
+                    <t-sld min="0" max="100" value="75" step="5" label="Power" fill-color="dark">
+                    </t-sld>
+                </div>
             </div>
 
             <h3>Tick Mark Variations</h3>
             <div class="demo-grid">
                 <div class="demo-item">
                     <span class="demo-label">Default Ticks (Major every 5)</span>
-                    <terminal-slider min="0" max="20" value="10" step="1" label="Steps" show-ticks>
-                    </terminal-slider>
+                    <t-sld min="0" max="20" value="10" step="1" label="Steps" show-ticks>
+                    </t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Major Ticks every 10</span>
-                    <terminal-slider min="0" max="100" value="50" step="5" label="Percentage" show-ticks major-tick-interval="10">
-                    </terminal-slider>
+                    <t-sld min="0" max="100" value="50" step="5" label="Percentage" show-ticks>
+                    </t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Dense Ticks (Major every 2)</span>
-                    <terminal-slider min="0" max="10" value="5" step="0.5" label="Rating" show-ticks major-tick-interval="2">
-                    </terminal-slider>
+                    <t-sld min="0" max="10" value="5" step="0.5" label="Rating" show-ticks>
+                    </t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">With Ticks and Input</span>
-                    <terminal-slider min="0" max="50" value="25" step="5" label="Size" show-ticks variant="with-input" major-tick-interval="5">
-                    </terminal-slider>
+                    <t-sld min="0" max="50" value="25" step="5" label="Size" show-ticks show-input>
+                    </t-sld>
                 </div>
             </div>
 
@@ -243,26 +266,53 @@
             <div class="demo-grid">
                 <div class="demo-item">
                     <span class="demo-label">Small Icon</span>
-                    <terminal-slider id="slider-small-icon" min="0" max="100" value="30" step="5" icon-size="small">
-                    </terminal-slider>
+                    <t-sld id="slider-small-icon" min="0" max="100" value="30" step="5" size="compact" icon="speakerHighIcon" label="Volume">
+                    </t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Medium Icon (Default)</span>
-                    <terminal-slider id="slider-medium-icon" min="0" max="100" value="50" step="5" icon-size="medium">
-                    </terminal-slider>
+                    <t-sld id="slider-medium-icon" min="0" max="100" value="50" step="5" icon="fadersIcon">
+                    </t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Large Icon</span>
-                    <terminal-slider id="slider-large-icon" min="0" max="100" value="75" step="5" icon-size="large">
-                    </terminal-slider>
+                    <t-sld id="slider-large-icon" min="0" max="100" value="75" step="5" size="large" icon="gaugeIcon">
+                    </t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Icon + Label + Input</span>
-                    <terminal-slider id="slider-brightness" label="Brightness" min="0" max="100" value="80" step="10" variant="with-input" icon-size="medium">
-                    </terminal-slider>
+                    <t-sld id="slider-brightness" label="Brightness" min="0" max="100" value="80" step="10" icon="fadersIcon" show-input>
+                    </t-sld>
+                </div>
+            </div>
+
+            <h3>Fill Color Variants</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Default Green</span>
+                    <t-sld min="0" max="100" value="60" step="5" label="Default">
+                    </t-sld>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Bright Green</span>
+                    <t-sld min="0" max="100" value="60" step="5" label="Bright" fill-color="bright">
+                    </t-sld>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Dim Green</span>
+                    <t-sld min="0" max="100" value="60" step="5" label="Dim" fill-color="dim">
+                    </t-sld>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Dark Green</span>
+                    <t-sld min="0" max="100" value="60" step="5" label="Dark" fill-color="dark">
+                    </t-sld>
                 </div>
             </div>
 
@@ -270,26 +320,26 @@
             <div class="demo-grid">
                 <div class="demo-item">
                     <span class="demo-label">Compact Default</span>
-                    <terminal-slider min="0" max="10" value="5" step="0.5" label="Rate" compact>
-                    </terminal-slider>
+                    <t-sld min="0" max="10" value="5" step="0.5" label="Rate" size="compact">
+                    </t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Compact with Input</span>
-                    <terminal-slider min="1" max="99" value="10" step="1" label="Qty" variant="with-input" compact>
-                    </terminal-slider>
+                    <t-sld min="1" max="99" value="10" step="1" label="Qty" size="compact" show-input>
+                    </t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Compact with Ticks</span>
-                    <terminal-slider min="0" max="5" value="3" step="1" label="Stars" compact show-ticks major-tick-interval="1">
-                    </terminal-slider>
+                    <t-sld min="0" max="5" value="3" step="1" label="Stars" show-ticks size="compact">
+                    </t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Disabled Slider</span>
-                    <terminal-slider value="75" label="Disabled" disabled>
-                    </terminal-slider>
+                    <t-sld value="75" label="Disabled" disabled>
+                    </t-sld>
                 </div>
             </div>
 
@@ -297,33 +347,33 @@
             <div class="demo-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
                 <div class="demo-item" style=" display: flex; flex-direction: column; align-items: center;">
                     <span class="demo-label">Vertical Default</span>
-                    <terminal-slider min="0" max="100" value="60" step="10" label="Height" vertical>
-                    </terminal-slider>
+                    <t-sld min="0" max="100" value="60" step="10" label="Height" vertical>
+                    </t-sld>
                 </div>
 
                 <div class="demo-item" style="display: flex; flex-direction: column; align-items: center;">
                     <span class="demo-label">Vertical with Icon</span>
-                    <terminal-slider id="slider-vertical-icon" min="0" max="100" value="75" step="5" vertical icon-size="large">
-                    </terminal-slider>
+                    <t-sld id="slider-vertical-icon" min="0" max="100" value="75" step="5" vertical icon="chartBarIcon">
+                    </t-sld>
                 </div>
 
                 <div class="demo-item" style="display: flex; flex-direction: column; align-items: center;">
                     <span class="demo-label">Vertical Smooth</span>
-                    <terminal-slider min="0" max="1" value="0.5" step="0.01" label="Level" vertical smooth>
-                    </terminal-slider>
+                    <t-sld min="0" max="1" value="0.5" step="0.01" label="Level" vertical smooth>
+                    </t-sld>
                 </div>
 
                 <div class="demo-item" style="display: flex; flex-direction: column; align-items: center;">
                     <span class="demo-label">Vertical Value in Thumb</span>
-                    <terminal-slider min="0" max="10" value="7" step="1" vertical variant="value-in-thumb">
-                    </terminal-slider>
+                    <t-sld min="0" max="10" value="7" step="1" vertical show-value-in-thumb>
+                    </t-sld>
                 </div>
             </div>
             
             <div class="code-block">
-                <code>&lt;terminal-slider min="0" max="100" value="50" step="5" label="Volume"&gt;&lt;/terminal-slider&gt;
-&lt;terminal-slider variant="with-input" smooth show-ticks&gt;&lt;/terminal-slider&gt;
-&lt;terminal-slider icon='&lt;svg&gt;...&lt;/svg&gt;' compact&gt;&lt;/terminal-slider&gt;</code>
+                <code>&lt;t-sld min="0" max="100" value="50" step="5" label="Volume"&gt;&lt;/t-sld&gt;
+&lt;t-sld smooth show-ticks&gt;&lt;/t-sld&gt;
+&lt;t-sld label="Custom"&gt;&lt;/t-sld&gt;</code>
             </div>
         </div>
 
@@ -333,18 +383,7 @@
     </div>
 
     <script type="module">
-        import '../js/components/TerminalComponent.js';
-        import '../js/components/TerminalSlider.js';
-        
-        // Import icons
-        import {
-            speakerHighIcon,
-            speakerSlashIcon,
-            gaugeIcon,
-            fadersIcon,
-            slidersIcon,
-            slidersHorizontalIcon
-        } from '../js/utils/phosphor-icons.js';
+        import '../js/components/TSliderLit.js';
 
         // Event logging
         function logEvent(component, event, detail) {
@@ -359,24 +398,11 @@
 
         // Set icons on components after DOM loads
         window.addEventListener('DOMContentLoaded', () => {
-            // Set icon size variation examples
-            const sliderSmallIcon = document.getElementById('slider-small-icon');
-            if (sliderSmallIcon) sliderSmallIcon.setAttribute('icon', speakerSlashIcon);
-
-            const sliderMediumIcon = document.getElementById('slider-medium-icon');
-            if (sliderMediumIcon) sliderMediumIcon.setAttribute('icon', fadersIcon);
-
-            const sliderLargeIcon = document.getElementById('slider-large-icon');
-            if (sliderLargeIcon) sliderLargeIcon.setAttribute('icon', speakerHighIcon);
-
-            const sliderBrightness = document.getElementById('slider-brightness');
-            if (sliderBrightness) sliderBrightness.setAttribute('icon', gaugeIcon);
-
-            const sliderVerticalIcon = document.getElementById('slider-vertical-icon');
-            if (sliderVerticalIcon) sliderVerticalIcon.setAttribute('icon', slidersHorizontalIcon);
+            // Note: The new TSliderLit component doesn't have icon support yet
+            // Icons can be added as part of labels or through CSS customization
 
             // Add event listeners to all sliders
-            const sliders = document.querySelectorAll('terminal-slider');
+            const sliders = document.querySelectorAll('t-sld');
             sliders.forEach((slider, index) => {
                 slider.addEventListener('slider-change', (e) => {
                     const label = slider.getAttribute('label') || `Slider${index + 1}`;
