@@ -5,10 +5,16 @@ export default defineConfig({
     target: 'esnext'
   },
   test: {
+    // Use happy-dom for DOM simulation (lighter than jsdom)
     environment: 'happy-dom',
+
+    // Enable global test APIs (describe, it, expect, etc.)
     globals: true,
-    setupFiles: ['./test/setup.js'],
-    include: ['test/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+
+    // Test file patterns - support both test/ and tests/ directories
+    include: ['test/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}', 'tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+
+    // Coverage configuration
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -16,7 +22,11 @@ export default defineConfig({
       exclude: [
         'js/components/**/*.backup.js',
         'node_modules/**',
-        'test/**'
+        'test/**',
+        'tests/**',
+        '**/*.d.ts',
+        '**/*.config.{js,ts}',
+        '**/dist/**'
       ],
       thresholds: {
         lines: 80,
@@ -25,7 +35,14 @@ export default defineConfig({
         statements: 80
       }
     },
+
+    // Setup files - support both locations
+    setupFiles: ['./test/setup.js'],
+
+    // Test timeout
     testTimeout: 10000,
+
+    // Show test output
     silent: false
   }
 });

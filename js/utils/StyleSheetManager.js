@@ -253,6 +253,18 @@ class StyleSheetManager {
                 // Check if it has shadowRoot (our components)
                 if (element.shadowRoot) {
                     const componentName = element.constructor.name;
+
+                    // CRITICAL: Skip Lit components (they manage their own styles)
+                    // Lit components have constructor that extends LitElement
+                    // Check for Lit-specific properties to detect them
+                    if (element.constructor.elementStyles ||
+                        element.constructor._styles ||
+                        componentName.endsWith('Lit') ||
+                        element.constructor.toString().includes('LitElement')) {
+                        this.logger.debug(`Skipping Lit component: ${element.tagName} (${componentName})`);
+                        return;
+                    }
+
                     this.logger.debug(`Updating component: ${element.tagName}, constructor: ${componentName}`);
                     const sheets = this.getComponentStyleSheets(componentName);
                     this.logger.debug(`Found ${sheets.length} sheets for ${componentName}`);

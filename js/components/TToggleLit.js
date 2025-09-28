@@ -1,0 +1,565 @@
+import { LitElement, html, css } from 'lit';
+
+export class TToggleLit extends LitElement {
+  static styles = css`
+/**
+ * Toggle Component Styles
+ * Terminal-themed toggle switch with label and icon
+ */
+
+/* Toggle Container */
+.terminal-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--spacing-xs);
+	cursor: pointer;
+	user-select: none;
+	padding: var(--spacing-xs);
+	transition: all 0.2s ease;
+}
+
+.terminal-toggle:hover {
+	background: rgba(0, 255, 65, 0.05);
+}
+
+/* Toggle Switch */
+.toggle-switch {
+	position: relative;
+	width: 48px;
+	height: 24px;
+	background: var(--terminal-gray-dark);
+	border: 1px solid var(--terminal-gray-light);
+	cursor: pointer;
+	border-radius: 24px;
+	transition: all 0.3s ease;
+	flex-shrink: 0;
+}
+
+.toggle-switch::before {
+	content: '';
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: var(--terminal-gray-light);
+	transition: all 0.3s ease;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Checkbox Variant */
+.toggle-checkbox {
+	position: relative;
+	width: 18px;
+	height: 18px;
+	background: var(--terminal-gray-dark);
+	border: 1px solid #666666;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	flex-shrink: 0;
+}
+
+/* Checkbox sizes */
+.terminal-toggle.small .toggle-checkbox {
+	width: 14px;
+	height: 14px;
+}
+
+.terminal-toggle.large .toggle-checkbox {
+	width: 24px;
+	height: 24px;
+}
+
+.toggle-checkbox::after {
+	content: '';
+	position: absolute;
+	display: none;
+	left: 50%;
+	top: 50%;
+	width: 4px;
+	height: 8px;
+	border: solid var(--terminal-green);
+	border-width: 0 2px 2px 0;
+	transform: translate(-50%, -60%) rotate(45deg);
+}
+
+/* Adjust checkmark size for small checkbox */
+.terminal-toggle.small .toggle-checkbox::after {
+	width: 3px;
+	height: 6px;
+}
+
+/* Adjust checkmark size for large checkbox */
+.terminal-toggle.large .toggle-checkbox::after {
+	width: 6px;
+	height: 12px;
+	border-width: 0 3px 3px 0;
+}
+
+/* Checked State - Default ON/OFF style */
+.terminal-toggle.checked .toggle-switch {
+	background: var(--terminal-green-dark);
+	border-color: var(--terminal-green);
+}
+
+.terminal-toggle.checked .toggle-switch::before {
+	transform: translateX(24px);
+	background: var(--terminal-green);
+	box-shadow: 0 0 10px var(--terminal-green-glow);
+}
+
+/* Checked State - Checkbox */
+.terminal-toggle.checked .toggle-checkbox {
+	background: var(--terminal-green-dark);
+	border-color: var(--terminal-green);
+}
+
+.terminal-toggle.checked .toggle-checkbox::after {
+	display: block;
+}
+
+/* Checkbox hover */
+.terminal-toggle:hover .toggle-checkbox {
+	border-color: var(--terminal-green);
+	box-shadow: 0 0 5px var(--terminal-green-glow);
+}
+
+/* Checkbox disabled */
+.terminal-toggle.disabled .toggle-checkbox {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* Error variant checkbox */
+.terminal-toggle.error .toggle-checkbox {
+	border-color: #ff3333;
+}
+
+.terminal-toggle.error.checked .toggle-checkbox {
+	background: rgba(255, 51, 51, 0.1);
+	border-color: #ff3333;
+}
+
+/* Error checkbox X mark */
+.terminal-toggle.error .toggle-checkbox::after {
+	border: none;
+	width: 10px;
+	height: 2px;
+	background: #ff3333;
+	transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.terminal-toggle.error .toggle-checkbox::before {
+	content: '';
+	position: absolute;
+	display: none;
+	left: 50%;
+	top: 50%;
+	width: 10px;
+	height: 2px;
+	background: #ff3333;
+	transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Adjust X size for small error checkbox */
+.terminal-toggle.error.small .toggle-checkbox::after,
+.terminal-toggle.error.small .toggle-checkbox::before {
+	width: 8px;
+}
+
+/* Adjust X size for large error checkbox */
+.terminal-toggle.error.large .toggle-checkbox::after,
+.terminal-toggle.error.large .toggle-checkbox::before {
+	width: 14px;
+	height: 3px;
+}
+
+.terminal-toggle.error.checked .toggle-checkbox::after,
+.terminal-toggle.error.checked .toggle-checkbox::before {
+	display: block;
+}
+
+.terminal-toggle.error:hover .toggle-checkbox {
+	border-color: #ff6666;
+	box-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
+}
+
+/* Equal States Toggle - for work/personal, A/B choices */
+.terminal-toggle.equal-states .toggle-switch {
+	background: var(--terminal-gray-dark);
+	border: 1px solid var(--terminal-green);
+	/* box-shadow: 0 0 8px var(--terminal-green-glow); */
+}
+
+.terminal-toggle.equal-states .toggle-switch::before {
+	background: var(--terminal-green);
+	/* box-shadow: 0 0 8px var(--terminal-green-glow); */
+}
+
+.terminal-toggle.equal-states.checked .toggle-switch {
+	background: var(--terminal-green);
+	border: 1px solid var(--terminal-green);
+}
+
+.terminal-toggle.equal-states.checked .toggle-switch::before {
+	transform: translateX(24px);
+	background: rgb(5, 82, 0);
+	/* box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); */
+}
+
+/* Equal states icons - both bright */
+.terminal-toggle.equal-states .toggle-icon {
+	color: var(--terminal-green);
+}
+
+.terminal-toggle.equal-states.checked .toggle-icon {
+	color: var(--terminal-green);
+	transform: scale(1);
+}
+
+/* Equal states labels - both bright */
+.terminal-toggle.equal-states .toggle-label {
+	color: var(--terminal-green);
+}
+
+.terminal-toggle.equal-states.checked .toggle-label {
+	color: var(--terminal-green);
+}
+
+/* Toggle Label */
+.toggle-label {
+	font-size: var(--font-size-sm);
+	color: var(--terminal-green-dim);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	transition: color 0.2s ease;
+}
+
+.terminal-toggle.checked .toggle-label {
+	color: var(--terminal-green);
+}
+
+/* Toggle Icon */
+.toggle-icon {
+	width: 16px;
+	height: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--terminal-green-dim);
+	transition: all 0.2s ease;
+}
+
+.toggle-icon svg {
+	width: 100%;
+	height: 100%;
+	fill: currentColor;
+}
+
+.terminal-toggle.checked .toggle-icon {
+	color: var(--terminal-green);
+	transform: scale(1.1);
+}
+
+/* Icon-only switching variant */
+.terminal-toggle.layout-icon-switching .toggle-icon {
+	min-width: 24px;
+	transition: all 0.3s ease;
+}
+
+.terminal-toggle.layout-icon-switching .toggle-label {
+	display: none;
+}
+
+/* Equal states switching - fixed size container */
+.terminal-toggle.equal-states.layout-switching,
+.terminal-toggle.equal-states.layout-icon-switching {
+	min-width: auto;
+}
+
+.terminal-toggle.equal-states .switching-icon {
+	color: var(--terminal-green) !important;
+}
+
+.terminal-toggle.equal-states .switching-label {
+	color: var(--terminal-green) !important;
+	font-weight: 600;
+}
+
+/* States Indicator */
+.toggle-states {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-xs);
+	font-size: var(--font-size-xs);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.toggle-state-off,
+.toggle-state-on {
+	color: var(--terminal-gray-text);
+	transition: color 0.2s ease;
+}
+
+.terminal-toggle:not(.checked) .toggle-state-off {
+	color: var(--terminal-green-dim);
+}
+
+.terminal-toggle.checked .toggle-state-on {
+	color: var(--terminal-green);
+}
+
+/* Disabled State */
+.terminal-toggle.disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+.terminal-toggle.disabled .toggle-switch {
+	background: var(--terminal-gray-darkest);
+	border-color: var(--terminal-gray-dark);
+}
+
+.terminal-toggle.disabled .toggle-label {
+	color: var(--terminal-gray-text);
+}
+
+/* Focus State */
+.terminal-toggle:focus-visible {
+	outline: 1px solid var(--terminal-green);
+	outline-offset: 2px;
+}
+
+/* Loading State */
+.terminal-toggle.loading .toggle-switch::before {
+	animation: togglePulse 1s ease-in-out infinite;
+}
+
+@keyframes togglePulse {
+
+	0%,
+	100% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.5;
+	}
+}
+
+/* Size Variants */
+
+/* Small */
+.terminal-toggle.small .toggle-switch {
+	width: 36px;
+	height: 18px;
+}
+
+.terminal-toggle.small .toggle-switch::before {
+	width: 14px;
+	height: 14px;
+	top: 1px;
+	left: 1px;
+}
+
+.terminal-toggle.small.checked .toggle-switch::before {
+	transform: translateX(18px);
+}
+
+/* Small equal states adjustments */
+.terminal-toggle.small.equal-states .toggle-switch::before {
+	width: 12px;
+	height: 12px;
+	top: 2px;
+	left: 2px;
+}
+
+.terminal-toggle.small.equal-states.checked .toggle-switch::before {
+	transform: translateX(17px);
+}
+
+.terminal-toggle.small .toggle-label {
+	font-size: var(--font-size-xs);
+}
+
+.terminal-toggle.small .toggle-icon {
+	width: 14px;
+	height: 14px;
+}
+
+/* Large */
+.terminal-toggle.large .toggle-switch {
+	width: 60px;
+	height: 30px;
+}
+
+.terminal-toggle.large .toggle-switch::before {
+	width: 24px;
+	height: 24px;
+	top: 2px;
+	left: 2px;
+}
+
+.terminal-toggle.large.checked .toggle-switch::before {
+	transform: translateX(30px);
+}
+
+/* Large equal states adjustments */
+.terminal-toggle.large.equal-states .toggle-switch::before {
+	width: 22px;
+	height: 22px;
+	top: 2px;
+	left: 3px;
+}
+
+.terminal-toggle.large.equal-states.checked .toggle-switch::before {
+	transform: translateX(29px);
+}
+
+.terminal-toggle.large .toggle-label {
+	font-size: var(--font-size-md);
+}
+
+.terminal-toggle.large .toggle-icon {
+	width: 20px;
+	height: 20px;
+}
+
+/* Layout Variants */
+
+/* Label + Toggle (default) */
+/* Default layout, no special styles needed */
+
+/* Icon + Toggle */
+.terminal-toggle.layout-icon-toggle .toggle-label {
+	display: none;
+}
+
+/* Icon + Label + Toggle */
+
+
+/* Switching Mode - Fixed Width Container */
+/* .terminal-toggle.layout-switching {
+  min-width: 180px;
+} */
+
+.terminal-toggle.layout-switching .switching-icon,
+.terminal-toggle.layout-switching .switching-label {
+	transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.terminal-toggle.layout-switching .switching-label {
+	min-width: 60px;
+	text-align: center;
+}
+
+.terminal-toggle.layout-switching .switching-icon {
+	width: 20px;
+	height: 20px;
+}
+
+/* Vertical */
+.terminal-toggle.vertical {
+	flex-direction: column;
+	text-align: center;
+}
+
+/* Reverse */
+.terminal-toggle.reverse {
+	flex-direction: row-reverse;
+}
+
+/* Group of Toggles */
+.toggle-group {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-xs);
+	padding: var(--spacing-md);
+	background: var(--terminal-gray-darkest);
+	border: 1px solid var(--terminal-gray-light);
+}
+
+.toggle-group-title {
+	font-size: var(--font-size-sm);
+	text-transform: uppercase;
+	color: var(--terminal-green);
+	letter-spacing: 0.5px;
+	margin-bottom: var(--spacing-sm);
+	padding-bottom: var(--spacing-sm);
+	border-bottom: 1px solid var(--terminal-gray-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.terminal-toggle {
+		gap: var(--spacing-sm);
+		padding: var(--spacing-xs);
+	}
+
+	.toggle-label {
+		font-size: var(--font-size-xs);
+	}
+}
+
+@media (max-width: 480px) {
+	.terminal-toggle.responsive-stack {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.toggle-switch {
+		width: 42px;
+		height: 22px;
+	}
+
+	.toggle-switch::before {
+		width: 16px;
+		height: 16px;
+	}
+
+	.terminal-toggle.checked .toggle-switch::before {
+		transform: translateX(20px);
+	}
+}
+  `;
+
+  static properties = {
+    label: { type: String },
+    checked: { type: Boolean },
+    size: { type: String }
+  };
+
+  constructor() {
+    super();
+    this.label = '';
+    this.checked = false;
+    this.size = '';
+  }
+
+  render() {
+    return html`
+      <div class="toggle-wrapper" @click=${this._handleClick}>
+        <div class="toggle-box ${this.checked ? 'checked' : ''}"></div>
+        ${this.label ? html`<span class="toggle-label">${this.label}</span>` : ''}
+      </div>
+    `;
+  }
+
+  _handleClick() {
+    this.checked = !this.checked;
+    this.dispatchEvent(new CustomEvent('toggle-change', {
+      detail: { checked: this.checked },
+      bubbles: true,
+      composed: true
+    }));
+  }
+}
+
+if (!customElements.get('t-tog')) {
+  customElements.define('t-tog', TToggleLit);
+}
+
+export default TToggleLit;

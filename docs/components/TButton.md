@@ -1,29 +1,38 @@
-# TButton (t-btn)
+# TButtonLit (t-btn)
 
-A customizable button component with terminal/cyberpunk styling. Supports multiple variants, sizes, states, toggle functionality, and icon integration.
+A **Pure Lit** button component with terminal/cyberpunk styling. Built with Lit 3.x for zero FOUC, complete Shadow DOM encapsulation, and reactive properties. Supports multiple variants, sizes, states, toggle functionality, and icon integration.
+
+## Architecture
+
+**CRITICAL:** This is a **Pure Lit Component**:
+- ✅ Extends `LitElement`
+- ✅ All styles in `static styles` CSS block
+- ✅ Zero FOUC (Flash of Unstyled Content)
+- ✅ Complete Shadow DOM encapsulation
+- ✅ Reactive properties with `@property()` decorator
+- ✅ No external CSS loading
+- ✅ No `adoptedStyleSheets`
 
 ## Tag Name
 ```html
 <t-btn></t-btn>
 ```
 
-## Attributes
+## Properties
 
-| Attribute | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `variant` | string | `'primary'` | Button style variant: 'primary', 'secondary', 'danger', 'toggle' |
-| `type` | string | `'text'` | Button display type: 'text', 'icon', 'icon-text' |
-| `size` | string | `'default'` | Button size: 'xs', 'small'/'sm', 'default', 'large'/'lg' |
-| `disabled` | boolean | `false` | Disabled state (presence-based) |
-| `loading` | boolean | `false` | Loading state (presence-based) |
-| `loader-type` | string | `'spinner'` | Loader animation type: 'spinner', 'dots', 'bars' |
-| `loader-color` | string | `null` | Custom color for the loader (CSS color value) |
-| `icon` | string | `null` | Icon SVG content |
-| `toggle-state` | string | `'false'` | Current state for toggle variant (string: 'true'/'false') |
-| `icon-on` | string | `null` | Icon SVG when toggle is on |
-| `icon-off` | string | `null` | Icon SVG when toggle is off |
-| `color-on` | string | `null` | CSS color when toggle is on |
-| `color-off` | string | `null` | CSS color when toggle is off |
+All properties are reactive Lit properties:
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `variant` | String | `'primary'` | Button style: 'primary', 'secondary', 'danger', 'toggle' |
+| `type` | String | `'text'` | Display type: 'text', 'icon', 'icon-text' |
+| `size` | String | `''` | Size: 'xs', 'small'/'sm', '' (default), 'large'/'lg' |
+| `disabled` | Boolean | `false` | Disabled state |
+| `loading` | Boolean | `false` | Loading state with spinner |
+| `icon` | String | `''` | Icon SVG content |
+| `toggleState` | Boolean | `false` | Toggle state (toggle variant only) |
+| `iconOn` | String | `''` | Icon when toggle is on |
+| `iconOff` | String | `''` | Icon when toggle is off |
 
 ### Variants
 - `primary` - Primary action button (green filled on hover)
@@ -32,166 +41,54 @@ A customizable button component with terminal/cyberpunk styling. Supports multip
 - `toggle` - Toggle button with on/off states
 
 ### Types
-- `text` - Text-only button
+- `text` - Text-only button (default)
 - `icon` - Icon-only button
 - `icon-text` - Icon with text
 
 ### Sizes
 - `xs` - Extra small (16px, borderless, transparent)
 - `small`/`sm` - Small size (20px)
-- `default` - Default size (28px)
+- `` (empty) - Default size (28px)
 - `large`/`lg` - Large size (36px)
 
-## Properties
+## Icon Sizes by Button Size
 
-All attributes are reflected as properties with camelCase naming:
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `variant` | string | Button variant |
-| `type` | string | Button display type |
-| `size` | string | Button size |
-| `disabled` | boolean | Disabled state |
-| `icon` | string | Icon SVG content |
-| `loading` | boolean | Loading state |
-| `loaderType` | string | Loader animation type |
-| `loaderColor` | string | Custom loader color |
-| `text` | string | Button text content |
-| `toggleState` | boolean | Current toggle state |
-| `iconOn` | string | Icon for toggle on state |
-| `iconOff` | string | Icon for toggle off state |
-| `colorOn` | string | Color for toggle on state |
-| `colorOff` | string | Color for toggle off state |
+Icons automatically scale based on button size:
+- **XS** - 12px icons
+- **Small** - 14px icons
+- **Default** - 18px icons (standard)
+- **Large** - 20px icons
 
 ## Methods
-
-### `click()`
-Programmatically clicks the button (if not disabled or loading).
-
-```javascript
-button.click();
-```
-
-### `disable()`
-Disables the button.
-
-```javascript
-button.disable();
-```
-
-### `enable()`
-Enables the button.
-
-```javascript
-button.enable();
-```
-
-### `setLoading(loading)`
-Sets the loading state with automatic width preservation.
-
-**Parameters:**
-- `loading` (boolean): Whether button is loading
-
-```javascript
-button.setLoading(true);
-// Width is automatically preserved to prevent layout shift
-```
-
-### `setText(text)`
-Sets the button text content.
-
-**Parameters:**
-- `text` (string): Button text content
-
-```javascript
-button.setText('Save Changes');
-```
 
 ### `setIcon(iconSvg)`
 Sets the button icon (automatically scales based on size).
 
 **Parameters:**
-- `iconSvg` (string): SVG string for the icon
+- `iconSvg` (String): SVG string for the icon
 
 ```javascript
 import { gearSixIcon } from '../utils/phosphor-icons.js';
 button.setIcon(gearSixIcon);
 ```
 
-### `setVariant(variant)`
-Sets the button variant.
-
-**Parameters:**
-- `variant` (string): One of 'primary', 'secondary', 'danger', 'toggle'
-
-```javascript
-button.setVariant('danger');
-```
-
-### `setType(type)`
-Sets the button display type.
-
-**Parameters:**
-- `type` (string): One of 'text', 'icon', 'icon-text'
-
-```javascript
-button.setType('icon');
-```
-
-### `setSize(size)`
-Sets the button size.
-
-**Parameters:**
-- `size` (string): One of 'xs', 'small'/'sm', 'default', 'large'/'lg'
-
-```javascript
-button.setSize('xs');
-```
-
 ### `toggle()`
 Toggles the state (toggle variant only). Returns the new state.
 
-**Returns:** `boolean` - The new toggle state
+**Returns:** `Boolean` - The new toggle state
 
 ```javascript
 const newState = button.toggle();
 ```
 
-### `setToggleState(state)`
-Sets the toggle state directly.
-
-**Parameters:**
-- `state` (boolean): The new toggle state
-
-```javascript
-button.setToggleState(true);
-```
-
-### `getToggleState()`
-Gets the current toggle state.
-
-**Returns:** `boolean` - Current toggle state
-
-```javascript
-const isOn = button.getToggleState();
-```
-
 ## Events
 
-### `button-click`
-Fired when the button is clicked (not disabled or loading).
+### `click`
+Standard DOM click event. Use for all button interactions.
 
-**Event Detail:**
 ```javascript
-{
-  originalEvent: MouseEvent
-}
-```
-
-**Example:**
-```javascript
-button.addEventListener('button-click', (e) => {
-  console.log('Button clicked', e.detail.originalEvent);
+button.addEventListener('click', (e) => {
+  console.log('Button clicked');
 });
 ```
 
@@ -201,7 +98,7 @@ Fired when toggle state changes (toggle variant only).
 **Event Detail:**
 ```javascript
 {
-  state: boolean // New toggle state
+  state: Boolean // New toggle state
 }
 ```
 
@@ -211,44 +108,6 @@ button.addEventListener('toggle-change', (e) => {
   console.log('Toggle state:', e.detail.state);
 });
 ```
-
-## CSS Classes
-
-The component uses these internal CSS classes (applied to shadow DOM):
-
-### Base Classes
-- `.t-btn` - Base button class
-- `.t-btn--{variant}` - Variant modifier (primary, secondary, danger)
-- `.t-btn--toggle` - Toggle button class
-
-### Type Classes
-- `.t-btn--text` - Text-only button
-- `.t-btn--icon` - Icon-only button
-- `.t-btn--icon-text` - Icon with text button
-
-### Size Classes
-- `.t-btn--xs` - Extra small size
-- `.t-btn--sm` - Small size (also supports 'small')
-- `.t-btn--lg` - Large size (also supports 'large')
-
-### State Classes
-- `.is-disabled` - Disabled state
-- `.is-loading` - Loading state
-- `.is-on` - Toggle button in on state
-- `.is-off` - Toggle button in off state
-- `.hover` - Hover state (programmatically applied)
-
-## Toggle Button Visual States
-
-### OFF State
-- **Normal**: Dimmed green color with matching border
-- **Hover**: Bright green color, light background tint
-- **Active**: Button depresses (translateY)
-
-### ON State
-- **Normal**: Bright green with background tint and glow
-- **Hover**: Enhanced glow and brighter background
-- **Active**: Button depresses (translateY)
 
 ## Examples
 
@@ -276,7 +135,7 @@ The component uses these internal CSS classes (applied to shadow DOM):
 <t-btn size="small" type="icon" id="smallBtn"></t-btn>
 
 <!-- Default Size (28px) -->
-<t-btn size="default">Default</t-btn>
+<t-btn>Default</t-btn>
 
 <!-- Large Size (36px) -->
 <t-btn size="large">Large Button</t-btn>
@@ -305,25 +164,18 @@ The component uses these internal CSS classes (applied to shadow DOM):
 
 ### Loading State
 ```html
-<!-- Default spinner loader -->
 <t-btn id="submitBtn" variant="primary">Submit</t-btn>
-
-<!-- Dots loader -->
-<t-btn id="processBtn" loader-type="dots">Process</t-btn>
-
-<!-- Bars loader with custom color -->
-<t-btn id="uploadBtn" loader-type="bars" loader-color="#00aaff">Upload</t-btn>
 
 <script type="module">
   const submitBtn = document.getElementById('submitBtn');
 
-  submitBtn.addEventListener('button-click', async () => {
-    submitBtn.setLoading(true);
+  submitBtn.addEventListener('click', async () => {
+    submitBtn.loading = true;
 
     try {
       await submitForm();
     } finally {
-      submitBtn.setLoading(false);
+      submitBtn.loading = false;
     }
   });
 </script>
@@ -343,8 +195,8 @@ The component uses these internal CSS classes (applied to shadow DOM):
   import { playIcon, pauseIcon } from '../js/utils/phosphor-icons.js';
 
   const playPauseBtn = document.getElementById('playPauseBtn');
-  playPauseBtn.setAttribute('icon-off', playIcon);
-  playPauseBtn.setAttribute('icon-on', pauseIcon);
+  playPauseBtn.iconOff = playIcon;
+  playPauseBtn.iconOn = pauseIcon;
 
   playPauseBtn.addEventListener('toggle-change', (e) => {
     if (e.detail.state) {
@@ -356,12 +208,10 @@ The component uses these internal CSS classes (applied to shadow DOM):
 </script>
 ```
 
-#### Recording Toggle with Custom Colors
+#### Recording Toggle
 ```html
 <t-btn
   variant="toggle"
-  color-on="#ff0000"
-  color-off="#00ff41"
   toggle-state="false">
   Recording
 </t-btn>
@@ -380,12 +230,12 @@ The component uses these internal CSS classes (applied to shadow DOM):
   import { caretUpIcon, caretDownIcon } from '../js/utils/phosphor-icons.js';
 
   const expandBtn = document.getElementById('expandBtn');
-  expandBtn.setAttribute('icon-on', caretUpIcon);
-  expandBtn.setAttribute('icon-off', caretDownIcon);
+  expandBtn.iconOn = caretUpIcon;
+  expandBtn.iconOff = caretDownIcon;
 </script>
 ```
 
-### Dynamic Button State Changes
+### Reactive Property Updates
 ```html
 <t-btn id="dynamicBtn" variant="primary">Submit</t-btn>
 
@@ -393,25 +243,22 @@ The component uses these internal CSS classes (applied to shadow DOM):
   import { checkIcon, xIcon } from '../js/utils/phosphor-icons.js';
   const dynamicBtn = document.getElementById('dynamicBtn');
 
-  dynamicBtn.addEventListener('button-click', async () => {
-    // Start loading (width automatically preserved)
-    dynamicBtn.setLoading(true);
-    dynamicBtn.setText('Processing...');
+  dynamicBtn.addEventListener('click', async () => {
+    // Start loading
+    dynamicBtn.loading = true;
 
     try {
       const result = await processData();
 
-      // Success state
-      dynamicBtn.setLoading(false);
-      dynamicBtn.setVariant('secondary');
-      dynamicBtn.setText('Success!');
+      // Success state - properties automatically trigger re-render
+      dynamicBtn.loading = false;
+      dynamicBtn.variant = 'secondary';
       dynamicBtn.setIcon(checkIcon);
 
     } catch (error) {
       // Error state
-      dynamicBtn.setLoading(false);
-      dynamicBtn.setVariant('danger');
-      dynamicBtn.setText('Failed');
+      dynamicBtn.loading = false;
+      dynamicBtn.variant = 'danger';
       dynamicBtn.setIcon(xIcon);
     }
   });
@@ -420,42 +267,35 @@ The component uses these internal CSS classes (applied to shadow DOM):
 
 ## Styling and Theming
 
-The component uses Shadow DOM with adoptedStyleSheets for encapsulated styling. It inherits CSS variables from the theme:
+### CSS Variables
+Components use CSS variables for theming. Override in `:root` or inline:
 
-### CSS Variables Used
 ```css
-/* Colors */
---terminal-green: #00ff41;
---terminal-green-dim: #00cc33;
---terminal-green-dark: #009929;
---terminal-green-bright: #00ff66;
---terminal-gray-dark: #242424;
---terminal-gray: #333333;
---terminal-gray-light: #333333;
---terminal-red: #ff0041;
+:root {
+  /* Colors */
+  --terminal-green: #00ff41;
+  --terminal-green-bright: #33ff66;
+  --terminal-green-dim: #00cc33;
+  --terminal-green-dark: #008820;
+  --terminal-gray-dark: #242424;
+  --terminal-gray: #808080;
 
-/* Typography */
---font-mono: 'SF Mono', 'Monaco', monospace;
---font-size-xs: 10px;
---font-size-sm: 11px;
---font-size-md: 12px;
+  /* Typography */
+  --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Courier New', monospace;
+  --font-size-sm: 11px;
 
-/* Sizing */
---control-height: 28px;
---spacing-xs: 4px;
---spacing-sm: 8px;
---spacing-md: 12px;
---spacing-lg: 16px;
+  /* Spacing */
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+}
 ```
 
-### Custom Properties
-You can set custom colors via CSS variables:
-
-```html
-<t-btn style="--loader-color: #00aaff;">Custom Loader Color</t-btn>
-<t-btn variant="toggle" style="--toggle-color-on: #ff0000; --toggle-color-off: #00ff41;">
-  Custom Toggle Colors
-</t-btn>
+### External Styling with `::part()`
+```css
+/* Style button internals from outside */
+t-btn::part(button) {
+  font-weight: bold;
+}
 ```
 
 ## Size Specifications
@@ -464,78 +304,114 @@ You can set custom colors via CSS variables:
 - **Height**: 16px
 - **Border**: None
 - **Background**: Transparent
-- **Use case**: Compact UIs, inline actions
+- **Use case**: Compact UIs, inline actions, panel headers
 - **Icon size**: 12px
-- **Supports**: Icon-only
+- **Padding**: Minimal
 
 ### Small
 - **Height**: 20px
 - **Padding**: 0 8px
-- **Use case**: Secondary actions
-- **Icon size**: 16px
-- **Supports**: All types
+- **Use case**: Secondary actions, panel action buttons
+- **Icon size**: 14px
 
 ### Default
 - **Height**: 28px
 - **Padding**: 0 12px
 - **Use case**: Standard buttons
-- **Icon size**: 16px
-- **Supports**: All types
+- **Icon size**: 18px
 
 ### Large
 - **Height**: 36px
 - **Padding**: 0 20px
 - **Use case**: Primary actions
 - **Icon size**: 20px
-- **Supports**: All types
 
-## Loading Animations
+## Panel Integration
 
-The button displays loader animations inline (not using separate loader component):
+When buttons are placed in panel action slots, the panel automatically sizes them:
+- **Compact panels** → XS buttons (12px icons)
+- **Standard panels** → Small buttons (14px icons)
+- **Large panels** → Default buttons (18px icons)
 
-### Loader Types
-- **spinner** (default) - CSS-based orbital spinner using box-shadow animation
-- **dots** - Three animated dots with bounce effect
-- **bars** - Five animated vertical bars with wave effect
+See [TPanelLit.md](./TPanelLit.md) for details on action button auto-sizing.
 
-All animations are defined via @keyframes in the stylesheet and applied via CSS classes.
+## Lit Lifecycle
 
-### Width Preservation
-When `setLoading(true)` is called:
-1. Current button width is captured
-2. `min-width` is applied to prevent collapse
-3. Loading animation is displayed
-4. When loading ends, width constraint is removed
+Component uses Lit lifecycle methods:
+
+```javascript
+connectedCallback() {
+  // Called when added to DOM
+}
+
+updated(changedProperties) {
+  // Called after property changes
+  if (changedProperties.has('toggleState')) {
+    // React to toggle state change
+  }
+}
+
+render() {
+  // Returns Lit html template
+}
+```
 
 ## Accessibility
 
 - Keyboard navigation support (Enter/Space to activate)
-- Properly handles disabled state with `pointer-events: none`
-- Focus states managed internally
-- Toggle buttons maintain state in attributes
+- Disabled state prevents interaction
+- Focus states managed by browser
+- Toggle buttons maintain state in properties
 - Disabled buttons have reduced opacity (0.3)
 
 ## Component Architecture
 
-- **Base Class**: Extends `TComponent`
-- **Shadow DOM**: Encapsulated styling and DOM
-- **Style Management**: Uses `StyleSheetManager` with adoptedStyleSheets
-- **Logger**: Uses `ComponentLogger` for debugging
-- **Event System**: Custom events with `emit()` method
-- **Lifecycle**: Managed render cycles with `afterRender()` hooks
+- **Base Class**: Extends `LitElement`
+- **Shadow DOM**: Complete encapsulation via Lit
+- **Style Management**: `static styles` CSS block
+- **Reactive Properties**: Automatic re-rendering on change
+- **Event System**: Native DOM events + custom events
 
 ## Browser Support
 
-- Chrome 90+ (adoptedStyleSheets)
-- Firefox 101+ (adoptedStyleSheets)
-- Safari 16.4+ (adoptedStyleSheets)
-- Edge 90+ (adoptedStyleSheets)
+- Chrome/Edge 90+ (native Lit support)
+- Firefox 90+ (native Lit support)
+- Safari 16.4+ (native Lit support)
+- Older browsers: Use Lit polyfills
 
-## Debugging
+## Migration from Legacy TButton
 
-Enable debug mode for this component:
+If migrating from old `TComponent`-based button:
+
+### Before (Legacy)
+```javascript
+import { TButton } from './js/components/TButton.js';
+button.setProp('variant', 'primary');
+button.emit('button-click', { ... });
 ```
-http://localhost:3007/demos/buttons.html?debug=TButton
+
+### After (Pure Lit)
+```javascript
+import './js/components/TButtonLit.js';
+button.variant = 'primary';
+button.dispatchEvent(new CustomEvent('click', { ... }));
 ```
 
-This will show detailed logs for stylesheet loading and component lifecycle.
+### Key Changes
+1. Component extends `LitElement` not `TComponent`
+2. Use properties directly, not `setProp()`
+3. Use standard `dispatchEvent()`, not `emit()`
+4. No external CSS loading
+5. All styles in `static styles` block
+
+## Related Components
+
+- [TPanelLit](./TPanelLit.md) - Panel component with action button auto-sizing
+- [TInputLit](./TerminalInput.md) - Text input component
+- [TDropdownLit](./TerminalDropdown.md) - Dropdown component
+
+## Resources
+
+- [Lit Documentation](https://lit.dev/)
+- [Pure Lit Architecture](../API.md)
+- [Component Creation Guide](../COMPONENT_CREATION_GUIDE.md)
