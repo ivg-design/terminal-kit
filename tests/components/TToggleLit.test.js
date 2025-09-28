@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { fixture, html, nextFrame } from '@open-wc/testing-helpers';
-import '../../js/components/TToggleLit.js';
+import { TToggleLit, TToggleManifest } from '../../js/components/TToggleLit.js';
 
 describe('TToggleLit', () => {
   let component;
 
-  beforeEach(async () => {
-    component = await fixture(html`<t-tog></t-tog>`);
+  beforeEach(() => {
+    component = document.createElement('t-tog');
+    document.body.appendChild(component);
   });
 
   afterEach(() => {
@@ -237,7 +237,7 @@ describe('TToggleLit', () => {
       });
 
       component.toggle();
-      await nextFrame();
+      await component.updateComplete;
 
       expect(eventFired).toBe(true);
       expect(eventDetail.checked).toBe(true);
@@ -252,7 +252,7 @@ describe('TToggleLit', () => {
       });
 
       component.check();
-      await nextFrame();
+      await component.updateComplete;
 
       expect(eventFired).toBe(true);
     });
@@ -267,7 +267,7 @@ describe('TToggleLit', () => {
       });
 
       component.uncheck();
-      await nextFrame();
+      await component.updateComplete;
 
       expect(eventFired).toBe(true);
     });
@@ -281,7 +281,7 @@ describe('TToggleLit', () => {
       });
 
       component.setValue(true);
-      await nextFrame();
+      await component.updateComplete;
 
       expect(eventFired).toBe(true);
     });
@@ -311,7 +311,7 @@ describe('TToggleLit', () => {
       input.checked = true;
       input.dispatchEvent(new Event('change'));
 
-      await nextFrame();
+      await component.updateComplete;
       expect(eventFired).toBe(true);
       expect(component.checked).toBe(true);
     });
@@ -434,7 +434,9 @@ describe('TToggleLit', () => {
 
     it('should set form value on initialization', async () => {
       if (component._internals) {
-        const newToggle = await fixture(html`<t-tog checked></t-tog>`);
+        const newToggle = document.createElement('t-tog');
+        newToggle.setAttribute('checked', '');
+        document.body.appendChild(newToggle);
         expect(newToggle._internals).toBeDefined();
         // ElementInternals setFormValue is called in connectedCallback
       }
@@ -659,21 +661,28 @@ describe('TToggleLit', () => {
 
   describe('Advanced Features', () => {
     it('should handle equalStates property', async () => {
-      const el = await fixture(html`<t-tog equal-states></t-tog>`);
+      const el = document.createElement('t-tog');
+      el.setAttribute('equal-states', '');
+      document.body.appendChild(el);
       expect(el.equalStates).toBe(true);
+
+      // Wait for render
+      await el.updateComplete;
 
       // Both states should appear as "on"
       const toggle = el.shadowRoot.querySelector('.toggle-switch');
       expect(toggle).toBeTruthy();
 
       // Check CSS class is applied
-      await el.updateComplete;
       const label = el.shadowRoot.querySelector('.terminal-toggle');
       expect(label.classList.contains('equal-states')).toBe(true);
     });
 
     it('should handle colorScheme property', async () => {
-      const el = await fixture(html`<t-tog variant="checkbox" color-scheme="error"></t-tog>`);
+      const el = document.createElement('t-tog');
+      el.setAttribute('variant', 'checkbox');
+      el.setAttribute('color-scheme', 'error');
+      document.body.appendChild(el);
       expect(el.colorScheme).toBe('error');
 
       el.colorScheme = 'warning';
@@ -686,7 +695,11 @@ describe('TToggleLit', () => {
     });
 
     it('should handle alignment property for checkboxes', async () => {
-      const el = await fixture(html`<t-tog variant="checkbox" alignment="right" label="Test"></t-tog>`);
+      const el = document.createElement('t-tog');
+      el.setAttribute('variant', 'checkbox');
+      el.setAttribute('alignment', 'right');
+      el.setAttribute('label', 'Test');
+      document.body.appendChild(el);
       expect(el.alignment).toBe('right');
 
       await el.updateComplete;
@@ -702,7 +715,8 @@ describe('TToggleLit', () => {
     });
 
     it('should validate enum properties', async () => {
-      const el = await fixture(html`<t-tog></t-tog>`);
+      const el = document.createElement('t-tog');
+      document.body.appendChild(el);
 
       // Test valid variant
       el.variant = 'checkbox';
@@ -722,7 +736,10 @@ describe('TToggleLit', () => {
     });
 
     it('should handle labelOn and labelOff properties', async () => {
-      const el = await fixture(html`<t-tog label-on="Active" label-off="Inactive"></t-tog>`);
+      const el = document.createElement('t-tog');
+      el.setAttribute('label-on', 'Active');
+      el.setAttribute('label-off', 'Inactive');
+      document.body.appendChild(el);
 
       expect(el.labelOn).toBe('Active');
       expect(el.labelOff).toBe('Inactive');
@@ -740,7 +757,10 @@ describe('TToggleLit', () => {
     });
 
     it('should handle iconOn and iconOff properties', async () => {
-      const el = await fixture(html`<t-tog icon-on="✓" icon-off="✗"></t-tog>`);
+      const el = document.createElement('t-tog');
+      el.setAttribute('icon-on', '✓');
+      el.setAttribute('icon-off', '✗');
+      document.body.appendChild(el);
 
       expect(el.iconOn).toBe('✓');
       expect(el.iconOff).toBe('✗');
@@ -758,7 +778,9 @@ describe('TToggleLit', () => {
     });
 
     it('should handle loading property', async () => {
-      const el = await fixture(html`<t-tog loading></t-tog>`);
+      const el = document.createElement('t-tog');
+      el.setAttribute('loading', '');
+      document.body.appendChild(el);
       expect(el.loading).toBe(true);
 
       // Should block toggle when loading
@@ -774,7 +796,8 @@ describe('TToggleLit', () => {
     });
 
     it('should handle all size variants', async () => {
-      const el = await fixture(html`<t-tog></t-tog>`);
+      const el = document.createElement('t-tog');
+      document.body.appendChild(el);
 
       // Test small size
       el.size = 'small';

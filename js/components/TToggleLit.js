@@ -3,6 +3,7 @@
 // ============================================================
 import { LitElement, html, css } from 'lit';
 import componentLogger from '../utils/ComponentLogger.js';
+import { generateManifest } from '../utils/manifest-generator.js';
 
 // ============================================================
 // SECTION 2: COMPONENT CLASS DECLARATION (REQUIRED)
@@ -577,7 +578,7 @@ export class TToggleLit extends LitElement {
     super();
 
     // Initialize logger first
-    this._logger = componentLogger.for('TToggleLit');
+    this._logger = componentLogger.for(TToggleLit.tagName);
     this._logger.debug('Component constructed');
 
     // Initialize property defaults
@@ -1041,3 +1042,64 @@ if (!customElements.get(TToggleLit.tagName)) {
 // SECTION 4: EXPORTS (REQUIRED)
 // ============================================================
 export default TToggleLit;
+
+// ============================================================
+// SECTION 5: MANIFEST GENERATION (REQUIRED)
+// ============================================================
+/**
+ * Component manifest for external tools and documentation
+ * @type {Object}
+ */
+export const TToggleManifest = generateManifest(TToggleLit, {
+  tagName: 't-tog',
+  displayName: 'Toggle',
+  category: 'Form Controls',
+  description: 'A versatile toggle component supporting switch and checkbox variants with form participation',
+  properties: [
+    { name: 'label', type: 'string', default: "''", description: 'Toggle label text' },
+    { name: 'labelOn', type: 'string', default: "''", description: 'Label text for checked state' },
+    { name: 'labelOff', type: 'string', default: "''", description: 'Label text for unchecked state' },
+    { name: 'checked', type: 'boolean', default: 'false', description: 'Toggle checked state' },
+    { name: 'disabled', type: 'boolean', default: 'false', description: 'Toggle disabled state' },
+    { name: 'variant', type: 'string', default: "'switch'", enum: ['switch', 'checkbox'], description: 'Toggle variant style' },
+    { name: 'labelPosition', type: 'string', default: "'right'", enum: ['left', 'right'], description: 'Label position relative to toggle' },
+    { name: 'alignment', type: 'string', default: "'left'", enum: ['left', 'right'], description: 'Checkbox group alignment' },
+    { name: 'iconOn', type: 'string', default: "''", description: 'Icon HTML/SVG for checked state' },
+    { name: 'iconOff', type: 'string', default: "''", description: 'Icon HTML/SVG for unchecked state' },
+    { name: 'size', type: 'string', default: "'medium'", enum: ['small', 'medium', 'large'], description: 'Toggle size' },
+    { name: 'loading', type: 'boolean', default: 'false', description: 'Toggle loading state' },
+    { name: 'required', type: 'boolean', default: 'false', description: 'Toggle required field state' },
+    { name: 'equalStates', type: 'boolean', default: 'false', description: 'Both states equally prominent' },
+    { name: 'colorScheme', type: 'string', default: "''", enum: ['', 'error', 'warning', 'success'], description: 'Color variant' }
+  ],
+  methods: [
+    { name: 'toggle', description: 'Toggle the checked state', returns: 'boolean' },
+    { name: 'check', description: 'Set toggle to checked state' },
+    { name: 'uncheck', description: 'Set toggle to unchecked state' },
+    { name: 'setValue', description: 'Set the value for form participation', params: ['value'] },
+    { name: 'getValue', description: 'Get the current value', returns: 'string' },
+    { name: 'focus', description: 'Focus the toggle element' },
+    { name: 'blur', description: 'Blur the toggle element' }
+  ],
+  events: [
+    { name: 'toggle-change', description: 'Fired when toggle state changes', detail: '{ checked: boolean }' }
+  ],
+  examples: [
+    {
+      title: 'Basic Switch',
+      code: `<t-tog label="Enable notifications"></t-tog>`
+    },
+    {
+      title: 'Checkbox Variant',
+      code: `<t-tog variant="checkbox" label="I agree to terms"></t-tog>`
+    },
+    {
+      title: 'Dual Labels',
+      code: `<t-tog label-on="ON" label-off="OFF" equal-states></t-tog>`
+    },
+    {
+      title: 'With Color Scheme',
+      code: `<t-tog color-scheme="success" label="Feature enabled"></t-tog>`
+    }
+  ]
+});

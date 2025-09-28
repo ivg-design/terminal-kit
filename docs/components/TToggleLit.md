@@ -19,7 +19,11 @@
 ## Installation
 
 ```javascript
+// Import component
 import './js/components/TToggleLit.js';
+
+// Import with manifest (for tooling/documentation)
+import { TToggleLit, TToggleManifest } from './js/components/TToggleLit.js';
 ```
 
 ## Basic Usage
@@ -64,8 +68,6 @@ import './js/components/TToggleLit.js';
 | `alignment` | `String` | `'left'` | `alignment` | Checkbox alignment: 'left' or 'right' |
 | `colorScheme` | `String` | `''` | `color-scheme` | Color variant: 'error', 'warning', 'success' |
 | `loading` | `Boolean` | `false` | `loading` | Loading state with animation |
-| `name` | `String` | `''` | `name` | Form field name |
-| `value` | `String` | `'on'` | `value` | Form field value when checked |
 
 ## Methods
 
@@ -129,33 +131,15 @@ toggle.blur();
 
 ## Events
 
-### `t-tog-change`
+### `toggle-change`
 Fired when the toggle state changes.
 
 **Event Detail:**
 - `checked` (Boolean): The new checked state
 
 ```javascript
-document.addEventListener('t-tog-change', (e) => {
+toggle.addEventListener('toggle-change', (e) => {
   console.log('Toggle changed to:', e.detail.checked);
-});
-```
-
-### `t-tog-focus`
-Fired when the toggle receives focus.
-
-```javascript
-document.addEventListener('t-tog-focus', (e) => {
-  console.log('Toggle focused');
-});
-```
-
-### `t-tog-blur`
-Fired when the toggle loses focus.
-
-```javascript
-document.addEventListener('t-tog-blur', (e) => {
-  console.log('Toggle blurred');
 });
 ```
 
@@ -311,9 +295,9 @@ The component implements the ElementInternals API for native form participation.
 
 ```html
 <form id="settings-form">
-  <t-tog name="notifications" label="Enable notifications"></t-tog>
-  <t-tog name="newsletter" variant="checkbox" label="Subscribe"></t-tog>
-  <t-tog name="theme" equal-states label-on="DARK" label-off="LIGHT"></t-tog>
+  <t-tog id="notifications" label="Enable notifications"></t-tog>
+  <t-tog id="newsletter" variant="checkbox" label="Subscribe"></t-tog>
+  <t-tog id="theme" equal-states label-on="DARK" label-off="LIGHT"></t-tog>
 
   <button type="submit">Save Settings</button>
 </form>
@@ -321,16 +305,15 @@ The component implements the ElementInternals API for native form participation.
 <script>
 document.getElementById('settings-form').addEventListener('submit', (e) => {
   e.preventDefault();
-  const formData = new FormData(e.target);
 
-  // Form data will contain:
-  // notifications: 'on' or 'off'
-  // newsletter: 'on' or 'off'
-  // theme: 'on' or 'off'
+  // Get values from toggles directly
+  const notifications = document.getElementById('notifications').getValue();
+  const newsletter = document.getElementById('newsletter').getValue();
+  const theme = document.getElementById('theme').getValue();
 
-  for (const [key, value] of formData.entries()) {
-    console.log(key, value);
-  }
+  console.log('notifications:', notifications); // 'on' or 'off'
+  console.log('newsletter:', newsletter); // 'on' or 'off'
+  console.log('theme:', theme); // 'on' or 'off'
 });
 </script>
 ```
@@ -348,7 +331,7 @@ document.getElementById('settings-form').addEventListener('submit', (e) => {
 
 ### ARIA Support
 
-- Proper `role="checkbox"` or `role="switch"` attributes
+- Proper `role="switch"` via ElementInternals API
 - `aria-checked` state management
 - `aria-label` for screen readers
 - `aria-disabled` for disabled state
@@ -378,7 +361,7 @@ toggles.forEach(toggle => toggle.toggle());
 
 // Listen to changes
 toggles.forEach(toggle => {
-  toggle.addEventListener('t-tog-change', (e) => {
+  toggle.addEventListener('toggle-change', (e) => {
     console.log(`${toggle.label} changed to ${e.detail.checked}`);
   });
 });
@@ -487,6 +470,6 @@ This component follows the Terminal Kit COMPONENT_SCHEMA.md specification:
 - **Profile**: FORM-ADVANCED
 - **Schema Version**: 1.0.0
 - **Blocks**: All 13 required blocks implemented
-- **Testing**: 94.49% code coverage
+- **Testing**: 95.74% code coverage
 - **Documentation**: Comprehensive with examples
 - **Accessibility**: WCAG 2.1 AA compliant
