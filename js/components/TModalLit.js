@@ -1335,5 +1335,4 @@ export const TModalManifest = generateManifest(TModalLit, {
 // ============================================
 // SECTION 5: Exports
 // ============================================
-export { TModalLit };
 export default TModalLit;
