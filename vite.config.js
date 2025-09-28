@@ -5,7 +5,7 @@ export default defineConfig({
   base: '/',
   resolve: {
     alias: {
-      '@jaames/iro': resolve(__dirname, 'public/js/libs/iro.min.js')
+      '@jaames/iro': resolve(__dirname, 'node_modules/@jaames/iro/dist/iro.es.js')
     }
   },
   build: {
