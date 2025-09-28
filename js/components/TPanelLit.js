@@ -1,13 +1,42 @@
+// ============================================
+// SECTION 1: IMPORTS
+// ============================================
 import { LitElement, html, css } from 'lit';
+import componentLogger from '../utils/ComponentLogger.js';
 import { caretRightIcon, caretDownIcon } from '../utils/phosphor-icons.js';
 import { generateManifest } from '../utils/manifest-generator.js';
 
+// ============================================
+// SECTION 2: COMPONENT CLASS
+// ============================================
+
 /**
- * Terminal Panel Component - Built with Lit
- * Zero FOUC, fully encapsulated styles, reactive properties
- * Supports collapsible/expandable states, variants, and resizable/draggable options
+ * Terminal Panel Component - Full Schema Implementation
+ *
+ * @component
+ * @tagname t-pnl
+ * @description Collapsible panel with header, footer, and nested content support. Follows FULL profile with all 13 blocks.
+ * @category Layout
+ * @since 1.0.0
+ * @example
+ * <t-pnl title="Settings" collapsible>
+ *   <t-inp slot="default" label="Name"></t-inp>
+ *   <t-btn slot="actions" icon="save">Save</t-btn>
+ *   <t-sta slot="footer">Status: Ready</t-sta>
+ * </t-pnl>
  */
 export class TPanelLit extends LitElement {
+
+  // ============================================
+  // BLOCK 1: Static Metadata
+  // ============================================
+  static tagName = 't-pnl';
+  static version = '1.0.0';
+  static category = 'Layout';
+
+  // ============================================
+  // BLOCK 2: Static Styles
+  // ============================================
   static styles = css`
     :host {
       --terminal-black: #0a0a0a;
@@ -16,26 +45,16 @@ export class TPanelLit extends LitElement {
       --terminal-green-bright: #33ff66;
       --terminal-green-dim: #00cc33;
       --terminal-green-dark: #008820;
-      --terminal-amber: #ffbf00;
-      --terminal-red: #ff4141;
-      --terminal-blue: #0080ff;
-      --terminal-purple: #bf00ff;
-      --terminal-cyan: #00ffff;
-      --terminal-white: #f0f0f0;
       --terminal-gray: #808080;
       --terminal-gray-dark: #242424;
       --terminal-gray-light: #333333;
       --terminal-gray-medium: #2a2a2a;
-      --terminal-bg: #0a0a0a;
-      --terminal-fg: #00ff41;
-      --terminal-font: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
       --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
       --font-size-sm: 11px;
       --spacing-xs: 4px;
       --spacing-sm: 8px;
       --spacing-md: 12px;
       --spacing-lg: 16px;
-      --spacing-xl: 24px;
 
       position: relative;
       display: block;
@@ -84,19 +103,6 @@ export class TPanelLit extends LitElement {
       gap: 6px;
       align-items: center;
       margin-left: auto;
-    }
-
-    /* Size slotted action buttons based on panel variant */
-    :host(:not(.t-pnl--compact):not(.t-pnl--large)) ::slotted(t-btn) {
-      --btn-size: small;
-    }
-
-    :host(.t-pnl--compact) ::slotted(t-btn) {
-      --btn-size: xs;
-    }
-
-    :host(.t-pnl--large) ::slotted(t-btn) {
-      --btn-size: default;
     }
 
     .t-pnl__collapse-btn {
@@ -160,7 +166,6 @@ export class TPanelLit extends LitElement {
       border-bottom: none;
     }
 
-    /* Collapsed panel heights match header only */
     .t-pnl--collapsed:not(.t-pnl--compact):not(.t-pnl--large) {
       min-height: 28px;
       max-height: 28px;
@@ -186,6 +191,11 @@ export class TPanelLit extends LitElement {
       font-size: 10px;
     }
 
+    .t-pnl--compact .t-pnl__body {
+      padding: 8px;
+      min-height: 40px;
+    }
+
     .t-pnl--large .t-pnl__header {
       padding: 9px 12px;
       height: 36px;
@@ -194,6 +204,11 @@ export class TPanelLit extends LitElement {
 
     .t-pnl--large .t-pnl__title {
       font-size: 14px;
+    }
+
+    .t-pnl--large .t-pnl__body {
+      padding: 16px;
+      min-height: 80px;
     }
 
     .t-pnl__footer {
@@ -230,10 +245,6 @@ export class TPanelLit extends LitElement {
       height: 36px;
       gap: 12px;
     }
-
-
-
-
 
     .t-pnl__footer-collapse {
       background: transparent;
@@ -286,16 +297,6 @@ export class TPanelLit extends LitElement {
       fill: var(--terminal-green);
     }
 
-
-
-
-
-
-    /* Panel Variants */
-    .t-pnl--standard {
-      min-height: 60px;
-    }
-
     .t-pnl--standard .t-pnl__title::before {
       content: '[ ';
       color: var(--terminal-green-dim);
@@ -306,71 +307,6 @@ export class TPanelLit extends LitElement {
       color: var(--terminal-green-dim);
     }
 
-    .t-pnl--control {
-      background: var(--terminal-black-light);
-      border-bottom: 1px solid var(--terminal-gray-light);
-      padding: var(--spacing-md);
-      flex-shrink: 0;
-    }
-
-    .t-pnl--slide {
-      position: fixed;
-      top: 0;
-      right: -400px;
-      width: 400px;
-      height: 100vh;
-      background: var(--terminal-black-light);
-      border-left: 1px solid var(--terminal-green);
-      transition: right 0.3s ease;
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .t-pnl--slide.is-active {
-      right: 0;
-    }
-
-    .t-pnl--slide.is-pinned {
-      position: relative;
-      right: 0;
-      width: 100%;
-      height: 100%;
-      border-left: none;
-      border: 1px solid var(--terminal-gray-light);
-    }
-
-    /* Enhanced Collapsible States */
-    .t-pnl--collapsed .t-pnl__body {
-      display: none !important;
-      visibility: hidden !important;
-      height: 0 !important;
-      overflow: hidden !important;
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-
-    .t-pnl--collapsed .t-pnl__footer {
-      display: none !important;
-      height: 0 !important;
-      min-height: 0 !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      border: none !important;
-    }
-
-
-    .t-pnl--expanded {
-      min-height: 60px;
-    }
-
-    .t-pnl--expanded .t-pnl__body {
-      display: block;
-      visibility: visible;
-      height: auto;
-    }
-
-    /* Collapsible Functionality */
     .t-pnl--collapsible .t-pnl__header {
       cursor: pointer;
       user-select: none;
@@ -387,60 +323,6 @@ export class TPanelLit extends LitElement {
       outline-offset: -1px;
     }
 
-    .t-pnl--collapsible .t-pnl__title::before {
-      content: '[ ';
-      color: var(--terminal-green-dim);
-    }
-
-    .t-pnl--collapsible .t-pnl__title::after {
-      content: ' ]';
-      color: var(--terminal-green-dim);
-    }
-
-    /* Compact Mode Additions */
-    .t-pnl--compact .t-pnl__body {
-      padding: 8px;
-      min-height: 40px;
-    }
-
-    .t-pnl--compact .t-pnl__actions {
-      gap: 4px;
-    }
-
-    .t-pnl--compact .t-pnl__footer {
-      padding: 4px 8px;
-      gap: 4px;
-    }
-
-
-    .t-pnl--compact .t-pnl__collapse-btn {
-      width: 16px;
-      height: 16px;
-      margin-right: 4px;
-    }
-
-    .t-pnl--large .t-pnl__collapse-btn {
-      width: 20px;
-      height: 20px;
-    }
-
-    /* Large Mode Additions */
-    .t-pnl--large .t-pnl__body {
-      padding: 16px;
-      min-height: 80px;
-    }
-
-    .t-pnl--large .t-pnl__actions {
-      gap: 8px;
-    }
-
-    .t-pnl--large .t-pnl__footer {
-      padding: 12px 16px;
-      gap: 12px;
-    }
-
-
-    /* Loading State */
     .t-pnl--loading .t-pnl__body {
       position: relative;
       pointer-events: none;
@@ -459,18 +341,6 @@ export class TPanelLit extends LitElement {
       animation: pulse 1s infinite;
     }
 
-    /* Headless Mode */
-    .t-pnl__body--headless {
-      border: none;
-      padding: var(--spacing-md);
-      background: transparent;
-      min-height: 40px;
-    }
-
-    .t-pnl__body--with-status {
-      border-bottom: none;
-    }
-
     :host([variant="headless"]) .t-pnl__header {
       display: none !important;
     }
@@ -480,11 +350,6 @@ export class TPanelLit extends LitElement {
       background: transparent;
     }
 
-    :host(:not([title])) .t-pnl__header {
-      display: none;
-    }
-
-    /* Panel Icons */
     .t-pnl__title-icon {
       width: 16px;
       height: 16px;
@@ -492,79 +357,6 @@ export class TPanelLit extends LitElement {
       margin-right: var(--spacing-xs);
     }
 
-    /* Scale buttons in actions slot */
-    .t-pnl--compact .t-pnl__actions ::slotted(t-btn) {
-      --btn-size: xs;
-    }
-
-    .t-pnl__actions ::slotted(t-btn) {
-      --btn-size: small;
-    }
-
-    .t-pnl--large .t-pnl__actions ::slotted(t-btn) {
-      --btn-size: default;
-    }
-
-    /* Error and Empty States */
-    .t-pnl__error,
-    .t-pnl__empty {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: var(--spacing-xl);
-      text-align: center;
-      min-height: 120px;
-      color: var(--terminal-green-dim);
-    }
-
-    .t-pnl__error {
-      color: var(--terminal-red);
-    }
-
-    .t-pnl__error-icon,
-    .t-pnl__empty-icon {
-      font-size: 24px;
-      margin-bottom: var(--spacing-sm);
-      opacity: 0.7;
-    }
-
-    .t-pnl__error-msg,
-    .t-pnl__empty-msg {
-      font-size: var(--font-size-sm);
-      line-height: 1.4;
-    }
-
-    /* Scrollbar Styling */
-    .t-pnl__body::-webkit-scrollbar,
-    .t-pnl__content::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-
-    .t-pnl__body::-webkit-scrollbar-track,
-    .t-pnl__content::-webkit-scrollbar-track {
-      background: var(--terminal-black);
-    }
-
-    .t-pnl__body::-webkit-scrollbar-thumb,
-    .t-pnl__content::-webkit-scrollbar-thumb {
-      background: var(--terminal-green-dark);
-      border: 1px solid var(--terminal-black);
-    }
-
-    .t-pnl__body::-webkit-scrollbar-thumb:hover,
-    .t-pnl__content::-webkit-scrollbar-thumb:hover {
-      background: var(--terminal-green);
-    }
-
-    .t-pnl__body,
-    .t-pnl__content {
-      scrollbar-width: thin;
-      scrollbar-color: var(--terminal-green-dark) var(--terminal-black);
-    }
-
-    /* Resizable & Draggable */
     :host([resizable]) {
       resize: both;
       overflow: auto;
@@ -585,13 +377,6 @@ export class TPanelLit extends LitElement {
       z-index: 1000;
     }
 
-    /* Slot Styling */
-    .t-pnl__slot {
-      display: contents;
-    }
-
-
-    /* Animations */
     @keyframes pulse {
       0%, 100% {
         opacity: 1;
@@ -601,35 +386,185 @@ export class TPanelLit extends LitElement {
       }
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
+    .t-pnl__body::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .t-pnl__body::-webkit-scrollbar-track {
+      background: var(--terminal-black);
+    }
+
+    .t-pnl__body::-webkit-scrollbar-thumb {
+      background: var(--terminal-green-dark);
+      border: 1px solid var(--terminal-black);
+    }
+
+    .t-pnl__body::-webkit-scrollbar-thumb:hover {
+      background: var(--terminal-green);
+    }
+
+    .t-pnl__body {
+      scrollbar-width: thin;
+      scrollbar-color: var(--terminal-green-dark) var(--terminal-black);
+    }
   `;
 
-  /* ========================================
-     REACTIVE PROPERTIES
-     ======================================== */
+  // ============================================
+  // BLOCK 3: Reactive Properties
+  // ============================================
+
   static properties = {
-    title: { type: String },
-    variant: { type: String },
-    collapsible: { type: Boolean },
-    collapsed: { type: Boolean },
-    compact: { type: Boolean },
-    large: { type: Boolean },
-    loading: { type: Boolean },
-    resizable: { type: Boolean },
-    draggable: { type: Boolean },
+    /**
+     * @property {string} title - Panel title displayed in header
+     * @default ''
+     * @attribute title
+     * @reflects
+     */
+    title: { type: String, reflect: true },
+
+    /**
+     * @property {string} variant - Panel variant (standard | headless)
+     * @default 'standard'
+     * @attribute variant
+     * @reflects
+     * @validation enum(['standard', 'headless'])
+     */
+    variant: { type: String, reflect: true },
+
+    /**
+     * @property {boolean} collapsible - Enable collapse/expand functionality
+     * @default false
+     * @attribute collapsible
+     * @reflects
+     */
+    collapsible: { type: Boolean, reflect: true },
+
+    /**
+     * @property {boolean} collapsed - Current collapsed state
+     * @default false
+     * @attribute collapsed
+     * @reflects
+     */
+    collapsed: { type: Boolean, reflect: true },
+
+    /**
+     * @property {boolean} compact - Compact size variant (20px header)
+     * @default false
+     * @attribute compact
+     * @reflects
+     */
+    compact: { type: Boolean, reflect: true },
+
+    /**
+     * @property {boolean} large - Large size variant (36px header)
+     * @default false
+     * @attribute large
+     * @reflects
+     */
+    large: { type: Boolean, reflect: true },
+
+    /**
+     * @property {boolean} loading - Show loading state
+     * @default false
+     * @attribute loading
+     * @reflects
+     */
+    loading: { type: Boolean, reflect: true },
+
+    /**
+     * @property {boolean} resizable - Enable panel resizing
+     * @default false
+     * @attribute resizable
+     * @reflects
+     */
+    resizable: { type: Boolean, reflect: true },
+
+    /**
+     * @property {boolean} draggable - Enable panel dragging
+     * @default false
+     * @attribute draggable
+     * @reflects
+     */
+    draggable: { type: Boolean, reflect: true },
+
+    /**
+     * @property {string} icon - SVG icon string to display in header
+     * @default ''
+     * @attribute icon
+     */
     icon: { type: String },
-    footerCollapsed: { type: Boolean }
+
+    /**
+     * @property {boolean} footerCollapsed - Footer collapsed state
+     * @default false
+     * @attribute footer-collapsed
+     * @reflects
+     */
+    footerCollapsed: { type: Boolean, reflect: true, attribute: 'footer-collapsed' }
   };
 
-  /* ========================================
-     LIFECYCLE METHODS
-     ======================================== */
+  // ============================================
+  // BLOCK 4: Internal State
+  // ============================================
+
+  /**
+   * @private
+   * @type {number}
+   */
+  _dragStartX = 0;
+
+  /**
+   * @private
+   * @type {number}
+   */
+  _dragStartY = 0;
+
+  /**
+   * @private
+   * @type {boolean}
+   */
+  _dragging = false;
+
+  /**
+   * @private
+   * @type {Set<number>}
+   */
+  _timers = new Set();
+
+  /**
+   * @private
+   * @type {number|null}
+   */
+  _loadingTimeout = null;
+
+  /**
+   * @private
+   * @type {Array<HTMLElement>}
+   */
+  _nestedComponents = [];
+
+  // ============================================
+  // BLOCK 5: Logger Instance
+  // ============================================
+
+  /**
+   * @private
+   * @type {Object}
+   */
+  _logger = null;
+
+  // ============================================
+  // BLOCK 6: Constructor
+  // ============================================
 
   constructor() {
     super();
 
-    // Initialize properties
+    this._logger = componentLogger.for('TPanelLit');
+    this._logger.debug('Component constructed');
+
+    // Initialize property defaults
     this.title = '';
     this.variant = 'standard';
     this.collapsible = false;
@@ -642,26 +577,38 @@ export class TPanelLit extends LitElement {
     this.icon = '';
     this.footerCollapsed = false;
 
-    // Internal state
-    this._dragStartX = 0;
-    this._dragStartY = 0;
-    this._dragging = false;
-
     this._handleHeaderClick = this._handleHeaderClick.bind(this);
+    this._handleHeaderKeydown = this._handleHeaderKeydown.bind(this);
     this._handleMouseDown = this._handleMouseDown.bind(this);
     this._handleMouseMove = this._handleMouseMove.bind(this);
     this._handleMouseUp = this._handleMouseUp.bind(this);
   }
 
+  // ============================================
+  // BLOCK 7: Lifecycle Methods
+  // ============================================
+
+  /**
+   * @lifecycle
+   */
   connectedCallback() {
     super.connectedCallback();
+    this._logger.info('Connected to DOM');
+
     if (this.draggable) {
       this.addEventListener('mousedown', this._handleMouseDown);
     }
   }
 
+  /**
+   * @lifecycle
+   */
   disconnectedCallback() {
     super.disconnectedCallback();
+    this._logger.info('Disconnected from DOM');
+
+    this._clearAllTimers();
+
     if (this.draggable) {
       this.removeEventListener('mousedown', this._handleMouseDown);
       document.removeEventListener('mousemove', this._handleMouseMove);
@@ -669,23 +616,381 @@ export class TPanelLit extends LitElement {
     }
   }
 
-  firstUpdated() {
-    // Lit handles style adoption automatically
-    // No manual intervention needed for zero FOUC
+  /**
+   * @lifecycle
+   * @param {Map} changedProperties
+   */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+    this._logger.debug('First update complete', { changedProperties: Array.from(changedProperties.keys()) });
 
-    // Listen for slot changes to update button sizes
     const actionsSlot = this.shadowRoot?.querySelector('slot[name="actions"]');
     if (actionsSlot) {
       actionsSlot.addEventListener('slotchange', () => {
         this._updateActionButtonSizes();
       });
     }
+
+    this._discoverNestedComponents();
   }
 
-  /* ========================================
-     RENDER METHOD
-     ======================================== */
+  /**
+   * @lifecycle
+   * @param {Map} changedProperties
+   */
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    this._logger.debug('Updated', { changedProperties: Array.from(changedProperties.keys()) });
+
+    if (changedProperties.has('collapsed')) {
+      this._updateSlotVisibility();
+    }
+
+    if (changedProperties.has('compact') || changedProperties.has('large')) {
+      this._updateActionButtonSizes();
+      this._propagateContextToChildren();
+    }
+
+    if (changedProperties.has('footerCollapsed')) {
+      this._updateSlotVisibility();
+    }
+
+    if (changedProperties.has('loading')) {
+      if (this.loading) {
+        this._emitEvent('panel-loading-start', {});
+        this._setLoadingTimeout();
+      } else {
+        this._emitEvent('panel-loading-end', {});
+        this._clearLoadingTimeout();
+      }
+    }
+  }
+
+  // ============================================
+  // BLOCK 8: Public API Methods
+  // ============================================
+
+  /**
+   * Toggle panel collapse state
+   *
+   * @public
+   * @returns {boolean} New collapsed state
+   * @fires panel-collapsed
+   * @example
+   * const panel = document.querySelector('t-pnl');
+   * const isCollapsed = panel.toggleCollapse();
+   */
+  toggleCollapse() {
+    this._logger.debug('toggleCollapse called');
+
+    if (!this.collapsible) {
+      this._logger.warn('toggleCollapse called but panel is not collapsible');
+      return this.collapsed;
+    }
+
+    this.collapsed = !this.collapsed;
+    this._emitEvent('panel-collapsed', { collapsed: this.collapsed });
+
+    return this.collapsed;
+  }
+
+  /**
+   * Collapse panel
+   *
+   * @public
+   * @fires panel-collapsed
+   */
+  collapse() {
+    this._logger.debug('collapse called');
+
+    if (!this.collapsible) {
+      this._logger.warn('collapse called but panel is not collapsible');
+      return;
+    }
+
+    if (!this.collapsed) {
+      this.collapsed = true;
+      this._emitEvent('panel-collapsed', { collapsed: true });
+    }
+  }
+
+  /**
+   * Expand panel
+   *
+   * @public
+   * @fires panel-collapsed
+   */
+  expand() {
+    this._logger.debug('expand called');
+
+    if (!this.collapsed) {
+      return;
+    }
+
+    this.collapsed = false;
+    this._emitEvent('panel-collapsed', { collapsed: false });
+  }
+
+  /**
+   * Toggle footer collapse state
+   *
+   * @public
+   * @returns {boolean} New footer collapsed state
+   * @fires panel-footer-collapsed
+   */
+  toggleFooterCollapse() {
+    this._logger.debug('toggleFooterCollapse called');
+
+    this.footerCollapsed = !this.footerCollapsed;
+    this._emitEvent('panel-footer-collapsed', { footerCollapsed: this.footerCollapsed });
+
+    return this.footerCollapsed;
+  }
+
+  /**
+   * Show loading state
+   *
+   * @public
+   * @fires panel-loading-start
+   */
+  startLoading() {
+    this._logger.debug('startLoading called');
+    this.loading = true;
+  }
+
+  /**
+   * Hide loading state
+   *
+   * @public
+   * @fires panel-loading-end
+   */
+  stopLoading() {
+    this._logger.debug('stopLoading called');
+    this.loading = false;
+  }
+
+  /**
+   * Receive context from parent component (nesting support)
+   *
+   * @public
+   * @param {Object} context - Context object from parent
+   * @param {string} context.size - Parent size (compact, large, default)
+   * @param {string} context.theme - Parent theme variant
+   */
+  receiveContext(context) {
+    this._logger.debug('Received context from parent', { context });
+
+    if (context.size) {
+      if (context.size === 'compact' && !this.compact) {
+        this.compact = true;
+      } else if (context.size === 'large' && !this.large) {
+        this.large = true;
+      }
+    }
+  }
+
+  // ============================================
+  // BLOCK 9: Event Emitters
+  // ============================================
+
+  /**
+   * Emit custom event
+   *
+   * @event
+   * @private
+   * @param {string} eventName - Event name
+   * @param {Object} detail - Event detail payload
+   * @property {*} detail - Event-specific data
+   * @bubbles
+   * @composed
+   */
+  _emitEvent(eventName, detail) {
+    this._logger.debug('Emitting event', { eventName, detail });
+
+    this.dispatchEvent(new CustomEvent(eventName, {
+      detail,
+      bubbles: true,
+      composed: true
+    }));
+  }
+
+  // ============================================
+  // BLOCK 10: Nesting Support
+  // ============================================
+
+  /**
+   * Discover nested components in default slot
+   *
+   * @private
+   */
+  _discoverNestedComponents() {
+    const defaultSlot = this.shadowRoot?.querySelector('slot:not([name])');
+    if (!defaultSlot) return;
+
+    const assignedElements = defaultSlot.assignedElements();
+    this._nestedComponents = assignedElements.filter(el =>
+      el.tagName && el.tagName.startsWith('T-')
+    );
+
+    this._logger.debug('Discovered nested components', {
+      count: this._nestedComponents.length,
+      tags: this._nestedComponents.map(c => c.tagName)
+    });
+
+    this._propagateContextToChildren();
+  }
+
+  /**
+   * Propagate context to nested child components
+   *
+   * @private
+   */
+  _propagateContextToChildren() {
+    const context = {
+      size: this.compact ? 'compact' : this.large ? 'large' : 'default',
+      variant: this.variant
+    };
+
+    this._nestedComponents.forEach(child => {
+      if (typeof child.receiveContext === 'function') {
+        child.receiveContext(context);
+        this._logger.debug('Propagated context to child', { tag: child.tagName, context });
+      }
+    });
+  }
+
+  // ============================================
+  // BLOCK 11: Validation
+  // ============================================
+
+  /**
+   * Validate property value
+   *
+   * @private
+   * @param {string} propName - Property name
+   * @param {*} value - Property value
+   * @returns {{valid: boolean, errors: string[]}}
+   */
+  _validateProperty(propName, value) {
+    const validation = TPanelLit.getPropertyValidation(propName);
+    if (!validation) {
+      return { valid: true, errors: [] };
+    }
+
+    const result = validation.validate(value);
+    if (!result.valid) {
+      this._logger.warn('Property validation failed', {
+        propName,
+        value,
+        errors: result.errors
+      });
+    }
+
+    return result;
+  }
+
+  /**
+   * Get validation rules for property
+   *
+   * @static
+   * @param {string} propName - Property name
+   * @returns {Object|null} Validation configuration
+   */
+  static getPropertyValidation(propName) {
+    const validations = {
+      variant: {
+        validate: (value) => {
+          const allowed = ['standard', 'headless'];
+          const valid = allowed.includes(value);
+          return {
+            valid,
+            errors: valid ? [] : [`variant must be one of: ${allowed.join(', ')}`]
+          };
+        }
+      }
+    };
+
+    return validations[propName] || null;
+  }
+
+  /**
+   * Validate slot content
+   *
+   * @private
+   * @param {string} slotName - Slot name
+   * @param {Array<HTMLElement>} elements - Assigned elements
+   * @returns {{valid: boolean, errors: string[]}}
+   */
+  _validateSlotContent(slotName, elements) {
+    const validation = TPanelLit.getSlotValidation(slotName);
+    if (!validation) {
+      return { valid: true, errors: [] };
+    }
+
+    const errors = [];
+
+    if (validation.maxElements && elements.length > validation.maxElements) {
+      errors.push(`${slotName} slot accepts max ${validation.maxElements} elements, got ${elements.length}`);
+    }
+
+    if (validation.accepts && !validation.accepts.includes('*')) {
+      elements.forEach((el, i) => {
+        const tagName = el.tagName.toLowerCase();
+        if (!validation.accepts.includes(tagName)) {
+          errors.push(`${slotName} slot only accepts ${validation.accepts.join(', ')}, found ${tagName} at index ${i}`);
+        }
+      });
+    }
+
+    if (errors.length > 0) {
+      this._logger.warn('Invalid slot content', { slotName, errors });
+    }
+
+    return {
+      valid: errors.length === 0,
+      errors
+    };
+  }
+
+  /**
+   * Get validation rules for slot
+   *
+   * @static
+   * @param {string} slotName - Slot name
+   * @returns {Object|null} Validation configuration
+   */
+  static getSlotValidation(slotName) {
+    const validations = {
+      actions: {
+        accepts: ['t-btn'],
+        maxElements: 10
+      },
+      footer: {
+        accepts: ['*']
+      },
+      default: {
+        accepts: ['*']
+      }
+    };
+
+    return validations[slotName] || null;
+  }
+
+  // ============================================
+  // BLOCK 12: Render Method
+  // ============================================
+
+  /**
+   * Render component template
+   *
+   * @returns {TemplateResult}
+   * @slot default - Main panel content (can nest panels)
+   * @slot actions - Action buttons (auto-sized, max 10)
+   * @slot footer - Footer content (collapsible independently)
+   */
   render() {
+    this._logger.debug('Rendering');
+
     const panelClasses = this._getPanelClasses();
 
     return html`
@@ -697,9 +1002,16 @@ export class TPanelLit extends LitElement {
     `;
   }
 
-  /* ========================================
-     PRIVATE RENDER METHODS
-     ======================================== */
+  // ============================================
+  // BLOCK 13: Private Helpers
+  // ============================================
+
+  /**
+   * Get CSS classes for panel container
+   *
+   * @private
+   * @returns {string}
+   */
   _getPanelClasses() {
     const classes = ['t-pnl'];
 
@@ -713,8 +1025,6 @@ export class TPanelLit extends LitElement {
 
     if (this.collapsed) {
       classes.push('t-pnl--collapsed');
-    } else {
-      classes.push('t-pnl--expanded');
     }
 
     if (this.compact) {
@@ -730,6 +1040,12 @@ export class TPanelLit extends LitElement {
     return classes.join(' ');
   }
 
+  /**
+   * Render panel header
+   *
+   * @private
+   * @returns {TemplateResult|string}
+   */
   _renderHeader() {
     if (this.variant === 'headless') {
       return '';
@@ -745,7 +1061,7 @@ export class TPanelLit extends LitElement {
         ${this.collapsible ? this._renderCollapseButton() : ''}
         <div class="t-pnl__title">
           ${this.icon ? html`<span class="t-pnl__title-icon" .innerHTML=${this.icon}></span>` : ''}
-          ${this.title || html`<slot name="title"></slot>`}
+          ${this.title}
         </div>
         <div class="t-pnl__actions">
           <slot name="actions"></slot>
@@ -754,6 +1070,12 @@ export class TPanelLit extends LitElement {
     `;
   }
 
+  /**
+   * Render collapse button
+   *
+   * @private
+   * @returns {TemplateResult}
+   */
   _renderCollapseButton() {
     const icon = this.collapsed ? caretRightIcon : caretDownIcon;
     return html`
@@ -768,6 +1090,12 @@ export class TPanelLit extends LitElement {
     `;
   }
 
+  /**
+   * Render panel body
+   *
+   * @private
+   * @returns {TemplateResult|string}
+   */
   _renderBody() {
     if (this.collapsed) {
       return '';
@@ -785,6 +1113,12 @@ export class TPanelLit extends LitElement {
     `;
   }
 
+  /**
+   * Render panel footer
+   *
+   * @private
+   * @returns {TemplateResult|string}
+   */
   _renderFooter() {
     if (this.collapsed) {
       return '';
@@ -804,6 +1138,12 @@ export class TPanelLit extends LitElement {
     `;
   }
 
+  /**
+   * Render footer collapse button
+   *
+   * @private
+   * @returns {TemplateResult}
+   */
   _renderFooterCollapseBtn() {
     return html`
       <button
@@ -816,6 +1156,12 @@ export class TPanelLit extends LitElement {
     `;
   }
 
+  /**
+   * Render footer reopen tab
+   *
+   * @private
+   * @returns {TemplateResult}
+   */
   _renderFooterReopenTab() {
     return html`
       <button
@@ -830,10 +1176,12 @@ export class TPanelLit extends LitElement {
     `;
   }
 
-
-  /* ========================================
-     EVENT HANDLERS
-     ======================================== */
+  /**
+   * Handle header click
+   *
+   * @private
+   * @param {MouseEvent} e
+   */
   _handleHeaderClick(e) {
     if (!this.collapsible) {
       return;
@@ -847,37 +1195,65 @@ export class TPanelLit extends LitElement {
       return;
     }
 
-    this._toggleCollapse();
+    this.toggleCollapse();
   }
 
+  /**
+   * Handle header keydown
+   *
+   * @private
+   * @param {KeyboardEvent} e
+   */
   _handleHeaderKeydown(e) {
     if (!this.collapsible) return;
 
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      this._toggleCollapse();
+      this.toggleCollapse();
     }
   }
 
+  /**
+   * Handle collapse button click
+   *
+   * @private
+   * @param {MouseEvent} e
+   */
   _handleCollapseClick(e) {
     e.stopPropagation();
-    this._toggleCollapse();
+    this.toggleCollapse();
   }
 
-  _toggleCollapse() {
-    this.collapsed = !this.collapsed;
-
-    // Dispatch custom event
-    this.dispatchEvent(new CustomEvent('panel-toggle', {
-      detail: { collapsed: this.collapsed },
-      bubbles: true,
-      composed: true
-    }));
+  /**
+   * Handle footer collapse button click
+   *
+   * @private
+   * @param {MouseEvent} e
+   */
+  _handleFooterCollapseClick(e) {
+    e.stopPropagation();
+    this.footerCollapsed = true;
+    this._emitEvent('panel-footer-collapsed', { footerCollapsed: true });
   }
 
-  /* ========================================
-     DRAG AND DROP FUNCTIONALITY
-     ======================================== */
+  /**
+   * Handle footer reopen tab click
+   *
+   * @private
+   * @param {MouseEvent} e
+   */
+  _handleFooterReopenClick(e) {
+    e.stopPropagation();
+    this.footerCollapsed = false;
+    this._emitEvent('panel-footer-collapsed', { footerCollapsed: false });
+  }
+
+  /**
+   * Handle mouse down for drag
+   *
+   * @private
+   * @param {MouseEvent} e
+   */
   _handleMouseDown(e) {
     if (!this.draggable || !e.target.closest('.t-pnl__header')) {
       return;
@@ -895,8 +1271,16 @@ export class TPanelLit extends LitElement {
     document.addEventListener('mouseup', this._handleMouseUp);
 
     e.preventDefault();
+
+    this._logger.debug('Drag started', { x: this._dragStartX, y: this._dragStartY });
   }
 
+  /**
+   * Handle mouse move during drag
+   *
+   * @private
+   * @param {MouseEvent} e
+   */
   _handleMouseMove(e) {
     if (!this._dragging) return;
 
@@ -911,6 +1295,11 @@ export class TPanelLit extends LitElement {
     this._dragStartY = e.clientY;
   }
 
+  /**
+   * Handle mouse up to end drag
+   *
+   * @private
+   */
   _handleMouseUp() {
     this._dragging = false;
     this.toggleAttribute('dragging', false);
@@ -918,80 +1307,14 @@ export class TPanelLit extends LitElement {
     document.removeEventListener('mousemove', this._handleMouseMove);
     document.removeEventListener('mouseup', this._handleMouseUp);
 
-    // Dispatch drag end event
-    this.dispatchEvent(new CustomEvent('panel-drag-end', {
-      detail: {
-        left: this.style.left,
-        top: this.style.top
-      },
-      bubbles: true,
-      composed: true
-    }));
+    this._logger.debug('Drag ended', { left: this.style.left, top: this.style.top });
   }
 
-  /* ========================================
-     PUBLIC API METHODS
-     ======================================== */
-  expand() {
-    this.collapsed = false;
-  }
-
-  collapse() {
-    this.collapsed = true;
-  }
-
-  toggle() {
-    this._toggleCollapse();
-  }
-
-  setLoading(loading) {
-    this.loading = loading;
-  }
-
-  setTitle(title) {
-    this.title = title;
-  }
-
-  collapseFooter() {
-    this.footerCollapsed = true;
-  }
-
-  expandFooter() {
-    this.footerCollapsed = false;
-  }
-
-  _handleFooterCollapseClick(e) {
-    e.stopPropagation();
-    this.collapseFooter();
-  }
-
-  _handleFooterReopenClick(e) {
-    e.stopPropagation();
-    this.expandFooter();
-  }
-
-  /* ========================================
-     UPDATED LIFECYCLE
-     ======================================== */
-  updated(changedProperties) {
-    super.updated(changedProperties);
-
-    // Show/hide footer and status bar based on slot content
-    if (changedProperties.has('collapsed') || this.hasUpdated) {
-      this._updateSlotVisibility();
-    }
-
-    // Update action button sizes based on panel variant
-    if (changedProperties.has('compact') || changedProperties.has('large') || this.hasUpdated) {
-      this._updateActionButtonSizes();
-    }
-
-    // Update footer visibility
-    if (changedProperties.has('footerCollapsed')) {
-      this._updateSlotVisibility();
-    }
-  }
-
+  /**
+   * Update slot visibility based on content
+   *
+   * @private
+   */
   _updateSlotVisibility() {
     const footerSlot = this.shadowRoot?.querySelector('slot[name="footer"]');
     const footerContainer = this.shadowRoot?.querySelector('.t-pnl__footer');
@@ -999,9 +1322,16 @@ export class TPanelLit extends LitElement {
     if (footerSlot && footerContainer) {
       const hasFooterContent = footerSlot.assignedElements().length > 0;
       footerContainer.style.display = hasFooterContent ? 'flex' : 'none';
+
+      this._logger.debug('Updated footer visibility', { hasContent: hasFooterContent });
     }
   }
 
+  /**
+   * Update action button sizes based on panel variant
+   *
+   * @private
+   */
   async _updateActionButtonSizes() {
     await customElements.whenDefined('t-btn');
 
@@ -1020,9 +1350,9 @@ export class TPanelLit extends LitElement {
       }
     });
 
-    console.log(`[TPanelLit] Sizing ${buttons.length} action buttons. compact=${this.compact}, large=${this.large}`);
-
     if (buttons.length === 0) return;
+
+    this._validateSlotContent('actions', buttons);
 
     let buttonSize = 'small';
     if (this.compact) {
@@ -1031,161 +1361,213 @@ export class TPanelLit extends LitElement {
       buttonSize = '';
     }
 
-    buttons.forEach((btn, i) => {
-      const oldSize = btn.getAttribute('size');
+    buttons.forEach(btn => {
       if (buttonSize === '') {
         btn.removeAttribute('size');
       } else {
         btn.setAttribute('size', buttonSize);
       }
-      const newSize = btn.getAttribute('size') || 'default';
-      console.log(`[TPanelLit]   Button ${i}: ${oldSize || 'default'} → ${newSize}`);
     });
+
+    this._logger.debug('Updated action button sizes', {
+      count: buttons.length,
+      size: buttonSize || 'default',
+      compact: this.compact,
+      large: this.large
+    });
+  }
+
+  /**
+   * Set loading timeout to auto-dismiss after 30 seconds
+   *
+   * @private
+   */
+  _setLoadingTimeout() {
+    this._clearLoadingTimeout();
+
+    this._loadingTimeout = this._setTimeout(() => {
+      this._logger.warn('Loading timeout reached (30s), auto-stopping');
+      this.stopLoading();
+    }, 30000);
+  }
+
+  /**
+   * Clear loading timeout
+   *
+   * @private
+   */
+  _clearLoadingTimeout() {
+    if (this._loadingTimeout !== null) {
+      this._clearTimeout(this._loadingTimeout);
+      this._loadingTimeout = null;
+    }
+  }
+
+  /**
+   * Managed setTimeout (tracked for cleanup)
+   *
+   * @private
+   * @param {Function} callback
+   * @param {number} delay
+   * @returns {number} Timer ID
+   */
+  _setTimeout(callback, delay) {
+    const id = setTimeout(() => {
+      this._timers.delete(id);
+      callback();
+    }, delay);
+
+    this._timers.add(id);
+    return id;
+  }
+
+  /**
+   * Managed clearTimeout
+   *
+   * @private
+   * @param {number} id - Timer ID
+   */
+  _clearTimeout(id) {
+    clearTimeout(id);
+    this._timers.delete(id);
+  }
+
+  /**
+   * Clear all timers
+   *
+   * @private
+   */
+  _clearAllTimers() {
+    this._timers.forEach(id => clearTimeout(id));
+    this._timers.clear();
+    this._logger.debug('Cleared all timers', { count: this._timers.size });
   }
 }
 
+// ============================================
+// SECTION 3: Custom Element Registration
+// ============================================
+if (!customElements.get('t-pnl')) {
+  customElements.define('t-pnl', TPanelLit);
+}
+
+// ============================================
+// SECTION 4: Export
+// ============================================
+export default TPanelLit;
+
 /**
  * Component Manifest - Auto-generated + Manual Annotations
- * Properties auto-extracted from static properties
- * Methods, events, slots manually documented
- * @type {import('../types/component-manifest').ComponentManifest}
  */
 export const TPanelManifest = generateManifest(TPanelLit, {
   tagName: 't-pnl',
   displayName: 'Terminal Panel',
-  description: 'Collapsible panel with header, footer, and nested content support. Supports nesting other panels and components.',
+  description: 'Collapsible panel with header, footer, and nested content support',
   version: '1.0.0',
 
-  // Property descriptions and enums (auto-generated types from static properties)
   properties: {
-    title: {
-      description: 'Panel title displayed in header'
-    },
+    title: { description: 'Panel title displayed in header' },
     variant: {
       enum: ['standard', 'headless'],
       description: 'Panel variant: standard (with header) or headless (no header)'
     },
-    collapsible: {
-      description: 'Enable collapse/expand functionality'
-    },
-    collapsed: {
-      description: 'Current collapsed state'
-    },
-    compact: {
-      description: 'Compact size variant (20px header)'
-    },
-    large: {
-      description: 'Large size variant (36px header)'
-    },
-    loading: {
-      description: 'Show loading state'
-    },
-    resizable: {
-      description: 'Enable panel resizing'
-    },
-    draggable: {
-      description: 'Enable panel dragging'
-    },
-    icon: {
-      description: 'SVG icon string to display in header'
-    },
-    footerCollapsed: {
-      description: 'Footer collapsed state'
-    }
+    collapsible: { description: 'Enable collapse/expand functionality' },
+    collapsed: { description: 'Current collapsed state' },
+    compact: { description: 'Compact size variant (20px header)' },
+    large: { description: 'Large size variant (36px header)' },
+    loading: { description: 'Show loading state' },
+    resizable: { description: 'Enable panel resizing' },
+    draggable: { description: 'Enable panel dragging' },
+    icon: { description: 'SVG icon string to display in header' },
+    footerCollapsed: { description: 'Footer collapsed state' }
   },
 
-  // Methods documentation
   methods: {
     toggleCollapse: {
       description: 'Toggle panel collapse state',
       parameters: [],
       returns: { type: 'boolean', description: 'New collapsed state' }
     },
-    toggleFooter: {
-      description: 'Toggle footer visibility',
+    collapse: {
+      description: 'Collapse panel',
+      parameters: [],
+      returns: { type: 'void' }
+    },
+    expand: {
+      description: 'Expand panel',
+      parameters: [],
+      returns: { type: 'void' }
+    },
+    toggleFooterCollapse: {
+      description: 'Toggle footer collapse state',
       parameters: [],
       returns: { type: 'boolean', description: 'New footer collapsed state' }
+    },
+    startLoading: {
+      description: 'Show loading state',
+      parameters: [],
+      returns: { type: 'void' }
+    },
+    stopLoading: {
+      description: 'Hide loading state',
+      parameters: [],
+      returns: { type: 'void' }
+    },
+    receiveContext: {
+      description: 'Receive context from parent component',
+      parameters: [
+        { name: 'context', type: 'Object', description: 'Context from parent' }
+      ],
+      returns: { type: 'void' }
     }
   },
 
-  // Events documentation
   events: {
     'panel-collapsed': {
       description: 'Fired when panel collapse state changes',
-      detail: {
-        collapsed: 'boolean'
-      },
+      detail: { collapsed: 'boolean' },
       bubbles: true,
       composed: true
     },
     'panel-footer-collapsed': {
       description: 'Fired when footer collapse state changes',
-      detail: {
-        collapsed: 'boolean'
-      },
+      detail: { footerCollapsed: 'boolean' },
+      bubbles: true,
+      composed: true
+    },
+    'panel-loading-start': {
+      description: 'Fired when loading state starts',
+      detail: {},
+      bubbles: true,
+      composed: true
+    },
+    'panel-loading-end': {
+      description: 'Fired when loading state ends',
+      detail: {},
       bubbles: true,
       composed: true
     }
   },
 
-  // Slots documentation
   slots: {
     default: {
-      description: 'Main panel content - supports nesting other panels and any components',
+      description: 'Main panel content - supports nesting other panels',
       multiple: true,
       accepts: ['*']
     },
     actions: {
-      description: 'Action buttons in panel header (auto-sized based on panel size)',
+      description: 'Action buttons (auto-sized, max 10)',
       multiple: true,
       accepts: ['t-btn']
     },
     footer: {
-      description: 'Footer content (can be collapsed with slide animation)',
+      description: 'Footer content (collapsible independently)',
       multiple: true,
       accepts: ['*']
-    }
-  },
-
-  // Shadow parts for external styling
-  parts: {
-    panel: 'Main panel container',
-    header: 'Panel header',
-    title: 'Panel title',
-    actions: 'Actions container',
-    body: 'Panel body',
-    footer: 'Panel footer'
-  },
-
-  // CSS custom properties
-  cssProperties: {
-    '--terminal-green': {
-      description: 'Primary color',
-      syntax: '<color>',
-      default: '#00ff41'
-    },
-    '--terminal-gray-dark': {
-      description: 'Header background color',
-      syntax: '<color>',
-      default: '#242424'
-    },
-    '--spacing-md': {
-      description: 'Standard spacing',
-      syntax: '<length>',
-      default: '12px'
     }
   }
 });
 
-// Register the custom element - only t-pnl since that's what the HTML uses
-if (!customElements.get('t-pnl')) {
-	customElements.define('t-pnl', TPanelLit);
-}
-
-// Auto-register manifest if registry available
 if (typeof window !== 'undefined' && window.__TERMINAL_KIT_REGISTRY__) {
   window.__TERMINAL_KIT_REGISTRY__.register(TPanelManifest);
 }
-
-// Export for use
-export default TPanelLit;

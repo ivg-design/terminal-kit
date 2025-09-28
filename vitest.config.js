@@ -1,6 +1,9 @@
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  esbuild: {
+    target: 'esnext'
+  },
   test: {
     // Use happy-dom for DOM simulation (lighter than jsdom)
     environment: 'happy-dom',
