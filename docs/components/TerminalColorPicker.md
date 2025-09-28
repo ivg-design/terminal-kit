@@ -1,145 +1,164 @@
-# TerminalColorPicker
+# TerminalColorPicker (t-clr)
 
-A color selection component that integrates with Pickr library, styled with terminal aesthetics. Supports multiple color formats, custom swatches with persistence, and Supabase integration.
+A modern color selection component built with **iro.js** and **Lit**, featuring terminal aesthetics, transparency support, multiple color formats, and persistent custom swatches. Supports HEXA, RGBA, and HSLA color modes with systematic element control and flexible ordering.
 
 ## Tag Name
 ```html
-<terminal-color-picker></terminal-color-picker>
+<t-clr></t-clr>
 ```
+
+## Features
+
+- **iro.js Integration**: Professional color picker with box + sliders layout
+- **Multiple Color Formats**: Switch between HEXA, RGBA, and HSLA modes
+- **Alpha/Opacity Support**: Full transparency control with dedicated slider
+- **Custom Swatches**: Persistent storage with CMD/Ctrl+Click removal
+- **Debounced Updates**: 250ms debounce for smooth performance during drag
+- **Three Variants**: Large (48px), Standard (32px), and Compact (minimal)
+- **Systematic Elements**: Universal element system - icon, label, swatch (mandatory), input (all optional except swatch)
+- **Flexible Ordering**: Elements render in exact order specified via `elements` attribute
+- **Custom Icons**: Set custom Phosphor icons via `setIcon()` method
+- **Clear Button**: Optional trash button with confirmation modal for clearing custom swatches
+- **Transparency Grid**: Visual checkerboard for transparent colors
+- **Keyboard Support**: CMD/Ctrl key detection for swatch removal
+- **LocalStorage**: Persistent swatch storage across sessions
 
 ## Attributes
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `value` | string | `'#00ff41'` | Initial color value (hex format) |
-| `label1` | string | `'Color'` | First line of label text |
-| `label2` | string | `'Picker'` | Second line of label text |
-| `disabled` | boolean | `false` | Disabled state |
-| `compact` | boolean | `false` | Compact mode (smaller size) |
-| `variant` | string | `'default'` | Display variant: 'default' or 'minimal' |
+| `value` | string | `'#00ff41ff'` | Initial color value (hex8 format with alpha) |
+| `label1` | string | `'Color'` | First line of label text (when `label` element included) |
+| `label2` | string | `'Picker'` | Second line of label text (when `label` element included) |
+| `disabled` | boolean | `false` | Disabled state (dims and disables interaction) |
+| `variant` | string | `'large'` | Display variant: `'large'` (48px), `'standard'` (32px), or `'compact'` (minimal) |
+| `elements` | string | `'icon,label,swatch,input'` | Comma-separated list of elements in render order. Available: `icon`, `label`, `swatch`, `input`. Swatch is mandatory. |
+| `show-clear-button` | boolean | `false` | Show trash button in picker for clearing all custom swatches (with confirmation modal) |
+
+## Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `value` | string | Current color value in hex8 format (e.g., `#00ff41ff`) |
+| `customSwatches` | string[] | Array of custom swatch colors (max 20) |
+| `colorPicker` | IroColorPicker | iro.js color picker instance |
+| `disabled` | boolean | Disabled state |
+| `variant` | string | Current variant: `'large'`, `'standard'`, or `'compact'` |
+| `elements` | string | Current element configuration |
+| `customIcon` | string | Custom icon SVG string |
 
 ## Methods
 
-### `getValue()`
-Returns the current color value in hex format.
+### `setIcon(iconSvg)`
+Sets a custom Phosphor icon for the picker.
 
-**Returns:** string
+**Parameters:**
+- `iconSvg` (string): SVG string of Phosphor icon
+
+**Returns:** void
+
+```javascript
+import { paintBucketIcon } from '../js/utils/phosphor-icons.js';
+const picker = document.querySelector('t-clr');
+picker.setIcon(paintBucketIcon);
+```
+
+### `clearAllCustomSwatches()`
+Clears all custom swatches from storage and display. When called via trash button, shows confirmation modal first.
+
+**Returns:** void
+
+```javascript
+const picker = document.querySelector('t-clr');
+picker.clearAllCustomSwatches();
+```
+
+### `loadCustomSwatches()`
+Loads custom swatches from localStorage.
+
+**Returns:** void
+
+```javascript
+picker.loadCustomSwatches();
+```
+
+### `saveCustomSwatches()`
+Saves custom swatches to localStorage.
+
+**Returns:** void
+
+```javascript
+picker.saveCustomSwatches();
+```
+
+### `updateSwatchesDisplay()`
+Updates the visual display of swatches in the picker popover.
+
+**Returns:** void
+
+```javascript
+picker.updateSwatchesDisplay();
+```
+
+### `getValue()`
+Gets the current color value.
+
+**Returns:** string (hex8 format)
 
 ```javascript
 const color = picker.getValue();
-// Returns: "#00ff41"
 ```
 
 ### `setValue(color)`
 Sets the color value programmatically.
 
 **Parameters:**
-- `color` (string): Color value in hex format
+- `color` (string): Color in hex format
+
+**Returns:** void
 
 ```javascript
-picker.setValue('#ff0041');
+picker.setValue('#ff6b35ff');
 ```
 
-### `setLabels(label1, label2)`
-Sets the label text for the picker.
+### `disable()` / `enable()`
+Enables or disables the picker.
 
-**Parameters:**
-- `label1` (string): First line of label
-- `label2` (string): Second line of label
-
-```javascript
-picker.setLabels('Theme', 'Color');
-```
-
-### `setIcon(iconSvg)`
-Sets a custom icon for the picker.
-
-**Parameters:**
-- `iconSvg` (string): SVG string for the icon
-
-```javascript
-picker.setIcon('<svg>...</svg>');
-```
-
-### `reset()`
-Resets the color to default (#00ff41).
-
-```javascript
-picker.reset();
-```
-
-### `disable()`
-Disables the color picker.
+**Returns:** void
 
 ```javascript
 picker.disable();
-```
-
-### `enable()`
-Enables the color picker.
-
-```javascript
 picker.enable();
-```
-
-## Usage Examples
-
-### Default Variant
-```html
-<terminal-color-picker
-  value="#00ff41"
-  label1="Theme"
-  label2="Color">
-</terminal-color-picker>
-```
-
-### Minimal Variant
-The minimal variant displays only the color swatch and hex input field, with no borders or labels.
-Perfect for inline color selection in forms or compact UIs.
-
-```html
-<terminal-color-picker
-  variant="minimal"
-  value="#00ff41">
-</terminal-color-picker>
-```
-
-### Compact Mode
-```html
-<terminal-color-picker
-  compact
-  value="#ff0000">
-</terminal-color-picker>
 ```
 
 ## Events
 
-### `color-change`
-Fired when color value changes.
+### `change`
+Fired when color value changes (debounced to 250ms).
 
 **Event Detail:**
 ```javascript
 {
-  color: string  // Hex color value
+  value: string,  // Hex8 color value (e.g., "#00ff41ff")
+  color: string   // Same as value
 }
 ```
 
 **Example:**
 ```javascript
-picker.addEventListener('color-change', (e) => {
-  console.log('New color:', e.detail.color);
+picker.addEventListener('change', (e) => {
+  console.log('New color:', e.target.value);
+  console.log('Detail:', e.detail.value);
 });
 ```
 
 ### `color-save`
-Fired when color is saved through Pickr's save button.
+Fired when user clicks the save button in the picker popover.
 
 **Event Detail:**
 ```javascript
 {
-  color: string,      // Hex color value
-  rgb: string,        // RGB representation
-  hsl: string,        // HSL representation
+  color: string,      // Hex8 color value
   timestamp: number   // Unix timestamp
 }
 ```
@@ -148,14 +167,12 @@ Fired when color is saved through Pickr's save button.
 ```javascript
 picker.addEventListener('color-save', (e) => {
   console.log('Saved color:', e.detail.color);
-  console.log('RGB:', e.detail.rgb);
-  console.log('HSL:', e.detail.hsl);
-  console.log('Saved at:', new Date(e.detail.timestamp));
+  console.log('Timestamp:', e.detail.timestamp);
 });
 ```
 
 ### `swatches-updated`
-Fired when custom swatches are modified.
+Fired when custom swatches array is modified.
 
 **Event Detail:**
 ```javascript
@@ -167,312 +184,540 @@ Fired when custom swatches are modified.
 **Example:**
 ```javascript
 picker.addEventListener('swatches-updated', (e) => {
-  console.log('Custom swatches:', e.detail.swatches);
+  console.log('Swatches updated:', e.detail.swatches);
+  console.log('Count:', e.detail.swatches.length);
 });
 ```
+
+### `swatches-cleared`
+Fired when all custom swatches are cleared.
+
+**Example:**
+```javascript
+picker.addEventListener('swatches-cleared', () => {
+  console.log('All custom swatches cleared');
+});
+```
+
+## Variants
+
+### Large Variant (48px height)
+Full-size variant with all elements available.
+
+```html
+<t-clr
+  variant="large"
+  value="#00ff41ff"
+  label1="Theme"
+  label2="Color"
+  elements="icon,label,swatch,input">
+</t-clr>
+```
+
+### Standard Variant (32px height)
+Compact version with all elements available but smaller sizing.
+
+```html
+<t-clr
+  variant="standard"
+  value="#00aaff"
+  label1="Accent"
+  label2="Color"
+  elements="icon,label,swatch,input">
+</t-clr>
+```
+
+### Compact Variant (Minimal)
+Ultra-compact design for inline use. All elements available.
+
+```html
+<t-clr
+  variant="compact"
+  value="#ff00ff"
+  elements="swatch,input">
+</t-clr>
+```
+
+## Element System
+
+The component uses a systematic element system where you specify which elements to show and in what order.
+
+### Available Elements
+
+- **`icon`**: Palette icon (or custom icon via `setIcon()`)
+- **`label`**: Two-line label (uses `label1` and `label2` attributes)
+- **`swatch`**: Color swatch button (mandatory - launches picker)
+- **`input`**: Hex color input field
+
+### Element Ordering
+
+Elements render in the **exact order** specified in the `elements` attribute. This allows complete control over layout.
+
+```html
+<!-- Default order -->
+<t-clr elements="icon,label,swatch,input"></t-clr>
+
+<!-- Swatch first -->
+<t-clr elements="swatch,icon,label,input"></t-clr>
+
+<!-- Input before swatch -->
+<t-clr elements="icon,label,input,swatch"></t-clr>
+
+<!-- Input in the middle -->
+<t-clr elements="icon,input,label,swatch"></t-clr>
+```
+
+### Element Combinations
+
+Any combination of elements is allowed (except swatch which is mandatory).
+
+```html
+<!-- Icon + Swatch only (no label, no input) -->
+<t-clr elements="icon,swatch"></t-clr>
+
+<!-- Label + Swatch only -->
+<t-clr elements="label,swatch" label1="Color" label2="Picker"></t-clr>
+
+<!-- Swatch + Input only -->
+<t-clr elements="swatch,input"></t-clr>
+
+<!-- Swatch only -->
+<t-clr elements="swatch"></t-clr>
+
+<!-- All elements -->
+<t-clr elements="icon,label,swatch,input"></t-clr>
+```
+
+### Variant + Element Examples
+
+All variants support all elements in any order.
+
+```html
+<!-- Large: Icon + Swatch only -->
+<t-clr variant="large" elements="icon,swatch"></t-clr>
+
+<!-- Standard: Label + Swatch only -->
+<t-clr variant="standard" elements="label,swatch" label1="Theme"></t-clr>
+
+<!-- Compact: Swatch + Input (reversed) -->
+<t-clr variant="compact" elements="input,swatch"></t-clr>
+
+<!-- Standard: Reordered with swatch first -->
+<t-clr variant="standard" elements="swatch,icon,label,input"></t-clr>
+```
+
+## Custom Icons
+
+Use Phosphor icons from the utils library or any SVG string.
+
+```javascript
+import { paintBucketIcon, paletteIcon } from '../js/utils/phosphor-icons.js';
+
+const picker = document.querySelector('t-clr');
+picker.setIcon(paintBucketIcon);
+```
+
+Available icons in `phosphor-icons.js`:
+- `paletteIcon` (default)
+- `paintBucketIcon`
+- `trashIcon`
+- `floppyDiskIcon`
+- `xIcon`
+
+## Clear Button with Confirmation Modal
+
+Add a trash button to the picker panel that clears all custom swatches with a confirmation modal.
+
+```html
+<t-clr
+  value="#00ff41ff"
+  label1="Custom"
+  label2="Swatches"
+  elements="icon,label,swatch,input"
+  show-clear-button>
+</t-clr>
+```
+
+When clicked, the trash button shows a confirmation modal:
+- **Title**: "Clear All Custom Swatches?" (red text)
+- **Message**: Shows count of swatches and warning
+- **Actions**: "Cancel" and "Clear All" (red error variant)
+- **Behavior**: Modal can be closed by clicking Cancel, Clear All, or outside the modal
 
 ## Custom Swatches
 
-The color picker includes advanced swatch management:
-
 ### Features
-- **Persistent Storage**: Custom swatches are saved to localStorage
-- **Swatch Limit**: Maximum of 20 custom swatches
-- **Visual Management**: Hold Cmd/Ctrl and hover to see remove icon
-- **Click to Remove**: Cmd/Ctrl + Click to remove a swatch
-- **Automatic Addition**: Saved colors are automatically added to swatches
-- **Duplicate Prevention**: Colors are not duplicated in the swatch list
+- **Persistent Storage**: Swatches saved to localStorage with key `'terminal-iro-swatches'`
+- **Maximum 20**: Limit of 20 custom swatches (oldest removed when exceeded)
+- **Default Swatches**: 11 built-in terminal-themed colors always visible
+- **Visual Management**: Hold CMD/Ctrl to show remove icons on custom swatches
+- **Click to Remove**: CMD/Ctrl + Click to remove a swatch
+- **Auto-save**: Click save button to add current color to swatches
+- **No Duplicates**: Same color won't be added twice
+- **Clear All**: Optional trash button with confirmation modal
 
-### Default Swatches
-The picker includes 11 default terminal-themed swatches:
-- Terminal Green (#00ff41)
-- Terminal Red (#ff0041)
-- Terminal Blue (#0041ff)
-- Terminal Yellow (#ffcc00)
-- Terminal Magenta (#ff00ff)
-- Terminal Cyan (#00ffff)
-- White (#ffffff)
-- Light Gray (#cccccc)
-- Medium Gray (#666666)
-- Dark Gray (#333333)
-- Black (#000000)
-
-### Managing Swatches
+### Default Swatches (11 colors)
 ```javascript
-// Access custom swatches array
+[
+  '#00ff41ff',  // Terminal Green
+  '#ff0041ff',  // Terminal Red
+  '#0041ffff',  // Terminal Blue
+  '#ffcc00ff',  // Terminal Yellow
+  '#ff00ffff',  // Terminal Magenta
+  '#00ffffff',  // Terminal Cyan
+  '#ffffffff',  // White
+  '#ccccccff',  // Light Gray
+  '#666666ff',  // Medium Gray
+  '#333333ff',  // Dark Gray
+  '#000000ff'   // Black
+]
+```
+
+### Managing Swatches Programmatically
+
+```javascript
+const picker = document.querySelector('t-clr');
+
+// Access custom swatches
 console.log(picker.customSwatches);
 
-// Manually update swatches display
+// Add a custom swatch
+picker.customSwatches.push('#ff6b35ff');
+picker.saveCustomSwatches();
 picker.updateSwatchesDisplay();
 
-// Load swatches from storage
-picker.loadCustomSwatches();
-
-// Save swatches to storage
-picker.saveCustomSwatches();
-```
-
-## Supabase Integration
-
-The component can integrate with Supabase for cloud storage of custom swatches:
-
-```javascript
-import { ColorSwatchesStorage } from './js/modules/storage/color-swatches-storage.js';
-
-// Initialize Supabase storage
-const colorStorage = new ColorSwatchesStorage(supabaseClient);
-await colorStorage.init();
-
-// Listen for color save events
-picker.addEventListener('color-save', async (e) => {
-  await colorStorage.addSwatch(e.detail.color);
-});
-
-// Listen for swatches updates
-picker.addEventListener('swatches-updated', async (e) => {
-  await colorStorage.saveSwatches(e.detail.swatches);
-});
-
-// Sync with auth changes
-colorStorage.onAuthChange((swatches) => {
-  picker.customSwatches = swatches;
+// Remove a specific swatch
+const index = picker.customSwatches.indexOf('#ff6b35ff');
+if (index > -1) {
+  picker.customSwatches.splice(index, 1);
+  picker.saveCustomSwatches();
   picker.updateSwatchesDisplay();
-});
+}
+
+// Clear all custom swatches
+picker.clearAllCustomSwatches();
+
+// Reload swatches from storage
+picker.loadCustomSwatches();
 ```
 
-## Pickr Configuration
+## iro.js Configuration
 
-The component uses Pickr with these settings:
+The component uses iro.js with these settings:
 
+### Layout
 ```javascript
 {
-  theme: 'classic',
-  useAsButton: true,
-  defaultRepresentation: 'HEX',
-  position: 'bottom-middle',
-  adjustableNumbers: true,
-  container: 'body',
-  
-  swatches: [
-    // 11 default swatches
-  ],
-  
-  components: {
-    preview: true,
-    opacity: true,
-    hue: true,
-    
-    interaction: {
-      hex: true,
-      rgba: true,
-      hsla: true,
-      hsva: true,
-      cmyk: false,
-      input: true,
-      clear: true,
-      save: true
+  width: 180,
+  layoutDirection: 'horizontal',
+  layout: [
+    {
+      component: iro.ui.Box,
+      options: {
+        boxHeight: 180
+      }
+    },
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'hue',
+        sliderSize: 20
+      }
+    },
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'alpha',
+        sliderSize: 20
+      }
     }
-  }
+  ]
 }
 ```
 
-## Dependencies
+### Picker Options
+- **Box Size**: 180px × 180px color selection area
+- **Horizontal Layout**: Box on left, sliders vertically on right
+- **Hue Slider**: Full spectrum color selection (20px wide)
+- **Alpha Slider**: Opacity/transparency control (20px wide)
+- **Color Format**: Full RGBA with hex8 output
 
-Requires Pickr library:
-```html
-<!-- Pickr CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css">
+## Color Format Modes
 
-<!-- Pickr JS -->
-<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+The picker supports three display modes in the input field:
 
-<!-- Component CSS (includes Pickr overrides) -->
-<link rel="stylesheet" href="css/components/color-picker.css">
+### HEXA Mode (Default)
 ```
+#00ff41ff
+```
+8-digit hex with alpha channel
 
-## CSS Classes
+### RGBA Mode
+```
+rgba(0, 255, 65, 1)
+```
+Red, Green, Blue, Alpha values
 
-- `color-picker-wrapper` - Main container
-- `color-picker-icon` - Icon container
-- `color-picker-label` - Label container
-- `color-picker-label-line1` - First line of label
-- `color-picker-label-line2` - Second line of label
-- `color-picker-swatch` - Color swatch display
-- `color-picker-swatch-color` - Swatch color element
-- `color-picker-hex` - Hex input field
-- `compact` - Compact mode modifier
-- `disabled` - Disabled state
-- `error` - Error state (invalid hex)
-- `updating` - Animation during color change
+### HSLA Mode
+```
+hsla(141, 100%, 50%, 1)
+```
+Hue, Saturation, Lightness, Alpha values
 
-## Examples
+**Toggle Modes**: Click the mode selector buttons (HEXA / RGBA / HSLA) in the picker popover to cycle through formats.
 
-### Basic Usage
+## Complete Examples
+
+### Basic Usage - All Elements
+
 ```html
-<terminal-color-picker 
-  id="colorPicker"
+<t-clr
+  value="#00ff41ff"
   label1="Theme"
   label2="Color"
-  value="#00ff41">
-</terminal-color-picker>
+  elements="icon,label,swatch,input">
+</t-clr>
+```
+
+### Icon + Swatch Only
+
+```html
+<t-clr
+  value="#00aaff"
+  elements="icon,swatch">
+</t-clr>
+```
+
+### Label + Swatch Only
+
+```html
+<t-clr
+  value="#ff00ff"
+  label1="Accent"
+  label2="Color"
+  elements="label,swatch">
+</t-clr>
+```
+
+### Swatch + Input Only
+
+```html
+<t-clr
+  value="#ffcc00"
+  elements="swatch,input">
+</t-clr>
+```
+
+### Reordered Elements
+
+```html
+<!-- Swatch first -->
+<t-clr
+  value="#ff0041"
+  label1="Error"
+  label2="Color"
+  elements="swatch,icon,label,input">
+</t-clr>
+
+<!-- Input first -->
+<t-clr
+  value="#00ff41"
+  elements="input,icon,label,swatch">
+</t-clr>
+```
+
+### Standard Variant with Custom Icon
+
+```html
+<t-clr
+  id="customPicker"
+  variant="standard"
+  value="#ff0041"
+  label1="Paint"
+  label2="Bucket"
+  elements="icon,label,swatch,input">
+</t-clr>
+
+<script type="module">
+  import { paintBucketIcon } from '../js/utils/phosphor-icons.js';
+  const picker = document.getElementById('customPicker');
+  picker.setIcon(paintBucketIcon);
+</script>
+```
+
+### Compact Variant with Reversed Order
+
+```html
+<t-clr
+  variant="compact"
+  value="#00aaff"
+  elements="input,swatch">
+</t-clr>
+```
+
+### With Clear Button
+
+```html
+<t-clr
+  value="#ffcc00"
+  label1="Custom"
+  label2="Swatches"
+  elements="icon,label,swatch,input"
+  show-clear-button>
+</t-clr>
+```
+
+### Disabled State
+
+```html
+<t-clr
+  value="#ff3333"
+  label1="Error"
+  label2="Color"
+  elements="icon,label,swatch,input"
+  disabled>
+</t-clr>
+```
+
+### Programmatic Control
+
+```html
+<t-clr id="myPicker" value="#00ff41ff"></t-clr>
 
 <script>
-  const picker = document.getElementById('colorPicker');
-  
-  picker.addEventListener('color-change', (e) => {
-    console.log('Color changed to:', e.detail.color);
+  const picker = document.getElementById('myPicker');
+
+  // Change color
+  picker.value = '#ff6b35ff';
+
+  // Change variant
+  picker.variant = 'standard';
+
+  // Change elements
+  picker.elements = 'swatch,input';
+
+  // Disable
+  picker.disabled = true;
+
+  // Listen for changes
+  picker.addEventListener('change', (e) => {
+    console.log('Color changed:', e.target.value);
   });
 </script>
 ```
 
-### Compact Mode
-```html
-<terminal-color-picker 
-  compact
-  value="#ff0041">
-</terminal-color-picker>
-```
+## Form Integration
 
-### With Custom Icon
 ```html
-<terminal-color-picker id="customIcon"></terminal-color-picker>
-
-<script>
-  import { paintBrushIcon } from './js/utils/phosphor-icons.js';
-  
-  const picker = document.getElementById('customIcon');
-  picker.setIcon(paintBrushIcon);
-</script>
-```
-
-### Form Integration
-```html
-<form id="settingsForm">
-  <terminal-color-picker 
-    name="primaryColor"
+<form id="themeForm">
+  <t-clr
+    id="primaryColor"
     label1="Primary"
     label2="Color"
-    value="#00ff41">
-  </terminal-color-picker>
-  
-  <terminal-button type="submit">Save</terminal-button>
+    value="#00ff41ff"
+    elements="icon,label,swatch,input">
+  </t-clr>
+
+  <button type="submit">Save Theme</button>
 </form>
 
 <script>
-  document.getElementById('settingsForm').addEventListener('submit', (e) => {
+  const form = document.getElementById('themeForm');
+  const picker = document.getElementById('primaryColor');
+
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const picker = document.querySelector('[name="primaryColor"]');
-    const color = picker.getValue();
-    console.log('Primary color:', color);
-  });
-</script>
-```
+    const color = picker.value;
+    console.log('Saving color:', color);
 
-### Theme Builder
-```html
-<div class="theme-builder">
-  <terminal-color-picker id="primary" label1="Primary" label2="Color"></terminal-color-picker>
-  <terminal-color-picker id="secondary" label1="Secondary" label2="Color"></terminal-color-picker>
-  <terminal-color-picker id="accent" label1="Accent" label2="Color"></terminal-color-picker>
-</div>
-
-<script>
-  const colors = {
-    primary: document.getElementById('primary'),
-    secondary: document.getElementById('secondary'),
-    accent: document.getElementById('accent')
-  };
-  
-  // Apply theme colors
-  function applyTheme() {
-    document.documentElement.style.setProperty('--primary', colors.primary.getValue());
-    document.documentElement.style.setProperty('--secondary', colors.secondary.getValue());
-    document.documentElement.style.setProperty('--accent', colors.accent.getValue());
-  }
-  
-  // Listen for changes
-  Object.values(colors).forEach(picker => {
-    picker.addEventListener('color-change', applyTheme);
-  });
-  
-  // Save theme
-  function saveTheme() {
-    const theme = {
-      primary: colors.primary.getValue(),
-      secondary: colors.secondary.getValue(),
-      accent: colors.accent.getValue(),
-      swatches: colors.primary.customSwatches
-    };
-    localStorage.setItem('custom-theme', JSON.stringify(theme));
-  }
-  
-  // Listen for save events
-  Object.values(colors).forEach(picker => {
-    picker.addEventListener('color-save', saveTheme);
-  });
-</script>
-```
-
-### With Supabase Storage
-```html
-<terminal-color-picker id="cloudPicker"></terminal-color-picker>
-
-<script type="module">
-  import { ColorSwatchesStorage } from './js/modules/storage/color-swatches-storage.js';
-  
-  const picker = document.getElementById('cloudPicker');
-  
-  // Initialize Supabase storage when ready
-  if (window.supabase) {
-    const storage = new ColorSwatchesStorage(window.supabase);
-    await storage.init();
-    
-    // Load saved swatches
-    const savedSwatches = storage.getSwatches();
-    if (savedSwatches.length > 0) {
-      picker.customSwatches = savedSwatches;
-      picker.updateSwatchesDisplay();
-    }
-    
-    // Save swatches on update
-    picker.addEventListener('swatches-updated', async (e) => {
-      await storage.saveSwatches(e.detail.swatches);
+    fetch('/api/theme', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ primaryColor: color })
     });
-    
-    // Sync on auth changes
-    storage.onAuthChange((swatches) => {
-      picker.customSwatches = swatches;
-      picker.updateSwatchesDisplay();
-    });
-  }
+  });
 </script>
 ```
 
-## Styling Variables
+## Performance
 
-```css
---terminal-green: #00ff41;
---terminal-green-dim: #00cc33;
---terminal-green-dark: #009926;
---terminal-gray-dark: #242424;
---terminal-gray-light: #333333;
---terminal-black: #0a0a0a;
---font-mono: 'SF Mono', 'Monaco', monospace;
---spacing-xs: 4px;
---spacing-sm: 8px;
---spacing-md: 12px;
---font-size-xs: 10px;
---font-size-sm: 11px;
+### Debouncing
+Color updates are debounced to **250ms** (4 times per second) during slider drag operations to prevent excessive event firing and maintain smooth performance.
+
+```javascript
+onColorChange(color) {
+  if (this._colorChangeDebounce) {
+    clearTimeout(this._colorChangeDebounce);
+  }
+
+  this._colorChangeDebounce = setTimeout(() => {
+    this.updateColor(hexValue);
+    this._colorChangeDebounce = null;
+  }, 250);
+
+  // Input field updates immediately for visual feedback
+  this.updateColorInput();
+}
 ```
 
-## Accessibility
+### Event Handling
+- **Outside Click**: Mousedown event (not click/mouseup) to prevent closing during drag
+- **Keyboard Events**: Global CMD/Ctrl detection for swatch removal UI
+- **Cleanup**: Proper disposal of iro.js instance and event listeners
 
-- Keyboard navigation support in Pickr
-- ARIA labels for all interactive elements
-- Screen reader compatible
-- High contrast mode compatible
-- Escape key closes picker
-- Tab navigation through color formats
+## Styling
+
+### Component Structure
+```
+t-clr (shadow root)
+├── .color-picker-wrapper
+│   ├── [elements render in specified order]
+│   │   ├── .color-picker-icon (if 'icon' in elements)
+│   │   ├── .color-picker-label (if 'label' in elements)
+│   │   │   ├── .color-picker-label-line1
+│   │   │   └── .color-picker-label-line2
+│   │   ├── .color-picker-swatch (if 'swatch' in elements, large/standard)
+│   │   │   └── .color-picker-swatch-color
+│   │   ├── .color-picker-swatch-compact (if 'swatch' in elements, compact)
+│   │   │   └── .color-picker-swatch-color
+│   │   ├── .colorIO (if 'input' in elements, large/standard)
+│   │   │   └── .color-picker-hex
+│   │   └── .color-picker-hex (if 'input' in elements, compact)
+```
+
+### CSS Classes
+- `.color-picker-wrapper` - Main container
+- `.large` - Large variant (48px height)
+- `.standard` - Standard variant (32px height)
+- `.compact` - Compact variant (minimal)
+- `.disabled` - Disabled state
+- `.has-transparency` - Shows transparency grid
+
+### Variant Sizing
+- **Large**: 48px height, 48px square swatches
+- **Standard**: 32px height, 32px square swatches
+- **Compact**: Auto height, 20px square swatches
+
+## Dependencies
+
+### Required
+```javascript
+// Lit
+import { LitElement, html, css } from 'lit';
+
+// iro.js
+import iro from '@jaames/iro';
+```
+
+### Installation
+```bash
+npm install lit @jaames/iro
+```
+
+### Import
+```javascript
+import './js/components/TColorPicker.js';
+```
 
 ## Browser Support
 
@@ -481,11 +726,49 @@ Requires Pickr library:
 - Safari 10.1+
 - Edge 79+
 
+**Requirements:**
+- Web Components support
+- ES6 modules
+- Shadow DOM
+- CSS custom properties
+
+## Troubleshooting
+
+### Picker not opening
+- Check that iro.js is properly imported
+- Verify component is registered: `customElements.get('t-clr')`
+- Check console for errors
+
+### Swatches not persisting
+- Verify localStorage is enabled
+- Check for localStorage quota errors
+- Key used: `'terminal-iro-swatches'`
+
+### Colors not updating
+- Changes are debounced to 250ms
+- Check event listeners are properly attached
+- Verify `value` property is valid hex8 format
+
+### Elements not showing
+- Check `elements` attribute is set correctly
+- Verify spelling: `icon`, `label`, `swatch`, `input`
+- Swatch is mandatory - component will fail without it
+
+### Wrong element order
+- Elements render in exact order specified
+- Check `elements` attribute for correct comma-separated order
+- No spaces allowed: `"icon,label,swatch"` not `"icon, label, swatch"`
+
 ## Notes
 
-- Custom swatches persist across sessions via localStorage
-- Maximum 20 custom swatches plus 11 defaults
-- Hex input automatically formats and validates
-- Color changes are debounced (300ms) for performance
-- Pickr instance is properly cleaned up on component unmount
-- Supports both light and dark themes through CSS variables
+- Custom swatches persist via localStorage key `'terminal-iro-swatches'`
+- Maximum 20 custom swatches (oldest removed when limit exceeded)
+- Color updates debounced to 250ms for performance
+- Input field updates immediately for visual feedback
+- Transparency grid shown automatically for colors with alpha < 1.0
+- CMD/Ctrl key detection works globally for swatch removal
+- Component properly cleans up on disconnect (removes event listeners)
+- Hex input validates and formats automatically
+- Swatches grid: 5 columns, scrollable with styled scrollbar
+- Confirmation modal shown when clearing swatches via trash button
+- Elements render in exact order specified - no automatic filtering or reordering
