@@ -73,31 +73,21 @@ const picker = document.querySelector('t-clr');
 picker.clearAllCustomSwatches();
 ```
 
-### `loadCustomSwatches()`
-Loads custom swatches from localStorage.
+### `addSwatch(hex)`
+Adds a color to the custom swatches array.
+
+**Parameters:**
+- `hex` (string): Hex color value (with or without # prefix)
 
 **Returns:** void
 
-```javascript
-picker.loadCustomSwatches();
-```
+**Throws:** Error if hex format is invalid
 
-### `saveCustomSwatches()`
-Saves custom swatches to localStorage.
-
-**Returns:** void
+**Fires:** `swatch-added`, `swatches-updated`
 
 ```javascript
-picker.saveCustomSwatches();
-```
-
-### `updateSwatchesDisplay()`
-Updates the visual display of swatches in the picker popover.
-
-**Returns:** void
-
-```javascript
-picker.updateSwatchesDisplay();
+picker.addSwatch('#ff6b35');
+picker.addSwatch('00ff41ff'); // Without # prefix also works
 ```
 
 ### `getValue()`
@@ -121,14 +111,15 @@ Sets the color value programmatically.
 picker.setValue('#ff6b35ff');
 ```
 
-### `disable()` / `enable()`
-Enables or disables the picker.
-
-**Returns:** void
+### Enabling/Disabling
+To enable or disable the picker, use the `disabled` property:
 
 ```javascript
-picker.disable();
-picker.enable();
+// Disable
+picker.disabled = true;
+
+// Enable
+picker.disabled = false;
 ```
 
 ## Events
@@ -196,6 +187,25 @@ Fired when all custom swatches are cleared.
 ```javascript
 picker.addEventListener('swatches-cleared', () => {
   console.log('All custom swatches cleared');
+});
+```
+
+### `swatch-added`
+Fired when a color is added to custom swatches via `addSwatch()` method.
+
+**Event Detail:**
+```javascript
+{
+  color: string,      // Hex color value with # prefix
+  timestamp: number   // Unix timestamp
+}
+```
+
+**Example:**
+```javascript
+picker.addEventListener('swatch-added', (e) => {
+  console.log('Swatch added:', e.detail.color);
+  console.log('At:', new Date(e.detail.timestamp));
 });
 ```
 

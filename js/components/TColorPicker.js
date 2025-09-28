@@ -212,6 +212,17 @@ export class TColorPicker extends LitElement {
 			padding: 8px;
 		}
 
+		.color-picker-wrapper.compact .color-picker-icon {
+			min-width: 20px;
+			height: 20px;
+			padding: 0;
+		}
+
+		.color-picker-wrapper.compact .color-picker-icon svg {
+			width: 16px;
+			height: 16px;
+		}
+
 		.color-picker-icon svg {
 			width: 100%;
 			height: 100%;
@@ -346,6 +357,36 @@ export class TColorPicker extends LitElement {
 
 		.color-picker-swatch-compact .color-picker-swatch-color {
 			z-index: 2;
+		}
+
+		.color-picker-wrapper.compact .color-picker-hex {
+			height: 20px;
+			padding: 2px 6px;
+			background: #0a0a0a;
+			border: 1px solid var(--t-clr-border);
+			font-size: 10px;
+			width: 70px;
+			margin-left: 4px;
+		}
+
+		.color-picker-wrapper.compact .color-picker-hex:hover {
+			border-color: var(--t-clr-color);
+		}
+
+		.color-picker-wrapper.compact .color-picker-hex:focus {
+			border-color: var(--t-clr-color-hover);
+			color: #ffffff;
+		}
+
+		.color-picker-wrapper.compact .color-picker-label {
+			padding: 0 6px;
+			min-width: auto;
+		}
+
+		.color-picker-wrapper.compact .color-picker-label-line1,
+		.color-picker-wrapper.compact .color-picker-label-line2 {
+			font-size: 9px;
+			line-height: 1.2;
 		}
 
 		.colorIO {
@@ -1306,7 +1347,7 @@ export class TColorPicker extends LitElement {
 					type="text"
 					class="color-picker-hex"
 					.value=${this._formatColorForDisplay()}
-					@input=${this._handleInputChange}
+					@change=${this._handleInputChange}
 					@focus=${this._handleInputFocus}
 					@blur=${this._handleInputBlur}
 					?disabled=${this.disabled}
@@ -1314,7 +1355,7 @@ export class TColorPicker extends LitElement {
 					autocomplete="off"
 					autocorrect="off"
 					autocapitalize="off"
-					maxlength="20"
+					maxlength="30"
 				/>
 			` : html`
 				<div class="colorIO">
@@ -1322,7 +1363,7 @@ export class TColorPicker extends LitElement {
 						type="text"
 						class="color-picker-hex"
 						.value=${this._formatColorForDisplay()}
-						@input=${this._handleInputChange}
+						@change=${this._handleInputChange}
 						@focus=${this._handleInputFocus}
 						@blur=${this._handleInputBlur}
 						?disabled=${this.disabled}
@@ -1330,7 +1371,7 @@ export class TColorPicker extends LitElement {
 						autocomplete="off"
 						autocorrect="off"
 						autocapitalize="off"
-						maxlength="20"
+						maxlength="30"
 					/>
 				</div>
 			`
@@ -1525,7 +1566,7 @@ export class TColorPicker extends LitElement {
 	 * @private
 	 */
 	_rgbaToHex(rgba) {
-		const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+		const match = rgba.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([0-9]*\.?[0-9]+)\s*)?\)/);
 		if (!match) throw new Error('Invalid RGBA format');
 
 		const r = parseInt(match[1]).toString(16).padStart(2, '0');
@@ -1541,7 +1582,7 @@ export class TColorPicker extends LitElement {
 	 * @private
 	 */
 	_hslaToHex(hsla) {
-		const match = hsla.match(/hsla?\((\d+),\s*(\d+)%,\s*(\d+)%(?:,\s*([\d.]+))?\)/);
+		const match = hsla.match(/hsla?\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*(?:,\s*([0-9]*\.?[0-9]+)\s*)?\)/);
 		if (!match) throw new Error('Invalid HSLA format');
 
 		let h = parseInt(match[1]) / 360;

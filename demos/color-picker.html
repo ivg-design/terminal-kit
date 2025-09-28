@@ -234,6 +234,30 @@
                     </div>
 
                     <div class="demo-item">
+                        <span class="demo-label">Icon + Swatch</span>
+                        <t-clr value="#ff0041" variant="compact" elements="icon,swatch" id="compactIcon1">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon + Label + Swatch</span>
+                        <t-clr value="#00ccff" variant="compact" elements="icon,label,swatch" label1="Compact" label2="Picker" id="compactIcon2">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">All Elements (Icon + Label + Swatch + Input)</span>
+                        <t-clr value="#ffaa00" variant="compact" elements="icon,label,swatch,input" label1="Full" label2="Compact" id="compactIcon3">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Label + Swatch + Input</span>
+                        <t-clr value="#aa00ff" variant="compact" elements="label,swatch,input" label1="Color" label2="Value">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
                         <span class="demo-label">Disabled</span>
                         <t-clr value="#ffcc00" variant="compact" elements="swatch,input" disabled>
                         </t-clr>
@@ -366,11 +390,20 @@ picker.clearAllCustomSwatches();     // Clear all saved swatches</code>
 
             // Setup event listeners after components are defined
             customElements.whenDefined('t-clr').then(() => {
-                // Set custom icon
+                // Set custom icon for main demo
                 const customIconPicker = document.getElementById('customIconPicker');
                 if (customIconPicker) {
                     customIconPicker.setIcon(paintBucketIcon);
                 }
+
+                // Set icons for compact variant demos
+                const compactIcon1 = document.getElementById('compactIcon1');
+                const compactIcon2 = document.getElementById('compactIcon2');
+                const compactIcon3 = document.getElementById('compactIcon3');
+
+                if (compactIcon1) compactIcon1.setIcon(paintBucketIcon);
+                if (compactIcon2) compactIcon2.setIcon(paintBucketIcon);
+                if (compactIcon3) compactIcon3.setIcon(paintBucketIcon);
 
                 // Add event listeners
                 document.querySelectorAll('t-clr').forEach((picker, index) => {

@@ -38,7 +38,7 @@ All properties are reactive Lit properties:
 | `disabled` | Boolean | `false` | ✅ | Disabled state |
 | `loading` | Boolean | `false` | ✅ | Loading state with spinner |
 | `icon` | String | `''` | ❌ | Icon SVG content |
-| `loaderType` | String | `'spinner'` | ❌ | Loader type: 'spinner', 'dots', 'pulse' |
+| `loaderType` | String | `'spinner'` | ❌ | Loader type: 'spinner', 'dots', 'bars' |
 | `loaderColor` | String | `''` | ❌ | Custom loader color (CSS color value) |
 | `toggleState` | Boolean | `false` | ✅ | Toggle state (toggle variant only) |
 | `iconOn` | String | `''` | ❌ | Icon when toggle is on |
@@ -283,8 +283,8 @@ button.addEventListener('toggle-change', (e) => {
 <!-- Dots loader with custom color -->
 <t-btn loading loader-type="dots" loader-color="#00ff41">Processing...</t-btn>
 
-<!-- Pulse loader -->
-<t-btn loading loader-type="pulse">Saving...</t-btn>
+<!-- Bars loader -->
+<t-btn loading loader-type="bars">Saving...</t-btn>
 ```
 
 ### Toggle Buttons
