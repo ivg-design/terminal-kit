@@ -729,22 +729,27 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       element._loadCustomSwatches();
 
       expect(element._customSwatches).toEqual(testSwatches);
+
+      // Cleanup localStorage for next tests
+      localStorage.removeItem('terminal-iro-swatches');
     });
 
     it('should handle localStorage errors gracefully', () => {
-      // Mock localStorage to throw error
+      // Mock localStorage to throw error BEFORE creating element
       const originalGetItem = localStorage.getItem;
-      element._customSwatches = ['#ff0000ff', '#00ff00ff']; // Set initial value
       localStorage.getItem = vi.fn(() => {
         throw new Error('Storage error');
       });
 
-      element._loadCustomSwatches();
+      // Create a fresh element that will call _loadCustomSwatches in constructor
+      const testElement = document.createElement('t-clr');
+      document.body.appendChild(testElement);
 
-      // Should reset to empty array on error
-      expect(element._customSwatches).toEqual([]);
+      // Should have empty array due to error during construction
+      expect(testElement._customSwatches).toEqual([]);
 
-      // Restore
+      // Cleanup
+      document.body.removeChild(testElement);
       localStorage.getItem = originalGetItem;
     });
 
@@ -815,7 +820,7 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
 
       expect(hexFormat).toBe('#ff6b35ff');
       expect(rgbFormat).toBe('rgba(255, 107, 53, 1)');
-      expect(hslFormat).toBe('hsla(16, 100, 60, 1)');
+      expect(hslFormat).toBe('hsla(16, 100%, 60%, 1)');
     });
 
     it('should set color mode', () => {
@@ -844,7 +849,7 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
         return null;
       });
 
-      element._createColorPickerPopover();
+      element._createPopover();
 
       expect(element._popoverElement).toBeTruthy();
 

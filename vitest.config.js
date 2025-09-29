@@ -29,6 +29,8 @@ export default defineConfig({
         'js/components/TModalLit.js',
         'js/components/TPanelLit.js',
         'js/components/TSliderLit.js',
+        'js/components/TStatusBarLit.js',
+        'js/components/TStatusFieldLit.js',
         'js/components/TTextareaLit.js',
         'js/components/TToastLit.js',
         'js/components/TToggleLit.js'
