@@ -12,7 +12,7 @@
  * @returns {import('../types/component-manifest').ComponentManifest}
  */
 export function generateManifest(componentClass, manual = {}) {
-  const tagName = manual.tagName || componentClass.is || '';
+  const tagName = manual.tagName || componentClass.tagName || componentClass.is || '';
 
   // Extract properties from Lit's static properties
   const litProperties = componentClass.properties || {};
@@ -33,12 +33,17 @@ export function generateManifest(componentClass, manual = {}) {
     }
   }
 
+  // Extract static metadata (if present)
+  const version = componentClass.version || manual.version || '1.0.0';
+  const category = componentClass.category || manual.category || '';
+
   // Merge auto-generated with manual overrides
   const manifest = {
     tagName,
     displayName: manual.displayName || tagName,
     description: manual.description || '',
-    version: manual.version || '1.0.0',
+    version,
+    category,
     properties,
     methods: manual.methods || {},
     events: manual.events || {},
