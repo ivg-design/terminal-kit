@@ -516,6 +516,7 @@ export class TSliderLit extends LitElement {
   // ----------------------------------------------------------
   // BLOCK 5: LOGGER INSTANCE (REQUIRED)
   // ----------------------------------------------------------
+  /** @private */
   _logger = null;
 
   // ----------------------------------------------------------
@@ -527,7 +528,7 @@ export class TSliderLit extends LitElement {
     super();
 
     // Initialize logger first
-    this._logger = componentLogger.for('TSliderLit');
+    this._logger = componentLogger.for(TSliderLit.tagName);
     this._logger.debug('Component constructed');
 
     // Initialize property defaults
@@ -1350,4 +1351,4 @@ export const TSliderManifest = generateManifest(TSliderLit, {
 // ============================================================
 // SECTION 5: EXPORTS (REQUIRED)
 // ============================================================
-export { TSliderLit as default };
+export default TSliderLit;
