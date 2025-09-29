@@ -656,6 +656,8 @@ if (!customElements.get(TToastLit.tagName)) {
 // SECTION 4: MANIFEST EXPORT (REQUIRED)
 // ============================================================
 export const TToastManifest = generateManifest(TToastLit, {
+  tagName: 't-tst',
+  displayName: 'Toast',
   description: 'Toast notification component with auto-dismiss and animation support',
   methods: {
     show: {

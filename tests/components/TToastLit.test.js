@@ -1,6 +1,20 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { fixture, html } from '@open-wc/testing-helpers';
 import '../../js/components/TToastLit.js';
+
+// Test utilities
+async function fixture(template) {
+  const div = document.createElement('div');
+  div.innerHTML = typeof template === 'string' ? template : template.strings.join('');
+  const element = div.firstElementChild;
+  document.body.appendChild(element);
+  await element.updateComplete;
+  return element;
+}
+
+const html = (strings, ...values) => ({
+  strings,
+  values
+});
 
 describe('TToastLit', () => {
   let component;

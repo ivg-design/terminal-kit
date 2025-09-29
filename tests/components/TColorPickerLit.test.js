@@ -552,6 +552,337 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
   });
 
   // ========================================
+  // Additional: Interactive Features
+  // ========================================
+  describe('Additional: Interactive Features', () => {
+    it('should handle keyboard events for CMD/Ctrl key', async () => {
+      // Test keydown event
+      const keyDownEvent = new KeyboardEvent('keydown', { key: 'Meta' });
+      element._handleKeyDown(keyDownEvent);
+      expect(element._cmdKeyPressed).toBe(true);
+
+      // Test keyup event
+      const keyUpEvent = new KeyboardEvent('keyup', { key: 'Meta' });
+      element._handleKeyUp(keyUpEvent);
+      expect(element._cmdKeyPressed).toBe(false);
+    });
+
+    it('should handle Control key as alternative to Meta', async () => {
+      const keyDownEvent = new KeyboardEvent('keydown', { key: 'Control' });
+      element._handleKeyDown(keyDownEvent);
+      expect(element._cmdKeyPressed).toBe(true);
+
+      const keyUpEvent = new KeyboardEvent('keyup', { key: 'Control' });
+      element._handleKeyUp(keyUpEvent);
+      expect(element._cmdKeyPressed).toBe(false);
+    });
+
+    it('should close color picker on Escape key', async () => {
+      element._isOpen = true;
+      const closeSpy = vi.spyOn(element, '_closeColorPicker');
+
+      const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+      element._handleKeyDown(escapeEvent);
+
+      expect(closeSpy).toHaveBeenCalled();
+    });
+
+    it('should not close on Escape if picker is not open', async () => {
+      element._isOpen = false;
+      const closeSpy = vi.spyOn(element, '_closeColorPicker');
+
+      const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+      element._handleKeyDown(escapeEvent);
+
+      expect(closeSpy).not.toHaveBeenCalled();
+    });
+
+    it('should handle document click outside', async () => {
+      element._isOpen = true;
+      const closeSpy = vi.spyOn(element, '_closeColorPicker');
+
+      // Create a mock event that's outside the element
+      const outsideElement = document.createElement('div');
+      document.body.appendChild(outsideElement);
+
+      const clickEvent = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        target: outsideElement
+      });
+
+      element._handleDocumentClick(clickEvent);
+      expect(closeSpy).toHaveBeenCalled();
+
+      document.body.removeChild(outsideElement);
+    });
+
+    it('should not close when clicking inside the element', async () => {
+      element._isOpen = true;
+      const closeSpy = vi.spyOn(element, '_closeColorPicker');
+
+      // Mock contains to return true
+      element.contains = vi.fn(() => true);
+
+      const clickEvent = new MouseEvent('click');
+      element._handleDocumentClick(clickEvent);
+
+      expect(closeSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not handle document click if picker is closed', async () => {
+      element._isOpen = false;
+      const closeSpy = vi.spyOn(element, '_closeColorPicker');
+
+      const clickEvent = new MouseEvent('click');
+      element._handleDocumentClick(clickEvent);
+
+      expect(closeSpy).not.toHaveBeenCalled();
+    });
+
+  });
+
+  // ========================================
+  // Additional: Popover & Swatches Tests
+  // ========================================
+  describe('Additional: Popover & Swatches', () => {
+    it('should show clear confirmation modal', () => {
+      // Call the private method directly
+      element._showClearConfirmation();
+
+      const modal = document.querySelector('.iro-modal-overlay');
+      expect(modal).toBeTruthy();
+
+      // Cleanup
+      if (modal) {
+        document.body.removeChild(modal);
+      }
+    });
+
+    it('should clear swatches when confirmed in modal', () => {
+      element._customSwatches = ['#ff0000', '#00ff00'];
+      element._showClearConfirmation();
+
+      const modal = document.querySelector('.iro-modal-overlay');
+      const confirmBtn = modal?.querySelector('[data-action="confirm"]');
+
+      expect(confirmBtn).toBeTruthy();
+      confirmBtn?.click();
+
+      expect(element._customSwatches).toEqual([]);
+      expect(document.querySelector('.iro-modal-overlay')).toBeFalsy();
+    });
+
+    it('should cancel clear operation', () => {
+      element._customSwatches = ['#ff0000', '#00ff00'];
+      element._showClearConfirmation();
+
+      const modal = document.querySelector('.iro-modal-overlay');
+      const cancelBtn = modal?.querySelector('[data-action="cancel"]');
+
+      expect(cancelBtn).toBeTruthy();
+      cancelBtn?.click();
+
+      expect(element._customSwatches).toEqual(['#ff0000', '#00ff00']);
+      expect(document.querySelector('.iro-modal-overlay')).toBeFalsy();
+    });
+
+    it('should close modal on overlay click', () => {
+      element._showClearConfirmation();
+
+      const modal = document.querySelector('.iro-modal-overlay');
+      expect(modal).toBeTruthy();
+
+      // Simulate clicking the overlay (not the modal content)
+      const clickEvent = new MouseEvent('click', { bubbles: true });
+      Object.defineProperty(clickEvent, 'target', { value: modal, enumerable: true });
+      modal?.dispatchEvent(clickEvent);
+
+      expect(document.querySelector('.iro-modal-overlay')).toBeFalsy();
+    });
+
+    it('should save current color to swatches', () => {
+      element.value = '#ff6b35ff';
+      const initialLength = element._customSwatches.length;
+
+      element._saveCurrentColor();
+
+      expect(element._customSwatches.length).toBe(initialLength + 1);
+      expect(element._customSwatches).toContain('#ff6b35ff');
+    });
+
+    it('should limit swatches to 20', () => {
+      // Fill with 20 swatches
+      element._customSwatches = Array(20).fill('#000000ff');
+
+      element.value = '#ff6b35ff';
+      element._saveCurrentColor();
+
+      expect(element._customSwatches.length).toBe(20);
+      expect(element._customSwatches[19]).toBe('#ff6b35ff');
+    });
+
+    it('should load custom swatches from localStorage', () => {
+      const testSwatches = ['#ff0000ff', '#00ff00ff'];
+      localStorage.setItem('terminal-iro-swatches', JSON.stringify(testSwatches));
+
+      element._loadCustomSwatches();
+
+      expect(element._customSwatches).toEqual(testSwatches);
+    });
+
+    it('should handle localStorage errors gracefully', () => {
+      // Mock localStorage to throw error
+      const originalGetItem = localStorage.getItem;
+      element._customSwatches = ['#ff0000ff', '#00ff00ff']; // Set initial value
+      localStorage.getItem = vi.fn(() => {
+        throw new Error('Storage error');
+      });
+
+      element._loadCustomSwatches();
+
+      // Should reset to empty array on error
+      expect(element._customSwatches).toEqual([]);
+
+      // Restore
+      localStorage.getItem = originalGetItem;
+    });
+
+    it('should update swatches display', () => {
+      // Create a mock popover element
+      const popover = document.createElement('div');
+      popover.innerHTML = `<div id="swatches-${element._pickerId}"></div>`;
+      element._popoverElement = popover;
+
+      element._customSwatches = ['#ff0000ff'];
+      element._updateSwatchesDisplay();
+
+      const swatchesContainer = popover.querySelector(`#swatches-${element._pickerId}`);
+      const swatches = swatchesContainer?.querySelectorAll('.iro-swatch');
+
+      expect(swatches?.length).toBeGreaterThan(0);
+    });
+
+    it('should handle swatch click to apply color', () => {
+      const popover = document.createElement('div');
+      popover.innerHTML = `<div id="swatches-${element._pickerId}"></div>`;
+      element._popoverElement = popover;
+
+      element._updateSwatchesDisplay();
+
+      const swatchesContainer = popover.querySelector(`#swatches-${element._pickerId}`);
+      const firstSwatch = swatchesContainer?.querySelector('.iro-swatch');
+
+      firstSwatch?.click();
+
+      expect(element.value).toBeTruthy();
+    });
+
+    it('should remove custom swatch when CMD key pressed', () => {
+      const popover = document.createElement('div');
+      popover.innerHTML = `<div id="swatches-${element._pickerId}"></div>`;
+      element._popoverElement = popover;
+
+      element._customSwatches = ['#ff0000ff'];
+      element._cmdKeyPressed = true;
+      element._updateSwatchesDisplay();
+
+      const swatchesContainer = popover.querySelector(`#swatches-${element._pickerId}`);
+      const customSwatch = swatchesContainer?.querySelector('.iro-swatch[data-index="11"]'); // After default swatches
+
+      customSwatch?.click();
+
+      expect(element._customSwatches.length).toBe(0);
+    });
+
+    it('should format color for different modes', () => {
+      element.value = '#ff6b35ff';
+
+      // Mock the color picker with complete color object
+      element._colorPicker = {
+        color: {
+          hexString: '#ff6b35',
+          hex8String: '#ff6b35ff',
+          rgba: { r: 255, g: 107, b: 53, a: 1 },
+          hsla: { h: 16, s: 100, l: 60, a: 1 }
+        },
+        off: vi.fn() // Add off method for cleanup
+      };
+
+      const hexFormat = element._formatColorForMode('hex');
+      const rgbFormat = element._formatColorForMode('rgb');
+      const hslFormat = element._formatColorForMode('hsl');
+
+      expect(hexFormat).toBe('#ff6b35ff');
+      expect(rgbFormat).toBe('rgba(255, 107, 53, 1)');
+      expect(hslFormat).toBe('hsla(16, 100, 60, 1)');
+    });
+
+    it('should set color mode', () => {
+      element._currentMode = 'hex';
+      element._setColorMode('rgb');
+
+      expect(element._currentMode).toBe('rgb');
+    });
+
+    it('should remove custom swatch by index', () => {
+      element._customSwatches = ['#ff0000ff', '#00ff00ff', '#0000ffff'];
+
+      element._removeCustomSwatch(1);
+
+      expect(element._customSwatches).toEqual(['#ff0000ff', '#0000ffff']);
+    });
+
+    it('should handle popover creation and initialization', () => {
+      // Mock querySelector to return elements
+      const mockSwatch = document.createElement('div');
+      mockSwatch.className = 'color-swatch';
+
+      // Use spyOn to mock shadowRoot.querySelector
+      vi.spyOn(element.shadowRoot, 'querySelector').mockImplementation((selector) => {
+        if (selector === '.color-swatch') return mockSwatch;
+        return null;
+      });
+
+      element._createColorPickerPopover();
+
+      expect(element._popoverElement).toBeTruthy();
+
+      // Cleanup
+      if (element._popoverElement) {
+        document.body.removeChild(element._popoverElement);
+      }
+    });
+
+    it('should initialize iro color picker', () => {
+      // Create mock popover with picker container
+      const popover = document.createElement('div');
+      const pickerContainer = document.createElement('div');
+      pickerContainer.id = `picker-${element._pickerId}`;
+      popover.appendChild(pickerContainer);
+      document.body.appendChild(popover);
+      element._popoverElement = popover;
+
+      // Mock iro global
+      window.iro = {
+        ColorPicker: vi.fn().mockReturnValue({
+          on: vi.fn(),
+          color: { hexString: '#000000ff' }
+        }),
+        ui: { Box: {}, Slider: {} }
+      };
+
+      element._initializeColorPicker();
+
+      expect(element._colorPicker).toBeTruthy();
+
+      // Cleanup
+      document.body.removeChild(popover);
+      delete window.iro;
+    });
+  });
+
+  // ========================================
   // Additional: Lifecycle Tests
   // ========================================
   describe('Additional: Lifecycle', () => {

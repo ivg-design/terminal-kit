@@ -21,12 +21,17 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       reportsDirectory: './coverage',
       include: [
-        'js/components/TPanelLit.js',
-        'js/components/TColorPickerLit.js',
         'js/components/TButtonLit.js',
+        'js/components/TColorPickerLit.js',
+        'js/components/TDropdownLit.js',
+        'js/components/TInputLit.js',
+        'js/components/TLoaderLit.js',
         'js/components/TModalLit.js',
-        'js/components/TToggleLit.js',
-        'js/components/TDropdownLit.js'
+        'js/components/TPanelLit.js',
+        'js/components/TSliderLit.js',
+        'js/components/TTextareaLit.js',
+        'js/components/TToastLit.js',
+        'js/components/TToggleLit.js'
       ],
       exclude: [
         'js/components/**/*.backup.js',
