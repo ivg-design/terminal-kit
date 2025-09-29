@@ -97,13 +97,6 @@ import iro from '@jaames/iro';
  * @external-dependencies
  * - **@jaames/iro**: iro.js color picker library
  * - **Phosphor Icons**: paletteIcon, xIcon, floppyDiskIcon, trashIcon
- * - **Global CSS**: css/components/t-clr-iro.css (must be linked in HTML)
- *
- * @global-css-requirement
- * The popover is appended to document.body (light DOM) and requires global CSS:
- * ```html
- * <link rel="stylesheet" href="css/components/t-clr-iro.css">
- * ```
  *
  * @example Basic usage
  * <t-clr value="#00ff41ff"></t-clr>
@@ -434,53 +427,108 @@ export class TColorPicker extends LitElement {
 
 		/* iro.js popover styling */
 		.iro-popover {
-			position: absolute;
+			position: fixed;
 			z-index: 10000;
 			background: #1a1a1a;
-			border: 1px solid var(--t-clr-border);
+			border: 1px solid #00ff41;
 			border-radius: 4px;
 			padding: 16px;
 			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
 			display: none;
-			min-width: 240px;
+			min-width: 400px;
 		}
 
 		.iro-popover.open {
-			display: block;
+			display: grid;
+			grid-template-columns: auto 1fr;
+			gap: 16px;
 		}
 
 		.iro-container {
-			margin-bottom: 12px;
+			grid-row: 1 / -1;
+			height: 180px;
+			display: flex;
+			align-items: flex-start;
+		}
+
+		/* Override iro.js internal spacing */
+		.iro-container .IroColorPicker {
+			margin: 0 !important;
+			height: 180px !important;
+		}
+
+		.iro-container .IroSlider {
+			margin: 0 !important;
+			margin-left: 8px !important;
+		}
+
+		.iro-container .IroBox {
+			margin: 0 !important;
+		}
+
+		.iro-controls {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+			width: 180px;
+			height: 180px;
+			align-items: stretch;
 		}
 
 		.iro-format-buttons {
 			display: flex;
 			gap: 4px;
-			margin-bottom: 12px;
-			justify-content: center;
 		}
 
 		.iro-format-btn {
+			flex: 1;
 			background: #242424;
-			border: 1px solid var(--t-clr-border);
-			color: var(--t-clr-color);
-			padding: 4px 8px;
-			font-size: 10px;
+			border: 1px solid #333333;
+			color: #00cc33;
+			padding: 5px 8px;
+			font-size: 9px;
 			text-transform: uppercase;
 			cursor: pointer;
-			transition: var(--t-clr-transition);
+			transition: all 0.2s ease;
 			font-family: 'SF Mono', 'Monaco', monospace;
-			letter-spacing: 0.5px;
+			letter-spacing: 0.3px;
 		}
 
 		.iro-format-btn.active {
-			background: var(--t-clr-color);
+			background: #00cc33;
 			color: #000;
-			border-color: var(--t-clr-color);
+			border-color: #00cc33;
 		}
 
 		.iro-format-btn:hover:not(.active) {
-			border-color: var(--t-clr-color);
+			border-color: #00cc33;
+		}
+
+		.iro-hex-input {
+			width: 100%;
+			background: #0a0a0a;
+			border: 1px solid #333333;
+			color: #00ff41;
+			padding: 5px 8px;
+			font-size: 11px;
+			font-family: 'SF Mono', 'Monaco', monospace;
+			letter-spacing: 0.5px;
+			text-align: left;
+			outline: none;
+		}
+
+		.iro-hex-input:focus {
+			border-color: #00ff41;
+		}
+
+		.iro-swatches-container {
+			display: grid;
+			grid-template-columns: 1fr auto;
+			gap: 4px;
+			align-items: start;
+			flex: 1;
+			min-height: 0;
+			overflow: hidden;
 		}
 
 		.iro-swatches {
@@ -503,12 +551,12 @@ export class TColorPicker extends LitElement {
 		}
 
 		.iro-swatches::-webkit-scrollbar-thumb {
-			background: var(--t-clr-border);
-			border-radius: 3px;
+			background: #00cc33;
+			border-radius: 0;
 		}
 
 		.iro-swatches::-webkit-scrollbar-thumb:hover {
-			background: var(--t-clr-color);
+			background: #00ff41;
 		}
 
 		.iro-swatch {
@@ -1646,12 +1694,19 @@ export class TColorPicker extends LitElement {
 			this._createPopover();
 		}
 
-		// Position popover next to the element
+		// Position popover next to the element using fixed positioning
 		const rect = this.getBoundingClientRect();
-		const scrollY = window.scrollY || window.pageYOffset;
-		const scrollX = window.scrollX || window.pageXOffset;
-		this._popoverElement.style.top = `${rect.bottom + scrollY + 8}px`;
-		this._popoverElement.style.left = `${rect.left + scrollX}px`;
+		this._popoverElement.style.top = `${rect.bottom + 8}px`;
+		this._popoverElement.style.left = `${rect.left}px`;
+
+		// Adjust if popover goes off screen
+		const popoverRect = this._popoverElement.getBoundingClientRect();
+		if (popoverRect.right > window.innerWidth) {
+			this._popoverElement.style.left = `${window.innerWidth - popoverRect.width - 10}px`;
+		}
+		if (popoverRect.bottom > window.innerHeight) {
+			this._popoverElement.style.top = `${rect.top - popoverRect.height - 8}px`;
+		}
 
 		// Show popover
 		this._popoverElement.classList.add('open');
@@ -1714,7 +1769,8 @@ export class TColorPicker extends LitElement {
 			</div>
 		`;
 
-		document.body.appendChild(popover);
+		// Append to shadow root instead of document.body
+		this.shadowRoot.appendChild(popover);
 		this._popoverElement = popover;
 
 		// Add event listeners
@@ -1770,7 +1826,7 @@ export class TColorPicker extends LitElement {
 	_initializeColorPicker() {
 		this._logger.debug('Initializing iro.js color picker');
 
-		const container = document.getElementById(`picker-${this._pickerId}`);
+		const container = this.shadowRoot.getElementById(`picker-${this._pickerId}`);
 		if (!container) {
 			this._logger.error('Color picker container not found');
 			return;
@@ -2090,7 +2146,7 @@ export class TColorPicker extends LitElement {
 			if (action === 'confirm') {
 				this.clearAllCustomSwatches();
 			}
-			document.body.removeChild(modalOverlay);
+			this.shadowRoot.removeChild(modalOverlay);
 		};
 
 		const cancelBtn = modalOverlay.querySelector('[data-action="cancel"]');
@@ -2100,11 +2156,12 @@ export class TColorPicker extends LitElement {
 
 		modalOverlay.addEventListener('click', (e) => {
 			if (e.target === modalOverlay) {
-				document.body.removeChild(modalOverlay);
+				this.shadowRoot.removeChild(modalOverlay);
 			}
 		});
 
-		document.body.appendChild(modalOverlay);
+		// Append to shadow root instead of document.body
+		this.shadowRoot.appendChild(modalOverlay);
 	}
 
 	/**
@@ -2141,10 +2198,14 @@ export class TColorPicker extends LitElement {
 	_handleDocumentClick(e) {
 		if (!this._isOpen) return;
 
-		// Check if click is outside picker and popover
-		if (!this.contains(e.target) &&
-			(!this._popoverElement || !this._popoverElement.contains(e.target))) {
-			this._closeColorPicker();
+		// Check if click is outside the host element
+		// Since popover is in shadow DOM, clicks on it won't bubble to document
+		if (!this.contains(e.target)) {
+			// Also check if the click is within our shadow root
+			const path = e.composedPath();
+			if (!path.includes(this.shadowRoot)) {
+				this._closeColorPicker();
+			}
 		}
 	}
 }

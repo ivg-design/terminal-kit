@@ -650,12 +650,12 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       // Call the private method directly
       element._showClearConfirmation();
 
-      const modal = document.querySelector('.iro-modal-overlay');
+      const modal = element.shadowRoot.querySelector('.iro-modal-overlay');
       expect(modal).toBeTruthy();
 
       // Cleanup
       if (modal) {
-        document.body.removeChild(modal);
+        element.shadowRoot.removeChild(modal);
       }
     });
 
@@ -663,34 +663,34 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       element._customSwatches = ['#ff0000', '#00ff00'];
       element._showClearConfirmation();
 
-      const modal = document.querySelector('.iro-modal-overlay');
+      const modal = element.shadowRoot.querySelector('.iro-modal-overlay');
       const confirmBtn = modal?.querySelector('[data-action="confirm"]');
 
       expect(confirmBtn).toBeTruthy();
       confirmBtn?.click();
 
       expect(element._customSwatches).toEqual([]);
-      expect(document.querySelector('.iro-modal-overlay')).toBeFalsy();
+      expect(element.shadowRoot.querySelector('.iro-modal-overlay')).toBeFalsy();
     });
 
     it('should cancel clear operation', () => {
       element._customSwatches = ['#ff0000', '#00ff00'];
       element._showClearConfirmation();
 
-      const modal = document.querySelector('.iro-modal-overlay');
+      const modal = element.shadowRoot.querySelector('.iro-modal-overlay');
       const cancelBtn = modal?.querySelector('[data-action="cancel"]');
 
       expect(cancelBtn).toBeTruthy();
       cancelBtn?.click();
 
       expect(element._customSwatches).toEqual(['#ff0000', '#00ff00']);
-      expect(document.querySelector('.iro-modal-overlay')).toBeFalsy();
+      expect(element.shadowRoot.querySelector('.iro-modal-overlay')).toBeFalsy();
     });
 
     it('should close modal on overlay click', () => {
       element._showClearConfirmation();
 
-      const modal = document.querySelector('.iro-modal-overlay');
+      const modal = element.shadowRoot.querySelector('.iro-modal-overlay');
       expect(modal).toBeTruthy();
 
       // Simulate clicking the overlay (not the modal content)
@@ -698,7 +698,7 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       Object.defineProperty(clickEvent, 'target', { value: modal, enumerable: true });
       modal?.dispatchEvent(clickEvent);
 
-      expect(document.querySelector('.iro-modal-overlay')).toBeFalsy();
+      expect(element.shadowRoot.querySelector('.iro-modal-overlay')).toBeFalsy();
     });
 
     it('should save current color to swatches', () => {
@@ -855,17 +855,17 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
 
       // Cleanup
       if (element._popoverElement) {
-        document.body.removeChild(element._popoverElement);
+        element.shadowRoot.removeChild(element._popoverElement);
       }
     });
 
     it('should initialize iro color picker', () => {
-      // Create mock popover with picker container
+      // Create mock popover with picker container in shadow DOM
       const popover = document.createElement('div');
       const pickerContainer = document.createElement('div');
       pickerContainer.id = `picker-${element._pickerId}`;
       popover.appendChild(pickerContainer);
-      document.body.appendChild(popover);
+      element.shadowRoot.appendChild(popover);
       element._popoverElement = popover;
 
       // Mock iro global
@@ -882,7 +882,7 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       expect(element._colorPicker).toBeTruthy();
 
       // Cleanup
-      document.body.removeChild(popover);
+      element.shadowRoot.removeChild(popover);
       delete window.iro;
     });
   });
