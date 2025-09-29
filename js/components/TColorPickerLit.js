@@ -84,8 +84,8 @@ import iro from '@jaames/iro';
  * - **ESC**: Close picker (handled by document click outside)
  *
  * @events
- * - **change**: Fired when color value changes (250ms debounced)
- *   - detail: { value: string, color: string }
+ * - **color-change**: Fired when color value changes (250ms debounced)
+ *   - detail: { value: string, hex: string, rgb?: object, hsl?: object }
  *
  * @css-variables
  * - **--t-clr-bg**: Background color (default: var(--terminal-bg, #242424))
@@ -1133,11 +1133,14 @@ export class TColorPicker extends LitElement {
 	 * picker.setValue('#ff6b35');
 	 * picker.setValue('#ff6b35ff');
 	 */
-	setValue(color) {
-		this._logger.debug('setValue called', { color });
+	setColor(color) {
+		this._logger.debug('setColor called', { color });
 
 		this.value = color;
-		this._emitEvent('change', { value: this.value, color: this.value });
+		this._emitEvent('color-change', {
+			value: this.value,
+			hex: this.value
+		});
 	}
 
 	/**
@@ -1145,10 +1148,10 @@ export class TColorPicker extends LitElement {
 	 * @public
 	 * @returns {string} Current color in hex8 format
 	 * @example
-	 * const color = picker.getValue();
+	 * const color = picker.getColor();
 	 */
-	getValue() {
-		this._logger.debug('getValue called', { value: this.value });
+	getColor() {
+		this._logger.debug('getColor called', { value: this.value });
 		return this.value;
 	}
 
@@ -1164,7 +1167,7 @@ export class TColorPicker extends LitElement {
 		this._logger.debug('clearAllCustomSwatches called');
 
 		this._customSwatches = [];
-		localStorage.removeItem('terminal-iro-swatches');
+		localStorage.removeItem('t-clr-custom-swatches');
 		this._updateSwatchesDisplay();
 
 		this._logger.info('All custom swatches cleared');
@@ -1205,7 +1208,7 @@ export class TColorPicker extends LitElement {
 		}
 
 		// Save to localStorage
-		localStorage.setItem('terminal-iro-swatches', JSON.stringify(this._customSwatches));
+		localStorage.setItem('t-clr-custom-swatches', JSON.stringify(this._customSwatches));
 
 		// Update display if popover is open
 		if (this._popoverElement) {
@@ -1288,14 +1291,6 @@ export class TColorPicker extends LitElement {
 	// BLOCK 10: NESTING SUPPORT (Minimal - not a container)
 	// ----------------------------------------------------------
 
-	/**
-	 * Receive context from parent component (no-op for color picker)
-	 * @public
-	 * @param {Object} context - Context object from parent
-	 */
-	receiveContext(context) {
-		this._logger.debug('Received context (no-op for color picker)', { context });
-	}
 
 	// ----------------------------------------------------------
 	// BLOCK 11: VALIDATION
@@ -1586,7 +1581,10 @@ export class TColorPicker extends LitElement {
 					this._colorPicker.color.hexString = hexValue;
 				}
 				this._syncingColor = false;
-				this._emitEvent('change', { value: this.value, color: this.value });
+				this._emitEvent('color-change', {
+			value: this.value,
+			hex: this.value
+		});
 			}
 		} catch (error) {
 			this._logger.warn('Invalid color input', { input, error });
@@ -1922,10 +1920,30 @@ export class TColorPicker extends LitElement {
 
 			this._syncingColor = false;
 
-			this._emitEvent('change', {
+			// Get rgb and hsl from iro's color object if available
+			let eventDetail = {
 				value: this.value,
-				color: this.value
-			});
+				hex: this.value
+			};
+
+			// Add rgb/hsl if we have iro picker
+			if (this._colorPicker && this._colorPicker.color) {
+				const iroColor = this._colorPicker.color;
+				eventDetail.rgb = {
+					r: iroColor.rgba.r,
+					g: iroColor.rgba.g,
+					b: iroColor.rgba.b,
+					a: iroColor.rgba.a
+				};
+				eventDetail.hsl = {
+					h: Math.round(iroColor.hsla.h),
+					s: Math.round(iroColor.hsla.s),
+					l: Math.round(iroColor.hsla.l),
+					a: iroColor.hsla.a
+				};
+			}
+
+			this._emitEvent('color-change', eventDetail);
 
 			this._colorChangeDebounce = null;
 		}, 250);
@@ -2009,7 +2027,7 @@ export class TColorPicker extends LitElement {
 		}
 
 		// Save to localStorage
-		localStorage.setItem('terminal-iro-swatches', JSON.stringify(this._customSwatches));
+		localStorage.setItem('t-clr-custom-swatches', JSON.stringify(this._customSwatches));
 
 		// Update display
 		this._updateSwatchesDisplay();
@@ -2031,7 +2049,7 @@ export class TColorPicker extends LitElement {
 	 */
 	_loadCustomSwatches() {
 		try {
-			const saved = localStorage.getItem('terminal-iro-swatches');
+			const saved = localStorage.getItem('t-clr-custom-swatches');
 			if (saved) {
 				this._customSwatches = JSON.parse(saved);
 				this._logger.debug('Loaded custom swatches', { count: this._customSwatches.length });
@@ -2099,7 +2117,10 @@ export class TColorPicker extends LitElement {
 					}
 
 					this._syncingColor = false;
-					this._emitEvent('change', { value: this.value, color: this.value });
+					this._emitEvent('color-change', {
+			value: this.value,
+			hex: this.value
+		});
 				}
 			});
 		});
@@ -2113,7 +2134,7 @@ export class TColorPicker extends LitElement {
 		this._logger.debug('Removing custom swatch', { index });
 
 		this._customSwatches.splice(index, 1);
-		localStorage.setItem('terminal-iro-swatches', JSON.stringify(this._customSwatches));
+		localStorage.setItem('t-clr-custom-swatches', JSON.stringify(this._customSwatches));
 		this._updateSwatchesDisplay();
 
 		this._emitEvent('swatches-updated', {
@@ -2246,17 +2267,12 @@ export const TColorPickerManifest = generateManifest(TColorPicker, {
 		swatches: { description: 'Predefined color swatches array (currently not implemented)' }
 	},
 	methods: {
-		setIcon: {
-			params: ['iconSvg'],
-			returns: 'void',
-			description: 'Set custom Phosphor icon for the picker'
-		},
-		setValue: {
+		setColor: {
 			params: ['color'],
 			returns: 'void',
 			description: 'Set color value programmatically'
 		},
-		getValue: {
+		getColor: {
 			params: [],
 			returns: 'string',
 			description: 'Get current color value in hex8 format'
@@ -2273,8 +2289,8 @@ export const TColorPickerManifest = generateManifest(TColorPicker, {
 		}
 	},
 	events: {
-		'change': {
-			detail: '{value: string, color: string}',
+		'color-change': {
+			detail: '{value: string, hex: string, rgb?: object, hsl?: object}',
 			description: 'Fired when color value changes (250ms debounced during drag)'
 		},
 		'color-save': {

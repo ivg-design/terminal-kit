@@ -60,12 +60,11 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       expect(properties.swatches).toBeDefined();
     });
 
-    it('should document all 5 methods', () => {
+    it('should document all 4 methods', () => {
       const { methods } = TColorPickerManifest;
 
-      expect(methods.setIcon).toBeDefined();
-      expect(methods.setValue).toBeDefined();
-      expect(methods.getValue).toBeDefined();
+      expect(methods.setColor).toBeDefined();
+      expect(methods.getColor).toBeDefined();
       expect(methods.clearAllCustomSwatches).toBeDefined();
       expect(methods.addSwatch).toBeDefined();
     });
@@ -73,7 +72,7 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
     it('should document all 5 events', () => {
       const { events } = TColorPickerManifest;
 
-      expect(events['change']).toBeDefined();
+      expect(events['color-change']).toBeDefined();
       expect(events['color-save']).toBeDefined();
       expect(events['swatch-added']).toBeDefined();
       expect(events['swatches-updated']).toBeDefined();
@@ -299,7 +298,7 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       element.addEventListener('color-change', handler);
 
       // Trigger color change through public API
-      element.setValue('#ff0000ff');
+      element.setColor('#ff0000ff');
       await element.updateComplete;
 
       // Note: Event might be emitted through iro.js interaction
@@ -364,34 +363,34 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
   // SUITE 6: Form Participation
   // ========================================
   describe('Suite 6: Form Participation', () => {
-    it('should have form value through getValue()', () => {
-      const value = element.getValue();
+    it('should have form value through getColor()', () => {
+      const value = element.getColor();
       expect(value).toBeDefined();
       expect(typeof value).toBe('string');
     });
 
-    it('should update form value through setValue()', async () => {
+    it('should update form value through setColor()', async () => {
       const newColor = '#0000ffff';
-      element.setValue(newColor);
+      element.setColor(newColor);
       await element.updateComplete;
-      expect(element.getValue()).toBe(newColor);
+      expect(element.getColor()).toBe(newColor);
     });
 
     it('should maintain value after multiple updates', async () => {
-      element.setValue('#ff0000ff');
+      element.setColor('#ff0000ff');
       await element.updateComplete;
-      expect(element.getValue()).toBe('#ff0000ff');
+      expect(element.getColor()).toBe('#ff0000ff');
 
-      element.setValue('#00ff00ff');
+      element.setColor('#00ff00ff');
       await element.updateComplete;
-      expect(element.getValue()).toBe('#00ff00ff');
+      expect(element.getColor()).toBe('#00ff00ff');
     });
 
     it('should be accessible via form controls', () => {
-      expect(element.getValue).toBeDefined();
-      expect(element.setValue).toBeDefined();
-      expect(typeof element.getValue).toBe('function');
-      expect(typeof element.setValue).toBe('function');
+      expect(element.getColor).toBeDefined();
+      expect(element.setColor).toBeDefined();
+      expect(typeof element.getColor).toBe('function');
+      expect(typeof element.setColor).toBe('function');
     });
 
     it('should handle disabled state for forms', async () => {
@@ -538,17 +537,6 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       expect(() => element.addSwatch('#zzz')).toThrow('Invalid hex color format');
     });
 
-    it('should have receiveContext method', () => {
-      expect(element.receiveContext).toBeDefined();
-      expect(typeof element.receiveContext).toBe('function');
-    });
-
-    it('should accept context from parent', () => {
-      const context = { size: 'large', variant: 'standard' };
-      expect(() => {
-        element.receiveContext(context);
-      }).not.toThrow();
-    });
   });
 
   // ========================================
@@ -724,14 +712,14 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
 
     it('should load custom swatches from localStorage', () => {
       const testSwatches = ['#ff0000ff', '#00ff00ff'];
-      localStorage.setItem('terminal-iro-swatches', JSON.stringify(testSwatches));
+      localStorage.setItem('t-clr-custom-swatches', JSON.stringify(testSwatches));
 
       element._loadCustomSwatches();
 
       expect(element._customSwatches).toEqual(testSwatches);
 
       // Cleanup localStorage for next tests
-      localStorage.removeItem('terminal-iro-swatches');
+      localStorage.removeItem('t-clr-custom-swatches');
     });
 
     it('should handle localStorage errors gracefully', () => {
