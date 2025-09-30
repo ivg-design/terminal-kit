@@ -466,11 +466,9 @@ export class TColorPicker extends LitElement {
 		/* Override iro.js internal spacing */
 		.iro-container .IroColorPicker {
 			margin: 0 !important;
-			padding: 6px !important;
 			height: 180px !important;
-			width: 200px !important;
 			display: flex !important;
-			gap: 8px !important;
+			gap: 10px !important;
 			box-sizing: content-box !important;
 		}
 
@@ -575,7 +573,6 @@ export class TColorPicker extends LitElement {
 			max-height: 120px;
 			overflow-y: auto;
 			margin-bottom: 12px;
-			padding: 4px;
 		}
 
 		.iro-swatches::-webkit-scrollbar {
