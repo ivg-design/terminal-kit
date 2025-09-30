@@ -66,6 +66,39 @@ Welcome to the Terminal UI Components documentation. This library provides a col
 - Safari 10.1+
 - Edge 79+
 
+## Attributions & Credits
+
+This project uses and acknowledges the following open-source libraries and resources:
+
+### **iro.js**
+- **Purpose**: Color picker functionality in TColorPicker component
+- **Author**: James Daniel ([@jaames](https://github.com/jaames))
+- **License**: MIT
+- **Repository**: [https://github.com/jaames/iro.js](https://github.com/jaames/iro.js)
+
+### **Prism.js**
+- **Purpose**: Syntax highlighting for code examples
+- **Authors**: Lea Verou, et al.
+- **License**: MIT
+- **Website**: [https://prismjs.com](https://prismjs.com)
+- **Repository**: [https://github.com/PrismJS/prism](https://github.com/PrismJS/prism)
+
+### **Phosphor Icons**
+- **Purpose**: SVG icon library used throughout components
+- **Authors**: Phosphor Icons Team
+- **License**: MIT
+- **Website**: [https://phosphoricons.com](https://phosphoricons.com)
+- **Repository**: [https://github.com/phosphor-icons/phosphor-icons](https://github.com/phosphor-icons/phosphor-icons)
+
+### **Loader Animations**
+The loader component includes animations inspired by:
+- **CSS Loaders**: Various open-source CSS loader patterns
+- **Loading.io**: Loader animation concepts (reimplemented in pure CSS)
+- **WC-Spinners**: Web component spinner patterns (adapted for Lit)
+- **Epic Spinners**: Animation timing and easing functions
+
+All loader animations have been reimplemented as pure CSS within Lit components to maintain the terminal aesthetic and ensure zero dependencies.
+
 ## License
 
 MIT License - Use freely in your projects!
