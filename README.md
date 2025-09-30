@@ -33,7 +33,7 @@ A retro-futuristic web components library with terminal aesthetics. Built with *
 - **TSlider** (`<t-sld>`) - Range sliders
 - **TDropdown** (`<t-drp>`) - Select dropdowns with search
 - **TColorPicker** (`<t-clr>`) - Color picker with swatches
-- **TLoader** (`<t-ldr>`) - Loading indicators
+- **TLoaderLit** (`<t-ldr>`) - Loading indicators with 55+ spinner animations
 - **TTextarea** (`<t-textarea>`) - Multiline text input
 
 ## Installation
