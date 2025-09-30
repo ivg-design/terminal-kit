@@ -2,9 +2,17 @@
 // SECTION 1: IMPORTS
 // ============================================
 import { LitElement, html, css } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import componentLogger from '../utils/ComponentLogger.js';
 import { generateManifest } from '../utils/manifest-generator.js';
-import { userCircleIcon, gearSixIcon, signOutIcon, folderUserIcon, caretDownIcon } from '../utils/phosphor-icons.js';
+import {
+  userCircleIcon,
+  gearSixIcon,
+  signOutIcon,
+  folderUserIcon,
+  caretDownIcon,
+  tableIcon
+} from '../utils/phosphor-icons.js';
 
 // ============================================
 // SECTION 2: COMPONENT CLASS
@@ -427,6 +435,21 @@ export class TUserMenuLit extends LitElement {
     { id: 'logout', label: 'Sign Out', icon: signOutIcon }
   ];
 
+  /** @private */
+  _iconMap = {
+    'user': userCircleIcon,
+    'userCircle': userCircleIcon,
+    'gear': gearSixIcon,
+    'settings': gearSixIcon,
+    'signOut': signOutIcon,
+    'logout': signOutIcon,
+    'folder': folderUserIcon,
+    'files': folderUserIcon,
+    'grid': tableIcon,
+    'dashboard': tableIcon,
+    'users': userCircleIcon  // Using userCircle as fallback for users
+  };
+
   // ============================================
   // BLOCK 5: Logger Instance (REQUIRED)
   // ============================================
@@ -570,7 +593,22 @@ export class TUserMenuLit extends LitElement {
       throw new Error('Menu items must be an array');
     }
 
-    this.menuItems = items;
+    // Map string icon names to actual SVG icons
+    this.menuItems = items.map(item => {
+      if (item.icon && typeof item.icon === 'string') {
+        // If icon is a string name, look it up in the icon map
+        const mappedIcon = this._iconMap[item.icon];
+        if (mappedIcon) {
+          return { ...item, icon: mappedIcon };
+        } else if (!item.icon.includes('<svg')) {
+          // If it's not an SVG string and not in the map, remove the icon
+          this._logger.warn(`Unknown icon name: ${item.icon}`);
+          const { icon, ...itemWithoutIcon } = item;
+          return itemWithoutIcon;
+        }
+      }
+      return item;
+    });
   }
 
   /**
@@ -680,7 +718,7 @@ export class TUserMenuLit extends LitElement {
             <span class="user-name user-name-full">${this.userName}</span>
             <span class="user-name user-name-initials">${initials}</span>
           </div>
-          <span class="chevron-icon">${caretDownIcon}</span>
+          <span class="chevron-icon">${unsafeHTML(caretDownIcon)}</span>
         </button>
 
         <div class="menu-dropdown" role="menu">
@@ -720,7 +758,7 @@ export class TUserMenuLit extends LitElement {
         role="menuitem"
         @click=${() => this._handleMenuItemClick(item.id)}
       >
-        ${item.icon ? html`<span class="menu-item-icon">${item.icon}</span>` : ''}
+        ${item.icon ? html`<span class="menu-item-icon">${unsafeHTML(item.icon)}</span>` : ''}
         <span class="menu-item-label">${item.label}</span>
       </div>
     `;
