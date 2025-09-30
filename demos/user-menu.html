@@ -139,15 +139,6 @@
                 font-size: 12px;
                 color: #00ff41;
             }
-
-            /* Force mobile styles for the simulated mobile view */
-            .mobile-view .user-name-full {
-                display: none !important;
-            }
-
-            .mobile-view .user-name-initials {
-                display: inline-block !important;
-            }
         </style>
     </head>
 
@@ -204,7 +195,7 @@
                     </div>
 
                     <div class="demo-item">
-                        <span class="demo-label">Mobile View (Simulated)</span>
+                        <span class="demo-label">Compact/Mobile View (Simulated)</span>
                         <div class="mobile-simulation">
                             <div class="mobile-header">
                                 <span class="mobile-label">Mobile Header</span>
@@ -212,12 +203,12 @@
                                     id="userMenuMobile"
                                     user-name="Alexander Hamilton"
                                     user-avatar="https://i.pravatar.cc/150?img=8"
-                                    class="mobile-view">
+                                    compact>
                                 </t-usr>
                             </div>
                         </div>
                         <div style="margin-top: 10px; font-size: 11px; color: #00ff41;">
-                            Shows initials "AH" - simulates mobile view without resizing browser
+                            Shows initials "AH" - uses compact mode without resizing browser
                         </div>
                     </div>
 
@@ -228,6 +219,14 @@
                             user-name="Dev User"
                             user-email="dev@example.com"
                             user-avatar="https://i.pravatar.cc/150?img=3">
+                        </t-usr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Compact Mode (No Avatar)</span>
+                        <t-usr
+                            user-name="Compact User"
+                            compact>
                         </t-usr>
                     </div>
                 </div>
@@ -269,7 +268,10 @@
 &lt;/t-usr&gt;
 
 &lt;!-- Disabled state --&gt;
-&lt;t-usr user-name="Disabled" disabled&gt;&lt;/t-usr&gt;</pre>
+&lt;t-usr user-name="Disabled" disabled&gt;&lt;/t-usr&gt;
+
+&lt;!-- Compact mode (shows initials) --&gt;
+&lt;t-usr user-name="Mobile User" compact&gt;&lt;/t-usr&gt;</pre>
                 </div>
 
                 <div class="code-example">
@@ -301,6 +303,10 @@ userMenu.toggleMenu();
 // Enable/disable
 userMenu.disabled = true;
 userMenu.disabled = false;
+
+// Toggle compact mode
+userMenu.compact = true; // Shows initials only
+userMenu.compact = false; // Shows full name
 
 // Event listeners
 userMenu.addEventListener('menu-open', () => {

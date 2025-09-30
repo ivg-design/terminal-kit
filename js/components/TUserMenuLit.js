@@ -298,6 +298,15 @@ export class TUserMenuLit extends LitElement {
       margin: var(--spacing-xs) 0;
     }
 
+    /* Compact mode */
+    :host([compact]) .user-name-full {
+      display: none;
+    }
+
+    :host([compact]) .user-name-initials {
+      display: inline;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .user-name-full {
@@ -416,6 +425,17 @@ export class TUserMenuLit extends LitElement {
      */
     menuItems: {
       type: Array
+    },
+
+    /**
+     * @property {boolean} compact - Whether to show in compact/mobile mode (initials only)
+     * @default false
+     * @attribute compact
+     * @reflects true
+     */
+    compact: {
+      type: Boolean,
+      reflect: true
     }
   };
 
@@ -471,6 +491,7 @@ export class TUserMenuLit extends LitElement {
     this.disabled = false;
     this.open = false;
     this.menuItems = [];
+    this.compact = false;
 
     // Bind event handlers
     this._handleClickOutside = this._handleClickOutside.bind(this);
