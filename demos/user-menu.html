@@ -136,8 +136,17 @@
             }
 
             .mobile-label {
-                font-size: 12px; 
+                font-size: 12px;
                 color: #00ff41;
+            }
+
+            /* Force mobile styles for the simulated mobile view */
+            .mobile-view .user-name-full {
+                display: none !important;
+            }
+
+            .mobile-view .user-name-initials {
+                display: inline-block !important;
             }
         </style>
     </head>
@@ -165,7 +174,7 @@
                         <span class="demo-label">Default User Menu</span>
                         <t-usr
                             id="userMenu1"
-                            userName="John Doe">
+                            user-name="John Doe">
                         </t-usr>
                     </div>
 
@@ -173,8 +182,8 @@
                         <span class="demo-label">With Avatar</span>
                         <t-usr
                             id="userMenu2"
-                            userName="Jane Smith"
-                            userAvatar="https://i.pravatar.cc/150?img=5">
+                            user-name="Jane Smith"
+                            user-avatar="https://i.pravatar.cc/150?img=5">
                         </t-usr>
                     </div>
 
@@ -182,14 +191,14 @@
                         <span class="demo-label">Custom Menu Items</span>
                         <t-usr
                             id="userMenu3"
-                            userName="Admin User">
+                            user-name="Admin User">
                         </t-usr>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Disabled State</span>
                         <t-usr
-                            userName="Disabled User"
+                            user-name="Disabled User"
                             disabled>
                         </t-usr>
                     </div>
@@ -201,8 +210,8 @@
                                 <span class="mobile-label">Mobile Header</span>
                                 <t-usr
                                     id="userMenuMobile"
-                                    userName="Alexander Hamilton"
-                                    userAvatar="https://i.pravatar.cc/150?img=8"
+                                    user-name="Alexander Hamilton"
+                                    user-avatar="https://i.pravatar.cc/150?img=8"
                                     class="mobile-view">
                                 </t-usr>
                             </div>
@@ -216,9 +225,9 @@
                         <span class="demo-label">With Email</span>
                         <t-usr
                             id="userMenu4"
-                            userName="Dev User"
-                            userEmail="dev@example.com"
-                            userAvatar="https://i.pravatar.cc/150?img=3">
+                            user-name="Dev User"
+                            user-email="dev@example.com"
+                            user-avatar="https://i.pravatar.cc/150?img=3">
                         </t-usr>
                     </div>
                 </div>
@@ -244,23 +253,23 @@
 
                 <div class="code-example">
                     <pre>&lt;!-- Basic user menu --&gt;
-&lt;t-usr userName="John Doe"&gt;&lt;/t-usr&gt;
+&lt;t-usr user-name="John Doe"&gt;&lt;/t-usr&gt;
 
 &lt;!-- With avatar --&gt;
 &lt;t-usr
-  userName="Jane Smith"
-  userAvatar="/path/to/avatar.jpg"&gt;
+  user-name="Jane Smith"
+  user-avatar="/path/to/avatar.jpg"&gt;
 &lt;/t-usr&gt;
 
 &lt;!-- With email --&gt;
 &lt;t-usr
-  userName="Dev User"
-  userEmail="dev@example.com"
-  userAvatar="https://i.pravatar.cc/150?img=3"&gt;
+  user-name="Dev User"
+  user-email="dev@example.com"
+  user-avatar="https://i.pravatar.cc/150?img=3"&gt;
 &lt;/t-usr&gt;
 
 &lt;!-- Disabled state --&gt;
-&lt;t-usr userName="Disabled" disabled&gt;&lt;/t-usr&gt;</pre>
+&lt;t-usr user-name="Disabled" disabled&gt;&lt;/t-usr&gt;</pre>
                 </div>
 
                 <div class="code-example">
@@ -324,35 +333,38 @@ userMenu.addEventListener('menu-select', (e) => {
 
             // Setup event listeners after components load
             window.customElements.whenDefined('t-usr').then(() => {
-                document.querySelectorAll('t-usr').forEach((menu, index) => {
-                    const userName = menu.userName || `Menu ${index + 1}`;
+                // Small delay to ensure properties are initialized
+                setTimeout(() => {
+                    document.querySelectorAll('t-usr').forEach((menu, index) => {
+                        const userName = menu.userName || `Menu ${index + 1}`;
 
-                    menu.addEventListener('menu-open', () => {
-                        logEvent(`${userName} menu opened`);
+                        menu.addEventListener('menu-open', () => {
+                            logEvent(`${userName} menu opened`);
+                        });
+
+                        menu.addEventListener('menu-close', () => {
+                            logEvent(`${userName} menu closed`);
+                        });
+
+                        menu.addEventListener('menu-select', (e) => {
+                            logEvent(`${userName} menu item selected: ${e.detail?.itemId || 'unknown'}`);
+                        });
                     });
 
-                    menu.addEventListener('menu-close', () => {
-                        logEvent(`${userName} menu closed`);
-                    });
+                    // Customize menu for Admin User
+                    const adminMenu = document.getElementById('userMenu3');
+                    if (adminMenu) {
+                        adminMenu.setMenuItems([
+                            { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
+                            { id: 'users', label: 'Manage Users', icon: 'users' },
+                            { id: 'settings', label: 'Settings', icon: 'gear' },
+                            { type: 'separator' },
+                            { id: 'logout', label: 'Logout', icon: 'signOut' }
+                        ]);
+                    }
 
-                    menu.addEventListener('menu-select', (e) => {
-                        logEvent(`${userName} menu item selected: ${e.detail?.itemId || 'unknown'}`);
-                    });
-                });
-
-                // Customize menu for Admin User
-                const adminMenu = document.getElementById('userMenu3');
-                if (adminMenu) {
-                    adminMenu.setMenuItems([
-                        { id: 'dashboard', label: 'Dashboard', icon: 'grid' },
-                        { id: 'users', label: 'Manage Users', icon: 'users' },
-                        { id: 'settings', label: 'Settings', icon: 'gear' },
-                        { type: 'separator' },
-                        { id: 'logout', label: 'Logout', icon: 'signOut' }
-                    ]);
-                }
-
-                logEvent('User menu demo initialized');
+                    logEvent('User menu demo initialized');
+                }, 100);
             });
         </script>
     </body>
