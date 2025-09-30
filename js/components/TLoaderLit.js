@@ -4,6 +4,7 @@
 import { LitElement, html, css } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import componentLogger from '../utils/ComponentLogger.js';
+import { generateManifest } from '../utils/manifest-generator.js';
 
 // Import wc-spinners library - loads all spinner web components
 import '../../public/js/libs/wc-spinners.js';
@@ -492,8 +493,51 @@ export class TLoaderLit extends LitElement {
   `;
 
   // ----------------------------------------------------------
-  // BLOCK 3: STATIC PROPERTIES DEFINITION (REQUIRED)
+  // BLOCK 3: REACTIVE PROPERTIES (REQUIRED)
   // ----------------------------------------------------------
+
+  /**
+   * @property {string} type - Spinner type
+   * @default 'atom-spinner'
+   * @attribute type
+   * @reflects true
+   */
+  /**
+   * @property {number} size - Size in pixels
+   * @default 60
+   * @attribute size
+   * @reflects true
+   */
+  /**
+   * @property {string} color - Color value (hex or CSS color)
+   * @default '#00ff41'
+   * @attribute color
+   * @reflects true
+   */
+  /**
+   * @property {number} duration - Animation duration in seconds
+   * @default 1
+   * @attribute duration
+   * @reflects true
+   */
+  /**
+   * @property {string} text - Loading text to display
+   * @default ''
+   * @attribute text
+   * @reflects true
+   */
+  /**
+   * @property {boolean} hidden - Whether loader is hidden
+   * @default false
+   * @attribute hidden
+   * @reflects true
+   */
+  /**
+   * @property {boolean} glow - Whether to show glow effect
+   * @default false
+   * @attribute glow
+   * @reflects true
+   */
   static properties = {
     type: {
       type: String,
@@ -537,13 +581,28 @@ export class TLoaderLit extends LitElement {
   };
 
   // ----------------------------------------------------------
-  // BLOCK 4: CONSTRUCTOR (REQUIRED)
+  // BLOCK 4: INTERNAL STATE (REQUIRED)
+  // ----------------------------------------------------------
+
+  /** @private */
+  _isAnimating = false;
+
+  // ----------------------------------------------------------
+  // BLOCK 5: LOGGER INSTANCE (REQUIRED)
+  // ----------------------------------------------------------
+
+  /** @private */
+  _logger = null;
+
+  // ----------------------------------------------------------
+  // BLOCK 6: CONSTRUCTOR (REQUIRED)
   // ----------------------------------------------------------
   constructor() {
     super();
 
     // Initialize logger
-    this.logger = componentLogger.for('TLoaderLit');
+    this._logger = new componentLogger(TLoaderLit.tagName, this);
+    this._logger.debug('Component constructed');
 
     // Set default property values
     this.type = 'atom-spinner';
@@ -553,15 +612,181 @@ export class TLoaderLit extends LitElement {
     this.text = '';
     this.hidden = false;
     this.glow = false;
-
-    this.logger.debug('Component constructed with defaults');
   }
 
   // ----------------------------------------------------------
-  // BLOCK 5: RENDER METHOD (REQUIRED)
+  // BLOCK 7: LIFECYCLE METHODS (REQUIRED - in order)
   // ----------------------------------------------------------
+
+  /**
+   * Called when component is connected to DOM
+   * @lifecycle
+   */
+  connectedCallback() {
+    super.connectedCallback();
+    this._logger.info('Connected to DOM');
+  }
+
+  /**
+   * Called when component is disconnected from DOM
+   * @lifecycle
+   */
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._logger.info('Disconnected from DOM');
+  }
+
+  /**
+   * Called after first render
+   * @lifecycle
+   * @param {Map} changedProperties
+   */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+    this._logger.debug('First update complete', { changedProperties });
+  }
+
+  /**
+   * Called after every render
+   * @lifecycle
+   * @param {Map} changedProperties
+   */
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    this._logger.trace('Updated', { changedProperties });
+  }
+
+  // ----------------------------------------------------------
+  // BLOCK 8: PUBLIC API METHODS (REQUIRED FOR DISPLAY)
+  // ----------------------------------------------------------
+
+  /**
+   * Show the loader
+   * @public
+   * @fires loader-show
+   */
+  show() {
+    this._logger.debug('show() called');
+    this.hidden = false;
+    this._emitEvent('loader-show', { type: this.type });
+  }
+
+  /**
+   * Hide the loader
+   * @public
+   * @fires loader-hide
+   */
+  hide() {
+    this._logger.debug('hide() called');
+    this.hidden = true;
+    this._emitEvent('loader-hide', { type: this.type });
+  }
+
+  /**
+   * Toggle loader visibility
+   * @public
+   */
+  toggle() {
+    this._logger.debug('toggle() called');
+    if (this.hidden) {
+      this.show();
+    } else {
+      this.hide();
+    }
+  }
+
+  /**
+   * Set spinner type
+   * @public
+   * @param {string} type - The spinner type to use
+   */
+  setType(type) {
+    this._logger.debug('setType() called', { type });
+    if (TLoaderLit.spinnerTypes.includes(type)) {
+      this.type = type;
+    } else {
+      this._logger.warn('Invalid spinner type', { type });
+    }
+  }
+
+  /**
+   * Get list of available spinner types
+   * @public
+   * @returns {string[]} Array of available spinner types
+   */
+  getAvailableTypes() {
+    this._logger.debug('getAvailableTypes() called');
+    return [...TLoaderLit.spinnerTypes];
+  }
+
+  /**
+   * Set loading text
+   * @public
+   * @param {string} text - The loading text to display
+   */
+  setText(text) {
+    this._logger.debug('setText() called', { text });
+    this.text = text;
+  }
+
+  // ----------------------------------------------------------
+  // BLOCK 9: EVENT EMITTERS (REQUIRED SECTION)
+  // ----------------------------------------------------------
+
+  /**
+   * Emit custom event
+   * @private
+   * @param {string} eventName
+   * @param {Object} detail
+   */
+  _emitEvent(eventName, detail = {}) {
+    this._logger.debug('Emitting event', { eventName, detail });
+
+    const event = new CustomEvent(eventName, {
+      detail,
+      bubbles: true,
+      composed: true
+    });
+
+    this.dispatchEvent(event);
+  }
+
+  /**
+   * @event TLoaderLit#loader-show
+   * @type {CustomEvent<{type: string}>}
+   * @description Fired when loader is shown
+   * @property {string} detail.type - Current spinner type
+   * @bubbles true
+   * @composed true
+   */
+
+  /**
+   * @event TLoaderLit#loader-hide
+   * @type {CustomEvent<{type: string}>}
+   * @description Fired when loader is hidden
+   * @property {string} detail.type - Current spinner type
+   * @bubbles true
+   * @composed true
+   */
+
+  // ----------------------------------------------------------
+  // BLOCK 10: Nesting Support - NOT NEEDED (DISPLAY profile)
+  // ----------------------------------------------------------
+
+  // ----------------------------------------------------------
+  // BLOCK 11: Validation - NOT NEEDED (DISPLAY profile)
+  // ----------------------------------------------------------
+
+  // ----------------------------------------------------------
+  // BLOCK 12: RENDER METHOD (REQUIRED)
+  // ----------------------------------------------------------
+
+  /**
+   * Render component template
+   * @returns {TemplateResult}
+   */
   render() {
-    this.logger.debug('Rendering', {
+    this._logger.trace('Rendering', {
       type: this.type,
       size: this.size,
       color: this.color,
@@ -601,117 +826,85 @@ export class TLoaderLit extends LitElement {
   }
 
   // ----------------------------------------------------------
-  // BLOCK 6: LIFECYCLE CALLBACKS (REQUIRED)
-  // ----------------------------------------------------------
-  connectedCallback() {
-    super.connectedCallback();
-    this.logger.info('Connected to DOM');
-
-    // Dispatch custom event
-    this.dispatchEvent(new CustomEvent('loader-connected', {
-      detail: { type: this.type },
-      bubbles: true,
-      composed: true
-    }));
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.logger.info('Disconnected from DOM');
-  }
-
-  // ----------------------------------------------------------
-  // BLOCK 7: PUBLIC METHODS (REQUIRED FOR DISPLAY)
+  // BLOCK 13: PRIVATE HELPERS (LAST)
   // ----------------------------------------------------------
 
-  /**
-   * Show the loader
-   * @public
-   */
-  show() {
-    this.logger.debug('Showing loader');
-    this.hidden = false;
-    this.dispatchEvent(new CustomEvent('loader-show', {
-      detail: { type: this.type },
-      bubbles: true,
-      composed: true
-    }));
-  }
-
-  /**
-   * Hide the loader
-   * @public
-   */
-  hide() {
-    this.logger.debug('Hiding loader');
-    this.hidden = true;
-    this.dispatchEvent(new CustomEvent('loader-hide', {
-      detail: { type: this.type },
-      bubbles: true,
-      composed: true
-    }));
-  }
-
-  /**
-   * Toggle loader visibility
-   * @public
-   */
-  toggle() {
-    if (this.hidden) {
-      this.show();
-    } else {
-      this.hide();
-    }
-  }
-
-  /**
-   * Set spinner type
-   * @public
-   * @param {string} type - The spinner type to use
-   */
-  setType(type) {
-    if (TLoaderLit.spinnerTypes.includes(type)) {
-      this.type = type;
-      this.logger.debug('Type changed', { type });
-    } else {
-      this.logger.warn('Invalid spinner type', { type });
-    }
-  }
-
-  /**
-   * Get list of available spinner types
-   * @public
-   * @returns {string[]} Array of available spinner types
-   */
-  getAvailableTypes() {
-    return [...TLoaderLit.spinnerTypes];
-  }
-
-  /**
-   * Set loading text
-   * @public
-   * @param {string} text - The loading text to display
-   */
-  setText(text) {
-    this.text = text;
-    this.logger.debug('Text updated', { text });
-  }
-
-  // ----------------------------------------------------------
-  // BLOCK 12: STATIC REGISTRATION (REQUIRED)
-  // ----------------------------------------------------------
-  static {
-    // Self-registration
-    customElements.define(this.tagName, this);
-  }
-
-  // ----------------------------------------------------------
-  // BLOCK 13: EXPORTS (REQUIRED)
-  // ----------------------------------------------------------
+  // No private helpers needed for this component
 }
 
-// Export as default and named
-export default TLoaderLit;
+// ============================================================
+// SECTION 3: CUSTOM ELEMENT REGISTRATION (REQUIRED)
+// ============================================================
+if (!customElements.get(TLoaderLit.tagName)) {
+  customElements.define(TLoaderLit.tagName, TLoaderLit);
+}
 
-// Terminal-specific re-export
-export const TerminalLoader = TLoaderLit;
+// ============================================================
+// SECTION 4: MANIFEST EXPORT (REQUIRED)
+// ============================================================
+export const TLoaderManifest = generateManifest(TLoaderLit, {
+  tagName: 't-ldr',
+  displayName: 'Loader',
+  description: 'Loading indicator with 50+ animation types from wc-spinners library',
+  methods: {
+    show: {
+      description: 'Show the loader',
+      params: [],
+      returns: 'void'
+    },
+    hide: {
+      description: 'Hide the loader',
+      params: [],
+      returns: 'void'
+    },
+    toggle: {
+      description: 'Toggle loader visibility',
+      params: [],
+      returns: 'void'
+    },
+    setType: {
+      description: 'Set spinner type',
+      params: [
+        { name: 'type', type: 'string', description: 'Spinner type to use' }
+      ],
+      returns: 'void'
+    },
+    getAvailableTypes: {
+      description: 'Get list of available spinner types',
+      params: [],
+      returns: 'string[]'
+    },
+    setText: {
+      description: 'Set loading text',
+      params: [
+        { name: 'text', type: 'string', description: 'Loading text to display' }
+      ],
+      returns: 'void'
+    }
+  },
+  events: {
+    'loader-show': {
+      description: 'Fired when loader is shown',
+      detail: {
+        type: {
+          type: 'string',
+          description: 'Current spinner type'
+        }
+      }
+    },
+    'loader-hide': {
+      description: 'Fired when loader is hidden',
+      detail: {
+        type: {
+          type: 'string',
+          description: 'Current spinner type'
+        }
+      }
+    }
+  }
+});
+
+// ============================================================
+// SECTION 5: EXPORTS
+// ============================================================
+export default TLoaderLit;

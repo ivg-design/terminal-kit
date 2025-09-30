@@ -475,7 +475,7 @@ export class TUserMenuLit extends LitElement {
   // ============================================
 
   /** @private */
-  _logger = componentLogger.for('t-usr');
+  _logger = null;
 
   // ============================================
   // BLOCK 6: Constructor (REQUIRED)
@@ -483,6 +483,10 @@ export class TUserMenuLit extends LitElement {
 
   constructor() {
     super();
+
+    // Initialize logger
+    this._logger = new componentLogger(TUserMenuLit.tagName, this);
+    this._logger.debug('Component constructed');
 
     // Initialize properties
     this.userName = 'User';
@@ -496,8 +500,6 @@ export class TUserMenuLit extends LitElement {
     // Bind event handlers
     this._handleClickOutside = this._handleClickOutside.bind(this);
     this._handleEscape = this._handleEscape.bind(this);
-
-    this._logger.debug('Component constructed');
   }
 
   // ============================================
@@ -510,7 +512,7 @@ export class TUserMenuLit extends LitElement {
    */
   connectedCallback() {
     super.connectedCallback();
-    this._logger.debug('Connected to DOM');
+    this._logger.info('Connected to DOM');
   }
 
   /**
@@ -519,7 +521,7 @@ export class TUserMenuLit extends LitElement {
    */
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._logger.debug('Disconnected from DOM');
+    this._logger.info('Disconnected from DOM');
 
     // Cleanup document listeners
     this._removeDocumentListeners();
