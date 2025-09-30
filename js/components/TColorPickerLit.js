@@ -435,9 +435,9 @@ export class TColorPicker extends LitElement {
 			padding: 16px;
 			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
 			display: none;
-			width: 420px;
+			width: 440px;
 			max-width: calc(100vw - 20px);
-			overflow: hidden;
+			overflow: visible;
 			box-sizing: border-box;
 		}
 
@@ -447,34 +447,39 @@ export class TColorPicker extends LitElement {
 
 		.iro-popover.open {
 			display: grid;
-			grid-template-columns: 200px 180px;
+			grid-template-columns: 212px 180px;
 			gap: 16px;
 			contain: layout;
 		}
 
 		.iro-container {
 			grid-row: 1 / -1;
-			height: 180px;
-			width: 200px;
+			height: 192px;
+			width: 212px;
 			display: flex;
-			align-items: flex-start;
-			overflow: hidden;
-			contain: layout size;
+			align-items: center;
+			justify-content: center;
+			overflow: visible;
+			position: relative;
 		}
 
 		/* Override iro.js internal spacing */
 		.iro-container .IroColorPicker {
 			margin: 0 !important;
+			padding: 6px !important;
 			height: 180px !important;
 			width: 200px !important;
 			display: flex !important;
 			gap: 8px !important;
+			box-sizing: content-box !important;
 		}
 
 		.iro-container .IroSlider {
 			margin: 0 !important;
+			padding: 0 !important;
 			width: 20px !important;
 			height: 180px !important;
+			position: relative !important;
 		}
 
 		.iro-container .IroBox {
@@ -1727,8 +1732,8 @@ export class TColorPicker extends LitElement {
 
 		// Position popover next to the element using fixed positioning
 		const rect = this.getBoundingClientRect();
-		const popoverWidth = 420;
-		const popoverHeight = 212; // 180px content + 32px padding
+		const popoverWidth = 440;
+		const popoverHeight = 224; // 192px content + 32px padding
 		const margin = 10;
 
 		// Calculate initial position
