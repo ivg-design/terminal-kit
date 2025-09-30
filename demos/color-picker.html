@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Terminal Color Picker - Component Demo</title>
+
+        <!-- Load CSS -->
+        <link rel="stylesheet" href="../css/theme.css">
+        <link rel="stylesheet" href="../css/components/t-clr-iro.css">
+
+        <style>
+            body {
+                font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+                background: #0a0a0a;
+                color: #00ff41;
+                padding: 40px 20px;
+                line-height: 1.6;
+            }
+
+            .demo-container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            h1 {
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                border-bottom: 2px solid #00ff41;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+
+            .breadcrumb {
+                margin-bottom: 30px;
+                font-size: 12px;
+                color: #00cc33;
+            }
+
+            .breadcrumb a {
+                color: #00cc33;
+                text-decoration: none;
+            }
+
+            .breadcrumb a:hover {
+                color: #00ff41;
+            }
+
+            .demo-section {
+                margin-bottom: 50px;
+                padding: 30px;
+                border: 1px solid #333;
+                background: #1a1a1a;
+            }
+
+            .demo-section h2 {
+                color: #00ff41;
+                text-transform: uppercase;
+                font-size: 16px;
+                margin-bottom: 15px;
+                letter-spacing: 0.05em;
+            }
+
+            .section-description {
+                color: #00cc33;
+                font-size: 12px;
+                margin-bottom: 25px;
+            }
+
+            .demo-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+
+            .demo-item {
+                padding: 20px;
+                background: #242424;
+                border: 1px solid #333;
+            }
+
+            .demo-label {
+                display: block;
+                margin-bottom: 10px;
+                font-size: 11px;
+                text-transform: uppercase;
+                color: #00cc33;
+            }
+
+            .code-block {
+                background: #0a0a0a;
+                padding: 15px;
+                border: 1px solid #009926;
+                font-size: 11px;
+                overflow-x: auto;
+                margin-top: 20px;
+            }
+
+            .code-block code {
+                color: #00ff41;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="demo-container">
+            <div class="breadcrumb">
+                <a href="index.html">← Back to Gallery</a> / Color Picker
+            </div>
+
+            <h1>Terminal Color Picker</h1>
+            <p style="color: #00cc33; margin-bottom: 40px;">
+                Systematic color picker with configurable elements. Three variants: large (48px), standard (32px), compact (swatch+input only). Elements are orderable and optional.
+            </p>
+
+            <!-- Large Variant -->
+            <div class="demo-section">
+                <h2>Large Variant (48px height)</h2>
+                <p class="section-description">
+                    All elements available: icon, label, swatch, input. Swatch is mandatory.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">All Elements (Default)</span>
+                        <t-clr value="#00ff41" label1="Theme" label2="Color" elements="icon,label,swatch,input">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon + Swatch Only</span>
+                        <t-clr value="#00aaff" elements="icon,swatch">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Label + Swatch Only</span>
+                        <t-clr value="#ff00ff" label1="Accent" label2="Color" elements="label,swatch">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Swatch + Input Only</span>
+                        <t-clr value="#ffcc00" elements="swatch,input">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Reordered: Swatch First</span>
+                        <t-clr value="#ff0041" label1="Error" label2="Color" elements="swatch,icon,label,input">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Disabled</span>
+                        <t-clr value="#ff3333" label1="Disabled" label2="Color" elements="icon,label,swatch,input" disabled>
+                        </t-clr>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Standard Variant -->
+            <div class="demo-section">
+                <h2>Standard Variant (32px height)</h2>
+                <p class="section-description">
+                    All elements available: icon, label, swatch, input. More compact sizing.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">All Elements</span>
+                        <t-clr value="#00ff41" label1="Theme" label2="Color" variant="standard" elements="icon,label,swatch,input">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon + Swatch Only</span>
+                        <t-clr value="#00aaff" variant="standard" elements="icon,swatch">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Label + Swatch Only</span>
+                        <t-clr value="#ff00ff" label1="Accent" label2="Color" variant="standard" elements="label,swatch">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Swatch + Input Only</span>
+                        <t-clr value="#ffcc00" variant="standard" elements="swatch,input">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Reordered: Swatch First</span>
+                        <t-clr value="#ffcc00" label1="Warning" label2="Color" variant="standard" elements="swatch,icon,label,input">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Disabled</span>
+                        <t-clr value="#ff0041" label1="Error" label2="Color" variant="standard" elements="icon,label,swatch,input" disabled>
+                        </t-clr>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compact Variant -->
+            <div class="demo-section">
+                <h2>Compact Variant (Minimal)</h2>
+                <p class="section-description">
+                    All elements available. Ultra-compact design for inline use.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Swatch + Input (Default Order)</span>
+                        <t-clr value="#00ff41" variant="compact" elements="swatch,input">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Input + Swatch (Reversed)</span>
+                        <t-clr value="#00aaff" variant="compact" elements="input,swatch">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Swatch Only</span>
+                        <t-clr value="#ff00ff" variant="compact" elements="swatch">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon + Swatch</span>
+                        <t-clr value="#ff0041" variant="compact" elements="icon,swatch" id="compactIcon1">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Icon + Label + Swatch</span>
+                        <t-clr value="#00ccff" variant="compact" elements="icon,label,swatch" label1="Compact" label2="Picker" id="compactIcon2">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">All Elements (Icon + Label + Swatch + Input)</span>
+                        <t-clr value="#ffaa00" variant="compact" elements="icon,label,swatch,input" label1="Full" label2="Compact" id="compactIcon3">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Label + Swatch + Input</span>
+                        <t-clr value="#aa00ff" variant="compact" elements="label,swatch,input" label1="Color" label2="Value">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Disabled</span>
+                        <t-clr value="#ffcc00" variant="compact" elements="swatch,input" disabled>
+                        </t-clr>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Features -->
+            <div class="demo-section">
+                <h2>Advanced Features</h2>
+                <p class="section-description">
+                    Custom icons and clear button.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">Custom Icon (via JS)</span>
+                        <t-clr id="customIconPicker" value="#ff0041" label1="Paint" label2="Bucket" elements="icon,label,swatch,input">
+                        </t-clr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">With Clear Button</span>
+                        <t-clr value="#ffcc00" label1="Custom" label2="Swatches" elements="icon,label,swatch,input" show-clear-button>
+                        </t-clr>
+                        <p style="font-size: 10px; color: #666; margin-top: 8px;">
+                            Open picker to see trash button
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Log -->
+            <div class="demo-section">
+                <h2>Event Log</h2>
+                <p class="section-description">
+                    Interact with the color pickers above to see their events logged here.
+                </p>
+                <div id="eventLog" style="height: 150px; overflow-y: auto; background: #0a0a0a; border: 1px solid #333; padding: 15px; font-size: 11px; color: #00cc33;">
+                    Change colors to see events...
+                </div>
+            </div>
+
+            <!-- API Reference -->
+            <div class="demo-section">
+                <h2>JavaScript API Reference</h2>
+                <p class="section-description">
+                    Complete API with systematic element control.
+                </p>
+
+                <div class="code-block">
+                    <code>// ===== VARIANTS =====
+// Three variants: large (48px), standard (32px), compact (minimal)
+&lt;t-clr variant="large"&gt;&lt;/t-clr&gt;      // Default
+&lt;t-clr variant="standard"&gt;&lt;/t-clr&gt;   // Smaller
+&lt;t-clr variant="compact"&gt;&lt;/t-clr&gt;    // Minimal
+
+// ===== ELEMENTS =====
+// Four elements: icon, label, swatch (mandatory), input
+// Order matters! Elements render in the order specified.
+// Any combination is allowed - specify only what you need
+
+// All elements (default order)
+&lt;t-clr elements="icon,label,swatch,input"&gt;&lt;/t-clr&gt;
+
+// Icon + swatch only (no input)
+&lt;t-clr elements="icon,swatch"&gt;&lt;/t-clr&gt;
+
+// Label + swatch only (no input)
+&lt;t-clr elements="label,swatch"&gt;&lt;/t-clr&gt;
+
+// Swatch + input only
+&lt;t-clr elements="swatch,input"&gt;&lt;/t-clr&gt;
+
+// Custom order (swatch first)
+&lt;t-clr elements="swatch,icon,label,input"&gt;&lt;/t-clr&gt;
+
+// Compact with reversed order
+&lt;t-clr variant="compact" elements="input,swatch"&gt;&lt;/t-clr&gt;
+
+// ===== CUSTOM ICON =====
+import { paintBucketIcon } from '../js/utils/phosphor-icons.js';
+const picker = document.querySelector('t-clr');
+picker.setIcon(paintBucketIcon);
+
+// ===== CLEAR BUTTON =====
+&lt;t-clr show-clear-button&gt;&lt;/t-clr&gt;  // Adds trash icon in picker
+
+// ===== PROGRAMMATIC CONTROL =====
+picker.value = '#ff6b35ff';          // Set color
+picker.variant = 'standard';         // Change variant
+picker.elements = 'swatch,input';    // Change elements
+picker.disabled = true;              // Disable
+
+// ===== EVENTS =====
+picker.addEventListener('change', (e) => {
+    console.log('Color:', e.target.value);
+});
+
+picker.addEventListener('color-save', (e) => {
+    console.log('Saved:', e.detail.color);
+});
+
+picker.addEventListener('swatches-cleared', () => {
+    console.log('Swatches cleared');
+});
+
+// ===== METHODS =====
+picker.setIcon(iconSvg);             // Set custom Phosphor icon
+picker.clearAllCustomSwatches();     // Clear all saved swatches</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import Components -->
+        <script type="module">
+            import '../js/components/TColorPickerLit.js';
+            import { paintBucketIcon } from '../js/utils/phosphor-icons.js';
+
+            function logEvent(message) {
+                const eventLog = document.getElementById('eventLog');
+                if (eventLog) {
+                    const timestamp = new Date().toLocaleTimeString();
+                    const entry = document.createElement('div');
+                    entry.textContent = `[${timestamp}] ${message}`;
+                    eventLog.appendChild(entry);
+                    eventLog.scrollTop = eventLog.scrollHeight;
+                }
+            }
+
+            // Setup event listeners after components are defined
+            customElements.whenDefined('t-clr').then(() => {
+                // Set custom icon for main demo
+                const customIconPicker = document.getElementById('customIconPicker');
+                if (customIconPicker) {
+                    customIconPicker.setIcon(paintBucketIcon);
+                }
+
+                // Set icons for compact variant demos
+                const compactIcon1 = document.getElementById('compactIcon1');
+                const compactIcon2 = document.getElementById('compactIcon2');
+                const compactIcon3 = document.getElementById('compactIcon3');
+
+                if (compactIcon1) compactIcon1.setIcon(paintBucketIcon);
+                if (compactIcon2) compactIcon2.setIcon(paintBucketIcon);
+                if (compactIcon3) compactIcon3.setIcon(paintBucketIcon);
+
+                // Add event listeners
+                document.querySelectorAll('t-clr').forEach((picker, index) => {
+                    picker.addEventListener('change', (e) => {
+                        const label = e.target.getAttribute('label1') || `Picker ${index + 1}`;
+                        logEvent(`${label} changed: ${e.target.value}`);
+                    });
+
+                    picker.addEventListener('color-save', (e) => {
+                        const label = e.target.getAttribute('label1') || `Picker ${index + 1}`;
+                        logEvent(`${label} saved: ${e.detail.color}`);
+                    });
+
+                    picker.addEventListener('swatches-updated', (e) => {
+                        logEvent(`Swatches updated: ${e.detail.swatches.length} custom`);
+                    });
+
+                    picker.addEventListener('swatches-cleared', () => {
+                        logEvent('All custom swatches cleared');
+                    });
+                });
+
+                logEvent('Color picker demo initialized - Systematic element control!');
+            }).catch((err) => {
+                logEvent(`Error: ${err.message}`);
+            });
+        </script>
+    </body>
+
+</html>

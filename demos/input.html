@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Input - Demo with Native Validation</title>
+
+    <!-- Core styles -->
+    <link rel="stylesheet" href="../css/theme/terminal.css">
+    <link rel="stylesheet" href="../css/components/form.css">
+    <link rel="stylesheet" href="../css/components/buttons.css">
+
+    <style>
+        :root {
+            --terminal-black: #0a0a0a;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-gray-dark: #242424;
+            --terminal-gray-light: #333333;
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-yellow: #ffcc00;
+            --terminal-red: #ff3333;
+            --font-mono: 'SF Mono', 'Monaco', monospace;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--terminal-black);
+            color: var(--terminal-green);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .component-section {
+            margin-bottom: 60px;
+            padding: 30px;
+            background: var(--terminal-gray-darkest);
+            border: 1px solid var(--terminal-gray-light);
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .demo-item {
+            background: var(--terminal-gray-dark);
+            border: 1px solid var(--terminal-gray-light);
+            padding: 20px;
+        }
+
+        .demo-label {
+            display: block;
+            color: var(--terminal-green-dim);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .message.error {
+            color: var(--terminal-red);
+        }
+
+        .message.success {
+            color: var(--terminal-green);
+        }
+
+        .message.warning {
+            color: var(--terminal-yellow);
+        }
+
+        .message.info {
+            color: var(--terminal-green-dim);
+        }
+
+        /* Warning input special styling */
+        .warning-input-wrapper t-inp input {
+            border-color: var(--terminal-yellow) !important;
+            color: var(--terminal-yellow) !important;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>Terminal Input - Native Validation Demo</h1>
+
+        <div class="component-section">
+            <h2>Interactive Validations (All Live)</h2>
+
+            <div class="demo-grid">
+                <!-- Character Counter -->
+                <div class="demo-item">
+                    <span class="demo-label">Character Counter (Live)</span>
+                    <t-inp id="charInput" type="text" placeholder="Type something..." maxlength="50"></t-inp>
+                    <div id="charCount" class="message info">0 / 50 characters</div>
+                </div>
+
+                <!-- Email Validation -->
+                <div class="demo-item">
+                    <span class="demo-label">Email Validation (Live)</span>
+                    <t-inp id="emailInput" type="email" placeholder="user@example.com"></t-inp>
+                    <div id="emailMsg" class="message info">Enter a valid email address</div>
+                </div>
+
+                <!-- Dynamic Error -->
+                <div class="demo-item">
+                    <span class="demo-label">Dynamic Error (type "error")</span>
+                    <t-inp id="errorInput" type="text" placeholder="Type 'error' to trigger"></t-inp>
+                    <div id="errorMsg" class="message info">Type "error" to see error state</div>
+                </div>
+
+                <!-- URL Validation -->
+                <div class="demo-item">
+                    <span class="demo-label">URL Validation (Live)</span>
+                    <t-inp id="urlInput" type="url" placeholder="https://example.com"></t-inp>
+                    <div id="urlMsg" class="message info">Enter a valid URL</div>
+                </div>
+
+                <!-- Pattern Validation -->
+                <div class="demo-item">
+                    <span class="demo-label">Letters Only (Live)</span>
+                    <t-inp id="patternInput" type="text" placeholder="Letters only" pattern="^[A-Za-z ]*$"></t-inp>
+                    <div id="patternMsg" class="message info">Only letters allowed</div>
+                </div>
+
+                <!-- Number Range -->
+                <div class="demo-item">
+                    <span class="demo-label">Number Range 0-100 (Live)</span>
+                    <t-inp id="rangeInput" type="number" placeholder="0-100" min="0" max="100"></t-inp>
+                    <div id="rangeMsg" class="message info">Enter number between 0-100</div>
+                </div>
+
+                <!-- Required Field -->
+                <div class="demo-item">
+                    <span class="demo-label">Required Field</span>
+                    <form id="reqForm" novalidate>
+                        <t-inp id="reqInput" type="text" placeholder="Required field" required></t-inp>
+                        <div class="button-row">
+                            <t-btn id="reqSubmit" variant="primary">Submit</t-btn>
+                        </div>
+                        <div id="reqMsg" class="message"></div>
+                    </form>
+                </div>
+
+                <!-- Password Input -->
+                <div class="demo-item">
+                    <span class="demo-label">Password with Toggle (Optional)</span>
+                    <t-inp id="passwordInput" type="password" placeholder="Enter password (optional)" minlength="8"></t-inp>
+                    <div id="passwordMsg" class="message info">Optional - minimum 8 characters if provided</div>
+                </div>
+
+                <!-- Warning State -->
+                <div class="demo-item">
+                    <span class="demo-label">Warning State</span>
+                    <div class="warning-input-wrapper">
+                        <t-inp id="warnInput" type="text" value="Warning value"></t-inp>
+                    </div>
+                    <div class="message warning">
+                        <span id="warnIcon"></span> This value may cause issues
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+  import '../js/components/TInputLit.js';
+  import '../js/components/TButtonLit.js';
+  import { warningIcon } from '../js/utils/phosphor-icons.js';
+
+  window.addEventListener('DOMContentLoaded', () => {
+    // Warning icon
+    const warnIconEl = document.getElementById('warnIcon');
+    if (warnIconEl) {
+      warnIconEl.innerHTML = warningIcon;
+      const svg = warnIconEl.querySelector('svg');
+      if (svg) {
+        svg.style.width = '14px';
+        svg.style.height = '14px';
+        svg.style.verticalAlign = 'middle';
+        svg.style.marginRight = '4px';
+        svg.style.fill = 'var(--terminal-yellow)';
+      }
+    }
+
+    // Character Counter
+    const charInput = document.getElementById('charInput');
+    const charCount = document.getElementById('charCount');
+    if (charInput && charCount) {
+      // Initial state
+      charCount.textContent = '0 / 50 characters';
+      charCount.className = 'message info';
+
+      charInput.addEventListener('input-value', (e) => {
+        const len = e.detail.value.length;
+        charCount.textContent = `${len} / 50 characters`;
+
+        if (len > 50) {
+          charCount.className = 'message error';
+        } else if (len >= 40) {
+          charCount.className = 'message warning';
+        } else {
+          charCount.className = 'message info';
+        }
+      });
+
+      // Listen for validation errors
+      charInput.addEventListener('input-error', (e) => {
+        charCount.className = 'message error';
+      });
+
+      charInput.addEventListener('input-valid', () => {
+        const len = (charInput.getValue() || '').length;
+        if (len >= 40 && len <= 50) {
+          charCount.className = 'message warning';
+        } else if (len < 40) {
+          charCount.className = 'message info';
+        }
+      });
+    }
+
+    // Email
+    const emailInput = document.getElementById('emailInput');
+    const emailMsg = document.getElementById('emailMsg');
+    if (emailInput && emailMsg) {
+      emailMsg.textContent = 'Enter a valid email address';
+      emailMsg.className = 'message info';
+      emailInput.addEventListener('input-error', (e) => {
+        emailMsg.textContent = e.detail?.message || 'Invalid email';
+        emailMsg.className = 'message error';
+      });
+      emailInput.addEventListener('input-valid', () => {
+        if ((emailInput.getValue() || '').trim() !== '') {
+          emailMsg.textContent = '✓ Valid email';
+          emailMsg.className = 'message success';
+        } else {
+          emailMsg.textContent = 'Enter a valid email address';
+          emailMsg.className = 'message info';
+        }
+      });
+    }
+
+    // Dynamic Error toggle
+    const errorInput = document.getElementById('errorInput');
+    const errorMsg = document.getElementById('errorMsg');
+    if (errorInput && errorMsg) {
+      errorInput.addEventListener('input-value', (e) => {
+        const value = (e.detail.value || '').toLowerCase();
+        if (value === 'error') {
+          errorInput.setError(true, '✗ Error state triggered!');
+          errorMsg.textContent = '✗ Error state triggered!';
+          errorMsg.className = 'message error';
+        } else {
+          errorInput.setError(false);
+          errorMsg.textContent = value ? 'Keep typing…' : 'Type "error" to see error state';
+          errorMsg.className = 'message info';
+        }
+      });
+    }
+
+    // URL
+    const urlInput = document.getElementById('urlInput');
+    const urlMsg = document.getElementById('urlMsg');
+    if (urlInput && urlMsg) {
+      urlMsg.textContent = 'Enter a valid URL';
+      urlMsg.className = 'message info';
+      urlInput.addEventListener('input-error', (e) => {
+        urlMsg.textContent = e.detail?.message || 'Invalid URL';
+        urlMsg.className = 'message error';
+      });
+      urlInput.addEventListener('input-valid', () => {
+        if ((urlInput.getValue() || '').trim() !== '') {
+          urlMsg.textContent = '✓ Valid URL';
+          urlMsg.className = 'message success';
+        } else {
+          urlMsg.textContent = 'Enter a valid URL';
+          urlMsg.className = 'message info';
+        }
+      });
+    }
+
+    // Letters and spaces only
+    const patternInput = document.getElementById('patternInput');
+    const patternMsg = document.getElementById('patternMsg');
+    if (patternInput && patternMsg) {
+      patternMsg.textContent = 'Only letters and spaces allowed';
+      patternMsg.className = 'message info';
+      patternInput.addEventListener('input-error', () => {
+        patternMsg.textContent = '✗ Only letters and spaces allowed';
+        patternMsg.className = 'message error';
+      });
+      patternInput.addEventListener('input-valid', () => {
+        if ((patternInput.getValue() || '').trim() !== '') {
+          patternMsg.textContent = '✓ Valid input';
+          patternMsg.className = 'message success';
+        } else {
+          patternMsg.textContent = 'Only letters and spaces allowed';
+          patternMsg.className = 'message info';
+        }
+      });
+    }
+
+    // Number range
+    const rangeInput = document.getElementById('rangeInput');
+    const rangeMsg = document.getElementById('rangeMsg');
+    if (rangeInput && rangeMsg) {
+      rangeMsg.textContent = 'Enter number between 0-100';
+      rangeMsg.className = 'message info';
+      rangeInput.addEventListener('input-error', (e) => {
+        rangeMsg.textContent = e.detail?.message || '✗ Invalid number';
+        rangeMsg.className = 'message error';
+      });
+      rangeInput.addEventListener('input-valid', () => {
+        if ((rangeInput.getValue() || '') !== '') {
+          rangeMsg.textContent = `✓ Valid (${rangeInput.getValue()})`;
+          rangeMsg.className = 'message success';
+        } else {
+          rangeMsg.textContent = 'Enter number between 0-100';
+          rangeMsg.className = 'message info';
+        }
+      });
+    }
+
+    // Required field
+    const reqForm = document.getElementById('reqForm');
+    const reqInput = document.getElementById('reqInput');
+    const reqSubmit = document.getElementById('reqSubmit');
+    const reqMsg = document.getElementById('reqMsg');
+    if (reqForm && reqInput && reqSubmit && reqMsg) {
+      reqForm.addEventListener('submit', (e) => e.preventDefault());
+      reqSubmit.addEventListener('button-click', () => {
+        if (reqInput.validate()) {
+          reqMsg.textContent = '✓ Form submitted successfully!';
+          reqMsg.className = 'message success';
+        } else {
+          reqMsg.textContent = '✗ This field is required';
+          reqMsg.className = 'message error';
+        }
+      });
+      reqInput.addEventListener('input-error', () => {
+        reqMsg.textContent = '✗ This field is required';
+        reqMsg.className = 'message error';
+      });
+      reqInput.addEventListener('input-valid', () => {
+        reqMsg.textContent = '';
+      });
+    }
+
+    // Password field (optional with strength indicator)
+    const passwordInput = document.getElementById('passwordInput');
+    const passwordMsg = document.getElementById('passwordMsg');
+    if (passwordInput && passwordMsg) {
+      passwordInput.addEventListener('input-value', (e) => {
+        const value = e.detail?.value || '';
+
+        // If empty, it's optional so no error
+        if (value.length === 0) {
+          passwordMsg.textContent = 'Optional - minimum 8 characters if provided';
+          passwordMsg.className = 'message info';
+          passwordInput.setError(false);
+        } else if (value.length < 8) {
+          // Only show error if user has started typing
+          passwordMsg.textContent = `✗ Too short (${value.length}/8 characters)`;
+          passwordMsg.className = 'message error';
+          // Don't call setError here - let validate() handle it
+        } else {
+          // Check password strength
+          const hasUpper = /[A-Z]/.test(value);
+          const hasLower = /[a-z]/.test(value);
+          const hasNumber = /[0-9]/.test(value);
+          const hasSpecial = /[^A-Za-z0-9]/.test(value);
+          const strength = [hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length;
+
+          if (strength === 4) {
+            passwordMsg.textContent = '✓ Strong password';
+            passwordMsg.className = 'message success';
+          } else if (strength >= 2) {
+            passwordMsg.textContent = '✓ Valid password (could be stronger)';
+            passwordMsg.className = 'message warning';
+          } else {
+            passwordMsg.textContent = '✓ Valid length (add variety for strength)';
+            passwordMsg.className = 'message info';
+          }
+          passwordInput.setError(false);
+        }
+      });
+
+      // Only validate on blur/enter for password
+      passwordInput.addEventListener('input-blur', () => {
+        if (passwordInput.getValue() && passwordInput.getValue().length < 8) {
+          passwordInput.validate();
+        }
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

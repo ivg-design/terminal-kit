@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Color Picker - JSColor Demo</title>
+
+    <!-- Load CSS -->
+    <link rel="stylesheet" href="../css/theme/terminal.css">
+    <link rel="stylesheet" href="../css/components/simple-color-picker.css">
+
+    <style>
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            background: #0a0a0a;
+            color: #00ff41;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 2px solid #00ff41;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+        }
+
+        .demo-section h2 {
+            color: #00ff41;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .demo-row {
+            margin-bottom: 20px;
+        }
+
+        .demo-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: #00cc33;
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            font-size: 11px;
+            font-family: monospace;
+            color: #00ff41;
+            min-height: 100px;
+            overflow: auto;
+        }
+
+        .info {
+            color: #00cc33;
+            font-size: 12px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid #00cc33;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>Simple Color Picker Demo</h1>
+
+        <div class="info">
+            ✅ Using JSColor library - reliable, single file, supports alpha channel<br>
+            ✅ No more Pickr bugs! Clean and simple implementation<br>
+            ✅ Full RGBA support with opacity slider
+        </div>
+
+        <div class="demo-section">
+            <h2>Basic Examples</h2>
+
+            <div class="demo-row">
+                <span class="demo-label">Default Color Picker (with alpha)</span>
+                <simple-color-picker id="picker1"
+                    value="#00ff41ff"
+                    label="Theme">
+                </simple-color-picker>
+            </div>
+
+            <div class="demo-row">
+                <span class="demo-label">Compact Variant (no icon)</span>
+                <simple-color-picker id="picker2"
+                    value="#ff0041"
+                    label="Alert"
+                    variant="compact">
+                </simple-color-picker>
+            </div>
+
+            <div class="demo-row">
+                <span class="demo-label">Minimal Variant (input only)</span>
+                <simple-color-picker id="picker3"
+                    value="#0099ffcc"
+                    variant="minimal">
+                </simple-color-picker>
+            </div>
+
+            <div class="demo-row">
+                <span class="demo-label">Without Alpha Channel</span>
+                <simple-color-picker id="picker4"
+                    value="#ffcc00"
+                    label="Warning"
+                    alpha="false">
+                </simple-color-picker>
+            </div>
+
+            <div class="demo-row">
+                <span class="demo-label">Disabled State</span>
+                <simple-color-picker id="picker5"
+                    value="#666666"
+                    label="Disabled"
+                    disabled>
+                </simple-color-picker>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>Event Output</h2>
+            <div id="output" class="output">
+                Events will appear here...
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Components -->
+    <script type="module">
+        import '../js/components/TerminalComponent.js';
+        import '../js/components/SimpleColorPicker.js';
+
+        const output = document.getElementById('output');
+
+        function log(message) {
+            const time = new Date().toLocaleTimeString();
+            output.innerHTML += `[${time}] ${message}\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Wait for components to be defined
+        customElements.whenDefined('simple-color-picker').then(() => {
+            document.querySelectorAll('simple-color-picker').forEach((picker, index) => {
+                // Listen for change events (on release)
+                picker.addEventListener('change', (e) => {
+                    log(`Picker ${index + 1} changed: ${e.detail.value} (${e.detail.rgba})`);
+                });
+
+                // Listen for input events (live updates)
+                picker.addEventListener('input', (e) => {
+                    log(`Picker ${index + 1} input: ${e.detail.value}`);
+                });
+            });
+
+            log('Simple Color Picker demo initialized');
+
+            // Test API
+            setTimeout(() => {
+                const picker1 = document.getElementById('picker1');
+                log(`Picker 1 value: ${picker1.getValue()}`);
+                log(`Picker 1 RGBA: ${picker1.getRGBA()}`);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
