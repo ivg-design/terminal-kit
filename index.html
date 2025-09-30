@@ -456,6 +456,115 @@
                     svg.style.cssText = 'width: 14px; height: 14px; vertical-align: middle; display: inline-block; margin-right: 4px; position: relative; top: -1px;';
                 }
             }
+
+            // ============ NAVIGATION DEBUGGING ============
+            console.log('%c=== Navigation Debug Started ===', 'color: #00ff41; font-weight: bold');
+            console.log('Current URL:', window.location.href);
+            console.log('Current pathname:', window.location.pathname);
+            console.log('Base URL:', window.location.origin);
+
+            // Track all demo card clicks
+            const demoCards = document.querySelectorAll('.demo-card');
+            console.log(`Found ${demoCards.length} demo cards`);
+
+            demoCards.forEach((card, index) => {
+                const href = card.getAttribute('href');
+                console.log(`Demo card ${index + 1}: ${href}`);
+
+                card.addEventListener('click', (e) => {
+                    console.log('%c=== Demo Card Clicked ===', 'color: #ffff00; font-weight: bold');
+                    console.log('Clicked element:', e.currentTarget);
+                    console.log('Target href:', href);
+                    console.log('Event defaultPrevented:', e.defaultPrevented);
+                    console.log('Event type:', e.type);
+                    console.log('Shift key:', e.shiftKey);
+                    console.log('Ctrl/Cmd key:', e.ctrlKey || e.metaKey);
+
+                    // Check if navigation is being prevented
+                    if (e.defaultPrevented) {
+                        console.warn('Navigation was prevented!');
+                    }
+
+                    // Log the navigation attempt
+                    console.log('Attempting navigation to:', href);
+
+                    // Track if the page actually changes
+                    setTimeout(() => {
+                        console.log('After navigation - Current URL:', window.location.href);
+                    }, 100);
+                });
+            });
+
+            // Track all navigation links
+            const navLinks = document.querySelectorAll('.nav-link');
+            console.log(`Found ${navLinks.length} nav links`);
+
+            navLinks.forEach((link, index) => {
+                const href = link.getAttribute('href');
+                console.log(`Nav link ${index + 1}: ${href}`);
+
+                link.addEventListener('click', (e) => {
+                    console.log('%c=== Nav Link Clicked ===', 'color: #00ffff; font-weight: bold');
+                    console.log('Clicked nav link:', href);
+                    console.log('Event defaultPrevented:', e.defaultPrevented);
+                });
+            });
+
+            // Monitor for any errors during navigation
+            window.addEventListener('error', (e) => {
+                console.error('%c=== Navigation Error ===', 'color: #ff0000; font-weight: bold');
+                console.error('Error message:', e.message);
+                console.error('Error source:', e.filename);
+                console.error('Line:', e.lineno, 'Column:', e.colno);
+            });
+
+            // Check for any global click handlers that might interfere
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('a')) {
+                    console.log('%c=== Global Click on Link ===', 'color: #ff00ff; font-weight: bold');
+                    console.log('Clicked element:', e.target);
+                    console.log('Closest anchor:', e.target.closest('a'));
+                    console.log('Event phase:', e.eventPhase);
+                }
+            }, true); // Use capture phase to catch early
+
+            // Check if any scripts are modifying links
+            setTimeout(() => {
+                const allLinks = document.querySelectorAll('a[href^="/demos/"]');
+                console.log('%c=== Link Status Check ===', 'color: #00ff41; font-weight: bold');
+                allLinks.forEach(link => {
+                    console.log(`Link: ${link.getAttribute('href')} | onClick: ${link.onclick} | Listeners: ${link.getEventListeners ? 'checking...' : 'unable to check'}`);
+                });
+            }, 1000);
+
+            // Monitor hash changes and pushState
+            window.addEventListener('hashchange', () => {
+                console.log('%c=== Hash Changed ===', 'color: #ffaa00; font-weight: bold');
+                console.log('New hash:', window.location.hash);
+            });
+
+            window.addEventListener('popstate', () => {
+                console.log('%c=== Popstate Event ===', 'color: #aa00ff; font-weight: bold');
+                console.log('New location:', window.location.href);
+            });
+
+            // Override pushState and replaceState to track programmatic navigation
+            const originalPushState = history.pushState;
+            const originalReplaceState = history.replaceState;
+
+            history.pushState = function() {
+                console.log('%c=== PushState Called ===', 'color: #00aaff; font-weight: bold');
+                console.log('Arguments:', arguments);
+                return originalPushState.apply(history, arguments);
+            };
+
+            history.replaceState = function() {
+                console.log('%c=== ReplaceState Called ===', 'color: #ff00aa; font-weight: bold');
+                console.log('Arguments:', arguments);
+                return originalReplaceState.apply(history, arguments);
+            };
+
+            console.log('%c=== Navigation Debug Setup Complete ===', 'color: #00ff41; font-weight: bold');
         </script>
     </body>
 
