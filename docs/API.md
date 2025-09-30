@@ -35,7 +35,7 @@ If you see references to:
 - [TSliderLit](./components/TerminalSlider.md) - Range slider component
 - [TToggleLit](./components/TToggleLit.md) - Toggle switch and checkbox component ✅ **CURRENT**
 - [TTextareaLit](./components/TerminalTextarea.md) - Multiline text input
-- [TLoaderLit](./components/TerminalLoader.md) - Loading indicators
+- [TLoaderLit](./components/TLoaderLit.md) - Loading indicators with 55+ animation types ✅ **DOCUMENTED**
 
 ### Legacy Components (Deprecated)
 - [TerminalComponent](./components/TerminalComponent.md) - ⚠️ DEPRECATED: Old base class

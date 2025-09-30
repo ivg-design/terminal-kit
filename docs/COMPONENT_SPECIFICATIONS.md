@@ -829,11 +829,20 @@ Named slots depend on layout:
 **Profile:** DISPLAY
 **Tag:** `<t-ldr>`
 **Category:** Display
+**Version:** 3.0.0
+
+#### Features
+- 55+ spinner animation types (Epic Spinners, React Spinners, CSS Spinners)
+- Customizable size, color, and animation speed
+- Optional loading text display
+- Glow effect support
+- Visibility control methods
 
 #### Blocks Required
 
 - ✅ BLOCK 1-7 (basic lifecycle)
-- ❌ BLOCK 8-9 (no public methods or events)
+- ✅ BLOCK 8 (public methods: show, hide, toggle, setType, getAvailableTypes, setText)
+- ✅ BLOCK 9 (events: loader-connected, loader-show, loader-hide)
 - ❌ BLOCK 10 (not a container)
 - ❌ BLOCK 11 (no validation)
 - ✅ BLOCK 12-13 (render + helpers)
@@ -842,17 +851,21 @@ Named slots depend on layout:
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| type | enum | 'spinner' | ❌ | ✅ | spinner, dots, bars, pulse |
-| size | enum | 'medium' | ❌ | ✅ | small, medium, large |
-| color | string | '' | ❌ | ✅ | CSS color value |
-| text | string | '' | ❌ | ✅ | Optional loading text |
+| type | String | 'atom-spinner' | ✅ | ✅ | One of 55 available spinner types |
+| size | Number | 60 | ❌ | ✅ | Pixels or 'small'(30), 'medium'(60), 'large'(90) |
+| color | String | '#00ff41' | ❌ | ✅ | Any CSS color value |
+| duration | Number | 1 | ❌ | ✅ | Animation speed in seconds |
+| text | String | '' | ❌ | ✅ | Optional loading text below spinner |
+| hidden | Boolean | false | ❌ | ✅ | Visibility control |
+| glow | Boolean | false | ❌ | ✅ | Adds drop-shadow glow effect |
 
 #### Events
 
 | Name | Detail | Description |
 |------|--------|-------------|
-| loader-show | `{}` | Fires when shown |
-| loader-hide | `{}` | Fires when hidden |
+| loader-connected | `{ type: String }` | Fires when connected to DOM |
+| loader-show | `{ type: String }` | Fires when shown via show() |
+| loader-hide | `{ type: String }` | Fires when hidden via hide() |
 
 #### Slots
 
@@ -862,8 +875,12 @@ None
 
 | Name | Params | Returns | Description |
 |------|--------|---------|-------------|
-| show() | - | void | Show loader |
-| hide() | - | void | Hide loader |
+| show() | - | void | Shows the loader |
+| hide() | - | void | Hides the loader |
+| toggle() | - | void | Toggles visibility |
+| setType(type) | type: String | void | Sets spinner type with validation |
+| getAvailableTypes() | - | String[] | Returns all 55 spinner types |
+| setText(text) | text: String | void | Updates loading text |
 
 #### Special Patterns
 
