@@ -60,11 +60,12 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       expect(properties.swatches).toBeDefined();
     });
 
-    it('should document all 4 methods', () => {
+    it('should document all 5 methods', () => {
       const { methods } = TColorPickerManifest;
 
-      expect(methods.setColor).toBeDefined();
-      expect(methods.getColor).toBeDefined();
+      expect(methods.setIcon).toBeDefined();
+      expect(methods.setValue).toBeDefined();
+      expect(methods.getValue).toBeDefined();
       expect(methods.clearAllCustomSwatches).toBeDefined();
       expect(methods.addSwatch).toBeDefined();
     });
@@ -72,7 +73,7 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
     it('should document all 5 events', () => {
       const { events } = TColorPickerManifest;
 
-      expect(events['color-change']).toBeDefined();
+      expect(events['change']).toBeDefined();
       expect(events['color-save']).toBeDefined();
       expect(events['swatch-added']).toBeDefined();
       expect(events['swatches-updated']).toBeDefined();
@@ -298,7 +299,7 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       element.addEventListener('color-change', handler);
 
       // Trigger color change through public API
-      element.setColor('#ff0000ff');
+      element.setValue('#ff0000ff');
       await element.updateComplete;
 
       // Note: Event might be emitted through iro.js interaction
@@ -363,34 +364,34 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
   // SUITE 6: Form Participation
   // ========================================
   describe('Suite 6: Form Participation', () => {
-    it('should have form value through getColor()', () => {
-      const value = element.getColor();
+    it('should have form value through getValue()', () => {
+      const value = element.getValue();
       expect(value).toBeDefined();
       expect(typeof value).toBe('string');
     });
 
-    it('should update form value through setColor()', async () => {
+    it('should update form value through setValue()', async () => {
       const newColor = '#0000ffff';
-      element.setColor(newColor);
+      element.setValue(newColor);
       await element.updateComplete;
-      expect(element.getColor()).toBe(newColor);
+      expect(element.getValue()).toBe(newColor);
     });
 
     it('should maintain value after multiple updates', async () => {
-      element.setColor('#ff0000ff');
+      element.setValue('#ff0000ff');
       await element.updateComplete;
-      expect(element.getColor()).toBe('#ff0000ff');
+      expect(element.getValue()).toBe('#ff0000ff');
 
-      element.setColor('#00ff00ff');
+      element.setValue('#00ff00ff');
       await element.updateComplete;
-      expect(element.getColor()).toBe('#00ff00ff');
+      expect(element.getValue()).toBe('#00ff00ff');
     });
 
     it('should be accessible via form controls', () => {
-      expect(element.getColor).toBeDefined();
-      expect(element.setColor).toBeDefined();
-      expect(typeof element.getColor).toBe('function');
-      expect(typeof element.setColor).toBe('function');
+      expect(element.getValue).toBeDefined();
+      expect(element.setValue).toBeDefined();
+      expect(typeof element.getValue).toBe('function');
+      expect(typeof element.setValue).toBe('function');
     });
 
     it('should handle disabled state for forms', async () => {
@@ -537,6 +538,17 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       expect(() => element.addSwatch('#zzz')).toThrow('Invalid hex color format');
     });
 
+    it('should have receiveContext method', () => {
+      expect(element.receiveContext).toBeDefined();
+      expect(typeof element.receiveContext).toBe('function');
+    });
+
+    it('should accept context from parent', () => {
+      const context = { size: 'large', variant: 'standard' };
+      expect(() => {
+        element.receiveContext(context);
+      }).not.toThrow();
+    });
   });
 
   // ========================================
@@ -638,12 +650,12 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       // Call the private method directly
       element._showClearConfirmation();
 
-      const modal = element.shadowRoot.querySelector('.iro-modal-overlay');
+      const modal = document.querySelector('.iro-modal-overlay');
       expect(modal).toBeTruthy();
 
       // Cleanup
       if (modal) {
-        element.shadowRoot.removeChild(modal);
+        document.body.removeChild(modal);
       }
     });
 
@@ -651,34 +663,34 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       element._customSwatches = ['#ff0000', '#00ff00'];
       element._showClearConfirmation();
 
-      const modal = element.shadowRoot.querySelector('.iro-modal-overlay');
+      const modal = document.querySelector('.iro-modal-overlay');
       const confirmBtn = modal?.querySelector('[data-action="confirm"]');
 
       expect(confirmBtn).toBeTruthy();
       confirmBtn?.click();
 
       expect(element._customSwatches).toEqual([]);
-      expect(element.shadowRoot.querySelector('.iro-modal-overlay')).toBeFalsy();
+      expect(document.querySelector('.iro-modal-overlay')).toBeFalsy();
     });
 
     it('should cancel clear operation', () => {
       element._customSwatches = ['#ff0000', '#00ff00'];
       element._showClearConfirmation();
 
-      const modal = element.shadowRoot.querySelector('.iro-modal-overlay');
+      const modal = document.querySelector('.iro-modal-overlay');
       const cancelBtn = modal?.querySelector('[data-action="cancel"]');
 
       expect(cancelBtn).toBeTruthy();
       cancelBtn?.click();
 
       expect(element._customSwatches).toEqual(['#ff0000', '#00ff00']);
-      expect(element.shadowRoot.querySelector('.iro-modal-overlay')).toBeFalsy();
+      expect(document.querySelector('.iro-modal-overlay')).toBeFalsy();
     });
 
     it('should close modal on overlay click', () => {
       element._showClearConfirmation();
 
-      const modal = element.shadowRoot.querySelector('.iro-modal-overlay');
+      const modal = document.querySelector('.iro-modal-overlay');
       expect(modal).toBeTruthy();
 
       // Simulate clicking the overlay (not the modal content)
@@ -686,7 +698,7 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       Object.defineProperty(clickEvent, 'target', { value: modal, enumerable: true });
       modal?.dispatchEvent(clickEvent);
 
-      expect(element.shadowRoot.querySelector('.iro-modal-overlay')).toBeFalsy();
+      expect(document.querySelector('.iro-modal-overlay')).toBeFalsy();
     });
 
     it('should save current color to swatches', () => {
@@ -712,14 +724,14 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
 
     it('should load custom swatches from localStorage', () => {
       const testSwatches = ['#ff0000ff', '#00ff00ff'];
-      localStorage.setItem('t-clr-custom-swatches', JSON.stringify(testSwatches));
+      localStorage.setItem('terminal-iro-swatches', JSON.stringify(testSwatches));
 
       element._loadCustomSwatches();
 
       expect(element._customSwatches).toEqual(testSwatches);
 
       // Cleanup localStorage for next tests
-      localStorage.removeItem('t-clr-custom-swatches');
+      localStorage.removeItem('terminal-iro-swatches');
     });
 
     it('should handle localStorage errors gracefully', () => {
@@ -843,17 +855,17 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
 
       // Cleanup
       if (element._popoverElement) {
-        element.shadowRoot.removeChild(element._popoverElement);
+        document.body.removeChild(element._popoverElement);
       }
     });
 
     it('should initialize iro color picker', () => {
-      // Create mock popover with picker container in shadow DOM
+      // Create mock popover with picker container
       const popover = document.createElement('div');
       const pickerContainer = document.createElement('div');
       pickerContainer.id = `picker-${element._pickerId}`;
       popover.appendChild(pickerContainer);
-      element.shadowRoot.appendChild(popover);
+      document.body.appendChild(popover);
       element._popoverElement = popover;
 
       // Mock iro global
@@ -870,7 +882,7 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       expect(element._colorPicker).toBeTruthy();
 
       // Cleanup
-      element.shadowRoot.removeChild(popover);
+      document.body.removeChild(popover);
       delete window.iro;
     });
   });

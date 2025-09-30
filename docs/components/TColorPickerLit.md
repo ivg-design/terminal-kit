@@ -43,14 +43,12 @@ A modern color selection component built with **iro.js** and **Lit**, featuring 
 | Property | Type | Description |
 |----------|------|-------------|
 | `value` | string | Current color value in hex8 format (e.g., `#00ff41ff`) |
-| `label1` | string | First line of label text |
-| `label2` | string | Second line of label text |
+| `customSwatches` | string[] | Array of custom swatch colors (max 20) |
+| `colorPicker` | IroColorPicker | iro.js color picker instance |
 | `disabled` | boolean | Disabled state |
 | `variant` | string | Current variant: `'large'`, `'standard'`, or `'compact'` |
 | `elements` | string | Current element configuration |
-| `showClearButton` | boolean | Whether to show clear button in picker |
-| `customIcon` | string | Custom icon SVG string (internal) |
-| `customSwatches` | string[] | Array of custom swatch colors (read-only, max 20) |
+| `customIcon` | string | Custom icon SVG string |
 
 ## Methods
 
@@ -114,20 +112,6 @@ Sets the color value programmatically.
 
 ```javascript
 picker.setValue('#ff6b35ff');
-```
-
-### `receiveContext(context)`
-Receives and applies context from parent components.
-
-**Parameters:**
-- `context` (object): Context object from parent
-
-**Returns:** void
-
-**Example:**
-```javascript
-// Usually called by parent components
-picker.receiveContext({ theme: 'dark' });
 ```
 
 ### Enabling/Disabling
@@ -745,13 +729,7 @@ npm install lit @jaames/iro
 
 ### Import
 ```javascript
-import { TColorPicker } from './js/components/TColorPickerLit.js';
-
-// The component auto-registers as <t-clr>
-// Or manually register if needed:
-if (!customElements.get('t-clr')) {
-  customElements.define('t-clr', TColorPicker);
-}
+import './js/components/TColorPickerLit.js';
 ```
 
 ## Browser Support

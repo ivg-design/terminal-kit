@@ -20,12 +20,6 @@ export default defineConfig({
   server: {
     port: 12359,
     open: false,
-    // Handle demo routes that don't exist yet
-    middlewareMode: false,
-    fs: {
-      strict: false
-    }
   },
-  // Serve public directory properly
-  publicDir: 'public'
+  // No plugins needed - Lit components work out of the box with Vite
 });

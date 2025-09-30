@@ -8,8 +8,7 @@
 
         <!-- Load CSS -->
         <link rel="stylesheet" href="../css/theme/terminal.css">
-        <link rel="stylesheet" href="../css/components/user-menu.css">
-        <link rel="stylesheet" href="../css/components/buttons.css">
+        <link rel="stylesheet" href="../css/components/t-usr.css">
 
         <style>
             html, body {
@@ -137,7 +136,7 @@
             }
 
             .mobile-label {
-                font-size: 12px; 
+                font-size: 12px;
                 color: #00ff41;
             }
         </style>
@@ -164,63 +163,71 @@
                 <div class="demo-grid">
                     <div class="demo-item">
                         <span class="demo-label">Default User Menu</span>
-                        <terminal-user-menu 
+                        <t-usr
                             id="userMenu1"
                             user-name="John Doe">
-                        </terminal-user-menu>
+                        </t-usr>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">With Avatar</span>
-                        <terminal-user-menu 
+                        <t-usr
                             id="userMenu2"
                             user-name="Jane Smith"
                             user-avatar="https://i.pravatar.cc/150?img=5">
-                        </terminal-user-menu>
+                        </t-usr>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Custom Menu Items</span>
-                        <terminal-user-menu 
+                        <t-usr
                             id="userMenu3"
                             user-name="Admin User">
-                        </terminal-user-menu>
+                        </t-usr>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">Disabled State</span>
-                        <terminal-user-menu 
+                        <t-usr
                             user-name="Disabled User"
                             disabled>
-                        </terminal-user-menu>
+                        </t-usr>
                     </div>
 
                     <div class="demo-item">
-                        <span class="demo-label">Mobile View (Simulated)</span>
+                        <span class="demo-label">Compact/Mobile View (Simulated)</span>
                         <div class="mobile-simulation">
                             <div class="mobile-header">
                                 <span class="mobile-label">Mobile Header</span>
-                                <terminal-user-menu 
+                                <t-usr
                                     id="userMenuMobile"
                                     user-name="Alexander Hamilton"
                                     user-avatar="https://i.pravatar.cc/150?img=8"
-                                    class="mobile-view">
-                                </terminal-user-menu>
+                                    compact>
+                                </t-usr>
                             </div>
                         </div>
                         <div style="margin-top: 10px; font-size: 11px; color: #00ff41;">
-                            Shows initials "AH" - simulates mobile view without resizing browser
+                            Shows initials "AH" - uses compact mode without resizing browser
                         </div>
                     </div>
 
                     <div class="demo-item">
                         <span class="demo-label">With Email</span>
-                        <terminal-user-menu 
+                        <t-usr
                             id="userMenu4"
                             user-name="Dev User"
                             user-email="dev@example.com"
                             user-avatar="https://i.pravatar.cc/150?img=3">
-                        </terminal-user-menu>
+                        </t-usr>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Compact Mode (No Avatar)</span>
+                        <t-usr
+                            user-name="Compact User"
+                            compact>
+                        </t-usr>
                     </div>
                 </div>
             </div>
@@ -245,28 +252,31 @@
 
                 <div class="code-example">
                     <pre>&lt;!-- Basic user menu --&gt;
-&lt;terminal-user-menu user-name="John Doe"&gt;&lt;/terminal-user-menu&gt;
+&lt;t-usr user-name="John Doe"&gt;&lt;/t-usr&gt;
 
 &lt;!-- With avatar --&gt;
-&lt;terminal-user-menu 
+&lt;t-usr
   user-name="Jane Smith"
   user-avatar="/path/to/avatar.jpg"&gt;
-&lt;/terminal-user-menu&gt;
+&lt;/t-usr&gt;
 
 &lt;!-- With email --&gt;
-&lt;terminal-user-menu 
+&lt;t-usr
   user-name="Dev User"
   user-email="dev@example.com"
   user-avatar="https://i.pravatar.cc/150?img=3"&gt;
-&lt;/terminal-user-menu&gt;
+&lt;/t-usr&gt;
 
 &lt;!-- Disabled state --&gt;
-&lt;terminal-user-menu user-name="Disabled" disabled&gt;&lt;/terminal-user-menu&gt;</pre>
+&lt;t-usr user-name="Disabled" disabled&gt;&lt;/t-usr&gt;
+
+&lt;!-- Compact mode (shows initials) --&gt;
+&lt;t-usr user-name="Mobile User" compact&gt;&lt;/t-usr&gt;</pre>
                 </div>
 
                 <div class="code-example">
                     <pre>// JavaScript API
-const userMenu = document.querySelector('terminal-user-menu');
+const userMenu = document.querySelector('t-usr');
 
 // Get user info
 console.log(userMenu.userName);
@@ -278,9 +288,25 @@ userMenu.userName = 'New Name';
 userMenu.userEmail = 'newemail@example.com';
 userMenu.userAvatar = '/path/to/new/avatar.jpg';
 
+// Update menu items
+userMenu.setMenuItems([
+    { id: 'custom', label: 'Custom Item', icon: 'gear' },
+    { type: 'separator' },
+    { id: 'signout', label: 'Sign Out', icon: 'signOut' }
+]);
+
+// Open/close/toggle menu
+userMenu.openMenu();
+userMenu.closeMenu();
+userMenu.toggleMenu();
+
 // Enable/disable
 userMenu.disabled = true;
 userMenu.disabled = false;
+
+// Toggle compact mode
+userMenu.compact = true; // Shows initials only
+userMenu.compact = false; // Shows full name
 
 // Event listeners
 userMenu.addEventListener('menu-open', () => {
@@ -291,8 +317,8 @@ userMenu.addEventListener('menu-close', () => {
     console.log('User menu closed');
 });
 
-userMenu.addEventListener('menu-item-click', (e) => {
-    console.log('Menu item clicked:', e.detail.item);
+userMenu.addEventListener('menu-select', (e) => {
+    console.log('Menu item selected:', e.detail.itemId);
 });</pre>
                 </div>
             </div>
@@ -300,8 +326,7 @@ userMenu.addEventListener('menu-item-click', (e) => {
 
         <!-- Import Components -->
         <script type="module">
-            import '../js/components/TerminalComponent.js';
-            import '../js/components/TerminalUserMenu.js';
+            import '../js/components/TUserMenuLit.js';
 
             function logEvent(message) {
                 const eventLog = document.getElementById('eventLog');
@@ -313,25 +338,40 @@ userMenu.addEventListener('menu-item-click', (e) => {
             }
 
             // Setup event listeners after components load
-            setTimeout(() => {
-                document.querySelectorAll('terminal-user-menu').forEach((menu, index) => {
-                    const userName = menu.getAttribute('user-name') || `Menu ${index + 1}`;
-                    
-                    menu.addEventListener('menu-open', () => {
-                        logEvent(`${userName} menu opened`);
+            window.customElements.whenDefined('t-usr').then(() => {
+                // Small delay to ensure properties are initialized
+                setTimeout(() => {
+                    document.querySelectorAll('t-usr').forEach((menu, index) => {
+                        const userName = menu.userName || `Menu ${index + 1}`;
+
+                        menu.addEventListener('menu-open', () => {
+                            logEvent(`${userName} menu opened`);
+                        });
+
+                        menu.addEventListener('menu-close', () => {
+                            logEvent(`${userName} menu closed`);
+                        });
+
+                        menu.addEventListener('menu-select', (e) => {
+                            logEvent(`${userName} menu item selected: ${e.detail?.itemId || 'unknown'}`);
+                        });
                     });
 
-                    menu.addEventListener('menu-close', () => {
-                        logEvent(`${userName} menu closed`);
-                    });
+                    // Customize menu for Admin User
+                    const adminMenu = document.getElementById('userMenu3');
+                    if (adminMenu) {
+                        adminMenu.setMenuItems([
+                            { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
+                            { id: 'users', label: 'Manage Users', icon: 'users' },
+                            { id: 'settings', label: 'Settings', icon: 'gear' },
+                            { type: 'separator' },
+                            { id: 'logout', label: 'Logout', icon: 'signOut' }
+                        ]);
+                    }
 
-                    menu.addEventListener('menu-item-click', (e) => {
-                        logEvent(`${userName} menu item clicked: ${e.detail?.item || 'unknown'}`);
-                    });
-                });
-                
-                logEvent('User menu demo initialized');
-            }, 100);
+                    logEvent('User menu demo initialized');
+                }, 100);
+            });
         </script>
     </body>
 

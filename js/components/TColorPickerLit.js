@@ -84,8 +84,8 @@ import iro from '@jaames/iro';
  * - **ESC**: Close picker (handled by document click outside)
  *
  * @events
- * - **color-change**: Fired when color value changes (250ms debounced)
- *   - detail: { value: string, hex: string, rgb?: object, hsl?: object }
+ * - **change**: Fired when color value changes (250ms debounced)
+ *   - detail: { value: string, color: string }
  *
  * @css-variables
  * - **--t-clr-bg**: Background color (default: var(--terminal-bg, #242424))
@@ -97,6 +97,13 @@ import iro from '@jaames/iro';
  * @external-dependencies
  * - **@jaames/iro**: iro.js color picker library
  * - **Phosphor Icons**: paletteIcon, xIcon, floppyDiskIcon, trashIcon
+ * - **Global CSS**: css/components/t-clr-iro.css (must be linked in HTML)
+ *
+ * @global-css-requirement
+ * The popover is appended to document.body (light DOM) and requires global CSS:
+ * ```html
+ * <link rel="stylesheet" href="css/components/t-clr-iro.css">
+ * ```
  *
  * @example Basic usage
  * <t-clr value="#00ff41ff"></t-clr>
@@ -427,143 +434,53 @@ export class TColorPicker extends LitElement {
 
 		/* iro.js popover styling */
 		.iro-popover {
-			position: fixed;
+			position: absolute;
 			z-index: 10000;
 			background: #1a1a1a;
-			border: 1px solid #00ff41;
+			border: 1px solid var(--t-clr-border);
 			border-radius: 4px;
 			padding: 16px;
 			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
 			display: none;
-			width: 440px;
-			max-width: calc(100vw - 20px);
-			overflow: visible;
-			box-sizing: border-box;
-		}
-
-		.iro-popover * {
-			box-sizing: border-box;
+			min-width: 240px;
 		}
 
 		.iro-popover.open {
-			display: grid;
-			grid-template-columns: 212px 180px;
-			gap: 16px;
-			contain: layout;
+			display: block;
 		}
 
 		.iro-container {
-			grid-row: 1 / -1;
-			height: 192px;
-			width: 212px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			overflow: visible;
-			position: relative;
-		}
-
-		/* Override iro.js internal spacing */
-		.iro-container .IroColorPicker {
-			margin: 0 !important;
-			height: 180px !important;
-			display: flex !important;
-			gap: 10px !important;
-			box-sizing: content-box !important;
-		}
-
-		.iro-container .IroSlider {
-			margin: 0 !important;
-			padding: 0 !important;
-			width: 20px !important;
-			height: 180px !important;
-			position: relative !important;
-		}
-
-		.iro-container .IroBox {
-			margin: 0 !important;
-			width: 150px !important;
-			height: 180px !important;
-		}
-
-		/* Ensure iro.js components stay within bounds */
-		.iro-container svg {
-			max-width: 100%;
-			max-height: 100%;
-		}
-
-		.iro-container .IroSliderGradient {
-			height: 100% !important;
-		}
-
-		.iro-container .IroHandle {
-			overflow: visible !important;
-		}
-
-		.iro-controls {
-			display: flex;
-			flex-direction: column;
-			gap: 6px;
-			width: 180px;
-			height: 180px;
-			align-items: stretch;
+			margin-bottom: 12px;
 		}
 
 		.iro-format-buttons {
 			display: flex;
 			gap: 4px;
+			margin-bottom: 12px;
+			justify-content: center;
 		}
 
 		.iro-format-btn {
-			flex: 1;
 			background: #242424;
-			border: 1px solid #333333;
-			color: #00cc33;
-			padding: 5px 8px;
-			font-size: 9px;
+			border: 1px solid var(--t-clr-border);
+			color: var(--t-clr-color);
+			padding: 4px 8px;
+			font-size: 10px;
 			text-transform: uppercase;
 			cursor: pointer;
-			transition: all 0.2s ease;
+			transition: var(--t-clr-transition);
 			font-family: 'SF Mono', 'Monaco', monospace;
-			letter-spacing: 0.3px;
+			letter-spacing: 0.5px;
 		}
 
 		.iro-format-btn.active {
-			background: #00cc33;
+			background: var(--t-clr-color);
 			color: #000;
-			border-color: #00cc33;
+			border-color: var(--t-clr-color);
 		}
 
 		.iro-format-btn:hover:not(.active) {
-			border-color: #00cc33;
-		}
-
-		.iro-hex-input {
-			width: 100%;
-			background: #0a0a0a;
-			border: 1px solid #333333;
-			color: #00ff41;
-			padding: 5px 8px;
-			font-size: 11px;
-			font-family: 'SF Mono', 'Monaco', monospace;
-			letter-spacing: 0.5px;
-			text-align: left;
-			outline: none;
-			box-sizing: border-box;
-		}
-
-		.iro-hex-input:focus {
-			border-color: #00ff41;
-		}
-
-		.iro-swatches-container {
-			display: grid;
-			grid-template-columns: 1fr auto;
-			gap: 4px;
-			align-items: start;
-			flex: 1;
-			min-height: 0;
-			overflow: hidden;
+			border-color: var(--t-clr-color);
 		}
 
 		.iro-swatches {
@@ -573,6 +490,7 @@ export class TColorPicker extends LitElement {
 			max-height: 120px;
 			overflow-y: auto;
 			margin-bottom: 12px;
+			padding: 4px;
 		}
 
 		.iro-swatches::-webkit-scrollbar {
@@ -585,17 +503,17 @@ export class TColorPicker extends LitElement {
 		}
 
 		.iro-swatches::-webkit-scrollbar-thumb {
-			background: #00cc33;
-			border-radius: 0;
+			background: var(--t-clr-border);
+			border-radius: 3px;
 		}
 
 		.iro-swatches::-webkit-scrollbar-thumb:hover {
-			background: #00ff41;
+			background: var(--t-clr-color);
 		}
 
 		.iro-swatch {
-			width: 22px;
-			height: 22px;
+			width: 28px;
+			height: 28px;
 			border: 1px solid var(--t-clr-border);
 			cursor: pointer;
 			position: relative;
@@ -652,9 +570,8 @@ export class TColorPicker extends LitElement {
 
 		.iro-actions {
 			display: flex;
-			flex-direction: column;
-			gap: 4px;
-			align-items: stretch;
+			justify-content: space-between;
+			align-items: center;
 		}
 
 		.iro-actions-left {
@@ -1168,14 +1085,11 @@ export class TColorPicker extends LitElement {
 	 * picker.setValue('#ff6b35');
 	 * picker.setValue('#ff6b35ff');
 	 */
-	setColor(color) {
-		this._logger.debug('setColor called', { color });
+	setValue(color) {
+		this._logger.debug('setValue called', { color });
 
 		this.value = color;
-		this._emitEvent('color-change', {
-			value: this.value,
-			hex: this.value
-		});
+		this._emitEvent('change', { value: this.value, color: this.value });
 	}
 
 	/**
@@ -1183,10 +1097,10 @@ export class TColorPicker extends LitElement {
 	 * @public
 	 * @returns {string} Current color in hex8 format
 	 * @example
-	 * const color = picker.getColor();
+	 * const color = picker.getValue();
 	 */
-	getColor() {
-		this._logger.debug('getColor called', { value: this.value });
+	getValue() {
+		this._logger.debug('getValue called', { value: this.value });
 		return this.value;
 	}
 
@@ -1202,7 +1116,7 @@ export class TColorPicker extends LitElement {
 		this._logger.debug('clearAllCustomSwatches called');
 
 		this._customSwatches = [];
-		localStorage.removeItem('t-clr-custom-swatches');
+		localStorage.removeItem('terminal-iro-swatches');
 		this._updateSwatchesDisplay();
 
 		this._logger.info('All custom swatches cleared');
@@ -1243,7 +1157,7 @@ export class TColorPicker extends LitElement {
 		}
 
 		// Save to localStorage
-		localStorage.setItem('t-clr-custom-swatches', JSON.stringify(this._customSwatches));
+		localStorage.setItem('terminal-iro-swatches', JSON.stringify(this._customSwatches));
 
 		// Update display if popover is open
 		if (this._popoverElement) {
@@ -1326,6 +1240,14 @@ export class TColorPicker extends LitElement {
 	// BLOCK 10: NESTING SUPPORT (Minimal - not a container)
 	// ----------------------------------------------------------
 
+	/**
+	 * Receive context from parent component (no-op for color picker)
+	 * @public
+	 * @param {Object} context - Context object from parent
+	 */
+	receiveContext(context) {
+		this._logger.debug('Received context (no-op for color picker)', { context });
+	}
 
 	// ----------------------------------------------------------
 	// BLOCK 11: VALIDATION
@@ -1616,10 +1538,7 @@ export class TColorPicker extends LitElement {
 					this._colorPicker.color.hexString = hexValue;
 				}
 				this._syncingColor = false;
-				this._emitEvent('color-change', {
-			value: this.value,
-			hex: this.value
-		});
+				this._emitEvent('change', { value: this.value, color: this.value });
 			}
 		} catch (error) {
 			this._logger.warn('Invalid color input', { input, error });
@@ -1727,49 +1646,12 @@ export class TColorPicker extends LitElement {
 			this._createPopover();
 		}
 
-		// Position popover next to the element using fixed positioning
+		// Position popover next to the element
 		const rect = this.getBoundingClientRect();
-		const popoverWidth = 440;
-		const popoverHeight = 224; // 192px content + 32px padding
-		const margin = 10;
-
-		// Calculate initial position
-		let top = rect.bottom + 8;
-		let left = rect.left;
-
-		// Ensure popover stays within viewport bounds
-		// Check right edge
-		if (left + popoverWidth > window.innerWidth - margin) {
-			left = Math.max(margin, window.innerWidth - popoverWidth - margin);
-		}
-
-		// Check left edge
-		if (left < margin) {
-			left = margin;
-		}
-
-		// Check bottom edge - if not enough space below, show above
-		if (top + popoverHeight > window.innerHeight - margin) {
-			const spaceAbove = rect.top;
-			const spaceBelow = window.innerHeight - rect.bottom;
-
-			if (spaceAbove > spaceBelow) {
-				// More space above - position above element
-				top = Math.max(margin, rect.top - popoverHeight - 8);
-			} else {
-				// Keep below but adjust to fit
-				top = Math.max(margin, window.innerHeight - popoverHeight - margin);
-			}
-		}
-
-		// Check top edge
-		if (top < margin) {
-			top = margin;
-		}
-
-		// Apply calculated position
-		this._popoverElement.style.top = `${top}px`;
-		this._popoverElement.style.left = `${left}px`;
+		const scrollY = window.scrollY || window.pageYOffset;
+		const scrollX = window.scrollX || window.pageXOffset;
+		this._popoverElement.style.top = `${rect.bottom + scrollY + 8}px`;
+		this._popoverElement.style.left = `${rect.left + scrollX}px`;
 
 		// Show popover
 		this._popoverElement.classList.add('open');
@@ -1832,8 +1714,7 @@ export class TColorPicker extends LitElement {
 			</div>
 		`;
 
-		// Append to shadow root instead of document.body
-		this.shadowRoot.appendChild(popover);
+		document.body.appendChild(popover);
 		this._popoverElement = popover;
 
 		// Add event listeners
@@ -1889,7 +1770,7 @@ export class TColorPicker extends LitElement {
 	_initializeColorPicker() {
 		this._logger.debug('Initializing iro.js color picker');
 
-		const container = this.shadowRoot.getElementById(`picker-${this._pickerId}`);
+		const container = document.getElementById(`picker-${this._pickerId}`);
 		if (!container) {
 			this._logger.error('Color picker container not found');
 			return;
@@ -1897,37 +1778,31 @@ export class TColorPicker extends LitElement {
 
 		try {
 			this._colorPicker = new iro.ColorPicker(container, {
-				width: 150,
+				width: 180,
 				color: this.value,
 				layoutDirection: 'horizontal',
 				layout: [
 					{
 						component: iro.ui.Box,
 						options: {
-							boxHeight: 180,
-							boxWidth: 150
+							boxHeight: 180
 						}
 					},
 					{
 						component: iro.ui.Slider,
 						options: {
 							sliderType: 'hue',
-							sliderSize: 20,
-							sliderHeight: 180
+							sliderSize: 20
 						}
 					},
 					{
 						component: iro.ui.Slider,
 						options: {
 							sliderType: 'alpha',
-							sliderSize: 20,
-							sliderHeight: 180
+							sliderSize: 20
 						}
 					}
-				],
-				padding: 0,
-				margin: 0,
-				borderWidth: 0
+				]
 			});
 
 			// Bridge iro events to Lit events
@@ -1991,30 +1866,10 @@ export class TColorPicker extends LitElement {
 
 			this._syncingColor = false;
 
-			// Get rgb and hsl from iro's color object if available
-			let eventDetail = {
+			this._emitEvent('change', {
 				value: this.value,
-				hex: this.value
-			};
-
-			// Add rgb/hsl if we have iro picker
-			if (this._colorPicker && this._colorPicker.color) {
-				const iroColor = this._colorPicker.color;
-				eventDetail.rgb = {
-					r: iroColor.rgba.r,
-					g: iroColor.rgba.g,
-					b: iroColor.rgba.b,
-					a: iroColor.rgba.a
-				};
-				eventDetail.hsl = {
-					h: Math.round(iroColor.hsla.h),
-					s: Math.round(iroColor.hsla.s),
-					l: Math.round(iroColor.hsla.l),
-					a: iroColor.hsla.a
-				};
-			}
-
-			this._emitEvent('color-change', eventDetail);
+				color: this.value
+			});
 
 			this._colorChangeDebounce = null;
 		}, 250);
@@ -2098,7 +1953,7 @@ export class TColorPicker extends LitElement {
 		}
 
 		// Save to localStorage
-		localStorage.setItem('t-clr-custom-swatches', JSON.stringify(this._customSwatches));
+		localStorage.setItem('terminal-iro-swatches', JSON.stringify(this._customSwatches));
 
 		// Update display
 		this._updateSwatchesDisplay();
@@ -2120,7 +1975,7 @@ export class TColorPicker extends LitElement {
 	 */
 	_loadCustomSwatches() {
 		try {
-			const saved = localStorage.getItem('t-clr-custom-swatches');
+			const saved = localStorage.getItem('terminal-iro-swatches');
 			if (saved) {
 				this._customSwatches = JSON.parse(saved);
 				this._logger.debug('Loaded custom swatches', { count: this._customSwatches.length });
@@ -2188,10 +2043,7 @@ export class TColorPicker extends LitElement {
 					}
 
 					this._syncingColor = false;
-					this._emitEvent('color-change', {
-			value: this.value,
-			hex: this.value
-		});
+					this._emitEvent('change', { value: this.value, color: this.value });
 				}
 			});
 		});
@@ -2205,7 +2057,7 @@ export class TColorPicker extends LitElement {
 		this._logger.debug('Removing custom swatch', { index });
 
 		this._customSwatches.splice(index, 1);
-		localStorage.setItem('t-clr-custom-swatches', JSON.stringify(this._customSwatches));
+		localStorage.setItem('terminal-iro-swatches', JSON.stringify(this._customSwatches));
 		this._updateSwatchesDisplay();
 
 		this._emitEvent('swatches-updated', {
@@ -2238,7 +2090,7 @@ export class TColorPicker extends LitElement {
 			if (action === 'confirm') {
 				this.clearAllCustomSwatches();
 			}
-			this.shadowRoot.removeChild(modalOverlay);
+			document.body.removeChild(modalOverlay);
 		};
 
 		const cancelBtn = modalOverlay.querySelector('[data-action="cancel"]');
@@ -2248,12 +2100,11 @@ export class TColorPicker extends LitElement {
 
 		modalOverlay.addEventListener('click', (e) => {
 			if (e.target === modalOverlay) {
-				this.shadowRoot.removeChild(modalOverlay);
+				document.body.removeChild(modalOverlay);
 			}
 		});
 
-		// Append to shadow root instead of document.body
-		this.shadowRoot.appendChild(modalOverlay);
+		document.body.appendChild(modalOverlay);
 	}
 
 	/**
@@ -2290,14 +2141,10 @@ export class TColorPicker extends LitElement {
 	_handleDocumentClick(e) {
 		if (!this._isOpen) return;
 
-		// Check if click is outside the host element
-		// Since popover is in shadow DOM, clicks on it won't bubble to document
-		if (!this.contains(e.target)) {
-			// Also check if the click is within our shadow root
-			const path = e.composedPath();
-			if (!path.includes(this.shadowRoot)) {
-				this._closeColorPicker();
-			}
+		// Check if click is outside picker and popover
+		if (!this.contains(e.target) &&
+			(!this._popoverElement || !this._popoverElement.contains(e.target))) {
+			this._closeColorPicker();
 		}
 	}
 }
@@ -2338,12 +2185,17 @@ export const TColorPickerManifest = generateManifest(TColorPicker, {
 		swatches: { description: 'Predefined color swatches array (currently not implemented)' }
 	},
 	methods: {
-		setColor: {
+		setIcon: {
+			params: ['iconSvg'],
+			returns: 'void',
+			description: 'Set custom Phosphor icon for the picker'
+		},
+		setValue: {
 			params: ['color'],
 			returns: 'void',
 			description: 'Set color value programmatically'
 		},
-		getColor: {
+		getValue: {
 			params: [],
 			returns: 'string',
 			description: 'Get current color value in hex8 format'
@@ -2360,8 +2212,8 @@ export const TColorPickerManifest = generateManifest(TColorPicker, {
 		}
 	},
 	events: {
-		'color-change': {
-			detail: '{value: string, hex: string, rgb?: object, hsl?: object}',
+		'change': {
+			detail: '{value: string, color: string}',
 			description: 'Fired when color value changes (250ms debounced during drag)'
 		},
 		'color-save': {
