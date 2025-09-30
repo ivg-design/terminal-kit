@@ -536,7 +536,7 @@ export class TColorPicker extends LitElement {
 		}
 
 		.iro-hex-input {
-			width: calc(100% - 16px);
+			width: 100%;
 			background: #0a0a0a;
 			border: 1px solid #333333;
 			color: #00ff41;
@@ -592,8 +592,8 @@ export class TColorPicker extends LitElement {
 		}
 
 		.iro-swatch {
-			width: 28px;
-			height: 28px;
+			width: 22px;
+			height: 22px;
 			border: 1px solid var(--t-clr-border);
 			cursor: pointer;
 			position: relative;
@@ -650,8 +650,9 @@ export class TColorPicker extends LitElement {
 
 		.iro-actions {
 			display: flex;
-			justify-content: space-between;
-			align-items: center;
+			flex-direction: column;
+			gap: 4px;
+			align-items: stretch;
 		}
 
 		.iro-actions-left {
