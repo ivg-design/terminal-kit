@@ -7,7 +7,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { fixture, html, nextFrame } from '@open-wc/testing-helpers';
 import '../../js/components/TUserMenuLit.js';
-import { TUserMenuLit, TUserMenuManifest } from '../../js/components/TUserMenuLit.js';
+import TUserMenuLit, { TUserMenuManifest } from '../../js/components/TUserMenuLit.js';
 
 describe('TUserMenuLit', () => {
   let component;

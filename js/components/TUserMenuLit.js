@@ -866,5 +866,4 @@ export const TUserMenuManifest = generateManifest(TUserMenuLit, {
 // ============================================
 // SECTION 5: EXPORTS
 // ============================================
-export { TUserMenuLit };
 export default TUserMenuLit;
