@@ -1,114 +1,464 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Component Demo</title>
-    <link rel="stylesheet" href="/css/theme.css">
-    <style>
-        body {
-            background: #0a0a0a;
-            color: #00ff41;
-            font-family: 'SF Mono', 'Monaco', monospace;
-            padding: 40px 20px;
-            margin: 0;
-            line-height: 1.6;
-        }
-        .demo-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        h1 {
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            border-bottom: 2px solid #00ff41;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-            font-size: 24px;
-        }
-        h2 {
-            color: #00cc33;
-            text-transform: uppercase;
-            font-size: 14px;
-            letter-spacing: 0.1em;
-            margin-top: 30px;
-        }
-        .back-link {
-            color: #00ff41;
-            text-decoration: none;
-            display: inline-block;
-            margin-bottom: 20px;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-        .back-link:hover {
-            opacity: 1;
-            text-decoration: underline;
-        }
-        .demo-section {
-            margin: 40px 0;
-            padding: 20px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 4px;
-        }
-        .demo-description {
-            color: #00cc33;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        .demo-code {
-            background: #0a0a0a;
-            border: 1px solid #00ff41;
-            padding: 15px;
-            margin-top: 20px;
-            font-size: 12px;
-            overflow-x: auto;
-        }
-        .demo-code pre {
-            margin: 0;
-            color: #00ff41;
-        }
-        .placeholder {
-            padding: 40px;
-            text-align: center;
-            border: 2px dashed #333;
-            color: #666;
-            font-style: italic;
-        }
-    </style>
-</head>
-<body>
-    <div class="demo-container">
-        <a href="/" class="back-link">← Back to Gallery</a>
 
-        <h1>COMPONENT DEMO</h1>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Terminal Tree View - Component Demo</title>
 
-        <div class="demo-section">
-            <h2>Demo Coming Soon</h2>
-            <div class="placeholder">
-                This demo page is under construction.
-                <br><br>
-                The component exists and works, but the demo showcase is still being built.
+        <!-- Load CSS -->
+        <link rel="stylesheet" href="../css/theme/terminal.css">
+        <link rel="stylesheet" href="../css/components/tree-view.css">
+        <link rel="stylesheet" href="../css/components/buttons.css">
+
+        <style>
+            html, body {
+                overflow: visible !important;
+            }
+            
+            body {
+                font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+                background: #0a0a0a;
+                color: #00ff41;
+                padding: 40px 20px;
+                line-height: 1.6;
+            }
+
+            .demo-container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            h1 {
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                border-bottom: 2px solid #00ff41;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+
+            .breadcrumb {
+                margin-bottom: 30px;
+                font-size: 12px;
+                color: #00cc33;
+            }
+
+            .breadcrumb a {
+                color: #00cc33;
+                text-decoration: none;
+            }
+
+            .breadcrumb a:hover {
+                color: #00ff41;
+            }
+
+            .demo-section {
+                margin-bottom: 60px;
+                padding: 30px;
+                background: #1a1a1a;
+                border: 1px solid #333333;
+            }
+
+            h2 {
+                color: #00ff41;
+                font-size: 18px;
+                margin-bottom: 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .section-description {
+                color: #00cc33;
+                font-size: 13px;
+                margin-bottom: 30px;
+            }
+
+            .demo-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                gap: 30px;
+            }
+
+            .demo-item {
+                background: #242424;
+                border: 1px solid #333333;
+                padding: 20px;
+            }
+
+            .demo-label {
+                display: block;
+                color: #00cc33;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-bottom: 15px;
+                padding-bottom: 5px;
+                border-bottom: 1px solid #333333;
+            }
+
+            .code-example {
+                background: #0a0a0a;
+                border: 1px solid #333333;
+                padding: 20px;
+                margin-top: 30px;
+                overflow-x: auto;
+            }
+
+            .code-example pre {
+                margin: 0;
+                color: #00cc33;
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .tree-container {
+                height: 250px;
+                overflow-y: auto;
+                border: 1px solid #333;
+                background: #0a0a0a;
+                margin-bottom: 10px;
+            }
+
+            .selection-output {
+                background: #0a0a0a;
+                border: 1px solid #333;
+                padding: 15px;
+                margin-top: 15px;
+                color: #00cc33;
+                font-size: 11px;
+                min-height: 100px;
+                overflow-y: auto;
+                white-space: pre-wrap;
+            }
+
+            .button-row {
+                display: flex;
+                gap: 10px;
+                margin-top: 15px;
+                flex-wrap: wrap;
+            }
+
+            .output-section {
+                margin-top: 30px;
+                padding: 20px;
+                background: #242424;
+                border: 1px solid #333;
+            }
+
+            .output-label {
+                color: #00ff41;
+                font-size: 12px;
+                margin-bottom: 10px;
+                text-transform: uppercase;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="demo-container">
+            <div class="breadcrumb">
+                <a href="index.html">← Back to Gallery</a> / Tree View
+            </div>
+
+            <h1>Terminal Tree View</h1>
+            <p style="color: #00cc33; margin-bottom: 40px;">
+                Hierarchical tree view with expand/collapse and selection management. Perfect for file explorers, navigation menus, or nested data structures.
+            </p>
+
+            <!-- Tree View Examples -->
+            <div class="demo-section">
+                <h2>Tree View Examples</h2>
+                <p class="section-description">
+                    Different configurations of tree views for various use cases.
+                </p>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <span class="demo-label">File Explorer Tree</span>
+                        <div class="tree-container">
+                            <terminal-tree-view id="treeView1">
+                                <terminal-tree-node id="rootNode" label="Project Root" type="folder" expanded>
+                                    <terminal-tree-node label="src" type="folder" expanded>
+                                        <terminal-tree-node label="components" type="folder">
+                                            <terminal-tree-node label="TerminalButton.js" type="file"></terminal-tree-node>
+                                            <terminal-tree-node label="TerminalInput.js" type="file"></terminal-tree-node>
+                                            <terminal-tree-node label="TerminalModal.js" type="file"></terminal-tree-node>
+                                        </terminal-tree-node>
+                                        <terminal-tree-node label="utils" type="folder">
+                                            <terminal-tree-node label="helpers.js" type="file"></terminal-tree-node>
+                                            <terminal-tree-node label="constants.js" type="file"></terminal-tree-node>
+                                        </terminal-tree-node>
+                                        <terminal-tree-node label="app.js" type="file"></terminal-tree-node>
+                                    </terminal-tree-node>
+                                    <terminal-tree-node label="css" type="folder">
+                                        <terminal-tree-node label="theme" type="folder">
+                                            <terminal-tree-node label="terminal.css" type="file"></terminal-tree-node>
+                                            <terminal-tree-node label="components.css" type="file"></terminal-tree-node>
+                                        </terminal-tree-node>
+                                        <terminal-tree-node label="main.css" type="file"></terminal-tree-node>
+                                    </terminal-tree-node>
+                                    <terminal-tree-node label="package.json" type="file"></terminal-tree-node>
+                                    <terminal-tree-node label="README.md" type="file"></terminal-tree-node>
+                                </terminal-tree-node>
+                            </terminal-tree-view>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Multi-Select Tree</span>
+                        <div class="tree-container">
+                            <terminal-tree-view id="treeView2" multi-select>
+                                <terminal-tree-node label="Features" type="folder" expanded>
+                                    <terminal-tree-node label="Authentication" type="category">
+                                        <terminal-tree-node label="Login" type="feature"></terminal-tree-node>
+                                        <terminal-tree-node label="Logout" type="feature"></terminal-tree-node>
+                                        <terminal-tree-node label="Password Reset" type="feature"></terminal-tree-node>
+                                    </terminal-tree-node>
+                                    <terminal-tree-node label="UI Components" type="category">
+                                        <terminal-tree-node label="Buttons" type="feature"></terminal-tree-node>
+                                        <terminal-tree-node label="Forms" type="feature"></terminal-tree-node>
+                                        <terminal-tree-node label="Modals" type="feature"></terminal-tree-node>
+                                    </terminal-tree-node>
+                                    <terminal-tree-node label="Data Management" type="category">
+                                        <terminal-tree-node label="CRUD Operations" type="feature"></terminal-tree-node>
+                                        <terminal-tree-node label="Search & Filter" type="feature"></terminal-tree-node>
+                                    </terminal-tree-node>
+                                </terminal-tree-node>
+                            </terminal-tree-view>
+                        </div>
+                        <div class="button-row">
+                            <terminal-button id="selectAllBtn" variant="secondary" size="small">Select All</terminal-button>
+                            <terminal-button id="clearSelectionBtn" variant="secondary" size="small">Clear Selection</terminal-button>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <span class="demo-label">Navigation Tree</span>
+                        <div class="tree-container">
+                            <terminal-tree-view id="treeView3" expand-on-select>
+                                <terminal-tree-node label="Dashboard" type="page" icon="📊"></terminal-tree-node>
+                                <terminal-tree-node label="Analytics" type="folder" icon="📈">
+                                    <terminal-tree-node label="Overview" type="page" icon="🔍"></terminal-tree-node>
+                                    <terminal-tree-node label="Reports" type="folder" icon="📋">
+                                        <terminal-tree-node label="Sales Report" type="page" icon="💰"></terminal-tree-node>
+                                        <terminal-tree-node label="Traffic Report" type="page" icon="🚗"></terminal-tree-node>
+                                        <terminal-tree-node label="User Report" type="page" icon="👥"></terminal-tree-node>
+                                    </terminal-tree-node>
+                                    <terminal-tree-node label="Real-time" type="page" icon="⚡"></terminal-tree-node>
+                                </terminal-tree-node>
+                                <terminal-tree-node label="Settings" type="folder" icon="⚙️">
+                                    <terminal-tree-node label="General" type="page" icon="🔧"></terminal-tree-node>
+                                    <terminal-tree-node label="Security" type="page" icon="🔒"></terminal-tree-node>
+                                    <terminal-tree-node label="Integrations" type="page" icon="🔌"></terminal-tree-node>
+                                </terminal-tree-node>
+                            </terminal-tree-view>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="output-section">
+                    <div class="output-label">Selection Output</div>
+                    <div class="selection-output" id="treeSelectionOutput">
+                        Select nodes in trees above to see selection data...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Log -->
+            <div class="demo-section">
+                <h2>Event Log</h2>
+                <p class="section-description">
+                    Interact with the tree views above to see their events logged here.
+                </p>
+                <div id="eventLog" class="selection-output">
+                    Click on tree nodes to see events...
+                </div>
+            </div>
+
+            <!-- Code Examples -->
+            <div class="demo-section">
+                <h2>Code Examples</h2>
+                <p class="section-description">
+                    How to create and interact with terminal tree views.
+                </p>
+
+                <div class="code-example">
+                    <pre>&lt;!-- Basic tree view --&gt;
+&lt;terminal-tree-view&gt;
+    &lt;terminal-tree-node label="Root Folder" type="folder" expanded&gt;
+        &lt;terminal-tree-node label="Subfolder" type="folder"&gt;
+            &lt;terminal-tree-node label="file.txt" type="file"&gt;&lt;/terminal-tree-node&gt;
+        &lt;/terminal-tree-node&gt;
+        &lt;terminal-tree-node label="document.pdf" type="file"&gt;&lt;/terminal-tree-node&gt;
+    &lt;/terminal-tree-node&gt;
+&lt;/terminal-tree-view&gt;
+
+&lt;!-- Multi-select tree --&gt;
+&lt;terminal-tree-view multi-select&gt;
+    &lt;terminal-tree-node label="Features" type="folder"&gt;
+        &lt;terminal-tree-node label="Feature 1" type="feature"&gt;&lt;/terminal-tree-node&gt;
+        &lt;terminal-tree-node label="Feature 2" type="feature"&gt;&lt;/terminal-tree-node&gt;
+    &lt;/terminal-tree-node&gt;
+&lt;/terminal-tree-view&gt;
+
+&lt;!-- Tree with icons and expand-on-select --&gt;
+&lt;terminal-tree-view expand-on-select&gt;
+    &lt;terminal-tree-node label="Dashboard" type="page" icon="📊"&gt;&lt;/terminal-tree-node&gt;
+    &lt;terminal-tree-node label="Settings" type="folder" icon="⚙️"&gt;
+        &lt;terminal-tree-node label="General" type="page" icon="🔧"&gt;&lt;/terminal-tree-node&gt;
+    &lt;/terminal-tree-node&gt;
+&lt;/terminal-tree-view&gt;</pre>
+                </div>
+
+                <div class="code-example">
+                    <pre>// JavaScript API
+const treeView = document.querySelector('terminal-tree-view');
+
+// Get selected nodes
+const selectedNodes = treeView.getSelectedNodes();
+console.log('Selected:', selectedNodes);
+
+// Select/deselect nodes programmatically
+const node = document.querySelector('terminal-tree-node[label="file.txt"]');
+treeView.selectNode(node);
+treeView.deselectNode(node);
+
+// Clear all selections
+treeView.clearSelection();
+
+// Select all nodes (multi-select trees only)
+treeView.selectAll();
+
+// Expand/collapse nodes
+const folderNode = document.querySelector('terminal-tree-node[type="folder"]');
+folderNode.expand();
+folderNode.collapse();
+folderNode.toggle();
+
+// Event listeners
+treeView.addEventListener('node-select', (e) => {
+    console.log('Node selected:', e.detail);
+    console.log('Node label:', e.detail.node.label);
+    console.log('Node type:', e.detail.node.type);
+});
+
+treeView.addEventListener('node-deselect', (e) => {
+    console.log('Node deselected:', e.detail);
+});
+
+treeView.addEventListener('node-expand', (e) => {
+    console.log('Node expanded:', e.detail.node.label);
+});
+
+treeView.addEventListener('node-collapse', (e) => {
+    console.log('Node collapsed:', e.detail.node.label);
+});
+
+// Navigation events for links/pages
+treeView.addEventListener('node-navigate', (e) => {
+    console.log('Navigate to:', e.detail.node.label);
+    // Handle navigation logic here
+});</pre>
+                </div>
             </div>
         </div>
 
-        <div class="demo-section">
-            <h2>Debug Information</h2>
-            <div class="demo-code">
-                <pre id="debug-info"></pre>
-            </div>
-        </div>
-    </div>
+        <!-- Import Components -->
+        <script type="module">
+            import '../js/components/TerminalComponent.js';
+            import '../js/components/TerminalTreeView.js';
+            import '../js/components/TerminalTreeNode.js';
+            import '../js/components/TerminalButton.js';
 
-    <script>
-        // Show debug info
-        const debugInfo = {
-            'Page': window.location.pathname,
-            'Component': window.location.pathname.split('/').pop().replace('.html', ''),
-            'Timestamp': new Date().toISOString()
-        };
-        document.getElementById('debug-info').textContent = JSON.stringify(debugInfo, null, 2);
-    </script>
-</body>
+            function logEvent(message) {
+                const eventLog = document.getElementById('eventLog');
+                if (eventLog) {
+                    const timestamp = new Date().toLocaleTimeString();
+                    eventLog.innerHTML += `[${timestamp}] ${message}\n`;
+                    eventLog.scrollTop = eventLog.scrollHeight;
+                }
+            }
+
+            // Setup after components load
+            setTimeout(() => {
+                const treeViews = document.querySelectorAll('terminal-tree-view');
+                const treeSelectionOutput = document.getElementById('treeSelectionOutput');
+
+                // Set up event listeners for all tree views
+                treeViews.forEach((treeView, index) => {
+                    const treeViewName = `TreeView ${index + 1}`;
+
+                    treeView.addEventListener('node-select', (e) => {
+                        logEvent(`${treeViewName}: Node selected - ${e.detail.node?.label || 'unknown'}`);
+                        
+                        if (treeSelectionOutput && treeView.getSelectedNodes) {
+                            const selected = treeView.getSelectedNodes();
+                            treeSelectionOutput.textContent = `${treeViewName} Selection:\n${JSON.stringify(selected.map(node => ({
+                                label: node.label,
+                                type: node.type,
+                                path: node.getPath ? node.getPath() : 'N/A'
+                            })), null, 2)}`;
+                        }
+                    });
+
+                    treeView.addEventListener('node-deselect', (e) => {
+                        logEvent(`${treeViewName}: Node deselected - ${e.detail.node?.label || 'unknown'}`);
+                        
+                        if (treeSelectionOutput && treeView.getSelectedNodes) {
+                            const selected = treeView.getSelectedNodes();
+                            if (selected.length === 0) {
+                                treeSelectionOutput.textContent = `${treeViewName}: No nodes selected`;
+                            } else {
+                                treeSelectionOutput.textContent = `${treeViewName} Selection:\n${JSON.stringify(selected.map(node => ({
+                                    label: node.label,
+                                    type: node.type
+                                })), null, 2)}`;
+                            }
+                        }
+                    });
+
+                    treeView.addEventListener('node-expand', (e) => {
+                        logEvent(`${treeViewName}: Node expanded - ${e.detail.node?.label || 'unknown'}`);
+                    });
+
+                    treeView.addEventListener('node-collapse', (e) => {
+                        logEvent(`${treeViewName}: Node collapsed - ${e.detail.node?.label || 'unknown'}`);
+                    });
+
+                    treeView.addEventListener('node-navigate', (e) => {
+                        logEvent(`${treeViewName}: Navigation requested - ${e.detail.node?.label || 'unknown'}`);
+                    });
+                });
+
+                // Set up control buttons for multi-select tree
+                const selectAllBtn = document.getElementById('selectAllBtn');
+                const clearSelectionBtn = document.getElementById('clearSelectionBtn');
+                const treeView2 = document.getElementById('treeView2');
+
+                if (selectAllBtn && treeView2) {
+                    selectAllBtn.addEventListener('click', () => {
+                        if (treeView2.selectAll) {
+                            treeView2.selectAll();
+                            logEvent('TreeView 2: Select All executed');
+                        }
+                    });
+                }
+
+                if (clearSelectionBtn && treeView2) {
+                    clearSelectionBtn.addEventListener('click', () => {
+                        if (treeView2.clearSelection) {
+                            treeView2.clearSelection();
+                            logEvent('TreeView 2: Selection cleared');
+                            if (treeSelectionOutput) {
+                                treeSelectionOutput.textContent = 'TreeView 2: No nodes selected';
+                            }
+                        }
+                    });
+                }
+
+                logEvent('Tree view demo initialized');
+            }, 100);
+        </script>
+    </body>
+
 </html>

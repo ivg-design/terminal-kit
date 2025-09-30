@@ -3,112 +3,425 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Component Demo</title>
-    <link rel="stylesheet" href="/css/theme.css">
+    <title>Terminal Dynamic Controls - Component Demo</title>
+
+    <!-- Load CSS -->
+    <link rel="stylesheet" href="../css/theme/terminal.css">
+    <link rel="stylesheet" href="../css/components/dynamic-controls.css">
+    <link rel="stylesheet" href="../css/components/panel.css">
+    <link rel="stylesheet" href="../css/components/button.css">
+    <link rel="stylesheet" href="../css/components/toggle.css">
+    <link rel="stylesheet" href="../css/components/dropdown.css">
+    <link rel="stylesheet" href="../css/components/color-picker.css">
+    <link rel="stylesheet" href="../css/components/form.css">
+
+    <!-- Pickr Library CSS (local) -->
+    <link rel="stylesheet" href="../css/libs/pickr.min.css">
+
     <style>
+        * {
+            overflow: unset !important;
+        }
+
         body {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
             background: #0a0a0a;
             color: #00ff41;
-            font-family: 'SF Mono', 'Monaco', monospace;
             padding: 40px 20px;
-            margin: 0;
             line-height: 1.6;
         }
+
         .demo-container {
             max-width: 1200px;
             margin: 0 auto;
         }
+
         h1 {
             text-transform: uppercase;
             letter-spacing: 0.1em;
             border-bottom: 2px solid #00ff41;
             padding-bottom: 10px;
-            margin-bottom: 30px;
-            font-size: 24px;
-        }
-        h2 {
-            color: #00cc33;
-            text-transform: uppercase;
-            font-size: 14px;
-            letter-spacing: 0.1em;
-            margin-top: 30px;
-        }
-        .back-link {
-            color: #00ff41;
-            text-decoration: none;
-            display: inline-block;
             margin-bottom: 20px;
-            opacity: 0.8;
-            transition: opacity 0.2s;
         }
-        .back-link:hover {
-            opacity: 1;
+
+        .breadcrumb {
+            margin-bottom: 30px;
+            font-size: 12px;
+            color: #00cc33;
+        }
+
+        .breadcrumb a {
+            color: #00cc33;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
             text-decoration: underline;
         }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
         .demo-section {
-            margin: 40px 0;
-            padding: 20px;
             background: #1a1a1a;
             border: 1px solid #333;
+            padding: 20px;
             border-radius: 4px;
         }
-        .demo-description {
-            color: #00cc33;
+
+        .demo-section h2 {
+            color: #00ff41;
             margin-bottom: 20px;
             font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
         }
-        .demo-code {
+
+        .value-monitor {
             background: #0a0a0a;
-            border: 1px solid #00ff41;
+            border: 1px solid #333;
             padding: 15px;
             margin-top: 20px;
             font-size: 12px;
+            color: #00cc33;
+            max-height: 300px;
+            overflow-y: auto;
             overflow-x: auto;
+            font-family: 'SF Mono', monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
-        .demo-code pre {
-            margin: 0;
-            color: #00ff41;
+
+        .controls-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
-        .placeholder {
-            padding: 40px;
-            text-align: center;
-            border: 2px dashed #333;
-            color: #666;
-            font-style: italic;
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Demo specific styles */
+        #controls-container {
+            min-height: 200px;
+        }
+
+        .status-message {
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #333;
+            color: #888;
+            font-size: 12px;
+            background: rgba(0, 255, 65, 0.02);
         }
     </style>
 </head>
 <body>
     <div class="demo-container">
-        <a href="/" class="back-link">← Back to Gallery</a>
-
-        <h1>COMPONENT DEMO</h1>
-
-        <div class="demo-section">
-            <h2>Demo Coming Soon</h2>
-            <div class="placeholder">
-                This demo page is under construction.
-                <br><br>
-                The component exists and works, but the demo showcase is still being built.
-            </div>
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a> /
+            <a href="../demos.html">Demos</a> /
+            Dynamic Controls
         </div>
 
-        <div class="demo-section">
-            <h2>Debug Information</h2>
-            <div class="demo-code">
-                <pre id="debug-info"></pre>
+        <h1>Terminal Dynamic Controls</h1>
+
+        <div class="demo-grid">
+            <!-- Simple Demo -->
+            <div class="demo-section">
+                <h2>Simple Rive-like Schema</h2>
+                <div class="controls-header">
+                    <span>Basic controls example</span>
+                    <div class="action-buttons">
+                        <terminal-button id="simple-toggle" size="small" variant="secondary">
+                            Toggle Disabled
+                        </terminal-button>
+                    </div>
+                </div>
+                <div id="simple-container"></div>
+                <div class="value-monitor" id="simple-monitor">Values will appear here...</div>
+            </div>
+
+            <!-- Complex Demo with Nested ViewModels -->
+            <div class="demo-section">
+                <h2>Complex Nested Schema</h2>
+                <div class="controls-header">
+                    <span>5-level deep nesting</span>
+                    <div class="action-buttons">
+                        <terminal-button id="complex-update" size="small" variant="secondary">
+                            Update Live Values
+                        </terminal-button>
+                    </div>
+                </div>
+                <div id="complex-container"></div>
+                <div class="value-monitor" id="complex-monitor">Values will appear here...</div>
+            </div>
+
+            <!-- State Machine Only -->
+            <div class="demo-section">
+                <h2>State Machine Controls</h2>
+                <div class="controls-header">
+                    <span>State machine inputs only</span>
+                </div>
+                <div id="sm-container"></div>
+                <div class="value-monitor" id="sm-monitor">State machine values...</div>
+            </div>
+
+            <!-- All Control Types -->
+            <div class="demo-section">
+                <h2>All Control Types</h2>
+                <div class="controls-header">
+                    <span>Every supported control type</span>
+                </div>
+                <div id="all-types-container"></div>
+                <div class="value-monitor" id="all-types-monitor">All types values...</div>
             </div>
         </div>
     </div>
 
-    <script>
-        // Show debug info
-        const debugInfo = {
-            'Page': window.location.pathname,
-            'Component': window.location.pathname.split('/').pop().replace('.html', ''),
-            'Timestamp': new Date().toISOString()
+    <!-- Load Pickr library -->
+    <script src="../js/libs/pickr.min.js"></script>
+
+    <!-- Load Components -->
+    <script type="module">
+        import '../js/components/TerminalComponent.js';
+        import '../js/components/TerminalPanel.js';
+        import '../js/components/TerminalButton.js';
+        import '../js/components/TerminalInput.js';
+        import '../js/components/TerminalToggle.js';
+        import '../js/components/TerminalDropdown.js';
+        import '../js/components/TerminalColorPicker.js';
+        import '../js/components/TerminalDynamicControls.js';
+
+        // Simple Rive-like schema
+        const simpleSchema = {
+            stateMachines: [
+                {
+                    name: "MainController",
+                    inputs: [
+                        { name: "isPlaying", type: "boolean", value: false },
+                        { name: "progress", type: "number", min: 0, max: 100, value: 50 }
+                    ]
+                }
+            ],
+            viewModel: {
+                name: "AppViewModel",
+                blueprintName: "Application Settings",
+                properties: [
+                    { name: "enabled", type: "boolean", value: true },
+                    { name: "speed", type: "number", value: 1.0 },
+                    { name: "themeColor", type: "color", value: 0xff00ff41 },
+                    { name: "mode", type: "enumType", value: "auto",
+                      metadata: { enumValues: ["auto", "manual", "hybrid"] }
+                    },
+                    { name: "title", type: "string", value: "Demo App" },
+                    { name: "reset", type: "trigger" }
+                ]
+            }
         };
-        document.getElementById('debug-info').textContent = JSON.stringify(debugInfo, null, 2);
+
+        // Complex nested schema (5 levels deep)
+        const complexSchema = {
+            viewModel: {
+                name: "RootVM",
+                blueprintName: "Root Level",
+                properties: [
+                    { name: "rootProp", type: "boolean", value: true }
+                ],
+                nestedViewModels: [
+                    {
+                        name: "Level1VM",
+                        blueprintName: "Level 1",
+                        properties: [
+                            { name: "level1Prop", type: "number", value: 1 }
+                        ],
+                        nestedViewModels: [
+                            {
+                                name: "Level2VM",
+                                blueprintName: "Level 2",
+                                properties: [
+                                    { name: "level2Prop", type: "string", value: "Level 2" },
+                                    { name: "level2Color", type: "color", value: 0xffff0000 }
+                                ],
+                                nestedViewModels: [
+                                    {
+                                        name: "Level3VM",
+                                        blueprintName: "Level 3",
+                                        properties: [
+                                            { name: "level3Prop", type: "enumType", value: "option1",
+                                              metadata: { enumValues: ["option1", "option2", "option3"] }
+                                            }
+                                        ],
+                                        nestedViewModels: [
+                                            {
+                                                name: "Level4VM",
+                                                blueprintName: "Level 4",
+                                                properties: [
+                                                    { name: "level4Prop", type: "boolean", value: false }
+                                                ],
+                                                nestedViewModels: [
+                                                    {
+                                                        name: "Level5VM",
+                                                        blueprintName: "Level 5 (Deepest)",
+                                                        properties: [
+                                                            { name: "deepestProp", type: "string", value: "Deep value" },
+                                                            { name: "deepTrigger", type: "trigger" }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        name: "SiblingVM",
+                        blueprintName: "Sibling ViewModel",
+                        properties: [
+                            { name: "siblingProp", type: "number", value: 42 }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // State Machine only schema
+        const smOnlySchema = {
+            stateMachines: [
+                {
+                    name: "PlayerController",
+                    inputs: [
+                        { name: "jump", type: "trigger" },
+                        { name: "moveSpeed", type: "number", min: 0, max: 10, step: 0.5, value: 5 },
+                        { name: "isGrounded", type: "boolean", value: true }
+                    ]
+                },
+                {
+                    name: "AnimationController",
+                    inputs: [
+                        { name: "play", type: "trigger" },
+                        { name: "pause", type: "trigger" },
+                        { name: "animSpeed", type: "number", min: 0.1, max: 2.0, step: 0.1, value: 1.0 }
+                    ]
+                }
+            ]
+        };
+
+        // All control types schema
+        const allTypesSchema = {
+            viewModel: {
+                name: "AllTypesVM",
+                blueprintName: "All Control Types Demo",
+                properties: [
+                    { name: "booleanControl", type: "boolean", value: false },
+                    { name: "numberControl", type: "number", value: 3.14159 },
+                    { name: "stringControl", type: "string", value: "Hello Terminal" },
+                    { name: "colorControl", type: "color", value: 0xff00ff41 },
+                    { name: "enumControl", type: "enumType", value: "medium",
+                      metadata: { enumValues: ["small", "medium", "large", "extra-large"] }
+                    },
+                    { name: "triggerControl", type: "trigger" }
+                ],
+                nestedViewModels: [
+                    {
+                        name: "SecondaryVM",
+                        blueprintName: "Secondary Controls",
+                        properties: [
+                            { name: "anotherBool", type: "boolean", value: true },
+                            { name: "anotherNumber", type: "number", value: 100 },
+                            { name: "anotherString", type: "string", value: "Nested value" },
+                            { name: "anotherColor", type: "color", value: 0xffff00ff },
+                            { name: "anotherEnum", type: "enumType", value: "B",
+                              metadata: { enumValues: ["A", "B", "C", "D", "E"] }
+                            },
+                            { name: "anotherTrigger", type: "trigger" }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // Initialize controls
+        function initializeDemo(containerId, schema, monitorId) {
+            const container = document.getElementById(containerId);
+            const monitor = document.getElementById(monitorId);
+
+            // Create the dynamic controls component using innerHTML to avoid createElement issues
+            container.innerHTML = '<terminal-dynamic-controls></terminal-dynamic-controls>';
+            const controls = container.querySelector('terminal-dynamic-controls');
+
+            // Wait for the element to be upgraded
+            customElements.whenDefined('terminal-dynamic-controls').then(() => {
+                controls.setSchema(schema);
+            });
+
+            // Listen for value changes
+            controls.addEventListener('control-change', (e) => {
+                const values = controls.getValues();
+                monitor.textContent = JSON.stringify(values, null, 2);
+                console.log(`${containerId} change:`, e.detail);
+            });
+
+            // Listen for triggers
+            controls.addEventListener('control-trigger', (e) => {
+                console.log(`Trigger fired: ${e.detail.path}`);
+                const message = document.createElement('div');
+                message.className = 'status-message';
+                message.textContent = `🔥 Trigger fired: ${e.detail.path}`;
+                container.appendChild(message);
+                setTimeout(() => message.remove(), 2000);
+            });
+
+            // Initial value display
+            monitor.textContent = JSON.stringify(controls.getValues(), null, 2);
+
+            return controls;
+        }
+
+        // Initialize all demos
+        window.addEventListener('DOMContentLoaded', () => {
+            // Simple demo
+            const simpleControls = initializeDemo('simple-container', simpleSchema, 'simple-monitor');
+
+            // Toggle disabled state
+            document.getElementById('simple-toggle').addEventListener('button-click', () => {
+                if (simpleControls.getProp('disabled')) {
+                    simpleControls.enable();
+                } else {
+                    simpleControls.disable();
+                }
+            });
+
+            // Complex demo
+            const complexControls = initializeDemo('complex-container', complexSchema, 'complex-monitor');
+
+            // Update live values
+            document.getElementById('complex-update').addEventListener('button-click', () => {
+                // Simulate external updates
+                complexControls.updateLiveValue('vm.RootVM.rootProp', Math.random() > 0.5);
+                complexControls.updateLiveValue('vm.Level1VM.level1Prop', Math.random() * 10);
+                complexControls.updateLiveValue('vm.Level2VM.level2Prop', `Updated ${Date.now()}`);
+                complexControls.updateLiveValue('vm.Level2VM.level2Color', 0xff000000 | Math.floor(Math.random() * 0xffffff));
+            });
+
+            // State Machine only
+            initializeDemo('sm-container', smOnlySchema, 'sm-monitor');
+
+            // All types demo
+            initializeDemo('all-types-container', allTypesSchema, 'all-types-monitor');
+        });
     </script>
 </body>
 </html>

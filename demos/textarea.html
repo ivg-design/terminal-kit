@@ -3,112 +3,755 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Component Demo</title>
-    <link rel="stylesheet" href="/css/theme.css">
+    <title>Terminal Textarea - Component Demo</title>
+
+    <!-- Core styles -->
+    <link rel="stylesheet" href="../css/theme/terminal.css">
+    <link rel="stylesheet" href="../css/components/form.css">
+
+    <!-- Prism.js Terminal Kit theme -->
+    <link rel="stylesheet" href="../public/js/libs/prismjs/prism-terminal-kit.css">
+
+    <!-- Web Components -->
+    <script type="module">
+        import '../js/components/TTextareaLit.js';
+    </script>
+
     <style>
-        body {
-            background: #0a0a0a;
-            color: #00ff41;
-            font-family: 'SF Mono', 'Monaco', monospace;
-            padding: 40px 20px;
+        :root {
+            --terminal-black: #0a0a0a;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-gray-dark: #242424;
+            --terminal-gray-medium: #2a2a2a;
+            --terminal-gray-light: #333333;
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-red: #ff3333;
+            --terminal-yellow: #ffcc00;
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+        }
+
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: auto !important;
+            overflow: visible !important;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--terminal-black);
+            color: var(--terminal-green);
+            padding: 40px 20px;
             line-height: 1.6;
         }
+
         .demo-container {
             max-width: 1200px;
             margin: 0 auto;
         }
+
         h1 {
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            border-bottom: 2px solid #00ff41;
+            border-bottom: 2px solid var(--terminal-green);
             padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
             margin-bottom: 30px;
-            font-size: 24px;
-        }
-        h2 {
-            color: #00cc33;
-            text-transform: uppercase;
-            font-size: 14px;
-            letter-spacing: 0.1em;
-            margin-top: 30px;
-        }
-        .back-link {
-            color: #00ff41;
-            text-decoration: none;
-            display: inline-block;
-            margin-bottom: 20px;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-        .back-link:hover {
-            opacity: 1;
-            text-decoration: underline;
-        }
-        .demo-section {
-            margin: 40px 0;
-            padding: 20px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 4px;
-        }
-        .demo-description {
-            color: #00cc33;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        .demo-code {
-            background: #0a0a0a;
-            border: 1px solid #00ff41;
-            padding: 15px;
-            margin-top: 20px;
             font-size: 12px;
+            color: var(--terminal-green-dim);
+        }
+
+        .breadcrumb a {
+            color: var(--terminal-green-dim);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--terminal-green);
+        }
+
+        .component-section {
+            margin-bottom: 60px;
+            padding: 30px;
+            background: var(--terminal-gray-darkest);
+            border: 1px solid var(--terminal-gray-light);
+        }
+
+        h2.component-title {
+            color: var(--terminal-green);
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .component-description {
+            color: var(--terminal-green-dim);
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            color: var(--terminal-green);
+            font-size: 14px;
+            margin: 30px 0 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .demo-item {
+            background: var(--terminal-gray-dark);
+            border: 1px solid var(--terminal-gray-light);
+            padding: 20px;
+        }
+
+        .demo-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .demo-label {
+            display: block;
+            color: var(--terminal-green-dim);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-light);
+            padding: 20px;
+            margin-top: 30px;
             overflow-x: auto;
         }
-        .demo-code pre {
-            margin: 0;
-            color: #00ff41;
+
+        .code-block code {
+            color: var(--terminal-green-dim);
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: pre;
+            display: block;
+            margin-bottom: 5px;
         }
-        .placeholder {
-            padding: 40px;
-            text-align: center;
-            border: 2px dashed #333;
-            color: #666;
-            font-style: italic;
+
+        .event-log {
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-light);
+            padding: 15px;
+            margin-top: 30px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .event-log h3 {
+            color: var(--terminal-green);
+            font-size: 14px;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .event-entry {
+            font-size: 11px;
+            color: var(--terminal-green-dim);
+            margin: 5px 0;
+            padding: 5px;
+            background: var(--terminal-gray-darkest);
+            border-left: 2px solid var(--terminal-green);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .terminal-button {
+            padding: 8px 16px;
+            background: var(--terminal-gray-dark);
+            color: var(--terminal-green);
+            border: 1px solid var(--terminal-green);
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+
+        .terminal-button:hover {
+            background: rgba(0, 255, 65, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+
+        .terminal-button.primary {
+            background: var(--terminal-green);
+            color: var(--terminal-black);
+        }
+
+        .terminal-button.primary:hover {
+            background: var(--terminal-green-dim);
+        }
+
+        .info-box {
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-green-dim);
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 11px;
+            color: var(--terminal-green-dim);
+        }
+
+        .keyboard-shortcuts {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 20px;
+            font-size: 11px;
+            color: var(--terminal-green-dim);
+        }
+
+        .shortcut-key {
+            color: var(--terminal-green);
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="demo-container">
-        <a href="/" class="back-link">← Back to Gallery</a>
+        <div class="breadcrumb">
+            <a href="index.html">← Back to Gallery</a> / Textarea
+        </div>
 
-        <h1>COMPONENT DEMO</h1>
+        <h1>Terminal Textarea Component</h1>
 
-        <div class="demo-section">
-            <h2>Demo Coming Soon</h2>
-            <div class="placeholder">
-                This demo page is under construction.
-                <br><br>
-                The component exists and works, but the demo showcase is still being built.
+        <div class="component-section">
+            <h2 class="component-title">Resize Control</h2>
+            <p class="component-description">
+                Control how users can resize textareas with the resize property.
+            </p>
+
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Resize Both (default)</span>
+                    <t-textarea
+                        placeholder="Drag corner to resize width & height..."
+                        rows="4">
+                    </t-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Resize Vertical Only</span>
+                    <t-textarea
+                        placeholder="Only height resizing..."
+                        rows="4"
+                        resize="vertical">
+                    </t-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Resize Horizontal Only</span>
+                    <t-textarea
+                        placeholder="Only width resizing..."
+                        rows="4"
+                        resize="horizontal">
+                    </t-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">No Resize (fixed)</span>
+                    <t-textarea
+                        placeholder="Cannot be resized at all..."
+                        rows="4"
+                        resize="none">
+                    </t-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Read-only (no resize)</span>
+                    <t-textarea
+                        value="This content is read-only.
+You cannot edit or resize it."
+                        readonly
+                        rows="3">
+                    </t-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Disabled (no resize)</span>
+                    <t-textarea
+                        value="This textarea is disabled"
+                        disabled
+                        rows="3">
+                    </t-textarea>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;t-textarea resize="both" rows="4"&gt;&lt;/t-textarea&gt;</code>
+                <code>&lt;t-textarea resize="vertical" rows="4"&gt;&lt;/t-textarea&gt;</code>
+                <code>&lt;t-textarea resize="horizontal" rows="4"&gt;&lt;/t-textarea&gt;</code>
+                <code>&lt;t-textarea resize="none" rows="4"&gt;&lt;/t-textarea&gt;</code>
             </div>
         </div>
 
-        <div class="demo-section">
-            <h2>Debug Information</h2>
-            <div class="demo-code">
-                <pre id="debug-info"></pre>
+        <div class="component-section">
+            <h2 class="component-title">Programmatic Size Control</h2>
+            <p class="component-description">
+                Dynamically change textarea size based on user actions or application state.
+            </p>
+
+            <div class="demo-item full-width">
+                <span class="demo-label">Size Presets</span>
+                <div class="button-row">
+                    <button class="terminal-button" onclick="setSizePreset('compact')">
+                        Compact (2 rows)
+                    </button>
+                    <button class="terminal-button" onclick="setSizePreset('standard')">
+                        Standard (4 rows)
+                    </button>
+                    <button class="terminal-button" onclick="setSizePreset('large')">
+                        Large (8 rows)
+                    </button>
+                    <button class="terminal-button" onclick="setSizePreset('full')">
+                        Full (15 rows)
+                    </button>
+                </div>
+                <t-textarea
+                    id="programmaticSize"
+                    placeholder="Click buttons above to change my size..."
+                    rows="4"
+                    resize="none">
+                </t-textarea>
             </div>
+
+            <div class="code-block">
+                <code>// Programmatically set textarea size</code>
+                <code>const textarea = document.getElementById('myTextarea');</code>
+                <code>textarea.rows = 8;  // Change to 8 rows</code>
+                <code></code>
+                <code>// Or set via function</code>
+                <code>function setSize(rows) {</code>
+                <code>  textarea.rows = rows;</code>
+                <code>}</code>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <h2 class="component-title">Min/Max Resize Constraints</h2>
+            <p class="component-description">
+                Control the minimum and maximum size users can resize textareas using CSS custom properties.
+            </p>
+
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Constrained Height (100px - 400px)</span>
+                    <t-textarea
+                        placeholder="Resize vertically - constrained between 100-400px..."
+                        rows="4"
+                        resize="vertical"
+                        style="--textarea-min-height: 100px; --textarea-max-height: 400px;">
+                    </t-textarea>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Constrained Width (200px - 600px)</span>
+                    <t-textarea
+                        placeholder="Resize horizontally - constrained between 200-600px..."
+                        rows="4"
+                        resize="horizontal"
+                        style="--textarea-min-width: 200px; --textarea-max-width: 600px;">
+                    </t-textarea>
+                </div>
+
+                <div class="demo-item full-width">
+                    <span class="demo-label">Both Dimensions Constrained</span>
+                    <t-textarea
+                        placeholder="Resize both - width: 300-800px, height: 150-500px..."
+                        rows="6"
+                        resize="both"
+                        style="--textarea-min-width: 300px; --textarea-max-width: 800px; --textarea-min-height: 150px; --textarea-max-height: 500px;">
+                    </t-textarea>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;t-textarea</code>
+                <code>  resize="vertical"</code>
+                <code>  style="--textarea-min-height: 100px; --textarea-max-height: 400px;"&gt;</code>
+                <code>&lt;/t-textarea&gt;</code>
+                <code></code>
+                <code>&lt;t-textarea</code>
+                <code>  resize="both"</code>
+                <code>  style="--textarea-min-width: 300px; --textarea-max-width: 800px;</code>
+                <code>         --textarea-min-height: 150px; --textarea-max-height: 500px;"&gt;</code>
+                <code>&lt;/t-textarea&gt;</code>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <h2 class="component-title">Code Editor Mode</h2>
+            <p class="component-description">
+                Advanced textarea with line numbers and IDE-like keyboard shortcuts.
+            </p>
+
+            <div class="demo-item full-width">
+                <span class="demo-label">Code Editor with Line Numbers</span>
+                <div class="info-box">
+                    <strong>IDE Keyboard Shortcuts:</strong>
+                    <div class="keyboard-shortcuts">
+                        <span class="shortcut-key">Tab</span><span>Insert tab / Indent selection</span>
+                        <span class="shortcut-key">Shift+Tab</span><span>Outdent current line or selection</span>
+                        <span class="shortcut-key">Enter</span><span>Auto-indent new line</span>
+                        <span class="shortcut-key">Ctrl/Cmd + D</span><span>Duplicate current line</span>
+                    </div>
+                </div>
+                <t-textarea
+                    id="codeEditor"
+                    show-line-numbers code-mode
+                    placeholder="// Enter your code here..."
+                    rows="15"
+                    min-height="300px"
+                    max-height="600px"
+                    value="function fibonacci(n) {
+  if (n <= 1) return n;
+
+  let prev = 0;
+  let curr = 1;
+
+  for (let i = 2; i <= n; i++) {
+    const temp = curr;
+    curr = prev + curr;
+    prev = temp;
+  }
+
+  return curr;
+}
+
+// Test the function
+console.log(fibonacci(10)); // Output: 55
+console.log(fibonacci(20)); // Output: 6765">
+                </t-textarea>
+                <div class="button-row">
+                    <button class="terminal-button" onclick="const e=document.getElementById('codeEditor'); e.showLineNumbers=!e.showLineNumbers;">
+                        Toggle Line Numbers
+                    </button>
+                    <button class="terminal-button" onclick="document.getElementById('codeEditor').focus()">
+                        Focus Editor
+                    </button>
+                    <button class="terminal-button" onclick="copyToClipboard()">
+                        Copy to Clipboard
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="code-block">
+                <code>&lt;t-textarea show-line-numbers code-mode rows="15"&gt;&lt;/t-textarea&gt;</code>
+                <code>&lt;t-textarea code-mode rows="10"&gt;&lt;/t-textarea&gt;</code>
+                <code>// Toggle line numbers programmatically</code>
+                <code>textarea.toggleLineNumbers();</code>
+                <code>textarea.setLineNumbers(true);</code>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <h2 class="component-title">Syntax Highlighting</h2>
+            <p class="component-description">
+                Live syntax highlighting with Prism.js. Type code and see it highlighted in real-time using the Terminal Kit color scheme.
+            </p>
+
+            <div class="info-box">
+                <strong>Supported Languages:</strong> JavaScript, HTML, CSS, and more. Set the language property to enable syntax highlighting.
+            </div>
+
+            <div class="demo-grid">
+                <div class="demo-item full-width">
+                    <span class="demo-label">JavaScript with Syntax Highlighting</span>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label for="jsLang">Language:</label>
+                            <select id="jsLang" onchange="document.getElementById('jsEditor').language = this.value">
+                                <option value="javascript">JavaScript</option>
+                                <option value="markup">HTML</option>
+                                <option value="css">CSS</option>
+                                <option value="none">Plain Text</option>
+                            </select>
+                        </div>
+                        <button class="terminal-button" onclick="const e=document.getElementById('jsEditor'); e.showLineNumbers=!e.showLineNumbers;">
+                            Toggle Line Numbers
+                        </button>
+                    </div>
+                    <t-textarea
+                        id="jsEditor"
+                        code-mode
+                        show-line-numbers
+                        language="javascript"
+                        rows="15"
+                        value="function fibonacci(n) {
+  if (n <= 1) return n;
+
+  let prev = 0;
+  let curr = 1;
+
+  for (let i = 2; i <= n; i++) {
+    const temp = curr;
+    curr = prev + curr;
+    prev = temp;
+  }
+
+  return curr;
+}
+
+// Test the function
+console.log(fibonacci(10)); // Output: 55
+console.log(fibonacci(20)); // Output: 6765">
+                    </t-textarea>
+                </div>
+
+                <div class="demo-item full-width">
+                    <span class="demo-label">HTML with Syntax Highlighting</span>
+                    <div class="button-row">
+                        <button class="terminal-button" onclick="const e=document.getElementById('htmlEditor'); e.showLineNumbers=!e.showLineNumbers;">
+                            Toggle Line Numbers
+                        </button>
+                    </div>
+                    <t-textarea
+                        id="htmlEditor"
+                        code-mode
+                        show-line-numbers
+                        language="markup"
+                        rows="12"
+                        value="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+  <meta charset=&quot;UTF-8&quot;>
+  <title>Hello World</title>
+</head>
+<body>
+  <div class=&quot;container&quot;>
+    <h1>Welcome to Terminal Kit</h1>
+    <button onclick=&quot;handleClick()&quot;>Click Me</button>
+  </div>
+</body>
+</html>">
+                    </t-textarea>
+                </div>
+
+                <div class="demo-item full-width">
+                    <span class="demo-label">CSS with Syntax Highlighting</span>
+                    <div class="button-row">
+                        <button class="terminal-button" onclick="const e=document.getElementById('cssEditor'); e.showLineNumbers=!e.showLineNumbers;">
+                            Toggle Line Numbers
+                        </button>
+                    </div>
+                    <t-textarea
+                        id="cssEditor"
+                        code-mode
+                        show-line-numbers
+                        language="css"
+                        rows="12"
+                        value=".container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.btn-primary {
+  background: #00ff41;
+  color: #0a0a0a;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+}">
+                    </t-textarea>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;t-textarea code-mode show-line-numbers language="javascript" rows="15"&gt;&lt;/t-textarea&gt;</code>
+                <code>&lt;t-textarea code-mode language="markup" rows="10"&gt;&lt;/t-textarea&gt;</code>
+                <code>&lt;t-textarea code-mode language="css" rows="10"&gt;&lt;/t-textarea&gt;</code>
+                <code></code>
+                <code>// Programmatically change language</code>
+                <code>textarea.language = 'javascript';</code>
+                <code>textarea.language = 'none'; // Disable highlighting</code>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <h2 class="component-title">Interactive Examples</h2>
+            <p class="component-description">
+                Dynamic examples showing character counting, auto-resize, and validation.
+            </p>
+
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Character Counter</span>
+                    <t-textarea
+                        id="charCounter"
+                        placeholder="Type something (max 280 chars)..."
+                        rows="6">
+                    </t-textarea>
+                    <div id="charCount" style="text-align: right; margin-top: 5px; color: var(--terminal-green-dim); font-size: 11px;">
+                        0 / 280 characters
+                    </div>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Auto-growing Textarea</span>
+                    <t-textarea
+                        id="autoGrow"
+                        placeholder="This textarea grows as you type..."
+                        rows="2"
+                        resize="none">
+                    </t-textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="event-log" id="eventLog">
+            <h3>Event Log</h3>
         </div>
     </div>
 
     <script>
-        // Show debug info
-        const debugInfo = {
-            'Page': window.location.pathname,
-            'Component': window.location.pathname.split('/').pop().replace('.html', ''),
-            'Timestamp': new Date().toISOString()
-        };
-        document.getElementById('debug-info').textContent = JSON.stringify(debugInfo, null, 2);
+        // Event logging
+        function logEvent(component, event, detail) {
+            const log = document.getElementById('eventLog');
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${component}: ${event} ${detail ? '- ' + JSON.stringify(detail) : ''}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Add event listeners to all textareas
+        document.addEventListener('DOMContentLoaded', () => {
+            const textareas = document.querySelectorAll('t-textarea');
+            textareas.forEach((textarea) => {
+                const id = textarea.id || textarea.getAttribute('placeholder')?.substring(0, 20) || 'Textarea';
+
+                textarea.addEventListener('textarea-input', (e) => {
+                    const value = e.detail?.value || '';
+                    const preview = value.substring(0, 50);
+                    logEvent(id, 'textarea-input', { preview: preview + (value.length > 50 ? '...' : '') });
+                });
+
+                textarea.addEventListener('textarea-change', (e) => {
+                    const value = e.detail?.value || '';
+                    logEvent(id, 'textarea-change', { length: value.length });
+                });
+
+                textarea.addEventListener('textarea-focus', () => {
+                    logEvent(id, 'textarea-focus');
+                });
+
+                textarea.addEventListener('textarea-blur', () => {
+                    logEvent(id, 'textarea-blur');
+                });
+            });
+
+            // Character counter
+            const charCounter = document.getElementById('charCounter');
+            const charCount = document.getElementById('charCount');
+            const maxChars = 280;
+
+            if (charCounter && charCount) {
+                charCounter.addEventListener('textarea-input', (e) => {
+                    const length = e.detail.value.length;
+                    charCount.textContent = `${length} / ${maxChars} characters`;
+
+                    if (length > maxChars) {
+                        charCount.style.color = 'var(--terminal-red)';
+                    } else if (length > maxChars * 0.9) {
+                        charCount.style.color = 'var(--terminal-yellow)';
+                    } else {
+                        charCount.style.color = 'var(--terminal-green-dim)';
+                    }
+                });
+            }
+
+            // Auto-growing textarea
+            const autoGrow = document.getElementById('autoGrow');
+            if (autoGrow) {
+                autoGrow.addEventListener('textarea-input', (e) => {
+                    const lines = e.detail.value.split('\n').length;
+                    const newRows = Math.max(3, Math.min(lines + 1, 15)); // Min 3, max 15 rows
+                    autoGrow.rows = newRows;
+                });
+            }
+
+            // Log initial state
+            logEvent('System', 'Demo initialized');
+        });
+
+        // Copy to clipboard
+        async function copyToClipboard() {
+            const codeEditor = document.getElementById('codeEditor');
+            if (codeEditor) {
+                const text = codeEditor.value;
+                try {
+                    await navigator.clipboard.writeText(text);
+                    logEvent('CodeEditor', 'copied to clipboard');
+                } catch (err) {
+                    logEvent('CodeEditor', 'copy failed', { error: err.message });
+                }
+            }
+        }
+
+        // Programmatic size control
+        function setSizePreset(preset) {
+            const textarea = document.getElementById('programmaticSize');
+            if (!textarea) return;
+
+            const presets = {
+                compact: 2,
+                standard: 4,
+                large: 8,
+                full: 15
+            };
+
+            textarea.rows = presets[preset] || 4;
+            logEvent('ProgrammaticSize', `Size changed to ${preset}`, { rows: presets[preset] });
+        }
+
     </script>
+
+    <!-- Prism.js core and language components (local files) -->
+    <script src="../public/js/libs/prismjs/prism.js"></script>
+    <script src="../public/js/libs/prismjs/prism-markup.min.js"></script>
+    <script src="../public/js/libs/prismjs/prism-css.min.js"></script>
+    <script src="../public/js/libs/prismjs/prism-javascript.min.js"></script>
 </body>
 </html>

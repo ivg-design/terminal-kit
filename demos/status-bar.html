@@ -1,114 +1,760 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Component Demo</title>
-    <link rel="stylesheet" href="/css/theme.css">
-    <style>
-        body {
-            background: #0a0a0a;
-            color: #00ff41;
-            font-family: 'SF Mono', 'Monaco', monospace;
-            padding: 40px 20px;
-            margin: 0;
-            line-height: 1.6;
-        }
-        .demo-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        h1 {
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            border-bottom: 2px solid #00ff41;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-            font-size: 24px;
-        }
-        h2 {
-            color: #00cc33;
-            text-transform: uppercase;
-            font-size: 14px;
-            letter-spacing: 0.1em;
-            margin-top: 30px;
-        }
-        .back-link {
-            color: #00ff41;
-            text-decoration: none;
-            display: inline-block;
-            margin-bottom: 20px;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-        .back-link:hover {
-            opacity: 1;
-            text-decoration: underline;
-        }
-        .demo-section {
-            margin: 40px 0;
-            padding: 20px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 4px;
-        }
-        .demo-description {
-            color: #00cc33;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        .demo-code {
-            background: #0a0a0a;
-            border: 1px solid #00ff41;
-            padding: 15px;
-            margin-top: 20px;
-            font-size: 12px;
-            overflow-x: auto;
-        }
-        .demo-code pre {
-            margin: 0;
-            color: #00ff41;
-        }
-        .placeholder {
-            padding: 40px;
-            text-align: center;
-            border: 2px dashed #333;
-            color: #666;
-            font-style: italic;
-        }
-    </style>
-</head>
-<body>
-    <div class="demo-container">
-        <a href="/" class="back-link">← Back to Gallery</a>
 
-        <h1>COMPONENT DEMO</h1>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Terminal Status Bar Lit - Component Demo</title>
 
-        <div class="demo-section">
-            <h2>Demo Coming Soon</h2>
-            <div class="placeholder">
-                This demo page is under construction.
-                <br><br>
-                The component exists and works, but the demo showcase is still being built.
+        <!-- Load CSS -->
+        <link rel="stylesheet" href="../css/theme/terminal.css">
+        <link rel="stylesheet" href="../css/components/status-bar.css">
+        <link rel="stylesheet" href="../css/components/buttons.css">
+
+        <style>
+            /* Page styles only - components have embedded styles */
+            :root {
+                --terminal-black: #0a0a0a;
+                --terminal-green: #00ff41;
+                --terminal-green-dim: #00cc33;
+                --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+                --spacing-sm: 8px;
+                --spacing-md: 12px;
+                --spacing-lg: 16px;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: var(--font-mono);
+                background: var(--terminal-black);
+                color: var(--terminal-green);
+                padding: 40px 20px;
+                line-height: 1.6;
+            }
+
+            .demo-container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            h1 {
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                border-bottom: 2px solid var(--terminal-green);
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+
+            .breadcrumb {
+                margin-bottom: 30px;
+                font-size: 12px;
+                color: var(--terminal-green-dim);
+            }
+
+            .breadcrumb a {
+                color: var(--terminal-green-dim);
+                text-decoration: none;
+            }
+
+            .breadcrumb a:hover {
+                color: var(--terminal-green);
+            }
+
+            .demo-section {
+                margin-bottom: 60px;
+                padding: 30px;
+                background: #1a1a1a;
+                border: 1px solid #333;
+                border-radius: 8px;
+            }
+
+            .demo-section h2 {
+                color: var(--terminal-green);
+                font-size: 18px;
+                margin-bottom: 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .demo-section h3 {
+                color: var(--terminal-green);
+                font-size: 16px;
+                margin-bottom: 15px;
+                margin-top: 30px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .section-description {
+                color: var(--terminal-green-dim);
+                font-size: 13px;
+                margin-bottom: 30px;
+            }
+
+            .demo-item {
+                padding: 20px;
+                background: #0a0a0a;
+                border: 1px solid #333;
+                border-radius: 4px;
+                margin-bottom: 20px;
+            }
+
+            .demo-label {
+                display: block;
+                margin-bottom: 15px;
+                font-size: 11px;
+                text-transform: uppercase;
+                color: var(--terminal-green-dim);
+                letter-spacing: 0.05em;
+                padding-bottom: 5px;
+                border-bottom: 1px solid #333;
+            }
+
+            .code-block {
+                background: #0a0a0a;
+                padding: 15px;
+                border: 1px solid #009926;
+                font-size: 11px;
+                overflow-x: auto;
+                margin-top: 20px;
+            }
+
+            .code-block code {
+                color: #00ff41;
+                white-space: pre-line;
+            }
+
+            .controls-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+
+            .control-group {
+                background: #2a2a2a;
+                padding: 10px;
+                border: 1px solid #404040;
+            }
+
+            .control-group label {
+                display: block;
+                font-size: 10px;
+                color: #00cc33;
+                margin-bottom: 5px;
+            }
+
+            .control-group select,
+            .control-group input[type="checkbox"] {
+                width: 100%;
+                background: #242424;
+                color: #00ff41;
+                border: 1px solid #404040;
+                padding: 2px;
+                margin-bottom: 5px;
+            }
+
+            .control-group input[type="checkbox"] {
+                width: auto;
+                margin-right: 5px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="demo-container">
+            <div class="breadcrumb">
+                <a href="index.html">← Back to Gallery</a> / Status Bar
+            </div>
+
+            <h1>Terminal Status Bar (TStatusBarLit)</h1>
+            <p style="color: var(--terminal-green-dim); margin-bottom: 40px;">
+                Flexible status bar with alignment zones (left/center/right), automatic width validation, and marquee scrolling. Built with LitElement.
+            </p>
+
+            <!-- Status Bar Examples -->
+            <div class="demo-section">
+                <h3>Status Fields with Different Properties</h3>
+
+                <div class="demo-item">
+                    <span class="demo-label">Basic Status Bar (with percentage widths for stable layout)</span>
+                    <t-sta id="statusBar1">
+                    </t-sta>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Interactive Status Bar Configuration</span>
+                    <t-sta id="statusBar2">
+                    </t-sta>
+
+                    <div style="margin-top: 15px; padding: 10px; border: 1px solid #404040; background: #2a2a2a;">
+                        <div class="controls-grid">
+                            <div class="control-group">
+                                <label>Field 1 Display:</label>
+                                <select id="field1Display">
+                                    <option value="text">Label + Value</option>
+                                    <option value="icon">Icon + Value</option>
+                                    <option value="icon-text" selected>Icon + Label + Value</option>
+                                    <option value="value">Value Only</option>
+                                </select>
+                                <label>Width:</label>
+                                <select id="field1Width">
+                                    <option value="auto">Auto</option>
+                                    <option value="10%">10%</option>
+                                    <option value="15%">15%</option>
+                                    <option value="20%">20%</option>
+                                    <option value="25%">25%</option>
+                                    <option value="30%">30%</option>
+                                    <option value="35%" selected>35%</option>
+                                    <option value="40%">40%</option>
+                                    <option value="45%">45%</option>
+                                    <option value="50%">50%</option>
+                                    <option value="60%">60%</option>
+                                    <option value="75%">75%</option>
+                                    <option value="100%">100%</option>
+                                </select>
+                                <label>Align:</label>
+                                <select id="field1Align">
+                                    <option value="left" selected>Left</option>
+                                    <option value="center">Center</option>
+                                    <option value="right">Right</option>
+                                </select>
+                                <label>
+                                    <input type="checkbox" id="field1Marquee" checked>
+                                    Enable Marquee
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="field1Hover" checked>
+                                    Enable Hover
+                                </label>
+                            </div>
+                            <div class="control-group">
+                                <label>Field 2 Display:</label>
+                                <select id="field2Display">
+                                    <option value="text" selected>Label + Value</option>
+                                    <option value="icon">Icon + Value</option>
+                                    <option value="icon-text">Icon + Label + Value</option>
+                                    <option value="value">Value Only</option>
+                                </select>
+                                <label>Width:</label>
+                                <select id="field2Width">
+                                    <option value="auto">Auto</option>
+                                    <option value="10%">10%</option>
+                                    <option value="15%">15%</option>
+                                    <option value="20%">20%</option>
+                                    <option value="25%" selected>25%</option>
+                                    <option value="30%">30%</option>
+                                    <option value="35%">35%</option>
+                                    <option value="40%">40%</option>
+                                    <option value="45%">45%</option>
+                                    <option value="50%">50%</option>
+                                    <option value="60%">60%</option>
+                                    <option value="75%">75%</option>
+                                    <option value="100%">100%</option>
+                                </select>
+                                <label>Align:</label>
+                                <select id="field2Align">
+                                    <option value="left">Left</option>
+                                    <option value="center" selected>Center</option>
+                                    <option value="right">Right</option>
+                                </select>
+                                <label>
+                                    <input type="checkbox" id="field2Marquee">
+                                    Enable Marquee
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="field2Hover" checked>
+                                    Enable Hover
+                                </label>
+                            </div>
+                            <div class="control-group">
+                                <label>Field 3 Display:</label>
+                                <select id="field3Display">
+                                    <option value="text" selected>Label + Value</option>
+                                    <option value="icon">Icon + Value</option>
+                                    <option value="icon-text">Icon + Label + Value</option>
+                                    <option value="value">Value Only</option>
+                                </select>
+                                <label>Width:</label>
+                                <select id="field3Width">
+                                    <option value="auto">Auto</option>
+                                    <option value="10%">10%</option>
+                                    <option value="15%" selected>15%</option>
+                                    <option value="20%">20%</option>
+                                    <option value="25%">25%</option>
+                                    <option value="30%">30%</option>
+                                    <option value="35%">35%</option>
+                                    <option value="40%">40%</option>
+                                    <option value="45%">45%</option>
+                                    <option value="50%">50%</option>
+                                    <option value="60%">60%</option>
+                                    <option value="75%">75%</option>
+                                    <option value="100%">100%</option>
+                                </select>
+                                <label>Align:</label>
+                                <select id="field3Align">
+                                    <option value="left">Left</option>
+                                    <option value="center">Center</option>
+                                    <option value="right" selected>Right</option>
+                                </select>
+                                <label>
+                                    <input type="checkbox" id="field3Marquee">
+                                    Enable Marquee
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="field3Hover" checked>
+                                    Enable Hover
+                                </label>
+                            </div>
+                            <div class="control-group">
+                                <label>Field 4 Display:</label>
+                                <select id="field4Display">
+                                    <option value="text" selected>Label + Value</option>
+                                    <option value="icon">Icon + Value</option>
+                                    <option value="icon-text">Icon + Label + Value</option>
+                                    <option value="value">Value Only</option>
+                                </select>
+                                <label>Width:</label>
+                                <select id="field4Width">
+                                    <option value="auto">Auto</option>
+                                    <option value="10%">10%</option>
+                                    <option value="15%">15%</option>
+                                    <option value="20%">20%</option>
+                                    <option value="25%" selected>25%</option>
+                                    <option value="30%">30%</option>
+                                    <option value="35%">35%</option>
+                                    <option value="40%">40%</option>
+                                    <option value="45%">45%</option>
+                                    <option value="50%">50%</option>
+                                    <option value="60%">60%</option>
+                                    <option value="75%">75%</option>
+                                    <option value="100%">100%</option>
+                                </select>
+                                <label>Align:</label>
+                                <select id="field4Align">
+                                    <option value="left">Left</option>
+                                    <option value="center">Center</option>
+                                    <option value="right" selected>Right</option>
+                                </select>
+                                <label>
+                                    <input type="checkbox" id="field4Marquee">
+                                    Enable Marquee
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="field4Hover" checked>
+                                    Enable Hover
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Dynamic Status Updates (fixed percentage layout)</span>
+                    <t-sta id="statusBar3">
+                    </t-sta>
+                    <div style="margin-top: 10px; display: flex; gap: 10px; align-items: center; min-height: 36px;">
+                        <t-btn id="startProgressBtn" variant="primary" size="small">Start Progress</t-btn>
+                        <t-btn id="updateStatusBtn" variant="secondary" size="small">Cycle Quality</t-btn>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code><!-- Basic usage with JavaScript API -->
+&lt;t-sta id="myStatusBar"&gt;&lt;/t-sta&gt;
+
+&lt;script type="module"&gt;
+import { gaugeIcon, packageIcon } from '../js/utils/phosphor-icons.js';
+
+const statusBar = document.getElementById('myStatusBar');
+
+// Set all fields at once
+statusBar.setFields([
+    {
+        label: 'CPU',           // Label text
+        value: '42%',           // Value to display
+        width: '25%',           // Width (auto, %, or px)
+        icon: gaugeIcon,        // SVG icon string
+        displayMode: 'icon-text', // 'text' | 'icon' | 'icon-text' | 'value'
+        hover: true,            // Enable hover effects (default: true)
+        marquee: false,         // Enable text scrolling for long values
+        align: 'left',          // 'left' | 'center' | 'right'
+        onHover: (field, index, bar) => {  // Hover callback
+            console.log('Hovering over:', field.label);
+        },
+        onHoverEnd: (field, index, bar) => { // Hover end callback
+            console.log('Stopped hovering:', field.label);
+        }
+    },
+    {
+        label: 'RAM',
+        value: '1.2GB',
+        width: '25%',
+        icon: packageIcon,
+        hover: false            // Disable hover (no interaction)
+    },
+    {
+        label: 'Status',
+        value: 'Running',
+        width: '50%'
+    }
+]);
+
+// Update individual field properties
+statusBar.updateField(0, {
+    value: '55%',
+    hover: false,
+    displayMode: 'text'
+});
+
+// Update just the value of a field
+statusBar.updateFieldValue(1, '2.4GB');
+
+// Add a new field
+statusBar.addField({
+    label: 'File',
+    value: 'very_long_filename_that_scrolls.txt',
+    marquee: true,          // Enable marquee for long text
+    width: '35%',
+    displayMode: 'icon-text',
+    icon: fileIcon,
+    hover: true
+});
+
+// Remove a field by index
+statusBar.removeField(2);
+
+// Clear all fields
+statusBar.clearFields();
+&lt;/script&gt;
+
+<!-- Field Configuration Options:
+  - label: Field label text
+  - value: Field value text (always shown)
+  - width: 'auto' | percentage (e.g., '25%') | pixels (e.g., '150px')
+  - icon: SVG string for icon
+  - displayMode: Display mode options:
+    • 'text' = Label + Value (no icon)
+    • 'icon' = Icon + Value (no label)
+    • 'icon-text' = Icon + Label + Value
+    • 'value' = Value only (no icon, no label)
+  - hover: true | false (enable/disable hover effects and interaction)
+  - marquee: true | false (enable text scrolling for long values)
+  - align: 'left' | 'center' | 'right' (field alignment)
+  - onHover: Function called when mouse enters field (if hover enabled)
+    • Parameters: (field, index, statusBar)
+  - onHoverEnd: Function called when mouse leaves field (if hover enabled)
+    • Parameters: (field, index, statusBar)
+
+Events:
+  The status bar also emits custom events:
+  - 'field-click': When a field is clicked
+  - 'field-hover': When mouse enters a field (if hover enabled)
+  - 'field-hover-end': When mouse leaves a field (if hover enabled)
+
+  Example:
+  statusBar.addEventListener('field-hover', (e) => {
+    console.log('Hovering:', e.detail.field.label);
+  });
+--></code>
+                </div>
             </div>
         </div>
 
-        <div class="demo-section">
-            <h2>Debug Information</h2>
-            <div class="demo-code">
-                <pre id="debug-info"></pre>
-            </div>
-        </div>
-    </div>
+        <!-- Import Components -->
+        <script type="module">
+            // Using new Lit components
+            import '../js/components/TStatusBarLit.js';
+            import '../js/components/TButtonLit.js';
 
-    <script>
-        // Show debug info
-        const debugInfo = {
-            'Page': window.location.pathname,
-            'Component': window.location.pathname.split('/').pop().replace('.html', ''),
-            'Timestamp': new Date().toISOString()
-        };
-        document.getElementById('debug-info').textContent = JSON.stringify(debugInfo, null, 2);
-    </script>
-</body>
+            // Import phosphor icons
+            import {
+                fileIcon,
+                playIcon,
+                gaugeIcon,
+                gearSixIcon,
+                briefcaseIcon,
+                packageIcon,
+                userCircleIcon,
+                fadersIcon
+            } from '../js/utils/phosphor-icons.js';
+
+            // Initialize Status Bars
+            const statusBar1 = document.getElementById('statusBar1');
+            if (statusBar1) {
+                // Initialize basic status bar with fields
+                statusBar1.setFields && statusBar1.setFields([
+                    {
+                        label: 'CPU',
+                        value: '42%',
+                        width: '20%',
+                        icon: gaugeIcon,
+                        hover: true,
+                        onHover: (field) => {
+                            console.log('Hovering CPU:', field.value);
+                        }
+                    },
+                    { label: 'RAM', value: '1.2GB / 8GB', width: '30%', icon: packageIcon, hover: true },
+                    { label: 'Status', value: 'Running', width: '20%', icon: playIcon, hover: false },
+                    { label: 'User', value: 'Admin', width: '30%', icon: userCircleIcon, hover: true }
+                ]);
+            }
+
+            const statusBar2 = document.getElementById('statusBar2');
+            if (statusBar2) {
+                // Initialize interactive status bar with advanced features
+                statusBar2.setFields && statusBar2.setFields([
+                    {
+                        label: 'File',
+                        value: 'very_long_filename_that_will_scroll_automatically_when_it_overflows_the_container.riv',
+                        marquee: true,
+                        width: '35%',
+                        displayMode: 'icon-text',
+                        icon: fileIcon,
+                        hover: true
+                    },
+                    {
+                        label: 'Frame',
+                        value: '125 / 300',
+                        width: '25%',
+                        displayMode: 'text',
+                        icon: playIcon,
+                        align: 'center',
+                        hover: true
+                    },
+                    {
+                        label: 'FPS',
+                        value: '60',
+                        width: '15%',
+                        displayMode: 'text',
+                        icon: gaugeIcon,
+                        align: 'right',
+                        hover: true
+                    },
+                    {
+                        label: 'Time',
+                        value: '2:34',
+                        width: '25%',
+                        displayMode: 'text',
+                        icon: playIcon,
+                        align: 'right',
+                        hover: true
+                    }
+                ]);
+            }
+
+            const statusBar3 = document.getElementById('statusBar3');
+            if (statusBar3) {
+                // Initialize dynamic status bar
+                statusBar3.setFields && statusBar3.setFields([
+                    { label: 'Progress', value: '0%', width: '33%', icon: briefcaseIcon, hover: true },
+                    { label: 'Time', value: '00:00', width: '33%', icon: playIcon, hover: true },
+                    { label: 'Quality', value: 'High', width: '34%', icon: fadersIcon, hover: true }
+                ]);
+            }
+
+            // Need to wait for components to be ready
+            setTimeout(() => {
+                // Initialize statusBar2 marquee controls
+                if (statusBar2 && statusBar2.updateField) {
+                    // Marquee handlers for statusBar2
+                    if (field1Marquee && statusBar2) {
+                        field1Marquee.addEventListener('change', (e) => {
+                            statusBar2.updateField(0, { marquee: e.target.checked });
+                        });
+                    }
+                    if (field2Marquee && statusBar2) {
+                        field2Marquee.addEventListener('change', (e) => {
+                            statusBar2.updateField(1, { marquee: e.target.checked });
+                        });
+                    }
+                    if (field3Marquee && statusBar2) {
+                        field3Marquee.addEventListener('change', (e) => {
+                            statusBar2.updateField(2, { marquee: e.target.checked });
+                        });
+                    }
+                    if (field4Marquee && statusBar2) {
+                        field4Marquee.addEventListener('change', (e) => {
+                            statusBar2.updateField(3, { marquee: e.target.checked });
+                        });
+                    }
+                }
+            }, 100);
+
+            // Status field dynamic updates
+            const startProgressBtn = document.getElementById('startProgressBtn');
+            const updateStatusBtn = document.getElementById('updateStatusBtn');
+            let progressValue = 0;
+            let progressInterval;
+
+            if (startProgressBtn && statusBar3) {
+                startProgressBtn.addEventListener('click', () => {
+                    // Clear any existing interval
+                    if (progressInterval) {
+                        clearInterval(progressInterval);
+                        progressInterval = null;
+                    }
+
+                    progressValue = 0;
+                    let seconds = 0;
+
+                    // Reset fields immediately using updateFieldValue
+                    statusBar3.updateFieldValue(0, '0%');  // Progress field
+                    statusBar3.updateFieldValue(1, '00:00'); // Time field
+
+                    progressInterval = setInterval(() => {
+                        progressValue += 5;
+                        seconds += 1;
+
+                        statusBar3.updateFieldValue(0, `${progressValue}%`);
+                        statusBar3.updateFieldValue(1, `00:${seconds.toString().padStart(2, '0')}`);
+
+                        if (progressValue >= 100) {
+                            clearInterval(progressInterval);
+                            progressInterval = null;
+                            console.log('Progress complete:', { progress: progressValue, time: seconds });
+                        }
+                    }, 200);
+
+                    console.log('Progress started');
+                });
+            }
+
+            if (updateStatusBtn && statusBar3) {
+                updateStatusBtn.addEventListener('click', () => {
+                    const qualities = ['Low', 'Medium', 'High', 'Ultra'];
+                    // Get current quality value from the status bar fields
+                    const currentFields = statusBar3.fields || [];
+                    const currentQuality = currentFields[2]?.value || 'High';
+                    const currentIndex = qualities.indexOf(currentQuality);
+                    const nextIndex = (currentIndex + 1) % qualities.length;
+
+                    statusBar3.updateFieldValue(2, qualities[nextIndex]); // Quality field
+                    console.log('Quality updated:', { quality: qualities[nextIndex] });
+                });
+            }
+
+            // Interactive Status Bar Controls (for statusBar2)
+            const field1Display = document.getElementById('field1Display');
+            const field2Display = document.getElementById('field2Display');
+            const field3Display = document.getElementById('field3Display');
+            const field4Display = document.getElementById('field4Display');
+
+            const field1Width = document.getElementById('field1Width');
+            const field2Width = document.getElementById('field2Width');
+            const field3Width = document.getElementById('field3Width');
+            const field4Width = document.getElementById('field4Width');
+
+            const field1Align = document.getElementById('field1Align');
+            const field2Align = document.getElementById('field2Align');
+            const field3Align = document.getElementById('field3Align');
+            const field4Align = document.getElementById('field4Align');
+
+            const field1Marquee = document.getElementById('field1Marquee');
+            const field2Marquee = document.getElementById('field2Marquee');
+            const field3Marquee = document.getElementById('field3Marquee');
+            const field4Marquee = document.getElementById('field4Marquee');
+
+            const field1Hover = document.getElementById('field1Hover');
+            const field2Hover = document.getElementById('field2Hover');
+            const field3Hover = document.getElementById('field3Hover');
+            const field4Hover = document.getElementById('field4Hover');
+
+            // Display mode handlers for statusBar2
+            if (field1Display && statusBar2) {
+                field1Display.addEventListener('change', (e) => {
+                    statusBar2.updateField(0, { displayMode: e.target.value });
+                });
+            }
+            if (field2Display && statusBar2) {
+                field2Display.addEventListener('change', (e) => {
+                    statusBar2.updateField(1, { displayMode: e.target.value });
+                });
+            }
+            if (field3Display && statusBar2) {
+                field3Display.addEventListener('change', (e) => {
+                    statusBar2.updateField(2, { displayMode: e.target.value });
+                });
+            }
+            if (field4Display && statusBar2) {
+                field4Display.addEventListener('change', (e) => {
+                    statusBar2.updateField(3, { displayMode: e.target.value });
+                });
+            }
+
+            // Width handlers for statusBar2
+            if (field1Width && statusBar2) {
+                field1Width.addEventListener('change', (e) => {
+                    statusBar2.updateField(0, { width: e.target.value });
+                });
+            }
+            if (field2Width && statusBar2) {
+                field2Width.addEventListener('change', (e) => {
+                    statusBar2.updateField(1, { width: e.target.value });
+                });
+            }
+            if (field3Width && statusBar2) {
+                field3Width.addEventListener('change', (e) => {
+                    statusBar2.updateField(2, { width: e.target.value });
+                });
+            }
+            if (field4Width && statusBar2) {
+                field4Width.addEventListener('change', (e) => {
+                    statusBar2.updateField(3, { width: e.target.value });
+                });
+            }
+
+            // Alignment handlers for statusBar2
+            if (field1Align && statusBar2) {
+                field1Align.addEventListener('change', (e) => {
+                    statusBar2.updateField(0, { align: e.target.value });
+                });
+            }
+            if (field2Align && statusBar2) {
+                field2Align.addEventListener('change', (e) => {
+                    statusBar2.updateField(1, { align: e.target.value });
+                });
+            }
+            if (field3Align && statusBar2) {
+                field3Align.addEventListener('change', (e) => {
+                    statusBar2.updateField(2, { align: e.target.value });
+                });
+            }
+            if (field4Align && statusBar2) {
+                field4Align.addEventListener('change', (e) => {
+                    statusBar2.updateField(3, { align: e.target.value });
+                });
+            }
+
+            // Marquee handlers are now handled above
+
+            // Hover handlers for statusBar2
+            if (field1Hover && statusBar2) {
+                field1Hover.addEventListener('change', (e) => {
+                    statusBar2.updateField(0, { hover: e.target.checked });
+                });
+            }
+            if (field2Hover && statusBar2) {
+                field2Hover.addEventListener('change', (e) => {
+                    statusBar2.updateField(1, { hover: e.target.checked });
+                });
+            }
+            if (field3Hover && statusBar2) {
+                field3Hover.addEventListener('change', (e) => {
+                    statusBar2.updateField(2, { hover: e.target.checked });
+                });
+            }
+            if (field4Hover && statusBar2) {
+                field4Hover.addEventListener('change', (e) => {
+                    statusBar2.updateField(3, { hover: e.target.checked });
+                });
+            }
+        </script>
+    </body>
+
 </html>
