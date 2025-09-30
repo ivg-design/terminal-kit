@@ -435,35 +435,66 @@ export class TColorPicker extends LitElement {
 			padding: 16px;
 			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
 			display: none;
-			min-width: 400px;
+			width: 420px;
+			max-width: calc(100vw - 20px);
+			overflow: hidden;
+			box-sizing: border-box;
+		}
+
+		.iro-popover * {
+			box-sizing: border-box;
 		}
 
 		.iro-popover.open {
 			display: grid;
-			grid-template-columns: auto 1fr;
+			grid-template-columns: 200px 180px;
 			gap: 16px;
+			contain: layout;
 		}
 
 		.iro-container {
 			grid-row: 1 / -1;
 			height: 180px;
+			width: 200px;
 			display: flex;
 			align-items: flex-start;
+			overflow: hidden;
+			contain: layout size;
 		}
 
 		/* Override iro.js internal spacing */
 		.iro-container .IroColorPicker {
 			margin: 0 !important;
 			height: 180px !important;
+			width: 200px !important;
+			display: flex !important;
+			gap: 8px !important;
 		}
 
 		.iro-container .IroSlider {
 			margin: 0 !important;
-			margin-left: 8px !important;
+			width: 20px !important;
+			height: 180px !important;
 		}
 
 		.iro-container .IroBox {
 			margin: 0 !important;
+			width: 150px !important;
+			height: 180px !important;
+		}
+
+		/* Ensure iro.js components stay within bounds */
+		.iro-container svg {
+			max-width: 100%;
+			max-height: 100%;
+		}
+
+		.iro-container .IroSliderGradient {
+			height: 100% !important;
+		}
+
+		.iro-container .IroHandle {
+			overflow: visible !important;
 		}
 
 		.iro-controls {
@@ -505,7 +536,7 @@ export class TColorPicker extends LitElement {
 		}
 
 		.iro-hex-input {
-			width: 100%;
+			width: calc(100% - 16px);
 			background: #0a0a0a;
 			border: 1px solid #333333;
 			color: #00ff41;
@@ -515,6 +546,7 @@ export class TColorPicker extends LitElement {
 			letter-spacing: 0.5px;
 			text-align: left;
 			outline: none;
+			box-sizing: border-box;
 		}
 
 		.iro-hex-input:focus {
@@ -1694,17 +1726,47 @@ export class TColorPicker extends LitElement {
 
 		// Position popover next to the element using fixed positioning
 		const rect = this.getBoundingClientRect();
-		this._popoverElement.style.top = `${rect.bottom + 8}px`;
-		this._popoverElement.style.left = `${rect.left}px`;
+		const popoverWidth = 420;
+		const popoverHeight = 212; // 180px content + 32px padding
+		const margin = 10;
 
-		// Adjust if popover goes off screen
-		const popoverRect = this._popoverElement.getBoundingClientRect();
-		if (popoverRect.right > window.innerWidth) {
-			this._popoverElement.style.left = `${window.innerWidth - popoverRect.width - 10}px`;
+		// Calculate initial position
+		let top = rect.bottom + 8;
+		let left = rect.left;
+
+		// Ensure popover stays within viewport bounds
+		// Check right edge
+		if (left + popoverWidth > window.innerWidth - margin) {
+			left = Math.max(margin, window.innerWidth - popoverWidth - margin);
 		}
-		if (popoverRect.bottom > window.innerHeight) {
-			this._popoverElement.style.top = `${rect.top - popoverRect.height - 8}px`;
+
+		// Check left edge
+		if (left < margin) {
+			left = margin;
 		}
+
+		// Check bottom edge - if not enough space below, show above
+		if (top + popoverHeight > window.innerHeight - margin) {
+			const spaceAbove = rect.top;
+			const spaceBelow = window.innerHeight - rect.bottom;
+
+			if (spaceAbove > spaceBelow) {
+				// More space above - position above element
+				top = Math.max(margin, rect.top - popoverHeight - 8);
+			} else {
+				// Keep below but adjust to fit
+				top = Math.max(margin, window.innerHeight - popoverHeight - margin);
+			}
+		}
+
+		// Check top edge
+		if (top < margin) {
+			top = margin;
+		}
+
+		// Apply calculated position
+		this._popoverElement.style.top = `${top}px`;
+		this._popoverElement.style.left = `${left}px`;
 
 		// Show popover
 		this._popoverElement.classList.add('open');
@@ -1832,31 +1894,37 @@ export class TColorPicker extends LitElement {
 
 		try {
 			this._colorPicker = new iro.ColorPicker(container, {
-				width: 180,
+				width: 150,
 				color: this.value,
 				layoutDirection: 'horizontal',
 				layout: [
 					{
 						component: iro.ui.Box,
 						options: {
-							boxHeight: 180
+							boxHeight: 180,
+							boxWidth: 150
 						}
 					},
 					{
 						component: iro.ui.Slider,
 						options: {
 							sliderType: 'hue',
-							sliderSize: 20
+							sliderSize: 20,
+							sliderHeight: 180
 						}
 					},
 					{
 						component: iro.ui.Slider,
 						options: {
 							sliderType: 'alpha',
-							sliderSize: 20
+							sliderSize: 20,
+							sliderHeight: 180
 						}
 					}
-				]
+				],
+				padding: 0,
+				margin: 0,
+				borderWidth: 0
 			});
 
 			// Bridge iro events to Lit events
