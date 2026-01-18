@@ -1007,7 +1007,7 @@ export class TPanelLit extends LitElement {
         @keydown=${this._handleHeaderKeydown}
         tabindex=${this.collapsible ? '0' : '-1'}
         role=${this.collapsible ? 'button' : null}
-        aria-expanded=${this.collapsible ? String(!this.collapsed) : 'true'}
+        aria-expanded=${this.collapsible ? String(!this.collapsed) : null}
         aria-controls=${this.collapsible ? bodyId : null}
       >
         ${this.collapsible ? this._renderCollapseButton(bodyId) : ''}
