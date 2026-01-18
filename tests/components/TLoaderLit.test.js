@@ -310,9 +310,8 @@ describe('TLoaderLit', () => {
   // ======================================================
   describe('Lifecycle', () => {
     it('should call connectedCallback', async () => {
-      const spy = vi.spyOn(component.logger, 'info');
-
       const newComponent = document.createElement('t-ldr');
+      const spy = vi.spyOn(newComponent.logger, 'info');
       document.body.appendChild(newComponent);
       await newComponent.updateComplete;
 
