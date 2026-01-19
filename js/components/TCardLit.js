@@ -111,55 +111,71 @@ const styles = css`
 		overflow: hidden;
 	}
 
-	/* Top loading bar */
+	/* Subtle green perimeter border animation */
 	.card.loading::before {
 		content: '';
 		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		height: 3px;
-		background: var(--card-green);
-		box-shadow: 0 0 8px var(--card-green), 0 0 16px var(--card-green);
-		animation: loading-bar 1.5s ease-in-out infinite;
+		inset: 0;
+		border: 1px solid transparent;
+		background: linear-gradient(90deg,
+			transparent 0%,
+			var(--card-green) 50%,
+			transparent 100%
+		) border-box;
+		-webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+		opacity: 0.6;
+		animation: border-glint 2.5s ease-in-out infinite;
+		pointer-events: none;
 		z-index: 10;
 	}
 
-	/* Scanline sweep effect */
+	/* Synced horizontal glint sweep */
 	.card.loading::after {
 		content: '';
 		position: absolute;
 		top: 0;
-		left: -100%;
-		width: 100%;
+		left: 0;
+		width: 60px;
 		height: 100%;
 		background: linear-gradient(90deg,
 			transparent 0%,
-			rgba(0, 255, 65, 0.05) 40%,
-			rgba(0, 255, 65, 0.1) 50%,
-			rgba(0, 255, 65, 0.05) 60%,
+			rgba(0, 255, 65, 0.03) 30%,
+			rgba(0, 255, 65, 0.08) 50%,
+			rgba(0, 255, 65, 0.03) 70%,
 			transparent 100%
 		);
-		animation: loading-sweep 2s ease-in-out infinite;
+		animation: glint-sweep 2.5s ease-in-out infinite;
 		pointer-events: none;
 	}
 
-	@keyframes loading-bar {
+	@keyframes border-glint {
 		0%, 100% {
-			opacity: 0.6;
-			transform: scaleX(0.3);
-			transform-origin: left;
+			opacity: 0.3;
+			background-position: -200% 0;
 		}
 		50% {
-			opacity: 1;
-			transform: scaleX(1);
-			transform-origin: left;
+			opacity: 0.7;
+			background-position: 200% 0;
 		}
 	}
 
-	@keyframes loading-sweep {
-		0% { left: -100%; }
-		100% { left: 100%; }
+	@keyframes glint-sweep {
+		0% {
+			left: -60px;
+			opacity: 0;
+		}
+		10% {
+			opacity: 1;
+		}
+		90% {
+			opacity: 1;
+		}
+		100% {
+			left: calc(100% + 60px);
+			opacity: 0;
+		}
 	}
 
 	/* Header slot */
