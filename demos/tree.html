@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTreeLit Component Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+        :root {
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff003c;
+            --terminal-cyan: #00ffff;
+            --terminal-gray: #666;
+            --terminal-gray-dark: #333;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-bg: #0a0a0a;
+            --terminal-black: #0a0a0a;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        body {
+            background: var(--terminal-bg);
+            color: var(--terminal-green);
+            font-family: var(--font-mono);
+            padding: 40px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        h1, h2 {
+            color: var(--terminal-green);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        h1 {
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .description {
+            color: var(--terminal-gray);
+            margin-bottom: 40px;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .demo-label {
+            font-size: 11px;
+            color: var(--terminal-gray);
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--terminal-green);
+            color: var(--terminal-black);
+        }
+
+        .event-log {
+            background: #111;
+            border: 1px solid #333;
+            padding: 15px;
+            font-size: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .event-log p {
+            margin: 5px 0;
+            color: var(--terminal-green);
+        }
+
+        .event-log .timestamp {
+            color: var(--terminal-gray);
+        }
+
+        .controls {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--terminal-green);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .selection-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--terminal-gray);
+        }
+
+        t-tree {
+            height: 300px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--terminal-gray-dark);
+        }
+    </style>
+</head>
+<body>
+    <h1>TTreeLit Component Demo</h1>
+    <p class="description">
+        Hierarchical tree with expand/collapse, selection modes, checkboxes, search, and drag-and-drop.
+    </p>
+
+    <!-- Basic Tree -->
+    <div class="demo-section">
+        <h2>Basic File Tree</h2>
+        <t-tree id="basic-tree"></t-tree>
+        <p class="demo-label">Click nodes to expand/collapse</p>
+    </div>
+
+    <!-- Single Selection -->
+    <div class="demo-section">
+        <h2>Single Selection</h2>
+        <t-tree id="single-select" selectable="single"></t-tree>
+        <p class="selection-info">Selected: <span id="single-selected">None</span></p>
+    </div>
+
+    <!-- Multiple Selection with Checkboxes -->
+    <div class="demo-section">
+        <h2>Multiple Selection with Checkboxes</h2>
+        <div class="controls">
+            <div class="control-row">
+                <button onclick="selectAllCheckbox()">Select All</button>
+                <button onclick="clearCheckboxSelection()">Clear Selection</button>
+            </div>
+        </div>
+        <t-tree id="checkbox-tree" selectable="multiple" show-checkboxes cascade-selection></t-tree>
+        <p class="selection-info">Selected: <span id="checkbox-selected">None</span></p>
+    </div>
+
+    <!-- Expand/Collapse Controls -->
+    <div class="demo-section">
+        <h2>Expand/Collapse Controls</h2>
+        <div class="controls">
+            <div class="control-row">
+                <button onclick="expandAll()">Expand All</button>
+                <button onclick="collapseAll()">Collapse All</button>
+            </div>
+        </div>
+        <t-tree id="expand-tree"></t-tree>
+    </div>
+
+    <!-- Searchable Tree -->
+    <div class="demo-section">
+        <h2>Searchable Tree</h2>
+        <t-tree id="search-tree" searchable></t-tree>
+        <p class="demo-label">Type to search and highlight matches</p>
+    </div>
+
+    <!-- Draggable Tree -->
+    <div class="demo-section">
+        <h2>Draggable (Reorderable)</h2>
+        <t-tree id="drag-tree" draggable></t-tree>
+        <p class="demo-label">Drag nodes to reorder</p>
+    </div>
+
+    <!-- Lazy Loading Tree -->
+    <div class="demo-section">
+        <h2>Lazy Loading</h2>
+        <t-tree id="lazy-tree"></t-tree>
+        <p class="demo-label">Children load on demand when expanded</p>
+    </div>
+
+    <!-- Custom Icons -->
+    <div class="demo-section">
+        <h2>Custom Icons & Metadata</h2>
+        <t-tree id="icon-tree"></t-tree>
+    </div>
+
+    <!-- Event Log -->
+    <div class="demo-section">
+        <h2>Event Log</h2>
+        <div class="event-log" id="event-log">
+            <p><span class="timestamp">[LOG]</span> Interact with trees to see events...</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import '../js/components/TTreeLit.js';
+        import { folderIcon, fileIcon, playIcon, imageIcon, noteBlankIcon } from '../js/utils/phosphor-icons.js';
+
+        const eventLog = document.getElementById('event-log');
+
+        function logEvent(treeId, event) {
+            const timestamp = new Date().toLocaleTimeString();
+            const p = document.createElement('p');
+            p.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${treeId}: ${event.type}`;
+            eventLog.insertBefore(p, eventLog.firstChild);
+        }
+
+        // File system tree
+        const fileSystemNodes = [
+            {
+                id: 'src',
+                label: 'src',
+                children: [
+                    {
+                        id: 'components',
+                        label: 'components',
+                        children: [
+                            { id: 'Button.js', label: 'Button.js' },
+                            { id: 'Modal.js', label: 'Modal.js' },
+                            { id: 'Panel.js', label: 'Panel.js' },
+                            { id: 'Tree.js', label: 'Tree.js' }
+                        ]
+                    },
+                    {
+                        id: 'utils',
+                        label: 'utils',
+                        children: [
+                            { id: 'helpers.js', label: 'helpers.js' },
+                            { id: 'constants.js', label: 'constants.js' }
+                        ]
+                    },
+                    { id: 'index.js', label: 'index.js' },
+                    { id: 'app.js', label: 'app.js' }
+                ]
+            },
+            {
+                id: 'tests',
+                label: 'tests',
+                children: [
+                    { id: 'Button.test.js', label: 'Button.test.js' },
+                    { id: 'Modal.test.js', label: 'Modal.test.js' }
+                ]
+            },
+            {
+                id: 'docs',
+                label: 'docs',
+                children: [
+                    { id: 'README.md', label: 'README.md' },
+                    { id: 'CHANGELOG.md', label: 'CHANGELOG.md' }
+                ]
+            },
+            { id: 'package.json', label: 'package.json' },
+            { id: 'tsconfig.json', label: 'tsconfig.json' }
+        ];
+
+        // Set up basic tree
+        document.getElementById('basic-tree').nodes = fileSystemNodes;
+
+        // Single selection tree
+        const singleTree = document.getElementById('single-select');
+        singleTree.nodes = fileSystemNodes;
+        singleTree.addEventListener('selection-change', (e) => {
+            document.getElementById('single-selected').textContent =
+                e.detail.selected.length ? e.detail.selected.join(', ') : 'None';
+            logEvent('single-select', e);
+        });
+
+        // Checkbox tree
+        const checkboxTree = document.getElementById('checkbox-tree');
+        checkboxTree.nodes = fileSystemNodes;
+        checkboxTree.addEventListener('selection-change', (e) => {
+            document.getElementById('checkbox-selected').textContent =
+                e.detail.selected.length ? `${e.detail.selected.length} items` : 'None';
+            logEvent('checkbox-tree', e);
+        });
+
+        window.selectAllCheckbox = () => {
+            const getAllIds = (nodes) => {
+                return nodes.reduce((ids, node) => {
+                    ids.push(node.id);
+                    if (node.children) {
+                        ids.push(...getAllIds(node.children));
+                    }
+                    return ids;
+                }, []);
+            };
+            checkboxTree.selected = getAllIds(fileSystemNodes);
+        };
+        window.clearCheckboxSelection = () => checkboxTree.clearSelection();
+
+        // Expand/collapse tree
+        const expandTree = document.getElementById('expand-tree');
+        expandTree.nodes = fileSystemNodes;
+        window.expandAll = () => expandTree.expandAll();
+        window.collapseAll = () => expandTree.collapseAll();
+
+        // Search tree
+        const searchTree = document.getElementById('search-tree');
+        searchTree.nodes = fileSystemNodes;
+
+        // Draggable tree
+        const dragTree = document.getElementById('drag-tree');
+        dragTree.nodes = [
+            { id: '1', label: 'Item 1' },
+            { id: '2', label: 'Item 2' },
+            { id: '3', label: 'Item 3' },
+            { id: '4', label: 'Item 4' },
+            { id: '5', label: 'Item 5' }
+        ];
+        dragTree.addEventListener('node-drop', (e) => {
+            logEvent('drag-tree', e);
+        });
+
+        // Lazy loading tree
+        const lazyTree = document.getElementById('lazy-tree');
+        lazyTree.nodes = [
+            { id: 'lazy1', label: 'Projects', lazy: true },
+            { id: 'lazy2', label: 'Documents', lazy: true },
+            { id: 'lazy3', label: 'Downloads', lazy: true }
+        ];
+
+        lazyTree.addEventListener('lazy-load', (e) => {
+            const nodeId = e.detail.id;
+            logEvent('lazy-tree', e);
+
+            // Simulate async loading
+            setTimeout(() => {
+                const children = [
+                    { id: `${nodeId}-1`, label: `${e.detail.node.label} Item 1` },
+                    { id: `${nodeId}-2`, label: `${e.detail.node.label} Item 2` },
+                    { id: `${nodeId}-3`, label: `${e.detail.node.label} Item 3`, lazy: true }
+                ];
+
+                // Update the node with loaded children
+                const updateNodes = (nodes) => {
+                    return nodes.map(node => {
+                        if (node.id === nodeId) {
+                            return { ...node, children, lazy: false };
+                        }
+                        if (node.children) {
+                            return { ...node, children: updateNodes(node.children) };
+                        }
+                        return node;
+                    });
+                };
+
+                lazyTree.nodes = updateNodes(lazyTree.nodes);
+                lazyTree.setNodeLoading(nodeId, false);
+            }, 1000);
+        });
+
+        // Custom icons tree
+        const iconTree = document.getElementById('icon-tree');
+        iconTree.nodes = [
+            {
+                id: 'music',
+                label: 'Music',
+                icon: playIcon,
+                children: [
+                    { id: 'song1', label: 'Synthwave.mp3', icon: playIcon, meta: '3:45' },
+                    { id: 'song2', label: 'Ambient.mp3', icon: playIcon, meta: '5:20' }
+                ]
+            },
+            {
+                id: 'photos',
+                label: 'Photos',
+                icon: imageIcon,
+                children: [
+                    { id: 'photo1', label: 'Vacation.jpg', icon: imageIcon, meta: '2.4 MB' },
+                    { id: 'photo2', label: 'Portrait.png', icon: imageIcon, meta: '1.8 MB' }
+                ]
+            },
+            {
+                id: 'videos',
+                label: 'Videos',
+                icon: playIcon,
+                children: [
+                    { id: 'video1', label: 'Tutorial.mp4', icon: playIcon, meta: '15:32' }
+                ]
+            },
+            { id: 'notes', label: 'Notes.txt', icon: noteBlankIcon, meta: '4 KB' }
+        ];
+
+        // Listen to all tree events
+        document.querySelectorAll('t-tree').forEach(tree => {
+            tree.addEventListener('node-click', (e) => logEvent(tree.id || 'tree', e));
+            tree.addEventListener('node-expand', (e) => logEvent(tree.id || 'tree', e));
+        });
+    </script>
+</body>
+</html>

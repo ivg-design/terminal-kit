@@ -11,9 +11,9 @@ import { generateManifest } from '../utils/manifest-generator.js';
  * @example
  * <t-btn variant="primary">Click Me</t-btn>
  * @example
- * <t-btn variant="toggle" icon-on="✓" icon-off="✗">Toggle</t-btn>
+ * <t-btn variant="toggle" icon-on="<svg>...</svg>" icon-off="<svg>...</svg>">Toggle</t-btn>
  * @example
- * <t-btn type="icon" icon="★" size="large"></t-btn>
+ * <t-btn type="icon" icon="<svg>...</svg>" size="large"></t-btn>
  */
 export class TButton extends LitElement {
   // ============================================================
@@ -593,7 +593,7 @@ export class TButton extends LitElement {
    * @attribute type
    * @reflects true
    * @example
-   * <t-btn type="icon" icon="★"></t-btn>
+   * <t-btn type="icon" icon="<svg>...</svg>"></t-btn>
    */
   /**
    * @property {string} size - Button size (xs, small, medium, large, or empty string for default)
@@ -653,14 +653,14 @@ export class TButton extends LitElement {
    * @default ''
    * @attribute icon-on
    * @example
-   * <t-btn variant="toggle" icon-on="✓" icon-off="✗">Toggle</t-btn>
+   * <t-btn variant="toggle" icon-on="<svg>...</svg>" icon-off="<svg>...</svg>">Toggle</t-btn>
    */
   /**
    * @property {string} iconOff - Icon to show when toggle is OFF
    * @default ''
    * @attribute icon-off
    * @example
-   * <t-btn variant="toggle" icon-on="✓" icon-off="✗">Toggle</t-btn>
+   * <t-btn variant="toggle" icon-on="<svg>...</svg>" icon-off="<svg>...</svg>">Toggle</t-btn>
    */
   /**
    * @property {string} colorOn - Custom color when toggle is ON

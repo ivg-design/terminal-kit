@@ -485,7 +485,7 @@ export class TUserMenuLit extends LitElement {
     super();
 
     // Initialize logger
-    this._logger = new componentLogger(TUserMenuLit.tagName, this);
+    this._logger = componentLogger.for(TUserMenuLit.tagName);
     this._logger.debug('Component constructed');
 
     // Initialize properties

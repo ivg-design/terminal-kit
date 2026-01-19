@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minimal Test</title>
+    <style>
+        body { background: #0a0a0a; padding: 40px; font-family: monospace; color: #00ff41; }
+    </style>
+</head>
+<body>
+    <h1>Minimal Component Test</h1>
+
+    <h2>Calendar (t-cal)</h2>
+    <t-cal id="test-cal"></t-cal>
+
+    <h2>Chart (t-chart)</h2>
+    <t-chart id="test-chart" type="bar" title="Test"></t-chart>
+
+    <h2>Tree (t-tree)</h2>
+    <t-tree id="test-tree"></t-tree>
+
+    <h2>List (t-list)</h2>
+    <t-list id="test-list"></t-list>
+
+    <div id="log" style="margin-top: 40px; border: 1px solid #333; padding: 10px;"></div>
+
+    <script type="module">
+        import '../js/components/TCalendarLit.js';
+        import '../js/components/TChartLit.js';
+        import '../js/components/TTreeLit.js';
+        import '../js/components/TListLit.js';
+
+        const log = document.getElementById('log');
+
+        function addLog(msg) {
+            log.innerHTML += `<p>${msg}</p>`;
+        }
+
+        // Check each component
+        setTimeout(() => {
+            const cal = document.getElementById('test-cal');
+            const chart = document.getElementById('test-chart');
+            const tree = document.getElementById('test-tree');
+            const list = document.getElementById('test-list');
+
+            addLog(`Calendar shadowRoot: ${!!cal.shadowRoot}`);
+            addLog(`Calendar days: ${cal.shadowRoot?.querySelectorAll('.day').length || 0}`);
+            addLog(`Chart shadowRoot: ${!!chart.shadowRoot}`);
+            addLog(`Tree shadowRoot: ${!!tree.shadowRoot}`);
+            addLog(`List shadowRoot: ${!!list.shadowRoot}`);
+
+            // Set some data
+            chart.setData([
+                { label: 'A', value: 30 },
+                { label: 'B', value: 50 },
+                { label: 'C', value: 20 }
+            ]);
+
+            tree.nodes = [
+                { id: '1', label: 'Node 1', children: [
+                    { id: '1-1', label: 'Child 1' }
+                ]}
+            ];
+
+            list.items = [
+                { id: '1', label: 'Item 1' },
+                { id: '2', label: 'Item 2' }
+            ];
+
+            setTimeout(() => {
+                addLog(`Chart bars after data: ${chart.shadowRoot?.querySelectorAll('.bar').length || 0}`);
+                addLog(`Tree nodes after data: ${tree.shadowRoot?.querySelectorAll('.tree-node').length || 0}`);
+                addLog(`List items after data: ${list.shadowRoot?.querySelectorAll('.list-item').length || 0}`);
+            }, 500);
+        }, 500);
+    </script>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMenuLit Component Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+        :root {
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff003c;
+            --terminal-cyan: #00ffff;
+            --terminal-gray: #666;
+            --terminal-gray-dark: #333;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-bg: #0a0a0a;
+            --terminal-black: #0a0a0a;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        body {
+            background: var(--terminal-bg);
+            color: var(--terminal-green);
+            font-family: var(--font-mono);
+            padding: 40px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        h1, h2 {
+            color: var(--terminal-green);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        h1 {
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .description {
+            color: var(--terminal-gray);
+            margin-bottom: 40px;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .demo-item {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .demo-label {
+            font-size: 11px;
+            color: var(--terminal-gray);
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--terminal-green);
+            color: var(--terminal-black);
+        }
+
+        .event-log {
+            background: #111;
+            border: 1px solid #333;
+            padding: 15px;
+            font-size: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .event-log p {
+            margin: 5px 0;
+            color: var(--terminal-green);
+        }
+
+        .event-log .timestamp {
+            color: var(--terminal-gray);
+        }
+
+        .context-area {
+            background: var(--terminal-gray-darkest);
+            border: 1px dashed var(--terminal-gray);
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>TMenuLit Component Demo</h1>
+    <p class="description">
+        Dropdown menu component with keyboard navigation, search, and various trigger types.
+    </p>
+
+    <!-- Basic Menu -->
+    <div class="demo-section">
+        <h2>Basic Menu</h2>
+        <div class="demo-row">
+            <t-menu id="basic-menu">
+                <button slot="trigger">Open Menu</button>
+            </t-menu>
+        </div>
+    </div>
+
+    <!-- Positions -->
+    <div class="demo-section">
+        <h2>Positions</h2>
+        <div class="demo-row">
+            <div class="demo-item">
+                <t-menu id="menu-bottom-start" position="bottom-start">
+                    <button slot="trigger">Bottom Start</button>
+                </t-menu>
+                <span class="demo-label">Bottom Start</span>
+            </div>
+            <div class="demo-item">
+                <t-menu id="menu-bottom-end" position="bottom-end">
+                    <button slot="trigger">Bottom End</button>
+                </t-menu>
+                <span class="demo-label">Bottom End</span>
+            </div>
+            <div class="demo-item">
+                <t-menu id="menu-top-start" position="top-start">
+                    <button slot="trigger">Top Start</button>
+                </t-menu>
+                <span class="demo-label">Top Start</span>
+            </div>
+            <div class="demo-item">
+                <t-menu id="menu-top-end" position="top-end">
+                    <button slot="trigger">Top End</button>
+                </t-menu>
+                <span class="demo-label">Top End</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- With Shortcuts -->
+    <div class="demo-section">
+        <h2>With Shortcuts</h2>
+        <div class="demo-row">
+            <t-menu id="menu-shortcuts">
+                <button slot="trigger">File Menu</button>
+            </t-menu>
+        </div>
+    </div>
+
+    <!-- With Dividers and Groups -->
+    <div class="demo-section">
+        <h2>With Dividers and Groups</h2>
+        <div class="demo-row">
+            <t-menu id="menu-groups">
+                <button slot="trigger">Edit Menu</button>
+            </t-menu>
+        </div>
+    </div>
+
+    <!-- Searchable Menu -->
+    <div class="demo-section">
+        <h2>Searchable Menu</h2>
+        <div class="demo-row">
+            <t-menu id="menu-searchable" searchable>
+                <button slot="trigger">Select Command</button>
+            </t-menu>
+        </div>
+    </div>
+
+    <!-- Disabled Items -->
+    <div class="demo-section">
+        <h2>Disabled Items</h2>
+        <div class="demo-row">
+            <t-menu id="menu-disabled">
+                <button slot="trigger">Actions Menu</button>
+            </t-menu>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="demo-section">
+        <h2>Context Menu (Right Click)</h2>
+        <t-menu id="menu-context" trigger="context">
+            <div slot="trigger" class="context-area">
+                Right-click in this area to open context menu
+            </div>
+        </t-menu>
+    </div>
+
+    <!-- Event Log -->
+    <div class="demo-section">
+        <h2>Event Log</h2>
+        <div class="event-log" id="event-log">
+            <p><span class="timestamp">[LOG]</span> Select menu items to see events...</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import '../js/components/TMenuLit.js';
+
+        const eventLog = document.getElementById('event-log');
+
+        function logEvent(menuId, event) {
+            const timestamp = new Date().toLocaleTimeString();
+            const p = document.createElement('p');
+            p.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${menuId}: ${event.type} - ${JSON.stringify(event.detail)}`;
+            eventLog.insertBefore(p, eventLog.firstChild);
+        }
+
+        // Basic menu
+        document.getElementById('basic-menu').items = [
+            { id: 'new', label: 'New File' },
+            { id: 'open', label: 'Open...' },
+            { id: 'save', label: 'Save' },
+            { id: 'divider1', divider: true },
+            { id: 'exit', label: 'Exit' }
+        ];
+
+        // Position menus
+        const positionItems = [
+            { id: 'option1', label: 'Option One' },
+            { id: 'option2', label: 'Option Two' },
+            { id: 'option3', label: 'Option Three' }
+        ];
+        document.getElementById('menu-bottom-start').items = positionItems;
+        document.getElementById('menu-bottom-end').items = positionItems;
+        document.getElementById('menu-top-start').items = positionItems;
+        document.getElementById('menu-top-end').items = positionItems;
+
+        // Shortcuts menu
+        document.getElementById('menu-shortcuts').items = [
+            { id: 'new', label: 'New File', shortcut: 'Ctrl+N' },
+            { id: 'open', label: 'Open...', shortcut: 'Ctrl+O' },
+            { id: 'save', label: 'Save', shortcut: 'Ctrl+S' },
+            { id: 'saveas', label: 'Save As...', shortcut: 'Ctrl+Shift+S' },
+            { id: 'divider', divider: true },
+            { id: 'close', label: 'Close', shortcut: 'Ctrl+W' }
+        ];
+
+        // Groups menu
+        document.getElementById('menu-groups').items = [
+            { id: 'undo-group', group: 'History' },
+            { id: 'undo', label: 'Undo', shortcut: 'Ctrl+Z' },
+            { id: 'redo', label: 'Redo', shortcut: 'Ctrl+Y' },
+            { id: 'clipboard-group', group: 'Clipboard' },
+            { id: 'cut', label: 'Cut', shortcut: 'Ctrl+X' },
+            { id: 'copy', label: 'Copy', shortcut: 'Ctrl+C' },
+            { id: 'paste', label: 'Paste', shortcut: 'Ctrl+V' },
+            { id: 'selection-group', group: 'Selection' },
+            { id: 'selectall', label: 'Select All', shortcut: 'Ctrl+A' }
+        ];
+
+        // Searchable menu
+        document.getElementById('menu-searchable').items = [
+            { id: 'git-clone', label: 'Git: Clone' },
+            { id: 'git-commit', label: 'Git: Commit' },
+            { id: 'git-push', label: 'Git: Push' },
+            { id: 'git-pull', label: 'Git: Pull' },
+            { id: 'git-fetch', label: 'Git: Fetch' },
+            { id: 'npm-install', label: 'NPM: Install' },
+            { id: 'npm-run', label: 'NPM: Run Script' },
+            { id: 'npm-test', label: 'NPM: Run Test' },
+            { id: 'format', label: 'Format Document' },
+            { id: 'lint', label: 'Run Linter' }
+        ];
+
+        // Disabled items menu
+        document.getElementById('menu-disabled').items = [
+            { id: 'run', label: 'Run' },
+            { id: 'debug', label: 'Debug', disabled: true },
+            { id: 'profile', label: 'Profile', disabled: true },
+            { id: 'divider', divider: true },
+            { id: 'stop', label: 'Stop', disabled: true },
+            { id: 'restart', label: 'Restart' }
+        ];
+
+        // Context menu
+        document.getElementById('menu-context').items = [
+            { id: 'cut', label: 'Cut', shortcut: 'Ctrl+X' },
+            { id: 'copy', label: 'Copy', shortcut: 'Ctrl+C' },
+            { id: 'paste', label: 'Paste', shortcut: 'Ctrl+V' },
+            { id: 'divider', divider: true },
+            { id: 'inspect', label: 'Inspect Element' }
+        ];
+
+        // Listen to all menu events
+        document.querySelectorAll('t-menu').forEach(menu => {
+            menu.addEventListener('menu-select', (e) => logEvent(menu.id, e));
+            menu.addEventListener('menu-open', (e) => logEvent(menu.id, e));
+            menu.addEventListener('menu-close', (e) => logEvent(menu.id, e));
+        });
+    </script>
+</body>
+</html>

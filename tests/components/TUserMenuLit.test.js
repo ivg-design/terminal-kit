@@ -17,10 +17,16 @@ describe('TUserMenuLit', () => {
   });
 
   afterEach(() => {
-    component?.remove();
-    // Clean up any document listeners
-    document.removeEventListener('click', component._handleClickOutside);
-    document.removeEventListener('keydown', component._handleEscape);
+    // Clean up any document listeners before removal
+    if (component) {
+      if (component._handleClickOutside) {
+        document.removeEventListener('click', component._handleClickOutside);
+      }
+      if (component._handleEscape) {
+        document.removeEventListener('keydown', component._handleEscape);
+      }
+      component.remove();
+    }
   });
 
   // ========================================

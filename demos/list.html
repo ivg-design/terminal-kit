@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TListLit Component Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+        :root {
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff003c;
+            --terminal-cyan: #00ffff;
+            --terminal-gray: #666;
+            --terminal-gray-dark: #333;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-bg: #0a0a0a;
+            --terminal-black: #0a0a0a;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        body {
+            background: var(--terminal-bg);
+            color: var(--terminal-green);
+            font-family: var(--font-mono);
+            padding: 40px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        h1, h2 {
+            color: var(--terminal-green);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        h1 {
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .description {
+            color: var(--terminal-gray);
+            margin-bottom: 40px;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .demo-label {
+            font-size: 11px;
+            color: var(--terminal-gray);
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--terminal-green);
+            color: var(--terminal-black);
+        }
+
+        .event-log {
+            background: #111;
+            border: 1px solid #333;
+            padding: 15px;
+            font-size: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .event-log p {
+            margin: 5px 0;
+            color: var(--terminal-green);
+        }
+
+        .event-log .timestamp {
+            color: var(--terminal-gray);
+        }
+
+        .controls {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--terminal-green);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .selection-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--terminal-gray);
+        }
+
+        t-list {
+            height: 300px;
+            width: 100%;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <h1>TListLit Component Demo</h1>
+    <p class="description">
+        Virtualized scrollable list with selection, grouping, drag-and-drop, and infinite scroll.
+    </p>
+
+    <!-- Basic List -->
+    <div class="demo-section">
+        <h2>Basic List</h2>
+        <t-list id="basic-list"></t-list>
+    </div>
+
+    <!-- Single Selection -->
+    <div class="demo-section">
+        <h2>Single Selection</h2>
+        <t-list id="single-select" selectable="single"></t-list>
+        <p class="selection-info">Selected: <span id="single-selected">None</span></p>
+    </div>
+
+    <!-- Multiple Selection -->
+    <div class="demo-section">
+        <h2>Multiple Selection</h2>
+        <div class="controls">
+            <div class="control-row">
+                <button onclick="selectAll()">Select All</button>
+                <button onclick="clearSelection()">Clear Selection</button>
+            </div>
+        </div>
+        <t-list id="multi-select" selectable="multiple"></t-list>
+        <p class="selection-info">Selected: <span id="multi-selected">None</span></p>
+    </div>
+
+    <!-- With Dividers & Dense -->
+    <div class="demo-section">
+        <h2>Variants: Dividers & Dense</h2>
+        <div class="demo-row">
+            <div>
+                <t-list id="dividers-list" dividers style="height: 200px;"></t-list>
+                <p class="demo-label">With Dividers</p>
+            </div>
+            <div>
+                <t-list id="dense-list" dense dividers style="height: 200px;"></t-list>
+                <p class="demo-label">Dense Mode</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- With Secondary Text -->
+    <div class="demo-section">
+        <h2>Items with Secondary Text</h2>
+        <t-list id="secondary-list" dividers></t-list>
+    </div>
+
+    <!-- Grouped List -->
+    <div class="demo-section">
+        <h2>Grouped Items</h2>
+        <t-list id="grouped-list" group-by="category" dividers></t-list>
+    </div>
+
+    <!-- Draggable List -->
+    <div class="demo-section">
+        <h2>Draggable (Reorderable)</h2>
+        <t-list id="draggable-list" draggable></t-list>
+        <p class="demo-label">Drag items to reorder</p>
+    </div>
+
+    <!-- Loading States -->
+    <div class="demo-section">
+        <h2>Loading States</h2>
+        <div class="controls">
+            <div class="control-row">
+                <button onclick="toggleLoading()">Toggle Loading</button>
+                <button onclick="toggleLoadingMore()">Toggle Load More</button>
+            </div>
+        </div>
+        <t-list id="loading-list"></t-list>
+    </div>
+
+    <!-- Empty State -->
+    <div class="demo-section">
+        <h2>Empty State</h2>
+        <t-list id="empty-list" empty-text="No items to display" style="height: 150px;"></t-list>
+    </div>
+
+    <!-- Infinite Scroll -->
+    <div class="demo-section">
+        <h2>Infinite Scroll</h2>
+        <t-list id="infinite-list" style="height: 250px;"></t-list>
+        <p class="demo-label">Scroll to bottom to load more items</p>
+    </div>
+
+    <!-- Event Log -->
+    <div class="demo-section">
+        <h2>Event Log</h2>
+        <div class="event-log" id="event-log">
+            <p><span class="timestamp">[LOG]</span> Interact with lists to see events...</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import '../js/components/TListLit.js';
+
+        const eventLog = document.getElementById('event-log');
+
+        function logEvent(listId, event) {
+            const timestamp = new Date().toLocaleTimeString();
+            const p = document.createElement('p');
+            const detail = event.detail ? JSON.stringify(event.detail) : 'N/A';
+            p.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${listId}: ${event.type}`;
+            eventLog.insertBefore(p, eventLog.firstChild);
+        }
+
+        // Basic items
+        const basicItems = Array.from({ length: 20 }, (_, i) => ({
+            id: `item-${i + 1}`,
+            label: `Item ${i + 1}`
+        }));
+
+        // Items with secondary text
+        const detailedItems = [
+            { id: '1', label: 'dashboard.js', secondary: 'Main dashboard component' },
+            { id: '2', label: 'api-client.js', secondary: 'API communication layer' },
+            { id: '3', label: 'auth-service.js', secondary: 'Authentication handling' },
+            { id: '4', label: 'config.json', secondary: 'Configuration settings' },
+            { id: '5', label: 'utils.js', secondary: 'Utility functions', disabled: true },
+            { id: '6', label: 'styles.css', secondary: 'Global stylesheet' },
+            { id: '7', label: 'router.js', secondary: 'Navigation routing' },
+            { id: '8', label: 'store.js', secondary: 'State management' }
+        ];
+
+        // Grouped items
+        const groupedItems = [
+            { id: '1', label: 'Apple', category: 'Fruits' },
+            { id: '2', label: 'Banana', category: 'Fruits' },
+            { id: '3', label: 'Orange', category: 'Fruits' },
+            { id: '4', label: 'Carrot', category: 'Vegetables' },
+            { id: '5', label: 'Broccoli', category: 'Vegetables' },
+            { id: '6', label: 'Spinach', category: 'Vegetables' },
+            { id: '7', label: 'Chicken', category: 'Proteins' },
+            { id: '8', label: 'Salmon', category: 'Proteins' },
+            { id: '9', label: 'Tofu', category: 'Proteins' }
+        ];
+
+        // Set up lists
+        document.getElementById('basic-list').items = basicItems.slice(0, 10);
+        document.getElementById('single-select').items = basicItems.slice(0, 10);
+        document.getElementById('multi-select').items = basicItems.slice(0, 10);
+        document.getElementById('dividers-list').items = basicItems.slice(0, 5);
+        document.getElementById('dense-list').items = basicItems.slice(0, 8);
+        document.getElementById('secondary-list').items = detailedItems;
+        document.getElementById('grouped-list').items = groupedItems;
+        document.getElementById('draggable-list').items = basicItems.slice(0, 6);
+        document.getElementById('loading-list').items = basicItems.slice(0, 5);
+
+        // Single selection tracking
+        const singleSelect = document.getElementById('single-select');
+        const singleDisplay = document.getElementById('single-selected');
+        singleSelect.addEventListener('selection-change', (e) => {
+            singleDisplay.textContent = e.detail.selected.length ? e.detail.selected.join(', ') : 'None';
+            logEvent('single-select', e);
+        });
+
+        // Multiple selection tracking
+        const multiSelect = document.getElementById('multi-select');
+        const multiDisplay = document.getElementById('multi-selected');
+        multiSelect.addEventListener('selection-change', (e) => {
+            multiDisplay.textContent = e.detail.selected.length ? `${e.detail.selected.length} items` : 'None';
+            logEvent('multi-select', e);
+        });
+
+        window.selectAll = () => multiSelect.selectAll();
+        window.clearSelection = () => multiSelect.clearSelection();
+
+        // Draggable list reorder
+        const draggableList = document.getElementById('draggable-list');
+        draggableList.addEventListener('reorder', (e) => {
+            const { fromIndex, toIndex } = e.detail;
+            const items = [...draggableList.items];
+            const [removed] = items.splice(fromIndex, 1);
+            items.splice(toIndex, 0, removed);
+            draggableList.items = items;
+            logEvent('draggable-list', e);
+        });
+
+        // Loading states
+        const loadingList = document.getElementById('loading-list');
+        window.toggleLoading = () => {
+            loadingList.loading = !loadingList.loading;
+        };
+        window.toggleLoadingMore = () => {
+            loadingList.loadingMore = !loadingList.loadingMore;
+        };
+
+        // Infinite scroll
+        const infiniteList = document.getElementById('infinite-list');
+        let infiniteItems = Array.from({ length: 20 }, (_, i) => ({
+            id: `item-${i + 1}`,
+            label: `Item ${i + 1}`
+        }));
+        infiniteList.items = infiniteItems;
+
+        infiniteList.addEventListener('load-more', (e) => {
+            if (infiniteList.loadingMore) return;
+
+            infiniteList.loadingMore = true;
+            logEvent('infinite-list', e);
+
+            // Simulate async loading
+            setTimeout(() => {
+                const startIndex = infiniteItems.length;
+                const newItems = Array.from({ length: 10 }, (_, i) => ({
+                    id: `item-${startIndex + i + 1}`,
+                    label: `Item ${startIndex + i + 1}`
+                }));
+                infiniteItems = [...infiniteItems, ...newItems];
+                infiniteList.items = infiniteItems;
+                infiniteList.loadingMore = false;
+            }, 1000);
+        });
+
+        // Listen to all list events
+        document.querySelectorAll('t-list').forEach(list => {
+            list.addEventListener('item-click', (e) => logEvent(list.id || 'list', e));
+        });
+    </script>
+</body>
+</html>

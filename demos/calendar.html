@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCalendarLit Component Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+        :root {
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff003c;
+            --terminal-cyan: #00ffff;
+            --terminal-gray: #666;
+            --terminal-gray-dark: #333;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-bg: #0a0a0a;
+            --terminal-black: #0a0a0a;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        body {
+            background: var(--terminal-bg);
+            color: var(--terminal-green);
+            font-family: var(--font-mono);
+            padding: 40px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        h1, h2 {
+            color: var(--terminal-green);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        h1 {
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .description {
+            color: var(--terminal-gray);
+            margin-bottom: 40px;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .demo-label {
+            font-size: 11px;
+            color: var(--terminal-gray);
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--terminal-green);
+            color: var(--terminal-black);
+        }
+
+        .event-log {
+            background: #111;
+            border: 1px solid #333;
+            padding: 15px;
+            font-size: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .event-log p {
+            margin: 5px 0;
+            color: var(--terminal-green);
+        }
+
+        .event-log .timestamp {
+            color: var(--terminal-gray);
+        }
+
+        .selection-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--terminal-gray);
+        }
+
+        .controls {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--terminal-green);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>TCalendarLit Component Demo</h1>
+    <p class="description">
+        Date picker calendar with single, multiple, and range selection modes.
+    </p>
+
+    <!-- Basic Calendar -->
+    <div class="demo-section">
+        <h2>Basic Calendar (Single Select)</h2>
+        <t-cal id="basic-cal"></t-cal>
+        <p class="selection-info">Selected: <span id="basic-selected">None</span></p>
+    </div>
+
+    <!-- Multiple Selection -->
+    <div class="demo-section">
+        <h2>Multiple Selection</h2>
+        <t-cal id="multi-cal" mode="multiple"></t-cal>
+        <p class="selection-info">Selected: <span id="multi-selected">None</span></p>
+    </div>
+
+    <!-- Range Selection -->
+    <div class="demo-section">
+        <h2>Range Selection</h2>
+        <t-cal id="range-cal" mode="range"></t-cal>
+        <p class="selection-info">Range: <span id="range-selected">None</span></p>
+    </div>
+
+    <!-- With Constraints -->
+    <div class="demo-section">
+        <h2>With Date Constraints</h2>
+        <t-cal id="constrained-cal"></t-cal>
+        <p class="demo-label">Only current month dates, weekends disabled</p>
+    </div>
+
+    <!-- With Highlights -->
+    <div class="demo-section">
+        <h2>With Highlighted Dates</h2>
+        <t-cal id="highlight-cal"></t-cal>
+        <p class="demo-label">Events/meetings highlighted in amber</p>
+    </div>
+
+    <!-- Week Numbers -->
+    <div class="demo-section">
+        <h2>With Week Numbers</h2>
+        <t-cal id="week-cal" show-week-numbers first-day-of-week="1"></t-cal>
+        <p class="demo-label">Monday start with ISO week numbers</p>
+    </div>
+
+    <!-- Different Views -->
+    <div class="demo-section">
+        <h2>Month/Year Navigation</h2>
+        <div class="controls">
+            <div class="control-row">
+                <button onclick="setView('days')">Days View</button>
+                <button onclick="setView('months')">Months View</button>
+                <button onclick="setView('years')">Years View</button>
+            </div>
+        </div>
+        <t-cal id="view-cal"></t-cal>
+        <p class="demo-label">Click title to cycle views, or use buttons above</p>
+    </div>
+
+    <!-- Programmatic Control -->
+    <div class="demo-section">
+        <h2>Programmatic Control</h2>
+        <div class="controls">
+            <div class="control-row">
+                <button onclick="goToToday()">Go to Today</button>
+                <button onclick="goToPrevMonth()">Previous Month</button>
+                <button onclick="goToNextMonth()">Next Month</button>
+                <button onclick="clearSelection()">Clear</button>
+            </div>
+        </div>
+        <t-cal id="control-cal"></t-cal>
+    </div>
+
+    <!-- Localization -->
+    <div class="demo-section">
+        <h2>Localization</h2>
+        <div class="demo-row">
+            <div>
+                <t-cal id="locale-en" locale="en-US"></t-cal>
+                <p class="demo-label">English (US)</p>
+            </div>
+            <div>
+                <t-cal id="locale-de" locale="de-DE" first-day-of-week="1"></t-cal>
+                <p class="demo-label">German</p>
+            </div>
+            <div>
+                <t-cal id="locale-fr" locale="fr-FR" first-day-of-week="1"></t-cal>
+                <p class="demo-label">French</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Log -->
+    <div class="demo-section">
+        <h2>Event Log</h2>
+        <div class="event-log" id="event-log">
+            <p><span class="timestamp">[LOG]</span> Select dates to see events...</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import '../js/components/TCalendarLit.js';
+
+        const eventLog = document.getElementById('event-log');
+
+        function logEvent(calId, event) {
+            const timestamp = new Date().toLocaleTimeString();
+            const p = document.createElement('p');
+            const detail = JSON.stringify(event.detail);
+            p.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${calId}: ${event.type}`;
+            eventLog.insertBefore(p, eventLog.firstChild);
+        }
+
+        // Basic calendar
+        const basicCal = document.getElementById('basic-cal');
+        basicCal.addEventListener('date-select', (e) => {
+            document.getElementById('basic-selected').textContent = e.detail.value || 'None';
+            logEvent('basic-cal', e);
+        });
+
+        // Multiple selection
+        const multiCal = document.getElementById('multi-cal');
+        multiCal.addEventListener('date-select', (e) => {
+            const val = e.detail.value;
+            document.getElementById('multi-selected').textContent =
+                val && val.length ? val.join(', ') : 'None';
+            logEvent('multi-cal', e);
+        });
+
+        // Range selection
+        const rangeCal = document.getElementById('range-cal');
+        rangeCal.addEventListener('date-select', (e) => {
+            const val = e.detail.value;
+            if (val && val.start && val.end) {
+                document.getElementById('range-selected').textContent = `${val.start} → ${val.end}`;
+            } else if (val && val.start) {
+                document.getElementById('range-selected').textContent = `${val.start} → (select end)`;
+            } else {
+                document.getElementById('range-selected').textContent = 'None';
+            }
+            logEvent('range-cal', e);
+        });
+
+        // Constrained calendar
+        const constrainedCal = document.getElementById('constrained-cal');
+        const today = new Date();
+        const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const lastOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+        constrainedCal.min = `${firstOfMonth.getFullYear()}-${String(firstOfMonth.getMonth() + 1).padStart(2, '0')}-01`;
+        constrainedCal.max = `${lastOfMonth.getFullYear()}-${String(lastOfMonth.getMonth() + 1).padStart(2, '0')}-${lastOfMonth.getDate()}`;
+        constrainedCal.disabledDays = [0, 6]; // Weekends
+
+        // Highlighted calendar
+        const highlightCal = document.getElementById('highlight-cal');
+        const month = today.getMonth() + 1;
+        const year = today.getFullYear();
+        highlightCal.highlighted = [
+            `${year}-${String(month).padStart(2, '0')}-05`,
+            `${year}-${String(month).padStart(2, '0')}-12`,
+            `${year}-${String(month).padStart(2, '0')}-18`,
+            `${year}-${String(month).padStart(2, '0')}-25`
+        ];
+
+        // View calendar
+        const viewCal = document.getElementById('view-cal');
+        window.setView = (view) => viewCal.setView(view);
+
+        // Control calendar
+        const controlCal = document.getElementById('control-cal');
+        window.goToToday = () => controlCal.goToToday();
+        window.goToPrevMonth = () => controlCal.previous();
+        window.goToNextMonth = () => controlCal.next();
+        window.clearSelection = () => controlCal.clear();
+
+        // Listen to all calendar events
+        document.querySelectorAll('t-cal').forEach(cal => {
+            cal.addEventListener('month-change', (e) => logEvent(cal.id || 'cal', e));
+            cal.addEventListener('view-change', (e) => logEvent(cal.id || 'cal', e));
+        });
+    </script>
+</body>
+</html>

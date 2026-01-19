@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSplitterLit Component Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+        :root {
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff003c;
+            --terminal-cyan: #00ffff;
+            --terminal-gray: #666;
+            --terminal-gray-dark: #333;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-bg: #0a0a0a;
+            --terminal-black: #0a0a0a;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        body {
+            background: var(--terminal-bg);
+            color: var(--terminal-green);
+            font-family: var(--font-mono);
+            padding: 40px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        h1, h2 {
+            color: var(--terminal-green);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        h1 {
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .description {
+            color: var(--terminal-gray);
+            margin-bottom: 40px;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .demo-label {
+            font-size: 11px;
+            color: var(--terminal-gray);
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--terminal-green);
+            color: var(--terminal-black);
+        }
+
+        .event-log {
+            background: #111;
+            border: 1px solid #333;
+            padding: 15px;
+            font-size: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .event-log p {
+            margin: 5px 0;
+            color: var(--terminal-green);
+        }
+
+        .event-log .timestamp {
+            color: var(--terminal-gray);
+        }
+
+        .controls {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--terminal-green);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* Demo pane content styling */
+        .pane-content {
+            padding: 20px;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pane-content h3 {
+            margin: 0 0 10px 0;
+            color: var(--terminal-green);
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .pane-content p {
+            margin: 0;
+            color: var(--terminal-gray);
+            font-size: 12px;
+        }
+
+        .splitter-container {
+            border: 1px solid var(--terminal-gray-dark);
+            background: var(--terminal-gray-darkest);
+        }
+
+        .file-tree {
+            font-size: 12px;
+            color: var(--terminal-green-dim);
+        }
+
+        .file-tree .folder {
+            color: var(--terminal-amber);
+        }
+
+        .file-tree .file {
+            color: var(--terminal-green);
+            margin-left: 15px;
+        }
+
+        .editor-content {
+            font-size: 11px;
+            color: var(--terminal-cyan);
+            white-space: pre;
+            overflow: auto;
+        }
+
+        .terminal-output {
+            font-size: 11px;
+            color: var(--terminal-green);
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+    <h1>TSplitterLit Component Demo</h1>
+    <p class="description">
+        Resizable panel splitter with drag-to-resize, collapsible panes, and persistent state.
+    </p>
+
+    <!-- Basic Horizontal Splitter -->
+    <div class="demo-section">
+        <h2>Horizontal Splitter (Default)</h2>
+        <div class="splitter-container" style="height: 250px;">
+            <t-split id="basic-splitter">
+                <div slot="pane-0" class="pane-content">
+                    <h3>Left Panel</h3>
+                    <p>Drag the gutter to resize panels.</p>
+                    <p>This is the left pane content.</p>
+                </div>
+                <div slot="pane-1" class="pane-content">
+                    <h3>Right Panel</h3>
+                    <p>The splitter maintains proportions on window resize.</p>
+                    <p>This is the right pane content.</p>
+                </div>
+            </t-split>
+        </div>
+        <p class="demo-label">Default 50/50 split</p>
+    </div>
+
+    <!-- Vertical Splitter -->
+    <div class="demo-section">
+        <h2>Vertical Splitter</h2>
+        <div class="splitter-container" style="height: 300px;">
+            <t-split id="vertical-splitter" orientation="vertical">
+                <div slot="pane-0" class="pane-content">
+                    <h3>Top Panel</h3>
+                    <p>Vertical orientation stacks panels top-to-bottom.</p>
+                </div>
+                <div slot="pane-1" class="pane-content">
+                    <h3>Bottom Panel</h3>
+                    <p>Drag the horizontal gutter to resize.</p>
+                </div>
+            </t-split>
+        </div>
+    </div>
+
+    <!-- Custom Sizes -->
+    <div class="demo-section">
+        <h2>Custom Initial Sizes</h2>
+        <div class="splitter-container" style="height: 200px;">
+            <t-split id="custom-sizes" sizes="[30, 70]">
+                <div slot="pane-0" class="pane-content">
+                    <h3>Sidebar (30%)</h3>
+                    <p>Narrower sidebar panel.</p>
+                </div>
+                <div slot="pane-1" class="pane-content">
+                    <h3>Main Content (70%)</h3>
+                    <p>Wider main content area.</p>
+                </div>
+            </t-split>
+        </div>
+        <p class="demo-label">30/70 split</p>
+    </div>
+
+    <!-- Collapsible Panels -->
+    <div class="demo-section">
+        <h2>Collapsible Panels</h2>
+        <div class="controls">
+            <div class="control-row">
+                <button onclick="toggleCollapseLeft()">Toggle Left</button>
+                <button onclick="toggleCollapseRight()">Toggle Right</button>
+                <button onclick="resetCollapsible()">Reset</button>
+            </div>
+        </div>
+        <div class="splitter-container" style="height: 250px;">
+            <t-split id="collapsible-splitter" collapsible="[true, true]">
+                <div slot="pane-0" class="pane-content">
+                    <h3>Collapsible Left</h3>
+                    <p>Click the arrows on the gutter or use the buttons above.</p>
+                </div>
+                <div slot="pane-1" class="pane-content">
+                    <h3>Collapsible Right</h3>
+                    <p>Both panels can be collapsed in this example.</p>
+                </div>
+            </t-split>
+        </div>
+    </div>
+
+    <!-- IDE Layout Example -->
+    <div class="demo-section">
+        <h2>IDE Layout Example</h2>
+        <div class="splitter-container" style="height: 400px;">
+            <t-split id="ide-main" sizes="[20, 80]" collapsible="[true, false]">
+                <div slot="pane-0" class="pane-content">
+                    <h3>File Explorer</h3>
+                    <div class="file-tree">
+                        <div class="folder">📁 src/</div>
+                        <div class="file">├─ index.js</div>
+                        <div class="file">├─ app.js</div>
+                        <div class="file">└─ utils.js</div>
+                        <div class="folder">📁 tests/</div>
+                        <div class="file">├─ index.test.js</div>
+                        <div class="file">└─ app.test.js</div>
+                        <div class="folder">📁 docs/</div>
+                        <div class="file">└─ README.md</div>
+                    </div>
+                </div>
+                <div slot="pane-1" style="height: 100%;">
+                    <t-split id="ide-editor" orientation="vertical" sizes="[70, 30]" collapsible="[false, true]">
+                        <div slot="pane-0" class="pane-content">
+                            <h3>Editor</h3>
+                            <div class="editor-content">// app.js
+import { Component } from 'lit';
+
+class MyApp extends Component {
+  static tagName = 'my-app';
+
+  render() {
+    return html`
+      &lt;div class="container"&gt;
+        &lt;h1&gt;Hello World&lt;/h1&gt;
+      &lt;/div&gt;
+    `;
+  }
+}
+
+export default MyApp;</div>
+                        </div>
+                        <div slot="pane-1" class="pane-content">
+                            <h3>Terminal</h3>
+                            <div class="terminal-output">$ npm run dev
+Starting development server...
+Server running at http://localhost:3000
+✓ Ready in 245ms
+
+$ _</div>
+                        </div>
+                    </t-split>
+                </div>
+            </t-split>
+        </div>
+        <p class="demo-label">Nested splitters for IDE-style layout</p>
+    </div>
+
+    <!-- Min/Max Sizes -->
+    <div class="demo-section">
+        <h2>Minimum Sizes</h2>
+        <div class="splitter-container" style="height: 200px;">
+            <t-split id="min-sizes" min-sizes="[100, 150]">
+                <div slot="pane-0" class="pane-content">
+                    <h3>Min 100px</h3>
+                    <p>Can't resize smaller than 100px.</p>
+                </div>
+                <div slot="pane-1" class="pane-content">
+                    <h3>Min 150px</h3>
+                    <p>Can't resize smaller than 150px.</p>
+                </div>
+            </t-split>
+        </div>
+        <p class="demo-label">Minimum sizes prevent over-collapsing</p>
+    </div>
+
+    <!-- Custom Gutter Size -->
+    <div class="demo-section">
+        <h2>Custom Gutter Size</h2>
+        <div class="demo-row">
+            <div style="flex: 1;">
+                <div class="splitter-container" style="height: 150px;">
+                    <t-split gutter-size="4">
+                        <div slot="pane-0" class="pane-content">
+                            <p>4px gutter</p>
+                        </div>
+                        <div slot="pane-1" class="pane-content">
+                            <p>Thin separator</p>
+                        </div>
+                    </t-split>
+                </div>
+                <p class="demo-label">Thin (4px)</p>
+            </div>
+            <div style="flex: 1;">
+                <div class="splitter-container" style="height: 150px;">
+                    <t-split gutter-size="16">
+                        <div slot="pane-0" class="pane-content">
+                            <p>16px gutter</p>
+                        </div>
+                        <div slot="pane-1" class="pane-content">
+                            <p>Wide separator</p>
+                        </div>
+                    </t-split>
+                </div>
+                <p class="demo-label">Wide (16px)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Programmatic Control -->
+    <div class="demo-section">
+        <h2>Programmatic Control</h2>
+        <div class="controls">
+            <div class="control-row">
+                <button onclick="setSizes25_75()">Set 25/75</button>
+                <button onclick="setSizes50_50()">Set 50/50</button>
+                <button onclick="setSizes75_25()">Set 75/25</button>
+            </div>
+        </div>
+        <div class="splitter-container" style="height: 200px;">
+            <t-split id="programmatic-splitter">
+                <div slot="pane-0" class="pane-content">
+                    <h3>Left</h3>
+                    <p>Use buttons to change sizes.</p>
+                </div>
+                <div slot="pane-1" class="pane-content">
+                    <h3>Right</h3>
+                    <p>Sizes are set programmatically.</p>
+                </div>
+            </t-split>
+        </div>
+    </div>
+
+    <!-- Event Log -->
+    <div class="demo-section">
+        <h2>Event Log</h2>
+        <div class="event-log" id="event-log">
+            <p><span class="timestamp">[LOG]</span> Resize panels to see events...</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import '../js/components/TSplitterLit.js';
+
+        const eventLog = document.getElementById('event-log');
+
+        function logEvent(splitterId, event) {
+            const timestamp = new Date().toLocaleTimeString();
+            const p = document.createElement('p');
+            const detail = event.detail ? JSON.stringify(event.detail) : 'N/A';
+            p.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${splitterId}: ${event.type} - ${detail}`;
+            eventLog.insertBefore(p, eventLog.firstChild);
+        }
+
+        // Listen to events on all splitters
+        document.querySelectorAll('t-split').forEach(splitter => {
+            splitter.addEventListener('resize', (e) => logEvent(splitter.id || 'splitter', e));
+            splitter.addEventListener('resize-start', (e) => logEvent(splitter.id || 'splitter', e));
+            splitter.addEventListener('resize-end', (e) => logEvent(splitter.id || 'splitter', e));
+            splitter.addEventListener('collapse', (e) => logEvent(splitter.id || 'splitter', e));
+        });
+
+        // Collapsible controls
+        const collapsibleSplitter = document.getElementById('collapsible-splitter');
+
+        window.toggleCollapseLeft = () => {
+            collapsibleSplitter.toggleCollapse(0);
+        };
+
+        window.toggleCollapseRight = () => {
+            collapsibleSplitter.toggleCollapse(1);
+        };
+
+        window.resetCollapsible = () => {
+            collapsibleSplitter.reset();
+        };
+
+        // Programmatic size controls
+        const programmaticSplitter = document.getElementById('programmatic-splitter');
+
+        window.setSizes25_75 = () => {
+            programmaticSplitter.setSizes([25, 75]);
+        };
+
+        window.setSizes50_50 = () => {
+            programmaticSplitter.setSizes([50, 50]);
+        };
+
+        window.setSizes75_25 = () => {
+            programmaticSplitter.setSizes([75, 25]);
+        };
+    </script>
+</body>
+</html>

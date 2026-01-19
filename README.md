@@ -24,17 +24,48 @@ A retro-futuristic web components library with terminal aesthetics. Built with *
 
 ## Components
 
-### Current Lit Components
-
-- **TPanel** (`<t-pnl>`) - Collapsible panels with header, footer, and actions
+### Core Components
 - **TButton** (`<t-btn>`) - Terminal-style buttons with size/variant options
+- **TBadge** (`<t-bdg>`) - Count and status indicator badges
+- **TChip** (`<t-chip>`) - Tag and filter chips with selection
+- **TPanel** (`<t-pnl>`) - Collapsible panels with header, footer, and actions
+- **TModal** (`<t-modal>`) - Modal dialogs with layouts
+- **TTooltip** (`<t-tip>`) - Information tooltips
+
+### Form Components
 - **TInput** (`<t-inp>`) - Text inputs with validation
-- **TToggleLit** (`<t-tog>`) - Toggle switches and checkboxes with multiple variants
-- **TSlider** (`<t-sld>`) - Range sliders
+- **TTextarea** (`<t-textarea>`) - Multiline text input with code mode
 - **TDropdown** (`<t-drp>`) - Select dropdowns with search
+- **TSlider** (`<t-sld>`) - Range sliders
+- **TToggle** (`<t-tog>`) - Toggle switches and checkboxes
 - **TColorPicker** (`<t-clr>`) - Color picker with swatches
+- **TCalendar** (`<t-cal>`) - Date picker with single/multiple/range modes
+
+### Display Components
+- **TAvatar** (`<t-avt>`) - User avatar with image, initials, status
+- **TCard** (`<t-card>`) - Flexible content card container
+- **TTimeline** (`<t-tmln>`) - Vertical timeline for events
+- **TChart** (`<t-chart>`) - Data visualizations (bar, line, pie, donut)
+- **TSkeleton** (`<t-skel>`) - Loading placeholder shapes
+
+### Status & Feedback
 - **TLoader** (`<t-ldr>`) - Loading indicators
-- **TTextarea** (`<t-textarea>`) - Multiline text input
+- **TProgress** (`<t-prg>`) - Progress bars and rings
+- **TToast** (`<t-toast>`) - Toast notifications
+- **TStatusBar** (`<t-stat>`) - Status bar with fields
+
+### Navigation
+- **TMenu** (`<t-menu>`) - Dropdown/context menus
+- **TTabs** (`<t-tabs>`) - Tab navigation with panels
+- **TUserMenu** (`<t-usr>`) - User menu dropdown
+
+### Layout Components
+- **TSplitter** (`<t-split>`) - Resizable panel divider
+- **TList** (`<t-list>`) - Virtualized scrollable list
+- **TTree** (`<t-tree>`) - Hierarchical tree structure
+
+### Composite Components
+- **TChatPanel** (`<t-chat>`) - Chat UI with markdown, streaming, attachments
 
 ## Installation
 

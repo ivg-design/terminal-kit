@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBadgeLit Component Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+        :root {
+            --terminal-green: #00ff41;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff003c;
+            --terminal-cyan: #00ffff;
+            --terminal-purple: #9d00ff;
+            --terminal-gray: #666;
+            --terminal-bg: #0a0a0a;
+            --terminal-black: #0a0a0a;
+            --terminal-white: #ffffff;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        body {
+            background: var(--terminal-bg);
+            color: var(--terminal-green);
+            font-family: var(--font-mono);
+            padding: 40px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        h1, h2 {
+            color: var(--terminal-green);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        h1 {
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .description {
+            color: var(--terminal-gray);
+            margin-bottom: 40px;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .demo-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .demo-label {
+            font-size: 11px;
+            color: var(--terminal-gray);
+            text-transform: uppercase;
+        }
+
+        .icon-box {
+            width: 40px;
+            height: 40px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .icon-box svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--terminal-green);
+        }
+
+        .controls {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--terminal-green);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--terminal-green);
+            color: var(--terminal-black);
+        }
+
+        .event-log {
+            background: #111;
+            border: 1px solid #333;
+            padding: 15px;
+            font-size: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .event-log p {
+            margin: 5px 0;
+            color: var(--terminal-green);
+        }
+
+        .event-log .timestamp {
+            color: var(--terminal-gray);
+        }
+    </style>
+</head>
+<body>
+    <h1>TBadgeLit Component Demo</h1>
+    <p class="description">
+        Count/status indicator badge component with variants, sizes, positions, and animations.
+    </p>
+
+    <!-- Variants -->
+    <div class="demo-section">
+        <h2>Variants</h2>
+        <div class="demo-row">
+            <div class="demo-item">
+                <t-bdg count="5" variant="default"></t-bdg>
+                <span class="demo-label">Default</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg count="5" variant="success"></t-bdg>
+                <span class="demo-label">Success</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg count="5" variant="warning"></t-bdg>
+                <span class="demo-label">Warning</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg count="5" variant="error"></t-bdg>
+                <span class="demo-label">Error</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg count="5" variant="info"></t-bdg>
+                <span class="demo-label">Info</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sizes -->
+    <div class="demo-section">
+        <h2>Sizes</h2>
+        <div class="demo-row">
+            <div class="demo-item">
+                <t-bdg count="5" size="sm"></t-bdg>
+                <span class="demo-label">Small</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg count="5" size="md"></t-bdg>
+                <span class="demo-label">Medium</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg count="5" size="lg"></t-bdg>
+                <span class="demo-label">Large</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dot Variant -->
+    <div class="demo-section">
+        <h2>Dot Variant</h2>
+        <div class="demo-row">
+            <div class="demo-item">
+                <t-bdg dot variant="default"></t-bdg>
+                <span class="demo-label">Default</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg dot variant="success"></t-bdg>
+                <span class="demo-label">Success</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg dot variant="warning"></t-bdg>
+                <span class="demo-label">Warning</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg dot variant="error"></t-bdg>
+                <span class="demo-label">Error</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg dot pulse variant="error"></t-bdg>
+                <span class="demo-label">Pulse</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Max Count -->
+    <div class="demo-section">
+        <h2>Max Count Overflow</h2>
+        <div class="demo-row">
+            <div class="demo-item">
+                <t-bdg count="50" max="99"></t-bdg>
+                <span class="demo-label">50 (max 99)</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg count="100" max="99"></t-bdg>
+                <span class="demo-label">100 (max 99)</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg count="999" max="99"></t-bdg>
+                <span class="demo-label">999 (max 99)</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg count="15" max="9"></t-bdg>
+                <span class="demo-label">15 (max 9)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Positioned on Content -->
+    <div class="demo-section">
+        <h2>Positioned on Content</h2>
+        <div class="demo-row">
+            <div class="demo-item">
+                <t-bdg count="3" position="top-right">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+                    </div>
+                </t-bdg>
+                <span class="demo-label">Top Right</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg count="3" position="top-left">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+                    </div>
+                </t-bdg>
+                <span class="demo-label">Top Left</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg count="3" position="bottom-right">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+                    </div>
+                </t-bdg>
+                <span class="demo-label">Bottom Right</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg count="3" position="bottom-left">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+                    </div>
+                </t-bdg>
+                <span class="demo-label">Bottom Left</span>
+            </div>
+            <div class="demo-item">
+                <t-bdg dot pulse variant="error" position="top-right">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+                    </div>
+                </t-bdg>
+                <span class="demo-label">Dot + Pulse</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive -->
+    <div class="demo-section">
+        <h2>Interactive Demo</h2>
+        <div class="controls">
+            <div class="control-row">
+                <t-bdg id="interactive-badge" count="0" variant="default" clickable></t-bdg>
+                <button onclick="incrementBadge()">Increment</button>
+                <button onclick="decrementBadge()">Decrement</button>
+                <button onclick="toggleVariant()">Toggle Variant</button>
+                <button onclick="togglePulse()">Toggle Pulse</button>
+                <button onclick="toggleVisibility()">Toggle Visibility</button>
+            </div>
+        </div>
+        <div class="event-log" id="event-log">
+            <p><span class="timestamp">[LOG]</span> Click events will appear here...</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import '../js/components/TBadgeLit.js';
+
+        const badge = document.getElementById('interactive-badge');
+        const eventLog = document.getElementById('event-log');
+        const variants = ['default', 'success', 'warning', 'error', 'info'];
+        let variantIndex = 0;
+
+        // Log badge-click events
+        badge.addEventListener('badge-click', (e) => {
+            const timestamp = new Date().toLocaleTimeString();
+            const p = document.createElement('p');
+            p.innerHTML = `<span class="timestamp">[${timestamp}]</span> badge-click: count=${e.detail.count}, variant=${e.detail.variant}`;
+            eventLog.insertBefore(p, eventLog.firstChild);
+        });
+
+        // Make functions globally available
+        window.incrementBadge = () => badge.increment();
+        window.decrementBadge = () => badge.decrement();
+        window.toggleVariant = () => {
+            variantIndex = (variantIndex + 1) % variants.length;
+            badge.variant = variants[variantIndex];
+        };
+        window.togglePulse = () => {
+            badge.pulse = !badge.pulse;
+        };
+        window.toggleVisibility = () => {
+            if (badge.hidden) {
+                badge.show();
+            } else {
+                badge.hide();
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TChartLit Component Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+        :root {
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff003c;
+            --terminal-cyan: #00ffff;
+            --terminal-gray: #666;
+            --terminal-gray-dark: #333;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-bg: #0a0a0a;
+            --terminal-black: #0a0a0a;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        body {
+            background: var(--terminal-bg);
+            color: var(--terminal-green);
+            font-family: var(--font-mono);
+            padding: 40px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        h1, h2 {
+            color: var(--terminal-green);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        h1 {
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .description {
+            color: var(--terminal-gray);
+            margin-bottom: 40px;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .demo-label {
+            font-size: 11px;
+            color: var(--terminal-gray);
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--terminal-green);
+            color: var(--terminal-black);
+        }
+
+        .event-log {
+            background: #111;
+            border: 1px solid #333;
+            padding: 15px;
+            font-size: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .event-log p {
+            margin: 5px 0;
+            color: var(--terminal-green);
+        }
+
+        .event-log .timestamp {
+            color: var(--terminal-gray);
+        }
+
+        .controls {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--terminal-green);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        t-chart {
+            max-width: 450px;
+        }
+    </style>
+</head>
+<body>
+    <h1>TChartLit Component Demo</h1>
+    <p class="description">
+        Simple data visualizations with bar, line, pie, and donut chart types.
+    </p>
+
+    <!-- Bar Chart -->
+    <div class="demo-section">
+        <h2>Bar Chart</h2>
+        <t-chart
+            id="bar-chart"
+            type="bar"
+            title="Monthly Revenue"
+            height="220px"
+            show-legend
+        ></t-chart>
+    </div>
+
+    <!-- Line Chart -->
+    <div class="demo-section">
+        <h2>Line Chart</h2>
+        <t-chart
+            id="line-chart"
+            type="line"
+            title="Daily Active Users"
+            height="220px"
+        ></t-chart>
+    </div>
+
+    <!-- Pie and Donut Charts -->
+    <div class="demo-section">
+        <h2>Pie & Donut Charts</h2>
+        <div class="demo-row">
+            <div>
+                <t-chart
+                    id="pie-chart"
+                    type="pie"
+                    title="Market Share"
+                    height="220px"
+                    show-legend
+                ></t-chart>
+                <p class="demo-label">Pie Chart</p>
+            </div>
+            <div>
+                <t-chart
+                    id="donut-chart"
+                    type="donut"
+                    title="Resource Usage"
+                    height="220px"
+                    show-legend
+                ></t-chart>
+                <p class="demo-label">Donut Chart</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Without Grid/Labels -->
+    <div class="demo-section">
+        <h2>Minimal Style (No Grid/Labels)</h2>
+        <t-chart
+            id="minimal-chart"
+            type="bar"
+            title="Clean View"
+            height="180px"
+        ></t-chart>
+    </div>
+
+    <!-- Custom Colors -->
+    <div class="demo-section">
+        <h2>Custom Colors</h2>
+        <t-chart
+            id="custom-colors-chart"
+            type="bar"
+            title="Quarterly Results"
+            height="200px"
+        ></t-chart>
+    </div>
+
+    <!-- Monochrome Charts -->
+    <div class="demo-section">
+        <h2>Monochrome Mode</h2>
+        <div class="demo-row">
+            <div>
+                <t-chart
+                    id="mono-green-chart"
+                    type="pie"
+                    title="Green Monochrome"
+                    height="200px"
+                    monochrome
+                    base-color="#00ff41"
+                    show-legend
+                ></t-chart>
+                <p class="demo-label">Base: Green</p>
+            </div>
+            <div>
+                <t-chart
+                    id="mono-cyan-chart"
+                    type="donut"
+                    title="Cyan Monochrome"
+                    height="200px"
+                    monochrome
+                    base-color="#00ffff"
+                    show-legend
+                ></t-chart>
+                <p class="demo-label">Base: Cyan</p>
+            </div>
+            <div>
+                <t-chart
+                    id="mono-amber-chart"
+                    type="bar"
+                    title="Amber Monochrome"
+                    height="200px"
+                    monochrome
+                    base-color="#ffb000"
+                ></t-chart>
+                <p class="demo-label">Base: Amber</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Color Schemes -->
+    <div class="demo-section">
+        <h2>Color Schemes</h2>
+        <div class="controls">
+            <div class="control-row">
+                <button onclick="setScheme('terminal')">Terminal</button>
+                <button onclick="setScheme('neon')">Neon</button>
+                <button onclick="setScheme('cool')">Cool</button>
+                <button onclick="setScheme('warm')">Warm</button>
+                <button onclick="setScheme('grayscale')">Grayscale</button>
+            </div>
+        </div>
+        <t-chart
+            id="scheme-chart"
+            type="bar"
+            title="Color Scheme Demo"
+            height="220px"
+            show-legend
+        ></t-chart>
+    </div>
+
+    <!-- Interactive Chart -->
+    <div class="demo-section">
+        <h2>Interactive Demo</h2>
+        <div class="controls">
+            <div class="control-row">
+                <button onclick="setChartType('bar')">Bar</button>
+                <button onclick="setChartType('line')">Line</button>
+                <button onclick="setChartType('pie')">Pie</button>
+                <button onclick="setChartType('donut')">Donut</button>
+                <button onclick="toggleLegend()">Toggle Legend</button>
+                <button onclick="toggleGrid()">Toggle Grid</button>
+                <button onclick="randomizeData()">Randomize Data</button>
+            </div>
+        </div>
+        <t-chart
+            id="interactive-chart"
+            type="bar"
+            title="Interactive Chart"
+            height="250px"
+            show-legend
+        ></t-chart>
+    </div>
+
+    <!-- Real-time Updates -->
+    <div class="demo-section">
+        <h2>Real-time Updates</h2>
+        <div class="controls">
+            <div class="control-row">
+                <button id="start-btn" onclick="startRealtime()">Start Updates</button>
+                <button id="stop-btn" onclick="stopRealtime()" disabled>Stop Updates</button>
+            </div>
+        </div>
+        <t-chart
+            id="realtime-chart"
+            type="line"
+            title="Live Data Feed"
+            height="200px"
+        ></t-chart>
+    </div>
+
+    <!-- Event Log -->
+    <div class="demo-section">
+        <h2>Event Log</h2>
+        <div class="event-log" id="event-log">
+            <p><span class="timestamp">[LOG]</span> Click on chart segments to see events...</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import '../js/components/TChartLit.js';
+
+        const eventLog = document.getElementById('event-log');
+
+        function logEvent(chartId, event) {
+            const timestamp = new Date().toLocaleTimeString();
+            const p = document.createElement('p');
+            p.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${chartId}: ${event.type} - ${event.detail.label}: ${event.detail.value}`;
+            eventLog.insertBefore(p, eventLog.firstChild);
+        }
+
+        // Sample data
+        const monthlyData = [
+            { label: 'Jan', value: 4200 },
+            { label: 'Feb', value: 3800 },
+            { label: 'Mar', value: 5100 },
+            { label: 'Apr', value: 4600 },
+            { label: 'May', value: 5800 },
+            { label: 'Jun', value: 6200 }
+        ];
+
+        const dailyData = [
+            { label: 'Mon', value: 1200 },
+            { label: 'Tue', value: 1400 },
+            { label: 'Wed', value: 1350 },
+            { label: 'Thu', value: 1600 },
+            { label: 'Fri', value: 1800 },
+            { label: 'Sat', value: 900 },
+            { label: 'Sun', value: 750 }
+        ];
+
+        const marketData = [
+            { label: 'Product A', value: 35 },
+            { label: 'Product B', value: 25 },
+            { label: 'Product C', value: 20 },
+            { label: 'Product D', value: 12 },
+            { label: 'Other', value: 8 }
+        ];
+
+        const resourceData = [
+            { label: 'CPU', value: 45, color: '#00ff41' },
+            { label: 'Memory', value: 30, color: '#00ffff' },
+            { label: 'Storage', value: 15, color: '#ffb000' },
+            { label: 'Network', value: 10, color: '#ff003c' }
+        ];
+
+        // Set up charts
+        document.getElementById('bar-chart').setData(monthlyData);
+        document.getElementById('line-chart').setData(dailyData);
+        document.getElementById('pie-chart').setData(marketData);
+        document.getElementById('donut-chart').setData(resourceData);
+
+        // Minimal chart
+        const minimalChart = document.getElementById('minimal-chart');
+        minimalChart.showGrid = false;
+        minimalChart.showLabels = false;
+        minimalChart.setData(monthlyData);
+
+        // Custom colors chart
+        const customChart = document.getElementById('custom-colors-chart');
+        customChart.colors = ['#ff003c', '#ffb000', '#00ffff', '#9d00ff'];
+        customChart.setData([
+            { label: 'Q1', value: 4500 },
+            { label: 'Q2', value: 5200 },
+            { label: 'Q3', value: 4800 },
+            { label: 'Q4', value: 6100 }
+        ]);
+
+        // Monochrome charts
+        const monoData = [
+            { label: 'A', value: 35 },
+            { label: 'B', value: 25 },
+            { label: 'C', value: 20 },
+            { label: 'D', value: 12 },
+            { label: 'E', value: 8 }
+        ];
+        document.getElementById('mono-green-chart').setData(monoData);
+        document.getElementById('mono-cyan-chart').setData(monoData);
+        document.getElementById('mono-amber-chart').setData(monoData);
+
+        // Color scheme chart
+        const schemeChart = document.getElementById('scheme-chart');
+        const schemeData = [
+            { label: 'Category A', value: 4200 },
+            { label: 'Category B', value: 3800 },
+            { label: 'Category C', value: 5100 },
+            { label: 'Category D', value: 4600 },
+            { label: 'Category E', value: 5800 },
+            { label: 'Category F', value: 3200 }
+        ];
+        schemeChart.setData(schemeData);
+
+        window.setScheme = (scheme) => {
+            schemeChart.colorScheme = scheme;
+        };
+
+        // Interactive chart
+        const interactiveChart = document.getElementById('interactive-chart');
+        let interactiveData = [...monthlyData];
+        interactiveChart.setData(interactiveData);
+
+        window.setChartType = (type) => {
+            interactiveChart.type = type;
+        };
+
+        window.toggleLegend = () => {
+            interactiveChart.showLegend = !interactiveChart.showLegend;
+        };
+
+        window.toggleGrid = () => {
+            interactiveChart.showGrid = !interactiveChart.showGrid;
+        };
+
+        window.randomizeData = () => {
+            interactiveData = interactiveData.map(item => ({
+                ...item,
+                value: Math.floor(Math.random() * 5000) + 1000
+            }));
+            interactiveChart.setData(interactiveData);
+        };
+
+        // Real-time chart
+        const realtimeChart = document.getElementById('realtime-chart');
+        let realtimeData = [];
+        let realtimeInterval = null;
+        let counter = 0;
+
+        function initRealtimeData() {
+            realtimeData = [];
+            counter = 0;
+            for (let i = 0; i < 10; i++) {
+                realtimeData.push({
+                    label: `T${counter++}`,
+                    value: Math.floor(Math.random() * 100) + 50
+                });
+            }
+            realtimeChart.setData(realtimeData);
+        }
+
+        initRealtimeData();
+
+        window.startRealtime = () => {
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('stop-btn').disabled = false;
+
+            realtimeInterval = setInterval(() => {
+                realtimeData.shift();
+                realtimeData.push({
+                    label: `T${counter++}`,
+                    value: Math.floor(Math.random() * 100) + 50
+                });
+                realtimeChart.setData([...realtimeData]);
+            }, 1000);
+        };
+
+        window.stopRealtime = () => {
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('stop-btn').disabled = true;
+
+            if (realtimeInterval) {
+                clearInterval(realtimeInterval);
+                realtimeInterval = null;
+            }
+        };
+
+        // Listen to chart events
+        document.querySelectorAll('t-chart').forEach(chart => {
+            chart.addEventListener('segment-click', (e) => logEvent(chart.id || 'chart', e));
+        });
+    </script>
+</body>
+</html>

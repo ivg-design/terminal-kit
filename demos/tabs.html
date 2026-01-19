@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTabsLit Component Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+        :root {
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff003c;
+            --terminal-cyan: #00ffff;
+            --terminal-gray: #666;
+            --terminal-gray-dark: #2a2a2a;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-bg: #0a0a0a;
+            --terminal-black: #0a0a0a;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        body {
+            background: var(--terminal-bg);
+            color: var(--terminal-green);
+            font-family: var(--font-mono);
+            padding: 40px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        h1, h2 {
+            color: var(--terminal-green);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        h1 {
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .description {
+            color: var(--terminal-gray);
+            margin-bottom: 40px;
+        }
+
+        .demo-section {
+            margin-bottom: 60px;
+        }
+
+        .demo-container {
+            background: var(--terminal-gray-darkest);
+            border: 1px solid var(--terminal-gray-dark);
+            margin-bottom: 20px;
+        }
+
+        .tab-content {
+            padding: 20px;
+            color: var(--terminal-green-dim);
+        }
+
+        .tab-content h3 {
+            color: var(--terminal-green);
+            margin-top: 0;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            margin-right: 8px;
+        }
+
+        button:hover {
+            background: var(--terminal-green);
+            color: var(--terminal-bg);
+        }
+
+        .demo-label {
+            font-size: 11px;
+            color: var(--terminal-gray);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>TTabsLit Component Demo</h1>
+    <p class="description">
+        Tab navigation component with panel switching, variants, and keyboard navigation.
+    </p>
+
+    <!-- Basic Tabs -->
+    <div class="demo-section">
+        <h2>Basic Tabs</h2>
+        <span class="demo-label">Default horizontal tabs</span>
+        <div class="demo-container">
+            <t-tabs id="basic-tabs">
+                <div slot="tab-overview" class="tab-content">
+                    <h3>Overview</h3>
+                    <p>This is the overview panel content. Terminal Kit provides a comprehensive set of web components for building terminal-style user interfaces.</p>
+                </div>
+                <div slot="tab-features" class="tab-content">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>Pure Lit 3.x components</li>
+                        <li>Terminal/cyberpunk styling</li>
+                        <li>Full keyboard navigation</li>
+                        <li>Accessible by default</li>
+                    </ul>
+                </div>
+                <div slot="tab-usage" class="tab-content">
+                    <h3>Usage</h3>
+                    <p>Import the component and use it in your HTML:</p>
+                    <code>&lt;t-tabs tabs='[...]'&gt;&lt;/t-tabs&gt;</code>
+                </div>
+            </t-tabs>
+        </div>
+    </div>
+
+    <!-- Tab Variants -->
+    <div class="demo-section">
+        <h2>Variants</h2>
+
+        <span class="demo-label">Default (underline)</span>
+        <div class="demo-container">
+            <t-tabs id="variant-default">
+                <div slot="tab-tab1" class="tab-content">Default variant content 1</div>
+                <div slot="tab-tab2" class="tab-content">Default variant content 2</div>
+                <div slot="tab-tab3" class="tab-content">Default variant content 3</div>
+            </t-tabs>
+        </div>
+
+        <span class="demo-label">Boxed</span>
+        <div class="demo-container">
+            <t-tabs id="variant-boxed" variant="boxed">
+                <div slot="tab-tab1" class="tab-content">Boxed variant content 1</div>
+                <div slot="tab-tab2" class="tab-content">Boxed variant content 2</div>
+                <div slot="tab-tab3" class="tab-content">Boxed variant content 3</div>
+            </t-tabs>
+        </div>
+
+        <span class="demo-label">Pills</span>
+        <div class="demo-container">
+            <t-tabs id="variant-pills" variant="pills">
+                <div slot="tab-tab1" class="tab-content">Pills variant content 1</div>
+                <div slot="tab-tab2" class="tab-content">Pills variant content 2</div>
+                <div slot="tab-tab3" class="tab-content">Pills variant content 3</div>
+            </t-tabs>
+        </div>
+    </div>
+
+    <!-- Sizes -->
+    <div class="demo-section">
+        <h2>Sizes</h2>
+
+        <span class="demo-label">Small</span>
+        <div class="demo-container">
+            <t-tabs id="size-sm" size="sm">
+                <div slot="tab-tab1" class="tab-content">Small tabs content</div>
+                <div slot="tab-tab2" class="tab-content">Small tabs content 2</div>
+            </t-tabs>
+        </div>
+
+        <span class="demo-label">Medium (default)</span>
+        <div class="demo-container">
+            <t-tabs id="size-md" size="md">
+                <div slot="tab-tab1" class="tab-content">Medium tabs content</div>
+                <div slot="tab-tab2" class="tab-content">Medium tabs content 2</div>
+            </t-tabs>
+        </div>
+
+        <span class="demo-label">Large</span>
+        <div class="demo-container">
+            <t-tabs id="size-lg" size="lg">
+                <div slot="tab-tab1" class="tab-content">Large tabs content</div>
+                <div slot="tab-tab2" class="tab-content">Large tabs content 2</div>
+            </t-tabs>
+        </div>
+    </div>
+
+    <!-- Vertical Orientation -->
+    <div class="demo-section">
+        <h2>Vertical Orientation</h2>
+        <div class="demo-container" style="min-height: 200px;">
+            <t-tabs id="vertical-tabs" orientation="vertical">
+                <div slot="tab-settings" class="tab-content">
+                    <h3>Settings</h3>
+                    <p>Configure your application settings here.</p>
+                </div>
+                <div slot="tab-profile" class="tab-content">
+                    <h3>Profile</h3>
+                    <p>Manage your user profile information.</p>
+                </div>
+                <div slot="tab-security" class="tab-content">
+                    <h3>Security</h3>
+                    <p>Security and privacy settings.</p>
+                </div>
+            </t-tabs>
+        </div>
+    </div>
+
+    <!-- Closable Tabs -->
+    <div class="demo-section">
+        <h2>Closable Tabs</h2>
+        <span class="demo-label">Click the X to close tabs</span>
+        <div class="demo-container">
+            <t-tabs id="closable-tabs" closable>
+                <div slot="tab-doc1" class="tab-content">Document 1 content</div>
+                <div slot="tab-doc2" class="tab-content">Document 2 content</div>
+                <div slot="tab-doc3" class="tab-content">Document 3 content</div>
+            </t-tabs>
+        </div>
+        <button onclick="resetClosableTabs()">Reset Tabs</button>
+    </div>
+
+    <!-- Disabled Tabs -->
+    <div class="demo-section">
+        <h2>Disabled Tabs</h2>
+        <div class="demo-container">
+            <t-tabs id="disabled-tabs">
+                <div slot="tab-active" class="tab-content">This tab is active and enabled.</div>
+                <div slot="tab-disabled" class="tab-content">This content won't be accessible.</div>
+                <div slot="tab-another" class="tab-content">Another enabled tab.</div>
+            </t-tabs>
+        </div>
+    </div>
+
+    <!-- Programmatic Control -->
+    <div class="demo-section">
+        <h2>Programmatic Control</h2>
+        <div class="demo-container">
+            <t-tabs id="programmatic-tabs">
+                <div slot="tab-first" class="tab-content">First tab content</div>
+                <div slot="tab-second" class="tab-content">Second tab content</div>
+                <div slot="tab-third" class="tab-content">Third tab content</div>
+            </t-tabs>
+        </div>
+        <button onclick="selectFirst()">Select First</button>
+        <button onclick="selectSecond()">Select Second</button>
+        <button onclick="selectThird()">Select Third</button>
+        <button onclick="addNewTab()">Add Tab</button>
+    </div>
+
+    <script type="module">
+        import '../js/components/TTabsLit.js';
+
+        // Initialize tabs with data
+        document.getElementById('basic-tabs').tabs = [
+            { id: 'overview', label: 'Overview' },
+            { id: 'features', label: 'Features' },
+            { id: 'usage', label: 'Usage' }
+        ];
+
+        document.getElementById('variant-default').tabs = [
+            { id: 'tab1', label: 'Tab One' },
+            { id: 'tab2', label: 'Tab Two' },
+            { id: 'tab3', label: 'Tab Three' }
+        ];
+
+        document.getElementById('variant-boxed').tabs = [
+            { id: 'tab1', label: 'Tab One' },
+            { id: 'tab2', label: 'Tab Two' },
+            { id: 'tab3', label: 'Tab Three' }
+        ];
+
+        document.getElementById('variant-pills').tabs = [
+            { id: 'tab1', label: 'Tab One' },
+            { id: 'tab2', label: 'Tab Two' },
+            { id: 'tab3', label: 'Tab Three' }
+        ];
+
+        document.getElementById('size-sm').tabs = [
+            { id: 'tab1', label: 'Tab One' },
+            { id: 'tab2', label: 'Tab Two' }
+        ];
+
+        document.getElementById('size-md').tabs = [
+            { id: 'tab1', label: 'Tab One' },
+            { id: 'tab2', label: 'Tab Two' }
+        ];
+
+        document.getElementById('size-lg').tabs = [
+            { id: 'tab1', label: 'Tab One' },
+            { id: 'tab2', label: 'Tab Two' }
+        ];
+
+        document.getElementById('vertical-tabs').tabs = [
+            { id: 'settings', label: 'Settings' },
+            { id: 'profile', label: 'Profile' },
+            { id: 'security', label: 'Security' }
+        ];
+
+        const closableTabsInitial = [
+            { id: 'doc1', label: 'Document 1' },
+            { id: 'doc2', label: 'Document 2' },
+            { id: 'doc3', label: 'Document 3' }
+        ];
+        document.getElementById('closable-tabs').tabs = [...closableTabsInitial];
+
+        document.getElementById('disabled-tabs').tabs = [
+            { id: 'active', label: 'Active' },
+            { id: 'disabled', label: 'Disabled', disabled: true },
+            { id: 'another', label: 'Another' }
+        ];
+
+        const programmaticTabs = document.getElementById('programmatic-tabs');
+        programmaticTabs.tabs = [
+            { id: 'first', label: 'First' },
+            { id: 'second', label: 'Second' },
+            { id: 'third', label: 'Third' }
+        ];
+
+        // Global functions for buttons
+        window.resetClosableTabs = () => {
+            document.getElementById('closable-tabs').tabs = [...closableTabsInitial];
+        };
+
+        window.selectFirst = () => programmaticTabs.selectTab('first');
+        window.selectSecond = () => programmaticTabs.selectTab('second');
+        window.selectThird = () => programmaticTabs.selectTab('third');
+
+        let tabCounter = 4;
+        window.addNewTab = () => {
+            const newId = `new${tabCounter}`;
+            programmaticTabs.addTab({ id: newId, label: `New ${tabCounter}` });
+            // Add slot content dynamically
+            const content = document.createElement('div');
+            content.slot = `tab-${newId}`;
+            content.className = 'tab-content';
+            content.textContent = `Content for new tab ${tabCounter}`;
+            programmaticTabs.appendChild(content);
+            tabCounter++;
+        };
+
+        // Listen for events
+        document.querySelectorAll('t-tabs').forEach(tabs => {
+            tabs.addEventListener('tab-change', (e) => {
+                console.log('Tab changed:', e.detail);
+            });
+            tabs.addEventListener('tab-close', (e) => {
+                console.log('Tab closed:', e.detail);
+            });
+        });
+    </script>
+</body>
+</html>

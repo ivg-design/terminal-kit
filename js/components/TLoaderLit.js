@@ -4,6 +4,7 @@
 import { LitElement, html, css } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import componentLogger from '../utils/ComponentLogger.js';
+import { warningIcon } from '../utils/phosphor-icons.js';
 
 // Import wc-spinners library - loads all spinner web components
 import '../../public/js/libs/wc-spinners.js';
@@ -293,6 +294,19 @@ export class TLoaderLit extends LitElement {
       border: 1px solid var(--terminal-red, #ff003c);
       background: rgba(255, 0, 60, 0.1);
     }
+
+    .warning-icon {
+      display: inline-flex;
+      vertical-align: middle;
+      width: 16px;
+      height: 16px;
+    }
+
+    .warning-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: currentColor;
+    }
   `;
 
   // ----------------------------------------------------------
@@ -376,7 +390,7 @@ export class TLoaderLit extends LitElement {
     if (!TLoaderLit.spinnerTypes.includes(this.type)) {
       return html`
         <div class="error-message">
-          ⚠️ Invalid spinner type: "${this.type}"<br>
+          <span class="warning-icon">${unsafeHTML(warningIcon)}</span> Invalid spinner type: "${this.type}"<br>
           Available types: ${TLoaderLit.spinnerTypes.slice(0, 5).join(', ')}...
         </div>
       `;

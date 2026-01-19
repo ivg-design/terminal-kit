@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Board - Terminal Components</title>
+    <link rel="stylesheet" href="../css/theme/terminal.css">
+    <style>
+        :root {
+            --terminal-black: #0a0a0a;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-gray-dark: #333;
+            --terminal-green: #00ff41;
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--terminal-black);
+            color: var(--terminal-green);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 24px;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: var(--terminal-green);
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: var(--terminal-gray-darkest);
+            border-left: 3px solid var(--terminal-green);
+        }
+
+        .demo-container {
+            min-height: 400px;
+        }
+
+        .event-log {
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--terminal-gray-darkest);
+            border: 1px solid var(--terminal-gray-dark);
+            font-size: 11px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .event-log-title {
+            color: var(--terminal-green);
+            margin-bottom: 8px;
+        }
+
+        .event-entry {
+            color: #888;
+            padding: 2px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .variant-section {
+            margin-bottom: 30px;
+        }
+
+        .variant-label {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Kanban Board Component</h1>
+    <p class="subtitle">Drag-and-drop kanban board with color-coded columns and expandable cards</p>
+
+    <!-- Full Featured Kanban -->
+    <div class="demo-section">
+        <h2 class="section-title">Interactive Kanban Board</h2>
+        <div class="demo-container">
+            <t-kanban id="demo-kanban" show-header title="Project Tasks">
+                <t-kanban-column column-id="backlog" title="Backlog" color="gray">
+                    <t-kanban-card
+                        card-id="1"
+                        title="Research new authentication methods"
+                        description="Evaluate OAuth 2.0, SAML, and WebAuthn for user authentication"
+                        .tags=${['research', 'security']}
+                        priority="low"
+                        assignee="alice"
+                    ></t-kanban-card>
+                    <t-kanban-card
+                        card-id="2"
+                        title="Performance audit"
+                        description="Analyze and optimize bundle size and load times"
+                        .tags=${['performance']}
+                        priority="medium"
+                    ></t-kanban-card>
+                </t-kanban-column>
+
+                <t-kanban-column column-id="todo" title="To Do" color="amber">
+                    <t-kanban-card
+                        card-id="3"
+                        title="Implement user settings page"
+                        description="Create settings UI with profile, notifications, and preferences tabs"
+                        .tags=${['feature', 'ui']}
+                        priority="high"
+                        assignee="bob"
+                        due-date="2024-01-20"
+                    ></t-kanban-card>
+                    <t-kanban-card
+                        card-id="4"
+                        title="Add dark mode toggle"
+                        .tags=${['enhancement']}
+                    ></t-kanban-card>
+                </t-kanban-column>
+
+                <t-kanban-column column-id="progress" title="In Progress" color="cyan">
+                    <t-kanban-card
+                        card-id="5"
+                        title="Fix login redirect bug"
+                        description="Users are redirected to wrong page after OAuth callback"
+                        .tags=${['bug', 'auth']}
+                        priority="high"
+                        assignee="charlie"
+                    ></t-kanban-card>
+                </t-kanban-column>
+
+                <t-kanban-column column-id="review" title="In Review" color="white">
+                    <t-kanban-card
+                        card-id="6"
+                        title="Update API documentation"
+                        description="Document new endpoints and update examples"
+                        .tags=${['docs']}
+                        assignee="diana"
+                    ></t-kanban-card>
+                </t-kanban-column>
+
+                <t-kanban-column column-id="done" title="Done" color="green">
+                    <t-kanban-card
+                        card-id="7"
+                        title="Setup CI/CD pipeline"
+                        .tags=${['devops']}
+                    ></t-kanban-card>
+                    <t-kanban-card
+                        card-id="8"
+                        title="Initialize project repository"
+                        .tags=${['setup']}
+                    ></t-kanban-card>
+                </t-kanban-column>
+            </t-kanban>
+        </div>
+        <div class="event-log">
+            <div class="event-log-title">Events:</div>
+            <div id="events"></div>
+        </div>
+    </div>
+
+    <!-- Monochrome Variant -->
+    <div class="demo-section">
+        <h2 class="section-title">Monochrome Theme</h2>
+        <div class="variant-label">Using monochrome attribute for minimal styling</div>
+        <div class="demo-container">
+            <t-kanban>
+                <t-kanban-column column-id="m-todo" title="Queue" monochrome>
+                    <t-kanban-card card-id="m1" title="Task Alpha"></t-kanban-card>
+                    <t-kanban-card card-id="m2" title="Task Beta"></t-kanban-card>
+                </t-kanban-column>
+                <t-kanban-column column-id="m-progress" title="Processing" monochrome>
+                    <t-kanban-card card-id="m3" title="Task Gamma"></t-kanban-card>
+                </t-kanban-column>
+                <t-kanban-column column-id="m-done" title="Complete" monochrome>
+                    <t-kanban-card card-id="m4" title="Task Delta"></t-kanban-card>
+                </t-kanban-column>
+            </t-kanban>
+        </div>
+    </div>
+
+    <!-- Color Variants -->
+    <div class="demo-section">
+        <h2 class="section-title">Color Variants</h2>
+        <div class="demo-container">
+            <t-kanban>
+                <t-kanban-column column-id="c1" title="Green" color="green">
+                    <t-kanban-card card-id="c1a" title="Green column card"></t-kanban-card>
+                </t-kanban-column>
+                <t-kanban-column column-id="c2" title="Amber" color="amber">
+                    <t-kanban-card card-id="c2a" title="Amber column card"></t-kanban-card>
+                </t-kanban-column>
+                <t-kanban-column column-id="c3" title="Cyan" color="cyan">
+                    <t-kanban-card card-id="c3a" title="Cyan column card"></t-kanban-card>
+                </t-kanban-column>
+                <t-kanban-column column-id="c4" title="Red" color="red">
+                    <t-kanban-card card-id="c4a" title="Red column card"></t-kanban-card>
+                </t-kanban-column>
+                <t-kanban-column column-id="c5" title="Gray" color="gray">
+                    <t-kanban-card card-id="c5a" title="Gray column card"></t-kanban-card>
+                </t-kanban-column>
+            </t-kanban>
+        </div>
+    </div>
+
+    <!-- Priority Cards -->
+    <div class="demo-section">
+        <h2 class="section-title">Priority Indicators</h2>
+        <div class="variant-label">Cards with priority show a colored indicator bar</div>
+        <div class="demo-container">
+            <t-kanban>
+                <t-kanban-column column-id="p1" title="Priorities" color="green">
+                    <t-kanban-card
+                        card-id="p1a"
+                        title="High priority task"
+                        description="Urgent: needs immediate attention"
+                        priority="high"
+                    ></t-kanban-card>
+                    <t-kanban-card
+                        card-id="p1b"
+                        title="Medium priority task"
+                        description="Should be done soon"
+                        priority="medium"
+                    ></t-kanban-card>
+                    <t-kanban-card
+                        card-id="p1c"
+                        title="Low priority task"
+                        description="Can wait if needed"
+                        priority="low"
+                    ></t-kanban-card>
+                    <t-kanban-card
+                        card-id="p1d"
+                        title="No priority set"
+                        description="Default card without priority"
+                    ></t-kanban-card>
+                </t-kanban-column>
+            </t-kanban>
+        </div>
+    </div>
+
+    <script type="module">
+        import '../js/components/TKanbanLit.js';
+
+        const kanban = document.getElementById('demo-kanban');
+        const eventsDiv = document.getElementById('events');
+
+        function logEvent(name, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            entry.textContent = `${new Date().toLocaleTimeString()} - ${name}: ${JSON.stringify(detail)}`;
+            eventsDiv.insertBefore(entry, eventsDiv.firstChild);
+            if (eventsDiv.children.length > 20) {
+                eventsDiv.removeChild(eventsDiv.lastChild);
+            }
+        }
+
+        // Listen for kanban events
+        kanban.addEventListener('card-move', e => {
+            logEvent('card-move', e.detail);
+            // Actually move the card
+            kanban.moveCard(e.detail.cardId, e.detail.columnId);
+        });
+
+        kanban.addEventListener('card-drag-start', e => logEvent('card-drag-start', e.detail));
+        kanban.addEventListener('card-drag-end', e => logEvent('card-drag-end', e.detail));
+        kanban.addEventListener('card-expand', e => logEvent('card-expand', e.detail));
+        kanban.addEventListener('card-edit', e => logEvent('card-edit', e.detail));
+        kanban.addEventListener('card-delete', e => logEvent('card-delete', e.detail));
+        kanban.addEventListener('column-add-card', e => logEvent('column-add-card', e.detail));
+        kanban.addEventListener('column-menu', e => logEvent('column-menu', e.detail));
+        kanban.addEventListener('add-column', e => logEvent('add-column', e.detail));
+    </script>
+</body>
+
+</html>

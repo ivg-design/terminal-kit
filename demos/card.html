@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCardLit Component Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+        :root {
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff003c;
+            --terminal-cyan: #00ffff;
+            --terminal-gray: #666;
+            --terminal-gray-dark: #333;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-bg: #0a0a0a;
+            --terminal-black: #0a0a0a;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        body {
+            background: var(--terminal-bg);
+            color: var(--terminal-green);
+            font-family: var(--font-mono);
+            padding: 40px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        h1, h2 {
+            color: var(--terminal-green);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        h1 {
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .description {
+            color: var(--terminal-gray);
+            margin-bottom: 40px;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .demo-label {
+            font-size: 11px;
+            color: var(--terminal-gray);
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        t-card {
+            width: 300px;
+        }
+
+        .card-title {
+            color: var(--terminal-green);
+            margin: 0 0 8px 0;
+            font-size: 14px;
+        }
+
+        .card-text {
+            color: var(--terminal-green-dim);
+            margin: 0;
+            font-size: 13px;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 6px 12px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--terminal-green);
+            color: var(--terminal-black);
+        }
+
+        .event-log {
+            background: #111;
+            border: 1px solid #333;
+            padding: 15px;
+            font-size: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .event-log p {
+            margin: 5px 0;
+            color: var(--terminal-green);
+        }
+
+        .event-log .timestamp {
+            color: var(--terminal-gray);
+        }
+    </style>
+</head>
+<body>
+    <h1>TCardLit Component Demo</h1>
+    <p class="description">
+        Flexible card container component with slots for header, media, content, and actions.
+    </p>
+
+    <!-- Basic Cards -->
+    <div class="demo-section">
+        <h2>Basic Card</h2>
+        <div class="demo-row">
+            <t-card>
+                <h3 class="card-title">Basic Card</h3>
+                <p class="card-text">This is a simple card with just content. Cards provide a flexible container for displaying related information.</p>
+            </t-card>
+        </div>
+    </div>
+
+    <!-- Variants -->
+    <div class="demo-section">
+        <h2>Variants</h2>
+        <div class="demo-row">
+            <div>
+                <t-card variant="default">
+                    <h3 class="card-title">Default</h3>
+                    <p class="card-text">Default card variant with standard styling.</p>
+                </t-card>
+                <div class="demo-label">Default</div>
+            </div>
+            <div>
+                <t-card variant="outlined">
+                    <h3 class="card-title">Outlined</h3>
+                    <p class="card-text">Outlined card with transparent background.</p>
+                </t-card>
+                <div class="demo-label">Outlined</div>
+            </div>
+            <div>
+                <t-card variant="elevated">
+                    <h3 class="card-title">Elevated</h3>
+                    <p class="card-text">Elevated card with shadow effect.</p>
+                </t-card>
+                <div class="demo-label">Elevated</div>
+            </div>
+            <div>
+                <t-card variant="terminal">
+                    <h3 class="card-title">Terminal</h3>
+                    <p class="card-text">Terminal-style card with green glow.</p>
+                </t-card>
+                <div class="demo-label">Terminal</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- With Header -->
+    <div class="demo-section">
+        <h2>With Header</h2>
+        <div class="demo-row">
+            <t-card>
+                <div slot="header">System Status</div>
+                <p class="card-text">All systems operational. Last check: 2 minutes ago.</p>
+            </t-card>
+            <t-card variant="terminal">
+                <div slot="header">Network Activity</div>
+                <p class="card-text">Active connections: 42<br>Bandwidth: 1.2 GB/s</p>
+            </t-card>
+        </div>
+    </div>
+
+    <!-- With Media -->
+    <div class="demo-section">
+        <h2>With Media</h2>
+        <div class="demo-row">
+            <t-card>
+                <img slot="media" class="card-image" src="https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?w=600" alt="Server rack">
+                <h3 class="card-title">Data Center</h3>
+                <p class="card-text">High-performance computing infrastructure.</p>
+            </t-card>
+            <t-card variant="terminal">
+                <img slot="media" class="card-image" src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600" alt="Circuit board">
+                <div slot="header">Hardware</div>
+                <p class="card-text">Custom PCB with advanced circuitry.</p>
+            </t-card>
+        </div>
+    </div>
+
+    <!-- With Actions -->
+    <div class="demo-section">
+        <h2>With Actions</h2>
+        <div class="demo-row">
+            <t-card>
+                <div slot="header">Deployment</div>
+                <p class="card-text">Ready to deploy version 3.0.0 to production.</p>
+                <div slot="actions">
+                    <button>Deploy</button>
+                    <button>Cancel</button>
+                </div>
+            </t-card>
+            <t-card variant="terminal">
+                <h3 class="card-title">Alert</h3>
+                <p class="card-text">Security scan completed. 2 issues found.</p>
+                <div slot="actions">
+                    <button>View Details</button>
+                    <button>Dismiss</button>
+                </div>
+            </t-card>
+        </div>
+    </div>
+
+    <!-- Clickable Cards -->
+    <div class="demo-section">
+        <h2>Clickable Cards</h2>
+        <div class="demo-row">
+            <t-card id="click-card-1" clickable>
+                <div slot="header">Clickable</div>
+                <p class="card-text">Click me to trigger an event.</p>
+            </t-card>
+            <t-card id="click-card-2" clickable selected>
+                <div slot="header">Selected</div>
+                <p class="card-text">I'm currently selected.</p>
+            </t-card>
+            <t-card id="click-card-3" clickable disabled>
+                <div slot="header">Disabled</div>
+                <p class="card-text">I'm disabled and not clickable.</p>
+            </t-card>
+        </div>
+        <div class="event-log" id="click-log">
+            <p><span class="timestamp">[LOG]</span> Click on cards...</p>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="demo-section">
+        <h2>Loading State</h2>
+        <div class="demo-row">
+            <t-card loading>
+                <div slot="header">Loading Data</div>
+                <p class="card-text">Fetching information from the server...</p>
+            </t-card>
+        </div>
+    </div>
+
+    <!-- Expandable Cards -->
+    <div class="demo-section">
+        <h2>Expandable Cards</h2>
+        <div class="demo-row">
+            <t-card expandable expanded>
+                <div slot="header">Expandable Card</div>
+                <p class="card-text">This content can be collapsed. Click the arrow in the header to toggle visibility.</p>
+                <p class="card-text">Additional content that will be hidden when collapsed.</p>
+            </t-card>
+            <t-card expandable expanded variant="terminal">
+                <div slot="header">Terminal Logs</div>
+                <p class="card-text">[INFO] System startup complete</p>
+                <p class="card-text">[DEBUG] Initializing modules...</p>
+                <p class="card-text">[INFO] All services running</p>
+            </t-card>
+        </div>
+    </div>
+
+    <!-- Padding Sizes -->
+    <div class="demo-section">
+        <h2>Padding Sizes</h2>
+        <div class="demo-row">
+            <div>
+                <t-card padding="none">
+                    <p class="card-text" style="padding: 16px;">No padding</p>
+                </t-card>
+                <div class="demo-label">None</div>
+            </div>
+            <div>
+                <t-card padding="sm">
+                    <p class="card-text">Small padding</p>
+                </t-card>
+                <div class="demo-label">Small</div>
+            </div>
+            <div>
+                <t-card padding="md">
+                    <p class="card-text">Medium padding</p>
+                </t-card>
+                <div class="demo-label">Medium</div>
+            </div>
+            <div>
+                <t-card padding="lg">
+                    <p class="card-text">Large padding</p>
+                </t-card>
+                <div class="demo-label">Large</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Demo -->
+    <div class="demo-section">
+        <h2>Interactive Demo</h2>
+        <div class="demo-row">
+            <t-card id="interactive-card" variant="terminal" expandable>
+                <div slot="header">Interactive Card</div>
+                <p class="card-text">Control this card with the buttons below.</p>
+                <div slot="actions">
+                    <button onclick="toggleSelect()">Toggle Select</button>
+                </div>
+            </t-card>
+        </div>
+        <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <button onclick="toggleLoading()">Toggle Loading</button>
+            <button onclick="toggleExpand()">Toggle Expand</button>
+            <button onclick="toggleDisabled()">Toggle Disabled</button>
+            <button onclick="cycleVariant()">Cycle Variant</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import '../js/components/TCardLit.js';
+
+        const clickLog = document.getElementById('click-log');
+        const interactiveCard = document.getElementById('interactive-card');
+        const variants = ['default', 'outlined', 'elevated', 'terminal'];
+        let variantIndex = 3; // Start with terminal
+
+        // Log click events
+        function logClick(cardId) {
+            const timestamp = new Date().toLocaleTimeString();
+            const p = document.createElement('p');
+            p.innerHTML = `<span class="timestamp">[${timestamp}]</span> card-click: ${cardId}`;
+            clickLog.insertBefore(p, clickLog.firstChild);
+        }
+
+        // Add click listeners to clickable cards
+        document.querySelectorAll('t-card[clickable]').forEach(card => {
+            card.addEventListener('card-click', () => logClick(card.id));
+        });
+
+        // Interactive controls
+        window.toggleSelect = () => {
+            interactiveCard.selected = !interactiveCard.selected;
+        };
+
+        window.toggleLoading = () => {
+            interactiveCard.loading = !interactiveCard.loading;
+        };
+
+        window.toggleExpand = () => {
+            interactiveCard.toggleExpand();
+        };
+
+        window.toggleDisabled = () => {
+            interactiveCard.disabled = !interactiveCard.disabled;
+        };
+
+        window.cycleVariant = () => {
+            variantIndex = (variantIndex + 1) % variants.length;
+            interactiveCard.variant = variants[variantIndex];
+        };
+    </script>
+</body>
+</html>
