@@ -196,23 +196,32 @@ export class TAccordionItemLit extends LitElement {
 			font-size: 13px;
 		}
 
-		/* Icon position */
-		:host([icon-position="right"]) .header {
-			flex-direction: row-reverse;
-		}
-
-		:host([icon-position="right"]) .icon {
-			order: 1;
-		}
-
-		:host([icon-position="right"]) .title {
+		/* Icon position - default is left (icon order 0) */
+		.icon {
 			order: 0;
 		}
 
-		/* Custom slot for header actions */
+		.title {
+			order: 1;
+		}
+
+		.subtitle {
+			order: 2;
+		}
+
+		.badge {
+			order: 3;
+		}
+
 		.header-actions {
+			order: 4;
 			display: flex;
 			gap: 4px;
+		}
+
+		/* Icon position right - move icon to end */
+		:host([icon-position="right"]) .icon {
+			order: 5;
 		}
 
 		::slotted([slot="header-action"]) {
