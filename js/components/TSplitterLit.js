@@ -117,67 +117,6 @@ const styles = [
 		border-radius: 50%;
 	}
 
-	/* Collapse buttons - on gutter */
-	.collapse-btn {
-		position: absolute;
-		z-index: 10;
-		background: var(--splitter-border);
-		border: none;
-		color: var(--splitter-green);
-		width: 20px;
-		height: 20px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		font-size: 12px;
-		transition: all 0.15s ease;
-		padding: 0;
-	}
-
-	.collapse-btn:hover {
-		background: var(--splitter-green);
-		color: var(--splitter-bg);
-	}
-
-	.collapse-btn svg {
-		width: 12px;
-		height: 12px;
-		fill: currentColor;
-	}
-
-	/* Horizontal collapse buttons - positioned on gutter edges */
-	.splitter:not(.vertical) .gutter .collapse-btn {
-		top: 50%;
-		transform: translateY(-50%);
-	}
-
-	.splitter:not(.vertical) .gutter .collapse-btn.collapse-pane-0 {
-		left: -10px;
-		border-radius: 4px 0 0 4px;
-	}
-
-	.splitter:not(.vertical) .gutter .collapse-btn.collapse-pane-1 {
-		right: -10px;
-		border-radius: 0 4px 4px 0;
-	}
-
-	/* Vertical collapse buttons - positioned on gutter edges */
-	.splitter.vertical .gutter .collapse-btn {
-		left: 50%;
-		transform: translateX(-50%);
-	}
-
-	.splitter.vertical .gutter .collapse-btn.collapse-pane-0 {
-		top: -10px;
-		border-radius: 4px 4px 0 0;
-	}
-
-	.splitter.vertical .gutter .collapse-btn.collapse-pane-1 {
-		bottom: -10px;
-		border-radius: 0 0 4px 4px;
-	}
-
 	/* Expand buttons in collapsed panes */
 	.pane .expand-btn {
 		position: absolute;
@@ -668,18 +607,13 @@ class TSplitterLit extends LitElement {
 					@mousedown=${this._handleMouseDown}
 					@touchstart=${this._handleTouchStart}
 					@dblclick=${this._handleDoubleClick}
+					title="Double-click to collapse, drag to resize"
 				>
 					<div class="gutter-handle">
 						<span class="gutter-handle-dot"></span>
 						<span class="gutter-handle-dot"></span>
 						<span class="gutter-handle-dot"></span>
 					</div>
-					${this.collapsible[0] && !this.collapsed[0]
-						? this._renderCollapseButton(0, false)
-						: ''}
-					${this.collapsible[1] && !this.collapsed[1]
-						? this._renderCollapseButton(1, false)
-						: ''}
 				</div>
 
 				<div

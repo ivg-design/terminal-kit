@@ -184,10 +184,14 @@
         import '../js/components/TColorPickerLit.js';
         import '../js/components/TDynamicControlsLit.js';
 
-        // Wait for components
+        // Wait for all components
         await Promise.all([
             customElements.whenDefined('t-dynamic-controls'),
-            customElements.whenDefined('t-button')
+            customElements.whenDefined('t-button'),
+            customElements.whenDefined('t-input'),
+            customElements.whenDefined('t-toggle'),
+            customElements.whenDefined('t-dropdown'),
+            customElements.whenDefined('t-color-picker')
         ]);
 
         // Schema definitions
