@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Kit Dashboard Demo</title>
+    <link rel="stylesheet" href="../css/theme/terminal.css">
+    <style>
+        :root {
+            --terminal-black: #0a0a0a;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-gray-dark: #333;
+            --terminal-gray: #666;
+            --terminal-gray-light: #888;
+            --terminal-white: #fff;
+            --terminal-green: #00ff41;
+            --terminal-cyan: #00ffff;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff003c;
+            --terminal-purple: #9d00ff;
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--terminal-black);
+            color: var(--terminal-green);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            background: var(--terminal-gray-darkest);
+            border-bottom: 1px solid var(--terminal-gray-dark);
+            flex-shrink: 0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Main Content */
+        .dashboard-main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background: var(--terminal-gray-darkest);
+            border-right: 1px solid var(--terminal-gray-dark);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section {
+            padding: 12px;
+            border-bottom: 1px solid var(--terminal-gray-dark);
+        }
+
+        .sidebar-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--terminal-gray-light);
+            margin-bottom: 8px;
+        }
+
+        /* Grid Container */
+        .grid-container {
+            flex: 1;
+            padding: 16px;
+            overflow: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-auto-rows: minmax(200px, auto);
+            gap: 16px;
+            align-content: start;
+        }
+
+        /* Widget Base */
+        .widget {
+            background: var(--terminal-gray-darkest);
+            border: 1px solid var(--terminal-gray-dark);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            min-height: 200px;
+            position: relative;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .widget:hover {
+            box-shadow: 0 0 0 1px var(--terminal-green);
+        }
+
+        .widget.dragging {
+            opacity: 0.8;
+            z-index: 1000;
+        }
+
+        .widget.resizing {
+            user-select: none;
+        }
+
+        .widget-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: var(--terminal-black);
+            border-bottom: 1px solid var(--terminal-gray-dark);
+            cursor: move;
+            user-select: none;
+        }
+
+        .widget-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .widget-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .widget-content {
+            flex: 1;
+            padding: 12px;
+            overflow: auto;
+            min-height: 0;
+        }
+
+        .widget-content::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .widget-content::-webkit-scrollbar-track {
+            background: var(--terminal-black);
+        }
+
+        .widget-content::-webkit-scrollbar-thumb {
+            background: var(--terminal-gray-dark);
+            border-radius: 3px;
+        }
+
+        /* Resize Handle */
+        .resize-handle {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 16px;
+            height: 16px;
+            cursor: se-resize;
+            opacity: 0.3;
+            transition: opacity 0.2s;
+        }
+
+        .resize-handle::before {
+            content: '';
+            position: absolute;
+            right: 4px;
+            bottom: 4px;
+            width: 8px;
+            height: 8px;
+            border-right: 2px solid var(--terminal-green);
+            border-bottom: 2px solid var(--terminal-green);
+        }
+
+        .widget:hover .resize-handle {
+            opacity: 1;
+        }
+
+        /* Widget Sizes */
+        .widget.span-2 {
+            grid-column: span 2;
+        }
+
+        .widget.span-3 {
+            grid-column: span 3;
+        }
+
+        .widget.tall {
+            grid-row: span 2;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .widget.span-3 {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+            .widget.span-2,
+            .widget.span-3 {
+                grid-column: span 1;
+            }
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Footer */
+        .dashboard-footer {
+            flex-shrink: 0;
+        }
+
+        /* Demo specific */
+        .demo-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .demo-label {
+            font-size: 10px;
+            color: var(--terminal-gray-light);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .demo-section {
+            margin-bottom: 16px;
+        }
+
+        .demo-section:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Mini chart placeholders */
+        .mini-chart {
+            height: 60px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                var(--terminal-green) 20%,
+                var(--terminal-green) 30%,
+                transparent 50%,
+                var(--terminal-cyan) 60%,
+                var(--terminal-cyan) 80%,
+                transparent 100%
+            );
+            opacity: 0.2;
+            border-radius: 4px;
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .stat-card {
+            padding: 12px;
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
+            border-radius: 4px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--terminal-white);
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--terminal-gray-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-change {
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .stat-change.positive {
+            color: var(--terminal-green);
+        }
+
+        .stat-change.negative {
+            color: var(--terminal-red);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <span class="logo">> Terminal Kit</span>
+            <t-chip label="Dashboard" variant="success" size="sm"></t-chip>
+            <t-chip label="v3.0.0" size="sm"></t-chip>
+        </div>
+        <div class="header-right">
+            <t-btn id="add-widget-btn" variant="secondary" size="sm">+ Add Widget</t-btn>
+            <t-btn id="reset-layout-btn" variant="ghost" size="sm">Reset Layout</t-btn>
+            <t-tog id="dark-mode" size="sm" checked label="Dark"></t-tog>
+            <t-usr
+                username="admin"
+                email="admin@terminal.dev"
+                avatar-text="AD"
+                status="online"
+            ></t-usr>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="dashboard-main">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Navigation</div>
+                <t-menu id="nav-menu" orientation="vertical"></t-menu>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Quick Actions</div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <t-btn variant="primary" size="sm" block>New Project</t-btn>
+                    <t-btn variant="secondary" size="sm" block>Import Data</t-btn>
+                    <t-btn variant="ghost" size="sm" block>Settings</t-btn>
+                </div>
+            </div>
+            <div class="sidebar-section" style="flex: 1;">
+                <div class="sidebar-title">Activity Feed</div>
+                <t-tmln id="activity-timeline" dense></t-tmln>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">System</div>
+                <t-prg id="cpu-progress" value="67" label="CPU" show-label size="sm"></t-prg>
+                <t-prg id="mem-progress" value="45" label="Memory" show-label size="sm" variant="info" style="margin-top: 8px;"></t-prg>
+                <t-prg id="disk-progress" value="82" label="Disk" show-label size="sm" variant="warning" style="margin-top: 8px;"></t-prg>
+            </div>
+        </aside>
+
+        <!-- Grid -->
+        <main class="grid-container" id="widget-grid">
+            <!-- Stats Widget -->
+            <div class="widget" data-widget-id="stats">
+                <div class="widget-header">
+                    <span class="widget-title">System Stats</span>
+                    <div class="widget-controls">
+                        <t-bdg count="4" variant="info" size="sm"></t-bdg>
+                    </div>
+                </div>
+                <div class="widget-content">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">1,247</div>
+                            <div class="stat-label">Active Users</div>
+                            <div class="stat-change positive">+12.5%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">89.2%</div>
+                            <div class="stat-label">Uptime</div>
+                            <div class="stat-change positive">+0.3%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">42ms</div>
+                            <div class="stat-label">Avg Response</div>
+                            <div class="stat-change negative">-5ms</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">3.2k</div>
+                            <div class="stat-label">Requests/min</div>
+                            <div class="stat-change positive">+8.1%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+
+            <!-- Chart Widget -->
+            <div class="widget span-2" data-widget-id="chart">
+                <div class="widget-header">
+                    <span class="widget-title">Performance Metrics</span>
+                    <div class="widget-controls">
+                        <t-drp id="chart-period" size="sm" placeholder="Period"></t-drp>
+                    </div>
+                </div>
+                <div class="widget-content">
+                    <t-chart id="perf-chart" type="line" height="200px" show-legend show-grid></t-chart>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+
+            <!-- Log List Widget -->
+            <div class="widget tall" data-widget-id="logs">
+                <div class="widget-header">
+                    <span class="widget-title">System Logs</span>
+                    <div class="widget-controls">
+                        <t-tog id="log-auto-scroll" size="sm" checked></t-tog>
+                        <t-btn variant="ghost" size="sm" id="clear-logs">Clear</t-btn>
+                    </div>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <t-log-list id="log-list" max-entries="100" auto-scroll></t-log-list>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+
+            <!-- Form Controls Widget -->
+            <div class="widget" data-widget-id="forms">
+                <div class="widget-header">
+                    <span class="widget-title">Form Controls</span>
+                    <div class="widget-controls">
+                        <t-chip label="Demo" size="sm"></t-chip>
+                    </div>
+                </div>
+                <div class="widget-content">
+                    <div class="demo-section">
+                        <div class="demo-label">Input</div>
+                        <t-inp placeholder="Enter value..." size="sm"></t-inp>
+                    </div>
+                    <div class="demo-section">
+                        <div class="demo-label">Slider</div>
+                        <t-sld value="50" min="0" max="100" show-value size="sm"></t-sld>
+                    </div>
+                    <div class="demo-section">
+                        <div class="demo-label">Dropdown</div>
+                        <t-drp id="demo-dropdown" placeholder="Select option" size="sm"></t-drp>
+                    </div>
+                    <div class="demo-section">
+                        <div class="demo-label">Color Picker</div>
+                        <t-clr value="#00ff41" size="sm"></t-clr>
+                    </div>
+                    <div class="demo-section">
+                        <div class="demo-label">Toggles</div>
+                        <div class="demo-row">
+                            <t-tog label="Option A" size="sm" checked></t-tog>
+                            <t-tog label="Option B" size="sm"></t-tog>
+                        </div>
+                    </div>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+
+            <!-- Kanban Widget -->
+            <div class="widget span-2 tall" data-widget-id="kanban">
+                <div class="widget-header">
+                    <span class="widget-title">Task Board</span>
+                    <div class="widget-controls">
+                        <t-btn variant="primary" size="sm">+ Task</t-btn>
+                    </div>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <t-kanban id="task-kanban"></t-kanban>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+
+            <!-- Calendar Widget -->
+            <div class="widget" data-widget-id="calendar">
+                <div class="widget-header">
+                    <span class="widget-title">Calendar</span>
+                    <div class="widget-controls">
+                        <t-bdg dot variant="success"></t-bdg>
+                    </div>
+                </div>
+                <div class="widget-content">
+                    <t-cal id="demo-calendar" inline></t-cal>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+
+            <!-- Tree Widget -->
+            <div class="widget" data-widget-id="tree">
+                <div class="widget-header">
+                    <span class="widget-title">File Browser</span>
+                    <div class="widget-controls">
+                        <t-inp placeholder="Search..." size="sm" style="width: 120px;"></t-inp>
+                    </div>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <t-tree id="file-tree" selectable="single"></t-tree>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+
+            <!-- Accordion Widget -->
+            <div class="widget" data-widget-id="accordion">
+                <div class="widget-header">
+                    <span class="widget-title">Documentation</span>
+                    <div class="widget-controls">
+                        <t-btn variant="ghost" size="sm" id="expand-all">Expand All</t-btn>
+                    </div>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <t-accordion id="docs-accordion">
+                        <t-accordion-item item-id="getting-started" title="Getting Started" expanded>
+                            <p style="color: var(--terminal-gray-light); font-size: 12px;">
+                                Welcome to Terminal Kit! This library provides a comprehensive set of
+                                terminal-styled web components built with Lit 3.x.
+                            </p>
+                        </t-accordion-item>
+                        <t-accordion-item item-id="installation" title="Installation">
+                            <pre style="color: var(--terminal-cyan); font-size: 11px;">npm install terminal-kit</pre>
+                        </t-accordion-item>
+                        <t-accordion-item item-id="components" title="Components" badge="35">
+                            <p style="color: var(--terminal-gray-light); font-size: 12px;">
+                                Includes buttons, inputs, panels, modals, charts, and more.
+                            </p>
+                        </t-accordion-item>
+                        <t-accordion-item item-id="theming" title="Theming">
+                            <p style="color: var(--terminal-gray-light); font-size: 12px;">
+                                Customize colors, fonts, and spacing using CSS variables.
+                            </p>
+                        </t-accordion-item>
+                    </t-accordion>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+
+            <!-- Tabs Widget -->
+            <div class="widget span-2" data-widget-id="tabs">
+                <div class="widget-header">
+                    <span class="widget-title">Data Views</span>
+                    <div class="widget-controls">
+                        <t-chip label="3 tabs" size="sm"></t-chip>
+                    </div>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <t-tabs id="data-tabs"></t-tabs>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+
+            <!-- List Widget -->
+            <div class="widget" data-widget-id="list">
+                <div class="widget-header">
+                    <span class="widget-title">Recent Items</span>
+                    <div class="widget-controls">
+                        <t-bdg count="12" variant="default" size="sm"></t-bdg>
+                    </div>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <t-list id="recent-list" selectable="single" dense></t-list>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+
+            <!-- Loaders Widget -->
+            <div class="widget" data-widget-id="loaders">
+                <div class="widget-header">
+                    <span class="widget-title">Loading States</span>
+                </div>
+                <div class="widget-content">
+                    <div class="demo-section">
+                        <div class="demo-label">Spinners</div>
+                        <div class="demo-row" style="gap: 16px;">
+                            <t-ldr type="dots" size="sm" active></t-ldr>
+                            <t-ldr type="pulse" size="sm" active></t-ldr>
+                            <t-ldr type="bars" size="sm" active></t-ldr>
+                            <t-ldr type="ring" size="sm" active></t-ldr>
+                        </div>
+                    </div>
+                    <div class="demo-section">
+                        <div class="demo-label">Skeleton</div>
+                        <t-skel type="text" lines="3"></t-skel>
+                    </div>
+                    <div class="demo-section">
+                        <div class="demo-label">Progress</div>
+                        <t-prg id="demo-progress" value="75" show-label striped animated></t-prg>
+                    </div>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+
+            <!-- Avatar & Chips Widget -->
+            <div class="widget" data-widget-id="avatars">
+                <div class="widget-header">
+                    <span class="widget-title">Team Members</span>
+                </div>
+                <div class="widget-content">
+                    <div class="demo-section">
+                        <div class="demo-label">Avatars</div>
+                        <div class="demo-row" style="gap: 8px;">
+                            <t-avt initials="JD" status="online"></t-avt>
+                            <t-avt initials="AS" status="busy" variant="warning"></t-avt>
+                            <t-avt initials="MK" status="away" variant="info"></t-avt>
+                            <t-avt initials="RB" status="offline"></t-avt>
+                        </div>
+                    </div>
+                    <div class="demo-section">
+                        <div class="demo-label">Tags</div>
+                        <div class="demo-row">
+                            <t-chip label="Frontend" removable variant="success"></t-chip>
+                            <t-chip label="Backend" removable variant="info"></t-chip>
+                            <t-chip label="DevOps" removable variant="warning"></t-chip>
+                            <t-chip label="Design" removable variant="error"></t-chip>
+                        </div>
+                    </div>
+                    <div class="demo-section">
+                        <div class="demo-label">Badges</div>
+                        <div class="demo-row" style="gap: 16px;">
+                            <t-bdg count="5" variant="default"></t-bdg>
+                            <t-bdg count="12" variant="success"></t-bdg>
+                            <t-bdg count="99" max="99" variant="warning"></t-bdg>
+                            <t-bdg dot pulse variant="error"></t-bdg>
+                        </div>
+                    </div>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+
+            <!-- Buttons Widget -->
+            <div class="widget" data-widget-id="buttons">
+                <div class="widget-header">
+                    <span class="widget-title">Button Variants</span>
+                </div>
+                <div class="widget-content">
+                    <div class="demo-section">
+                        <div class="demo-label">Primary Actions</div>
+                        <div class="demo-row">
+                            <t-btn variant="primary" size="sm">Primary</t-btn>
+                            <t-btn variant="secondary" size="sm">Secondary</t-btn>
+                            <t-btn variant="ghost" size="sm">Ghost</t-btn>
+                        </div>
+                    </div>
+                    <div class="demo-section">
+                        <div class="demo-label">Status Variants</div>
+                        <div class="demo-row">
+                            <t-btn variant="success" size="sm">Success</t-btn>
+                            <t-btn variant="warning" size="sm">Warning</t-btn>
+                            <t-btn variant="error" size="sm">Error</t-btn>
+                        </div>
+                    </div>
+                    <div class="demo-section">
+                        <div class="demo-label">States</div>
+                        <div class="demo-row">
+                            <t-btn variant="primary" size="sm" loading>Loading</t-btn>
+                            <t-btn variant="primary" size="sm" disabled>Disabled</t-btn>
+                        </div>
+                    </div>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+
+            <!-- Tooltips Widget -->
+            <div class="widget" data-widget-id="tooltips">
+                <div class="widget-header">
+                    <span class="widget-title">Tooltips & Cards</span>
+                </div>
+                <div class="widget-content">
+                    <div class="demo-section">
+                        <div class="demo-label">Tooltip Positions</div>
+                        <div class="demo-row" style="gap: 16px; justify-content: center;">
+                            <t-tip content="Top tooltip" position="top">
+                                <t-btn size="sm" variant="secondary">Top</t-btn>
+                            </t-tip>
+                            <t-tip content="Bottom tooltip" position="bottom">
+                                <t-btn size="sm" variant="secondary">Bottom</t-btn>
+                            </t-tip>
+                            <t-tip content="Left tooltip" position="left">
+                                <t-btn size="sm" variant="secondary">Left</t-btn>
+                            </t-tip>
+                            <t-tip content="Right tooltip" position="right">
+                                <t-btn size="sm" variant="secondary">Right</t-btn>
+                            </t-tip>
+                        </div>
+                    </div>
+                    <div class="demo-section">
+                        <div class="demo-label">Card</div>
+                        <t-card variant="bordered" padding="sm">
+                            <div style="font-size: 12px; color: var(--terminal-white);">Card Content</div>
+                            <div style="font-size: 11px; color: var(--terminal-gray-light); margin-top: 4px;">
+                                Cards provide structured content containers.
+                            </div>
+                        </t-card>
+                    </div>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer Status Bar -->
+    <footer class="dashboard-footer">
+        <t-sta>
+            <t-sta-field slot="left" label="Status" value="Connected" variant="success"></t-sta-field>
+            <t-sta-field slot="left" label="Widgets" value="15"></t-sta-field>
+            <t-sta-field slot="center" label="Dashboard" value="Terminal Kit v3.0.0"></t-sta-field>
+            <t-sta-field slot="right" label="Memory" value="128MB"></t-sta-field>
+            <t-sta-field slot="right" id="time-field" label="Time" value="00:00:00"></t-sta-field>
+        </t-sta>
+    </footer>
+
+    <!-- Modal for adding widgets -->
+    <t-mdl id="add-widget-modal" title="Add Widget" size="md">
+        <div style="padding: 16px;">
+            <p style="color: var(--terminal-gray-light); font-size: 12px; margin-bottom: 16px;">
+                Select a widget to add to your dashboard:
+            </p>
+            <t-list id="widget-options" selectable="single"></t-list>
+        </div>
+        <div slot="footer">
+            <t-btn variant="ghost" id="modal-cancel">Cancel</t-btn>
+            <t-btn variant="primary" id="modal-add">Add Widget</t-btn>
+        </div>
+    </t-mdl>
+
+    <!-- Toast Container -->
+    <t-tst id="toast"></t-tst>
+
+    <script type="module">
+        // Import all components
+        import '../js/components/TButtonLit.js';
+        import '../js/components/TInputLit.js';
+        import '../js/components/TSliderLit.js';
+        import '../js/components/TToggleLit.js';
+        import '../js/components/TDropdownLit.js';
+        import '../js/components/TColorPickerLit.js';
+        import '../js/components/TTextareaLit.js';
+        import '../js/components/TPanelLit.js';
+        import '../js/components/TModalLit.js';
+        import '../js/components/TLoaderLit.js';
+        import '../js/components/TToastLit.js';
+        import '../js/components/TStatusBarLit.js';
+        import '../js/components/TStatusFieldLit.js';
+        import '../js/components/TUserMenuLit.js';
+        import '../js/components/TBadgeLit.js';
+        import '../js/components/TChipLit.js';
+        import '../js/components/TAvatarLit.js';
+        import '../js/components/TProgressLit.js';
+        import '../js/components/TSkeletonLit.js';
+        import '../js/components/TTooltipLit.js';
+        import '../js/components/TTabsLit.js';
+        import '../js/components/TAccordionLit.js';
+        import '../js/components/TCardLit.js';
+        import '../js/components/TMenuLit.js';
+        import '../js/components/TListLit.js';
+        import '../js/components/TTreeLit.js';
+        import '../js/components/TTimelineLit.js';
+        import '../js/components/TKanbanLit.js';
+        import '../js/components/TCalendarLit.js';
+        import '../js/components/TChartLit.js';
+        import '../js/components/TLogListLit.js';
+
+        // Wait for components
+        await Promise.all([
+            customElements.whenDefined('t-btn'),
+            customElements.whenDefined('t-log-list'),
+            customElements.whenDefined('t-kanban'),
+            customElements.whenDefined('t-chart'),
+            customElements.whenDefined('t-tabs'),
+            customElements.whenDefined('t-tree'),
+            customElements.whenDefined('t-list'),
+            customElements.whenDefined('t-menu'),
+            customElements.whenDefined('t-tmln'),
+            customElements.whenDefined('t-mdl'),
+            customElements.whenDefined('t-tst')
+        ]);
+
+        // Initialize components with data
+        const initializeDashboard = () => {
+            // Nav Menu
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.setItems([
+                { id: 'dashboard', label: 'Dashboard', icon: 'grid' },
+                { id: 'analytics', label: 'Analytics', icon: 'chart' },
+                { id: 'projects', label: 'Projects', icon: 'folder', badge: '3' },
+                { id: 'team', label: 'Team', icon: 'users' },
+                { id: 'settings', label: 'Settings', icon: 'gear' }
+            ]);
+
+            // Activity Timeline
+            const timeline = document.getElementById('activity-timeline');
+            timeline.setItems([
+                { id: '1', title: 'Deployment completed', time: '2 min ago', variant: 'success' },
+                { id: '2', title: 'New user registered', time: '15 min ago', variant: 'info' },
+                { id: '3', title: 'Error in API endpoint', time: '1 hour ago', variant: 'error' },
+                { id: '4', title: 'Database backup', time: '3 hours ago', variant: 'default' }
+            ]);
+
+            // Chart Period Dropdown
+            const chartPeriod = document.getElementById('chart-period');
+            chartPeriod.setOptions([
+                { value: '1h', label: '1 Hour' },
+                { value: '24h', label: '24 Hours' },
+                { value: '7d', label: '7 Days' },
+                { value: '30d', label: '30 Days' }
+            ]);
+            chartPeriod.value = '24h';
+
+            // Performance Chart
+            const perfChart = document.getElementById('perf-chart');
+            perfChart.setData([
+                { label: 'Response Time', values: [45, 52, 38, 41, 55, 42, 48, 51, 44, 39, 47, 43] },
+                { label: 'Throughput', values: [2.1, 2.4, 2.2, 2.8, 2.5, 2.9, 3.1, 2.7, 2.6, 3.0, 2.8, 3.2] }
+            ]);
+
+            // Demo Dropdown
+            const demoDropdown = document.getElementById('demo-dropdown');
+            demoDropdown.setOptions([
+                { value: 'opt1', label: 'Option 1' },
+                { value: 'opt2', label: 'Option 2' },
+                { value: 'opt3', label: 'Option 3' }
+            ]);
+
+            // Kanban Board
+            const kanban = document.getElementById('task-kanban');
+            kanban.setColumns([
+                { id: 'todo', title: 'To Do', color: 'var(--terminal-gray)' },
+                { id: 'progress', title: 'In Progress', color: 'var(--terminal-amber)' },
+                { id: 'review', title: 'Review', color: 'var(--terminal-cyan)' },
+                { id: 'done', title: 'Done', color: 'var(--terminal-green)' }
+            ]);
+            kanban.setItems([
+                { id: '1', column: 'todo', title: 'Implement auth flow', tags: ['backend'] },
+                { id: '2', column: 'todo', title: 'Design landing page', tags: ['design'] },
+                { id: '3', column: 'progress', title: 'API documentation', tags: ['docs'] },
+                { id: '4', column: 'progress', title: 'Unit tests', tags: ['testing'] },
+                { id: '5', column: 'review', title: 'Code review: PR #42', tags: ['review'] },
+                { id: '6', column: 'done', title: 'Setup CI/CD', tags: ['devops'] }
+            ]);
+
+            // File Tree
+            const fileTree = document.getElementById('file-tree');
+            fileTree.setNodes([
+                {
+                    id: 'src', label: 'src', icon: 'folder', expanded: true,
+                    children: [
+                        {
+                            id: 'components', label: 'components', icon: 'folder', expanded: true,
+                            children: [
+                                { id: 'button', label: 'TButtonLit.js', icon: 'file' },
+                                { id: 'input', label: 'TInputLit.js', icon: 'file' },
+                                { id: 'panel', label: 'TPanelLit.js', icon: 'file' }
+                            ]
+                        },
+                        {
+                            id: 'utils', label: 'utils', icon: 'folder',
+                            children: [
+                                { id: 'logger', label: 'logger.js', icon: 'file' },
+                                { id: 'helpers', label: 'helpers.js', icon: 'file' }
+                            ]
+                        },
+                        { id: 'index', label: 'index.js', icon: 'file' }
+                    ]
+                },
+                {
+                    id: 'tests', label: 'tests', icon: 'folder',
+                    children: [
+                        { id: 'unit', label: 'unit', icon: 'folder' },
+                        { id: 'e2e', label: 'e2e', icon: 'folder' }
+                    ]
+                },
+                { id: 'package', label: 'package.json', icon: 'file' },
+                { id: 'readme', label: 'README.md', icon: 'file' }
+            ]);
+
+            // Data Tabs
+            const dataTabs = document.getElementById('data-tabs');
+            dataTabs.setTabs([
+                { id: 'table', label: 'Table View', content: '<div style="padding: 16px; color: #888;">Table data would display here with sortable columns and pagination.</div>' },
+                { id: 'json', label: 'JSON View', content: '<pre style="padding: 16px; color: var(--terminal-cyan); font-size: 11px;">{\n  "data": [...],\n  "total": 1247,\n  "page": 1\n}</pre>' },
+                { id: 'raw', label: 'Raw Data', content: '<div style="padding: 16px; color: #888;">Raw binary or text data view.</div>' }
+            ]);
+
+            // Recent List
+            const recentList = document.getElementById('recent-list');
+            recentList.setItems([
+                { id: '1', label: 'project-alpha.zip', secondary: '2.4 MB • Just now' },
+                { id: '2', label: 'dashboard-v3.fig', secondary: '8.1 MB • 5 min ago' },
+                { id: '3', label: 'api-docs.md', secondary: '124 KB • 1 hour ago' },
+                { id: '4', label: 'database-backup.sql', secondary: '45 MB • 3 hours ago' },
+                { id: '5', label: 'config.json', secondary: '2 KB • Yesterday' }
+            ]);
+
+            // Widget Options for Modal
+            const widgetOptions = document.getElementById('widget-options');
+            widgetOptions.setItems([
+                { id: 'chart', label: 'Chart Widget', secondary: 'Line, bar, pie charts' },
+                { id: 'stats', label: 'Stats Widget', secondary: 'KPI metrics display' },
+                { id: 'logs', label: 'Log Viewer', secondary: 'Real-time log stream' },
+                { id: 'calendar', label: 'Calendar', secondary: 'Date picker and events' },
+                { id: 'kanban', label: 'Kanban Board', secondary: 'Task management' }
+            ]);
+
+            // Log List - Add initial logs
+            const logList = document.getElementById('log-list');
+            const logLevels = ['debug', 'info', 'warn', 'error', 'success'];
+            const logMessages = [
+                'Server started on port 3000',
+                'Database connection established',
+                'User authentication successful',
+                'Cache invalidated for key: user_sessions',
+                'API request completed in 42ms',
+                'Memory usage: 128MB / 512MB',
+                'Background job completed: data_sync',
+                'Rate limit reached for IP: 192.168.1.100',
+                'WebSocket connection opened',
+                'Configuration reloaded'
+            ];
+
+            // Add initial logs
+            for (let i = 0; i < 10; i++) {
+                const level = logLevels[Math.floor(Math.random() * logLevels.length)];
+                const message = logMessages[Math.floor(Math.random() * logMessages.length)];
+                logList.addEntry({ level, message, timestamp: new Date().toISOString() });
+            }
+
+            // Update time field
+            const updateTime = () => {
+                const timeField = document.getElementById('time-field');
+                timeField.value = new Date().toLocaleTimeString();
+            };
+            updateTime();
+            setInterval(updateTime, 1000);
+
+            // Simulate live logs
+            setInterval(() => {
+                const level = logLevels[Math.floor(Math.random() * logLevels.length)];
+                const message = logMessages[Math.floor(Math.random() * logMessages.length)];
+                logList.addEntry({ level, message, timestamp: new Date().toISOString() });
+            }, 3000);
+
+            // Simulate system stats updates
+            setInterval(() => {
+                document.getElementById('cpu-progress').value = 50 + Math.random() * 40;
+                document.getElementById('mem-progress').value = 30 + Math.random() * 50;
+            }, 5000);
+        };
+
+        // Widget Drag & Drop
+        const initDragAndDrop = () => {
+            const grid = document.getElementById('widget-grid');
+            let draggedWidget = null;
+            let dragOffset = { x: 0, y: 0 };
+
+            grid.querySelectorAll('.widget-header').forEach(header => {
+                header.addEventListener('mousedown', (e) => {
+                    if (e.target.closest('t-button, t-dropdown, t-toggle, t-badge')) return;
+
+                    draggedWidget = header.closest('.widget');
+                    draggedWidget.classList.add('dragging');
+
+                    const rect = draggedWidget.getBoundingClientRect();
+                    dragOffset.x = e.clientX - rect.left;
+                    dragOffset.y = e.clientY - rect.top;
+
+                    e.preventDefault();
+                });
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!draggedWidget) return;
+                // Visual feedback only - actual reordering would require more complex logic
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (draggedWidget) {
+                    draggedWidget.classList.remove('dragging');
+                    draggedWidget = null;
+                }
+            });
+        };
+
+        // Widget Resize
+        const initResize = () => {
+            const grid = document.getElementById('widget-grid');
+            let resizingWidget = null;
+            let startSize = { width: 0, height: 0 };
+            let startPos = { x: 0, y: 0 };
+
+            grid.querySelectorAll('.resize-handle').forEach(handle => {
+                handle.addEventListener('mousedown', (e) => {
+                    resizingWidget = handle.closest('.widget');
+                    resizingWidget.classList.add('resizing');
+
+                    const rect = resizingWidget.getBoundingClientRect();
+                    startSize = { width: rect.width, height: rect.height };
+                    startPos = { x: e.clientX, y: e.clientY };
+
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!resizingWidget) return;
+
+                const dx = e.clientX - startPos.x;
+                const dy = e.clientY - startPos.y;
+
+                const newWidth = Math.max(300, startSize.width + dx);
+                const newHeight = Math.max(150, startSize.height + dy);
+
+                resizingWidget.style.width = newWidth + 'px';
+                resizingWidget.style.minHeight = newHeight + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (resizingWidget) {
+                    resizingWidget.classList.remove('resizing');
+                    resizingWidget = null;
+                }
+            });
+        };
+
+        // Event Handlers
+        const initEventHandlers = () => {
+            const toast = document.getElementById('toast');
+            const modal = document.getElementById('add-widget-modal');
+
+            // Add Widget Button
+            document.getElementById('add-widget-btn').addEventListener('button-click', () => {
+                modal.open();
+            });
+
+            // Modal Cancel
+            document.getElementById('modal-cancel').addEventListener('button-click', () => {
+                modal.close();
+            });
+
+            // Modal Add
+            document.getElementById('modal-add').addEventListener('button-click', () => {
+                toast.show({ message: 'Widget added to dashboard', variant: 'success' });
+                modal.close();
+            });
+
+            // Reset Layout
+            document.getElementById('reset-layout-btn').addEventListener('button-click', () => {
+                document.querySelectorAll('.widget').forEach(w => {
+                    w.style.width = '';
+                    w.style.minHeight = '';
+                });
+                toast.show({ message: 'Layout reset to default', variant: 'info' });
+            });
+
+            // Clear Logs
+            document.getElementById('clear-logs').addEventListener('button-click', () => {
+                document.getElementById('log-list').clear();
+                toast.show({ message: 'Logs cleared', variant: 'info' });
+            });
+
+            // Expand All Accordion
+            document.getElementById('expand-all').addEventListener('button-click', () => {
+                document.getElementById('docs-accordion').expandAll();
+            });
+
+            // Log Auto-scroll Toggle
+            document.getElementById('log-auto-scroll').addEventListener('toggle-change', (e) => {
+                document.getElementById('log-list').autoScroll = e.detail.checked;
+            });
+
+            // Nav Menu Selection
+            document.getElementById('nav-menu').addEventListener('menu-select', (e) => {
+                toast.show({ message: `Navigating to ${e.detail.item.label}`, variant: 'info' });
+            });
+
+            // User Menu Events
+            document.querySelector('t-user-menu').addEventListener('user-menu-action', (e) => {
+                toast.show({ message: `Action: ${e.detail.action}`, variant: 'info' });
+            });
+        };
+
+        // Initialize everything
+        initializeDashboard();
+        initDragAndDrop();
+        initResize();
+        initEventHandlers();
+
+        console.log('Dashboard initialized with all Terminal Kit components');
+    </script>
+</body>
+</html>

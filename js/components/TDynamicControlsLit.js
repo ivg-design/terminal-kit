@@ -303,8 +303,10 @@ export class TDynamicControlsLit extends LitElement {
 	 * @param {Object} schema - Schema definition
 	 */
 	setSchema(schema) {
-		this._logger.debug('setSchema called');
+		this._logger.debug('setSchema called', schema);
 		this.schema = schema;
+		this._values = this._extractInitialValues(schema);
+		this.requestUpdate();
 	}
 
 	/**
@@ -504,17 +506,17 @@ export class TDynamicControlsLit extends LitElement {
 		switch (type) {
 			case 'boolean':
 				controlHtml = html`
-					<t-toggle
+					<t-tog
 						?checked=${!!value}
 						?disabled=${this.disabled}
 						@toggle-change=${(e) => this._handleValueChange(path, e.detail.checked)}
-					></t-toggle>
+					></t-tog>
 				`;
 				break;
 
 			case 'number':
 				controlHtml = html`
-					<t-input
+					<t-inp
 						type="number"
 						.value=${String(value ?? 0)}
 						min=${config.min ?? ''}
@@ -522,52 +524,52 @@ export class TDynamicControlsLit extends LitElement {
 						step=${config.step ?? 'any'}
 						?disabled=${this.disabled}
 						@input-change=${(e) => this._handleValueChange(path, parseFloat(e.detail.value) || 0)}
-					></t-input>
+					></t-inp>
 				`;
 				break;
 
 			case 'string':
 				controlHtml = html`
-					<t-input
+					<t-inp
 						type="text"
 						.value=${value ?? ''}
 						?disabled=${this.disabled}
 						@input-change=${(e) => this._handleValueChange(path, e.detail.value)}
-					></t-input>
+					></t-inp>
 				`;
 				break;
 
 			case 'color':
 				controlHtml = html`
-					<t-color-picker
+					<t-clr
 						value=${this._argbToHex(value)}
 						variant="minimal"
 						?disabled=${this.disabled}
 						@color-change=${(e) => this._handleValueChange(path, this._hexToArgb(e.detail.value))}
-					></t-color-picker>
+					></t-clr>
 				`;
 				break;
 
 			case 'enumType':
 				const options = config.metadata?.enumValues || config.values || [];
 				controlHtml = html`
-					<t-dropdown
+					<t-drp
 						.value=${value ?? ''}
 						.options=${options.map(v => ({ value: v, label: v }))}
 						?disabled=${this.disabled}
 						@dropdown-change=${(e) => this._handleValueChange(path, e.detail.value)}
-					></t-dropdown>
+					></t-drp>
 				`;
 				break;
 
 			case 'trigger':
 				controlHtml = html`
-					<t-button
+					<t-btn
 						variant="secondary"
 						size="sm"
 						?disabled=${this.disabled}
 						@button-click=${() => this._handleTrigger(path)}
-					>Fire</t-button>
+					>Fire</t-btn>
 				`;
 				break;
 

@@ -123,8 +123,8 @@
         <div class="demo-section">
             <h2 class="section-title">Simple Schema</h2>
             <div class="controls">
-                <t-button id="toggle-disabled" variant="secondary" size="sm">Toggle Disabled</t-button>
-                <t-button id="toggle-types" variant="secondary" size="sm">Toggle Type Badges</t-button>
+                <t-btn id="toggle-disabled" variant="secondary" size="sm">Toggle Disabled</t-btn>
+                <t-btn id="toggle-types" variant="secondary" size="sm">Toggle Type Badges</t-btn>
             </div>
             <div class="demo-container">
                 <t-dynamic-controls id="simple-controls"></t-dynamic-controls>
@@ -139,7 +139,7 @@
         <div class="demo-section">
             <h2 class="section-title">Nested ViewModels (5 Levels)</h2>
             <div class="controls">
-                <t-button id="random-update" variant="secondary" size="sm">Randomize Values</t-button>
+                <t-btn id="random-update" variant="secondary" size="sm">Randomize Values</t-btn>
             </div>
             <div class="demo-container">
                 <t-dynamic-controls id="nested-controls" show-types></t-dynamic-controls>
@@ -187,11 +187,11 @@
         // Wait for all components
         await Promise.all([
             customElements.whenDefined('t-dynamic-controls'),
-            customElements.whenDefined('t-button'),
-            customElements.whenDefined('t-input'),
-            customElements.whenDefined('t-toggle'),
-            customElements.whenDefined('t-dropdown'),
-            customElements.whenDefined('t-color-picker')
+            customElements.whenDefined('t-btn'),
+            customElements.whenDefined('t-inp'),
+            customElements.whenDefined('t-tog'),
+            customElements.whenDefined('t-drp'),
+            customElements.whenDefined('t-clr')
         ]);
 
         // Schema definitions
