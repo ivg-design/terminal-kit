@@ -68,3 +68,7 @@ Thumbs.db
 *.tmp
 *.temp
 .dsd-preview/
+
+# Audit/internal docs
+docs/AUDIT*.md
+**/AUDIT*.md
