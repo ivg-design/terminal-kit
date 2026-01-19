@@ -3,305 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal Buttons - Lit Components (Zero FOUC)</title>
+    <title>TButtonLit - Component Demo</title>
 
-    <style>
-        /* Page styles only - components have embedded styles */
-        :root {
-            --terminal-black: #0a0a0a;
-            --terminal-green: #00ff41;
-            --terminal-green-dim: #00cc33;
-            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-            --spacing-sm: 8px;
-            --spacing-md: 12px;
-            --spacing-lg: 16px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font-mono);
-            background: var(--terminal-black);
-            color: var(--terminal-green);
-            padding: 40px 20px;
-            line-height: 1.6;
-        }
-
-        .demo-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            border-bottom: 2px solid var(--terminal-green);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .notice {
-            background: rgba(0, 255, 65, 0.1);
-            border: 1px solid var(--terminal-green);
-            padding: 15px;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        .notice strong {
-            color: var(--terminal-green);
-        }
-
-        h2 {
-            color: var(--terminal-green);
-            font-size: 18px;
-            margin: 30px 0 20px 0;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .demo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .demo-item {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .demo-label {
-            display: block;
-            color: var(--terminal-green-dim);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .code-block {
-            background: var(--terminal-black);
-            border: 1px solid #333;
-            padding: 20px;
-            margin-top: 30px;
-            overflow-x: auto;
-        }
-
-        code {
-            color: var(--terminal-green-dim);
-            font-size: 12px;
-            line-height: 1.5;
-            white-space: pre;
-        }
-
-        .breadcrumb {
-            padding: 10px 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #242424;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: #00cc33;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .breadcrumb a {
-            color: #00cc33;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .breadcrumb a:hover {
-            color: var(--terminal-green);
-        }
-
-        .breadcrumb-separator {
-            margin: 0 8px;
-            color: #333;
-        }
-
-        .breadcrumb-current {
-            color: var(--terminal-green);
-        }
-    </style>
+    <!-- Demo Template Styles -->
+    <link rel="stylesheet" href="../css/demo-template.css">
 </head>
 <body>
     <div class="demo-container">
         <div class="breadcrumb">
-            <a href="../index.html">Terminal Kit</a>
-            <span class="breadcrumb-separator">›</span>
-            <a href="index.html">Demos</a>
-            <span class="breadcrumb-separator">›</span>
-            <span class="breadcrumb-current">Buttons</span>
+            <a href="index.html">&larr; Back to Gallery</a> / Buttons
         </div>
 
-        <h1>Terminal Buttons - Lit Components</h1>
+        <h1>TButtonLit</h1>
 
-        <div class="notice">
-            <strong>✓ ZERO FOUC</strong> - These components use Lit framework with embedded styles via Constructable Stylesheets.
-            No external CSS loading, no flash of unstyled content, instant rendering.
+        <div class="component-section">
+            <h2 class="component-title">Terminal Buttons</h2>
+            <p class="component-description">
+                Versatile button component with variants, sizes, loading states, and toggle functionality. Zero FOUC with embedded Lit styles.
+            </p>
+
+            <h3>Button Variants</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <span class="demo-label">Primary</span>
+                    <t-btn variant="primary">Primary</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Secondary</span>
+                    <t-btn variant="secondary">Secondary</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Danger</span>
+                    <t-btn variant="danger">Delete</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Warning</span>
+                    <t-btn variant="warning">Warning</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Info</span>
+                    <t-btn variant="info">Info</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Success</span>
+                    <t-btn variant="success">Success</t-btn>
+                </div>
+            </div>
+
+            <h3>Button Sizes</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <span class="demo-label">XS (Icon Only)</span>
+                    <t-btn size="xs" variant="primary" type="icon" id="xsIconBtn"></t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Small</span>
+                    <t-btn size="small" variant="primary">Small</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Default</span>
+                    <t-btn variant="primary">Default</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Large</span>
+                    <t-btn size="large" variant="primary">Large</t-btn>
+                </div>
+            </div>
+
+            <h3>Button Types</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <span class="demo-label">Text Only</span>
+                    <t-btn type="text" variant="primary">Text Only</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Icon + Text</span>
+                    <t-btn type="icon-text" variant="primary" id="iconTextBtn">Save</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Icon Only</span>
+                    <t-btn type="icon" variant="primary" id="iconOnlyBtn"></t-btn>
+                </div>
+            </div>
+
+            <h3>Button States</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <span class="demo-label">Loading State</span>
+                    <t-btn id="loadingBtn" variant="primary">Click Me</t-btn>
+                    <t-btn size="small" variant="secondary" onclick="toggleLoading()">Toggle Loading</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Disabled State</span>
+                    <t-btn disabled variant="primary">Disabled</t-btn>
+                </div>
+            </div>
+
+            <h3>Toggle Buttons</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <span class="demo-label">Primary Toggle</span>
+                    <t-btn variant="toggle" toggle-variant="primary" text-off="Enable" text-on="Disable" id="primaryToggle">Toggle Me</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Secondary Toggle</span>
+                    <t-btn variant="toggle" toggle-variant="secondary" text-off="Start" text-on="Stop" id="secondaryToggle">Secondary</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Custom Colors</span>
+                    <t-btn variant="toggle" color-on="#ff0041" color-off="#ffcc00" text-off="Record" text-on="Recording" id="colorToggle">Record</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Icon Toggle (Play/Pause)</span>
+                    <t-btn variant="toggle" toggle-variant="primary" type="icon" id="playPauseToggle"></t-btn>
+                </div>
+            </div>
+
+            <h3>Loader Types</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <span class="demo-label">Spinner</span>
+                    <t-btn loading loader-type="spinner" variant="primary">Loading</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Dots</span>
+                    <t-btn loading loader-type="dots" variant="primary">Loading</t-btn>
+                </div>
+
+                <div class="demo-item centered">
+                    <span class="demo-label">Bars</span>
+                    <t-btn loading loader-type="bars" variant="primary">Loading</t-btn>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;!-- Basic button variants --&gt;
+&lt;t-btn variant="primary"&gt;Primary&lt;/t-btn&gt;
+&lt;t-btn variant="secondary"&gt;Secondary&lt;/t-btn&gt;
+&lt;t-btn variant="danger"&gt;Delete&lt;/t-btn&gt;
+
+&lt;!-- Sizes --&gt;
+&lt;t-btn size="small"&gt;Small&lt;/t-btn&gt;
+&lt;t-btn size="large"&gt;Large&lt;/t-btn&gt;
+
+&lt;!-- With icon --&gt;
+&lt;t-btn type="icon-text" id="saveBtn"&gt;Save&lt;/t-btn&gt;
+&lt;script&gt;
+  import { floppyDiskIcon } from './js/utils/phosphor-icons.js';
+  saveBtn.setIcon(floppyDiskIcon);
+&lt;/script&gt;
+
+&lt;!-- Loading state --&gt;
+&lt;t-btn loading loader-type="dots"&gt;Processing&lt;/t-btn&gt;
+
+&lt;!-- Toggle button --&gt;
+&lt;t-btn variant="toggle" text-off="Start" text-on="Stop"&gt;Start&lt;/t-btn&gt;</code>
+            </div>
         </div>
 
-        <h2>Button Variants</h2>
-        <div class="demo-grid">
-            <div class="demo-item">
-                <span class="demo-label">Primary Button</span>
-                <t-btn variant="primary">Primary</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Secondary Button</span>
-                <t-btn variant="secondary">Secondary</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Danger Button</span>
-                <t-btn variant="danger">Delete</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Warning Button</span>
-                <t-btn variant="warning">Warning</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Info Button</span>
-                <t-btn variant="info">Info</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Success Button</span>
-                <t-btn variant="success">Success</t-btn>
-            </div>
-        </div>
-
-        <h2>Button Sizes</h2>
-        <div class="demo-grid">
-            <div class="demo-item">
-                <span class="demo-label">XS Size (Icon Only)</span>
-                <t-btn size="xs" variant="primary" type="icon" id="xsIconBtn"></t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Small Size</span>
-                <t-btn size="small" variant="primary">Small</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Default Size</span>
-                <t-btn variant="primary">Default</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Large Size</span>
-                <t-btn size="large" variant="primary">Large</t-btn>
-            </div>
-        </div>
-
-        <h2>Button Types</h2>
-        <div class="demo-grid">
-            <div class="demo-item">
-                <span class="demo-label">Text Button</span>
-                <t-btn type="text" variant="primary">Text Only</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Icon + Text</span>
-                <t-btn type="icon-text" variant="primary" id="iconTextBtn">Save</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Icon Only</span>
-                <t-btn type="icon" variant="primary" id="iconOnlyBtn"></t-btn>
-            </div>
-        </div>
-
-        <h2>Button States</h2>
-        <div class="demo-grid">
-            <div class="demo-item">
-                <span class="demo-label">Loading State</span>
-                <t-btn id="loadingBtn" variant="primary">Click Me</t-btn>
-                <t-btn size="small" variant="secondary" onclick="toggleLoading()">Toggle Loading</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Disabled State</span>
-                <t-btn disabled variant="primary">Disabled</t-btn>
-            </div>
-        </div>
-
-        <h2>Toggle Buttons</h2>
-        <div class="demo-grid">
-            <div class="demo-item">
-                <span class="demo-label">Primary Toggle</span>
-                <t-btn variant="toggle" toggle-variant="primary" text-off="Enable" text-on="Disable" id="primaryToggle">Toggle Me</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Secondary Toggle</span>
-                <t-btn variant="toggle" toggle-variant="secondary" text-off="Start" text-on="Stop" id="secondaryToggle">Secondary</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Custom Colors (Red/Yellow)</span>
-                <t-btn variant="toggle" color-on="#ff0041" color-off="#ffcc00" text-off="Record" text-on="Recording" id="colorToggle">Record</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Primary Icon Toggle (Play/Pause)</span>
-                <t-btn variant="toggle" toggle-variant="primary" type="icon" id="playPauseToggle"></t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Secondary Icon Toggle</span>
-                <t-btn variant="toggle" toggle-variant="secondary" type="icon" id="secondaryIconToggle"></t-btn>
-            </div>
-        </div>
-
-        <h2>Loader Types</h2>
-        <div class="demo-grid">
-            <div class="demo-item">
-                <span class="demo-label">Spinner Loader</span>
-                <t-btn loading loader-type="spinner" variant="primary">Loading</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Dots Loader</span>
-                <t-btn loading loader-type="dots" variant="primary">Loading</t-btn>
-            </div>
-
-            <div class="demo-item">
-                <span class="demo-label">Bars Loader</span>
-                <t-btn loading loader-type="bars" variant="primary">Loading</t-btn>
-            </div>
-        </div>
-
-        <div class="code-block">
-            <code>// Lit Components - Zero FOUC Implementation
-import { TButton } from './js/components/TButtonLit.js';
-
-// Components self-register with @customElement decorator
-// Styles are embedded using Constructable Stylesheets
-// No external CSS files = No FOUC
-
-// Usage:
-&lt;t-btn variant="primary" size="large"&gt;Click Me&lt;/t-btn&gt;
-&lt;t-btn loading loader-type="dots"&gt;Loading...&lt;/t-btn&gt;
-&lt;t-btn variant="toggle" toggle-state="false"&gt;Toggle&lt;/t-btn&gt;</code>
+        <div class="event-log" id="eventLog">
+            <h3>Event Log</h3>
         </div>
     </div>
 
-    <!-- Import the Lit components -->
     <script type="module">
         import '../js/components/TButtonLit.js';
         import {
@@ -314,29 +193,30 @@ import { TButton } from './js/components/TButtonLit.js';
             pauseIconFill
         } from '../js/utils/phosphor-icons.js';
 
+        const eventLog = document.getElementById('eventLog');
+
+        function logEvent(component, event, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${component}: ${event} ${detail ? '- ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+        }
+
         // Wait for components to be defined
         customElements.whenDefined('t-btn').then(() => {
-            // Components loaded with zero FOUC
-
             // Set icons for demo buttons
             const xsIconBtn = document.getElementById('xsIconBtn');
-            if (xsIconBtn) {
-                xsIconBtn.setIcon(gearSixIcon);
-            }
+            if (xsIconBtn) xsIconBtn.setIcon(gearSixIcon);
 
             const iconTextBtn = document.getElementById('iconTextBtn');
-            if (iconTextBtn) {
-                iconTextBtn.setIcon(floppyDiskIcon);
-            }
+            if (iconTextBtn) iconTextBtn.setIcon(floppyDiskIcon);
 
             const iconOnlyBtn = document.getElementById('iconOnlyBtn');
-            if (iconOnlyBtn) {
-                iconOnlyBtn.setIcon(gearSixIcon);
-            }
+            if (iconOnlyBtn) iconOnlyBtn.setIcon(gearSixIcon);
 
-            // Set up play/pause toggle button
-            // In OFF state: filled play icon with background cutout effect
-            // In ON state: filled pause icon on transparent background
+            // Play/Pause toggle
             const playPauseBtn = document.getElementById('playPauseToggle');
             if (playPauseBtn) {
                 playPauseBtn.setAttribute('icon-off', playIconFill);
@@ -344,24 +224,28 @@ import { TButton } from './js/components/TButtonLit.js';
                 playPauseBtn.setIcon(playIconFill);
             }
 
-            // Set up secondary icon toggle button
-            const secondaryIconBtn = document.getElementById('secondaryIconToggle');
-            if (secondaryIconBtn) {
-                secondaryIconBtn.setAttribute('icon-off', gearSixIcon);
-                secondaryIconBtn.setAttribute('icon-on', gearSixIconFill);
-                secondaryIconBtn.setIcon(gearSixIcon);
-            }
+            logEvent('System', 'Demo initialized');
         });
 
         // Loading demo
         window.toggleLoading = function() {
             const btn = document.getElementById('loadingBtn');
             btn.loading = !btn.loading;
+            logEvent('loadingBtn', 'loading-toggle', { loading: btn.loading });
         }
+
+        // Listen for button clicks
+        document.querySelectorAll('t-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = btn.id || btn.textContent.trim();
+                logEvent(id, 'click');
+            });
+        });
 
         // Listen for toggle events
         document.addEventListener('toggle-change', (e) => {
-            // Toggle state: e.detail.state
+            const id = e.target.id || 'toggle';
+            logEvent(id, 'toggle-change', { state: e.detail.state });
         });
     </script>
 </body>

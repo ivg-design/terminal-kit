@@ -1,441 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDropdownLit - Component Demo</title>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Terminal Dropdowns - Component Demo</title>
+    <!-- Demo Template Styles -->
+    <link rel="stylesheet" href="../css/demo-template.css">
 
-        <!-- Load CSS -->
-        <link rel="stylesheet" href="../css/theme/terminal.css">
-        <link rel="stylesheet" href="../css/components/dropdown.css">
-        <link rel="stylesheet" href="../css/components/buttons.css">
+    <style>
+        .selection-display {
+            background: var(--terminal-gray-darkest);
+            border: 1px solid var(--terminal-gray-light);
+            padding: 10px;
+            margin-top: 10px;
+            color: var(--terminal-green-dim);
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="breadcrumb">
+            <a href="index.html">&larr; Back to Gallery</a> / Dropdowns
+        </div>
 
-        <style>
-            :root {
-                --terminal-black: #0a0a0a;
-                --terminal-gray-darkest: #1a1a1a;
-                --terminal-gray-dark: #242424;
-                --terminal-gray-medium: #2a2a2a;
-                --terminal-gray-light: #333333;
-                --terminal-green: #00ff41;
-                --terminal-green-dim: #00cc33;
-                --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-                --spacing-sm: 8px;
-                --spacing-md: 12px;
-                --spacing-lg: 16px;
-            }
+        <h1>TDropdownLit</h1>
 
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
+        <div class="component-section">
+            <h2 class="component-title">Nested Dropdown</h2>
+            <p class="component-description">
+                Dropdown with folder structure, search, metadata support, and multiple configuration options.
+            </p>
 
-            html,
-            body {
-                width: 100%;
-                height: auto !important;
-                overflow: visible !important;
-            }
-
-            body {
-                font-family: var(--font-mono);
-                background: var(--terminal-black);
-                color: var(--terminal-green);
-                padding: 40px 20px;
-                line-height: 1.6;
-            }
-
-            .demo-container {
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-
-            h1 {
-                text-transform: uppercase;
-                letter-spacing: 0.1em;
-                border-bottom: 2px solid var(--terminal-green);
-                padding-bottom: 10px;
-                margin-bottom: 20px;
-            }
-
-            .breadcrumb {
-                margin-bottom: 30px;
-                font-size: 12px;
-                color: var(--terminal-green-dim);
-            }
-
-            .breadcrumb a {
-                color: var(--terminal-green-dim);
-                text-decoration: none;
-            }
-
-            .breadcrumb a:hover {
-                color: var(--terminal-green);
-            }
-
-            .component-section {
-                margin-bottom: 60px;
-                padding: 30px;
-                background: var(--terminal-gray-darkest);
-                border: 1px solid var(--terminal-gray-light);
-            }
-
-            h2.component-title {
-                color: var(--terminal-green);
-                font-size: 18px;
-                margin-bottom: 10px;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-            }
-
-            .component-description {
-                color: var(--terminal-green-dim);
-                font-size: 13px;
-                margin-bottom: 30px;
-            }
-
-            h3 {
-                color: var(--terminal-green);
-                font-size: 14px;
-                margin: 30px 0 20px 0;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-            }
-
-            .demo-column {
-                display: flex;
-                flex-direction: column;
-                gap: 30px;
-            }
-
-            .demo-item {
-                background: var(--terminal-gray-dark);
-                border: 1px solid var(--terminal-gray-light);
-                padding: 20px;
-            }
-
-            .demo-label {
-                display: block;
-                color: var(--terminal-green-dim);
-                font-size: 11px;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-                margin-bottom: 15px;
-            }
-
-            .code-block {
-                background: var(--terminal-black);
-                border: 1px solid var(--terminal-gray-light);
-                padding: 20px;
-                margin-top: 30px;
-                overflow-x: auto;
-            }
-
-            .code-block code {
-                color: var(--terminal-green-dim);
-                font-size: 12px;
-                line-height: 1.5;
-                white-space: pre;
-            }
-
-            .event-log {
-                background: var(--terminal-black);
-                border: 1px solid var(--terminal-gray-light);
-                padding: 15px;
-                margin-top: 30px;
-                max-height: 200px;
-                overflow-y: auto;
-            }
-
-            .event-log h3 {
-                color: var(--terminal-green);
-                font-size: 14px;
-                margin: 0 0 10px 0;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-            }
-
-            .event-entry {
-                font-size: 11px;
-                color: var(--terminal-green-dim);
-                margin: 5px 0;
-                padding: 5px;
-                background: var(--terminal-gray-darkest);
-                border-left: 2px solid var(--terminal-green);
-            }
-
-            .form-group {
-                margin-bottom: 20px;
-            }
-
-            .form-group label {
-                display: block;
-                margin-bottom: 5px;
-                color: var(--terminal-green-dim);
-                font-size: 12px;
-            }
-
-            .button-row {
-                display: flex;
-                gap: 10px;
-                margin-top: 15px;
-                flex-wrap: wrap;
-            }
-
-            .code-example {
-                background: #0a0a0a;
-                border: 1px solid #333333;
-                padding: 20px;
-                margin-top: 30px;
-                overflow-x: auto;
-            }
-
-            .code-example pre {
-                margin: 0;
-                color: #00cc33;
-                font-size: 12px;
-                line-height: 1.5;
-            }
-
-            .selection-display {
-                background: #1a1a1a;
-                border: 1px solid #333;
-                padding: 10px;
-                margin-top: 10px;
-                color: #00cc33;
-                font-size: 11px;
-            }
-        </style>
-    </head>
-
-    <body>
-        <div class="demo-container">
-            <div class="breadcrumb">
-                <a href="index.html">← Back to Gallery</a> / Terminal Dropdowns
-            </div>
-
-            <h1>Terminal Dropdowns</h1>
-
-            <div class="component-section">
-                <h2 class="component-title">Dropdown Types</h2>
-                <p class="component-description">
-                    Nested dropdown with folder structure, search, and metadata support.
-                </p>
-                
-                <div class="demo-column">
-                    <div class="demo-item">
-                        <span class="demo-label">Basic Dropdown with Nested Folders & Search</span>
-                        <t-drp id="dropdown1" placeholder="Select animation...">
-                        </t-drp>
-                    </div>
-
-                    <div class="demo-item">
-                        <span class="demo-label">Flat List (No Folders)</span>
-                        <t-drp id="dropdownFlat" placeholder="Select option...">
-                        </t-drp>
-                    </div>
-
-                    <div class="demo-item">
-                        <span class="demo-label">Without Icons</span>
-                        <t-drp id="dropdownIcons" placeholder="Select option..." icons="false">
-                        </t-drp>
-                    </div>
-
-                    <div class="demo-item">
-                        <span class="demo-label">Without Search Bar</span>
-                        <t-drp id="dropdownNoSearch" placeholder="Select option..." search="false">
-                        </t-drp>
-                    </div>
-
-                    <div class="demo-item">
-                        <span class="demo-label">Compact Size</span>
-                        <t-drp id="dropdownCompact" placeholder="Select option..." compact="true">
-                        </t-drp>
-                    </div>
-
-                    <div class="demo-item">
-                        <span class="demo-label">Disabled State</span>
-                        <t-drp placeholder="Disabled dropdown" disabled>
-                        </t-drp>
-                    </div>
-
-                    <div class="demo-item">
-                        <span class="demo-label">Wide Dropdown (600px)</span>
-                        <t-drp id="dropdownWide" placeholder="Select from a wide dropdown..." width="600px">
-                        </t-drp>
-                    </div>
-
-                    <div class="demo-item">
-                        <span class="demo-label">Narrow Dropdown (200px)</span>
-                        <t-drp id="dropdownNarrow" placeholder="Select..." width="200px">
-                        </t-drp>
-                    </div>
+            <h3>Basic Variants</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">Nested Folders with Search</span>
+                    <t-drp id="dropdown1" placeholder="Select animation..."></t-drp>
+                    <div class="selection-display" id="selection1">No selection</div>
                 </div>
 
-                <div class="code-block">
-                    <code>// Default width (300px)<br>
-&lt;t-drp id="dropdown1" placeholder="Select animation..."&gt;&lt;/t-drp&gt;<br><br>
-// Custom width<br>
-&lt;t-drp width="400px" placeholder="Wide dropdown..."&gt;&lt;/t-drp&gt;<br><br>
-// Disabled state<br>
-&lt;t-drp disabled placeholder="Disabled..."&gt;&lt;/t-drp&gt;</code>
+                <div class="demo-item">
+                    <span class="demo-label">Flat List (No Folders)</span>
+                    <t-drp id="dropdownFlat" placeholder="Select option..."></t-drp>
                 </div>
             </div>
 
-            <div class="event-log" id="eventLog">
-                <h3>Event Log</h3>
+            <h3>Configuration Options</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Without Icons</span>
+                    <t-drp id="dropdownIcons" placeholder="Select option..." icons="false"></t-drp>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Without Search Bar</span>
+                    <t-drp id="dropdownNoSearch" placeholder="Select option..." search="false"></t-drp>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Compact Size</span>
+                    <t-drp id="dropdownCompact" placeholder="Select option..." compact="true"></t-drp>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Disabled State</span>
+                    <t-drp placeholder="Disabled dropdown" disabled></t-drp>
+                </div>
             </div>
-        
 
-        <script type="module">
-            import '../js/components/TDropdownLit.js';
+            <h3>Custom Widths</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">Wide Dropdown (600px)</span>
+                    <t-drp id="dropdownWide" placeholder="Select from a wide dropdown..." width="600px"></t-drp>
+                </div>
 
-            // Dropdown Demo Data
-            const demoData = {
-                folders: {
-                        'Characters': {
-                            folders: {
-                                'Heroes': {
-                                    files: [
-                                        'knight.riv', 
-                                        'wizard.riv', 
-                                        'archer.riv',
-                                        'knight_with_golden_armor_and_enchanted_sword.riv',
-                                        'powerful_archmage_with_elemental_mastery_skills.riv'
-                                    ]
-                                },
-                                'Enemies': {
-                                    files: [
-                                        'goblin.riv', 
-                                        'dragon.riv', 
-                                        'skeleton.riv',
-                                        'ancient_dragon_boss_with_multiple_attack_phases.riv',
-                                        'undead_skeleton_warrior_with_cursed_weapons.riv'
-                                    ]
-                                }
-                            },
-                            files: [
-                                'npc_merchant.riv', 
-                                'npc_guard.riv',
-                                'friendly_merchant_with_randomized_inventory_system.riv'
-                            ]
+                <div class="demo-item">
+                    <span class="demo-label">Narrow Dropdown (200px)</span>
+                    <t-drp id="dropdownNarrow" placeholder="Select..." width="200px"></t-drp>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;!-- Basic dropdown with nested folders --&gt;
+&lt;t-drp id="dropdown1" placeholder="Select..."&gt;&lt;/t-drp&gt;
+
+&lt;!-- Without search or icons --&gt;
+&lt;t-drp search="false" icons="false"&gt;&lt;/t-drp&gt;
+
+&lt;!-- Compact mode --&gt;
+&lt;t-drp compact="true"&gt;&lt;/t-drp&gt;
+
+&lt;!-- Custom width --&gt;
+&lt;t-drp width="400px"&gt;&lt;/t-drp&gt;
+
+&lt;!-- Disabled state --&gt;
+&lt;t-drp disabled&gt;&lt;/t-drp&gt;
+
+&lt;!-- JavaScript API --&gt;
+&lt;script&gt;
+  const dropdown = document.querySelector('t-drp');
+
+  // Load nested data structure
+  dropdown.loadData({
+    folders: {
+      'Category A': {
+        files: ['item1.riv', 'item2.riv']
+      },
+      'Category B': {
+        folders: {
+          'Subcategory': {
+            files: ['nested.riv']
+          }
+        }
+      }
+    },
+    files: ['root_item.riv']
+  });
+
+  // Add metadata for items
+  dropdown.setMetadata({
+    'item1.riv': { description: 'Description text' }
+  });
+
+  // Listen for selection changes
+  dropdown.addEventListener('dropdown-change', (e) =&gt; {
+    console.log('Selected:', e.detail);
+  });
+&lt;/script&gt;</code>
+            </div>
+        </div>
+
+        <div class="event-log" id="eventLog">
+            <h3>Event Log</h3>
+        </div>
+    </div>
+
+    <script type="module">
+        import '../js/components/TDropdownLit.js';
+
+        const eventLog = document.getElementById('eventLog');
+
+        function logEvent(component, event, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${component}: ${event} ${detail ? '- ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+        }
+
+        // Demo data with nested folders
+        const demoData = {
+            folders: {
+                'Characters': {
+                    folders: {
+                        'Heroes': {
+                            files: ['knight.riv', 'wizard.riv', 'archer.riv']
                         },
-                        'Effects': {
-                            folders: {
-                                'Magic': {
-                                    files: [
-                                        'fireball.riv', 
-                                        'lightning.riv', 
-                                        'heal.riv',
-                                        'chain_lightning_spell_with_multiple_targets.riv',
-                                        'grand_healing_aura_with_particle_effects.riv'
-                                    ]
-                                },
-                                'Physical': {
-                                    files: [
-                                        'slash.riv', 
-                                        'impact.riv', 
-                                        'explosion.riv',
-                                        'devastating_ground_slam_with_shockwave_effect.riv'
-                                    ]
-                                }
-                            },
-                            files: ['sparkle.riv', 'smoke.riv']
-                        },
-                        'UI': {
-                            files: [
-                                'loading_spinner.riv', 
-                                'button_hover.riv', 
-                                'modal_transition.riv',
-                                'smooth_page_transition_with_fade_and_slide_effects.riv'
-                            ]
+                        'Enemies': {
+                            files: ['goblin.riv', 'dragon.riv', 'skeleton.riv']
                         }
                     },
-                    files: ['intro.riv', 'credits.riv']
-            };
-
-            // Event logging
-            function logEvent(component, event, detail) {
-                const log = document.getElementById('eventLog');
-                const entry = document.createElement('div');
-                entry.className = 'event-entry';
-                const timestamp = new Date().toLocaleTimeString();
-                entry.textContent = `[${timestamp}] ${component}: ${event} ${detail ? '- ' + JSON.stringify(detail) : ''}`;
-                log.appendChild(entry);
-                log.scrollTop = log.scrollHeight;
-            }
-
-            // Initialize all dropdowns
-            const dropdowns = [
-                { id: 'dropdown1', label: 'Basic Dropdown' },
-                { id: 'dropdownFlat', label: 'Flat List' },
-                { id: 'dropdownIcons', label: 'Without Icons' },
-                { id: 'dropdownNoSearch', label: 'Without Search' },
-                { id: 'dropdownCompact', label: 'Compact Size' },
-                { id: 'dropdownWide', label: 'Wide Dropdown' },
-                { id: 'dropdownNarrow', label: 'Narrow Dropdown' }
-            ];
-
-            // Simple flat data for flat dropdown
-            const flatData = {
-                files: [
-                    'Option 1.riv',
-                    'Option 2.riv',
-                    'Option 3.riv',
-                    'Option 4.riv',
-                    'Option 5.riv',
-                    'Option 6.riv',
-                    'Very Long Option Name That Should Show Ellipsis.riv'
-                ]
-            };
-
-            // Initialize each dropdown
-            dropdowns.forEach(({ id, label }) => {
-                const dropdown = document.getElementById(id);
-                if (dropdown) {
-                    setTimeout(() => {
-                        if (dropdown.loadData) {
-                            // Use flat data for flat dropdown, nested for others
-                            const dataToLoad = id === 'dropdownFlat' ? flatData : demoData;
-                            dropdown.loadData(dataToLoad);
-
-                            // Add metadata for some dropdowns
-                            if (id === 'dropdown1' || id === 'dropdownWide') {
-                                dropdown.setMetadata({
-                                    'knight.riv': { description: 'Armored knight character with sword animations' },
-                                    'wizard.riv': { description: 'Magic user with spell casting animations' },
-                                    'fireball.riv': { description: 'Projectile fire spell effect' },
-                                    'loading_spinner.riv': { description: 'Circular loading indicator' }
-                                });
-                            }
-
-                            // Configure dropdown-specific settings
-                            if (id === 'dropdownIcons') {
-                                dropdown.setMetadata({
-                                    'knight.riv': { description: 'Knight with custom icon', icon: '⚔️' },
-                                    'wizard.riv': { description: 'Wizard with custom icon', icon: '🧙' },
-                                    'dragon.riv': { description: 'Dragon with custom icon', icon: '🐉' },
-                                });
-                            }
-                        } else {
-                            console.error(`Dropdown ${id} component not ready`);
+                    files: ['npc_merchant.riv', 'npc_guard.riv']
+                },
+                'Effects': {
+                    folders: {
+                        'Magic': {
+                            files: ['fireball.riv', 'lightning.riv', 'heal.riv']
+                        },
+                        'Physical': {
+                            files: ['slash.riv', 'impact.riv', 'explosion.riv']
                         }
-                    }, 100);
-
-                    // Add event listener
-                    dropdown.addEventListener('dropdown-change', (e) => {
-                        logEvent(label, 'dropdown-change', e.detail);
-                    });
+                    },
+                    files: ['sparkle.riv', 'smoke.riv']
+                },
+                'UI': {
+                    files: ['loading_spinner.riv', 'button_hover.riv', 'modal_transition.riv']
                 }
-            })
+            },
+            files: ['intro.riv', 'credits.riv']
+        };
 
-            // Test auto-close behavior
-            setTimeout(() => {
-                logEvent('System', 'Demo initialized - try opening multiple dropdowns to see auto-close');
-            }, 500);
-        </script>
-    </body>
+        // Flat data for flat dropdown
+        const flatData = {
+            files: [
+                'Option 1.riv',
+                'Option 2.riv',
+                'Option 3.riv',
+                'Option 4.riv',
+                'Very Long Option Name.riv'
+            ]
+        };
 
+        // Dropdown configurations
+        const dropdowns = [
+            { id: 'dropdown1', label: 'Basic', data: demoData },
+            { id: 'dropdownFlat', label: 'Flat', data: flatData },
+            { id: 'dropdownIcons', label: 'NoIcons', data: demoData },
+            { id: 'dropdownNoSearch', label: 'NoSearch', data: demoData },
+            { id: 'dropdownCompact', label: 'Compact', data: demoData },
+            { id: 'dropdownWide', label: 'Wide', data: demoData },
+            { id: 'dropdownNarrow', label: 'Narrow', data: flatData }
+        ];
+
+        // Initialize dropdowns
+        dropdowns.forEach(({ id, label, data }) => {
+            const dropdown = document.getElementById(id);
+            if (dropdown) {
+                setTimeout(() => {
+                    if (dropdown.loadData) {
+                        dropdown.loadData(data);
+
+                        // Add metadata for main dropdowns
+                        if (id === 'dropdown1' || id === 'dropdownWide') {
+                            dropdown.setMetadata({
+                                'knight.riv': { description: 'Armored knight with sword animations' },
+                                'wizard.riv': { description: 'Magic user with spells' },
+                                'fireball.riv': { description: 'Fire projectile effect' }
+                            });
+                        }
+                    }
+                }, 100);
+
+                // Event listener
+                dropdown.addEventListener('dropdown-change', (e) => {
+                    logEvent(label, 'dropdown-change', e.detail);
+
+                    // Update selection display for main dropdown
+                    if (id === 'dropdown1') {
+                        const display = document.getElementById('selection1');
+                        if (display) {
+                            display.textContent = e.detail.label || e.detail.value || 'No selection';
+                        }
+                    }
+                });
+            }
+        });
+
+        setTimeout(() => {
+            logEvent('System', 'Demo initialized');
+        }, 200);
+    </script>
+</body>
 </html>
