@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Chat Panel - Demo</title>
+
+    <style>
+        t-chat:not(:defined),
+        t-pnl:not(:defined),
+        t-btn:not(:defined),
+        t-drp:not(:defined),
+        t-ldr:not(:defined),
+        t-textarea:not(:defined) {
+            opacity: 0;
+            display: inline-block;
+        }
+
+        :root {
+            --terminal-black: #0a0a0a;
+            --terminal-black-light: #1a1a1a;
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-green-dark: #008820;
+            --terminal-gray: #808080;
+            --terminal-gray-dark: #242424;
+            --terminal-gray-light: #333333;
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--terminal-black);
+            color: var(--terminal-green);
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb {
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #242424;
+            font-size: 11px;
+            color: #00cc33;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .breadcrumb a {
+            color: #00cc33;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--terminal-green);
+        }
+
+        h1 {
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .demo-panel {
+            min-height: 520px;
+        }
+    </style>
+</head>
+<body>
+    <div class="breadcrumb">
+        <a href="index.html">Demo Gallery</a>
+        <span> / </span>
+        <span>Chat Panel</span>
+    </div>
+
+    <h1>Chat Panel (t-chat)</h1>
+
+    <div class="demo-controls">
+        <t-drp id="spinnerSelect" placeholder="Spinner" width="220px"></t-drp>
+        <t-btn id="toggleThinking" size="sm">Toggle Thinking</t-btn>
+        <t-btn id="simulateStream" size="sm" variant="secondary">Simulate Stream</t-btn>
+        <t-btn id="addQueued" size="sm" variant="secondary">Add Queue Item</t-btn>
+    </div>
+
+    <div class="demo-grid">
+        <t-chat
+            id="chatDemo"
+            title="Agent Console"
+            export-format="markdown"
+            export-filename="terminal-kit-chat"
+            max-height="100%"
+            persist-key="tkit-chat-demo"
+            show-queue
+        ></t-chat>
+    </div>
+
+    <script type="module">
+        import '../js/components/TChatPanelLit.js';
+        import '../js/components/TDropdownLit.js';
+        import '../js/components/TButtonLit.js';
+        import '../js/components/TLoaderLit.js';
+        import '../js/components/TTextareaLit.js';
+        import { dotsThreeCircleIcon } from '../js/utils/phosphor-icons.js';
+
+        const chat = document.getElementById('chatDemo');
+        const spinnerSelect = document.getElementById('spinnerSelect');
+        const toggleThinking = document.getElementById('toggleThinking');
+        const simulateStream = document.getElementById('simulateStream');
+        const addQueued = document.getElementById('addQueued');
+
+        chat.icon = dotsThreeCircleIcon;
+        chat.agentModes = [
+            { value: 'haiku', label: 'Haiku' },
+            { value: 'sonnet', label: 'Sonnet' },
+            { value: 'opus', label: 'Opus' },
+            { value: 'browser', label: 'Browser Worker' }
+        ];
+
+        chat.messages = [
+            {
+                id: 'msg-1',
+                role: 'assistant',
+                content: 'Welcome to the **Terminal-Kit** chat component.\n\n- Markdown list item\n- Inline `code` sample\n- Blockquote:\n> Keep it compact and legible.',
+                timestamp: new Date().toISOString(),
+                model: 'sonnet'
+            },
+            {
+                id: 'msg-2',
+                role: 'user',
+                content: 'Show me a code block and file attachment.',
+                timestamp: new Date().toISOString(),
+                model: 'user'
+            },
+            {
+                id: 'msg-3',
+                role: 'assistant',
+                content: '```js\nconst status = "ready";\nconsole.log(status);\n```\n\nAttached: **agent-plan.md**',
+                attachments: [{ name: 'agent-plan.md', size: 18342 }],
+                timestamp: new Date().toISOString(),
+                model: 'sonnet'
+            }
+        ];
+
+        spinnerSelect.setOptions([
+            { value: 'self-building-square-spinner', label: 'Self Building Square' },
+            { value: 'ellipsis-spinner', label: 'Ellipsis' },
+            { value: 'dot-spinner', label: 'Dots' },
+            { value: 'ring-spinner', label: 'Ring' },
+            { value: 'atom-spinner', label: 'Atom' },
+            { value: 'pulse-spinner', label: 'Pulse' }
+        ]);
+        spinnerSelect.value = 'self-building-square-spinner';
+
+        spinnerSelect.addEventListener('dropdown-change', (e) => {
+            chat.spinnerType = e.detail.value;
+        });
+
+        toggleThinking.addEventListener('button-click', () => {
+            chat.thinking = !chat.thinking;
+        });
+
+        addQueued.addEventListener('button-click', () => {
+            chat.enqueueMessage('Queued note - follow up on system metrics.', []);
+        });
+
+        simulateStream.addEventListener('button-click', () => {
+            chat.thinking = true;
+            chat.streamingContent = '';
+            const chunks = ['Streaming response...', ' step 1 done.', ' step 2 done.', ' complete.'];
+            let index = 0;
+            const interval = setInterval(() => {
+                chat.streamingContent += chunks[index] || '';
+                index += 1;
+                if (index >= chunks.length) {
+                    clearInterval(interval);
+                    chat.messages = [
+                        ...chat.messages,
+                        {
+                            id: `msg-${Date.now()}`,
+                            role: 'assistant',
+                            content: chat.streamingContent,
+                            timestamp: new Date().toISOString(),
+                            model: 'sonnet'
+                        }
+                    ];
+                    chat.streamingContent = '';
+                    chat.thinking = false;
+                }
+            }, 600);
+        });
+
+        chat.addEventListener('chat-send', (e) => {
+            const detail = e.detail || {};
+            const entry = {
+                id: `msg-${Date.now()}`,
+                role: 'user',
+                content: detail.message,
+                attachments: detail.attachments || [],
+                timestamp: new Date().toISOString(),
+                model: detail.mode || 'user'
+            };
+            chat.messages = [...chat.messages, entry];
+        });
+    </script>
+</body>
+</html>

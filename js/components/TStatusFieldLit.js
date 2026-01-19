@@ -292,6 +292,6 @@ if (!customElements.get(TStatusFieldLit.tagName)) {
 export const TStatusFieldManifest = generateManifest(TStatusFieldLit);
 
 // ============================================================
-// SECTION 5: EXPORTS
+// SECTION 5: EXPORTS (class already exported via declaration)
 // ============================================================
-export { TStatusFieldLit };
+// TStatusFieldLit exported via 'export class' declaration

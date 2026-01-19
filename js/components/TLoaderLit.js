@@ -94,6 +94,70 @@ export class TLoaderLit extends LitElement {
     'sync-spinner'
   ];
 
+  static widthHeightDefaults = Object.freeze({
+    'bar-spinner': { base: 100, width: 100, height: 4 },
+    'fade-spinner': { base: 50, width: 5, height: 15, radius: 10 },
+    'scale-spinner': { base: 40, width: 4, height: 35, radius: 2, margin: 2 }
+  });
+
+  static sizeDefaults = Object.freeze({
+    'atom-spinner': { defaultSize: 60, innerMax: 60 },
+    'breeding-rhombus-spinner': { defaultSize: 65, innerMax: 91.9 },
+    'circles-to-rhombuses-spinner': { defaultSize: 15, innerMax: 78.8 },
+    'fingerprint-spinner': { defaultSize: 64, innerMax: 64 },
+    'flower-spinner': { defaultSize: 70, innerMax: 70 },
+    'fulfilling-bouncing-circle-spinner': { defaultSize: 50, innerMax: 59.2 },
+    'fulfilling-square-spinner': { defaultSize: 50, innerMax: 70 },
+    'half-circle-spinner': { defaultSize: 60, innerMax: 60 },
+    'hollow-dots-spinner': { defaultSize: 15, innerMax: 90 },
+    'intersecting-circles-spinner': { defaultSize: 35, innerMax: 70 },
+    'looping-rhombuses-spinner': { defaultSize: 15, innerMax: 60 },
+    'orbit-spinner': { defaultSize: 55, innerMax: 55 },
+    'pixel-spinner': { defaultSize: 70, innerMax: 70 },
+    'radar-spinner': { defaultSize: 60, innerMax: 60 },
+    'scaling-squares-spinner': { defaultSize: 65, innerMax: 91.6 },
+    'self-building-square-spinner': { defaultSize: 10, innerMax: 40 },
+    'semipolar-spinner': { defaultSize: 65, innerMax: 65 },
+    'spring-spinner': { defaultSize: 60, innerMax: 60 },
+    'swapping-squares-spinner': { defaultSize: 65, innerMax: 65 },
+    'trinity-rings-spinner': { defaultSize: 60, innerMax: 120 },
+    'beat-spinner': { defaultSize: 15, innerMax: 76.3 },
+    'bounce-spinner': { defaultSize: 60, innerMax: 60 },
+    'circle-spinner': { defaultSize: 60, innerMax: 60 },
+    'climbing-box-spinner': { defaultSize: 15, innerMax: 113.6 },
+    'clip-spinner': { defaultSize: 35, innerMax: 34.4 },
+    'dot-spinner': { defaultSize: 60, innerMax: 83.8 },
+    'grid-spinner': { defaultSize: 15, innerMax: 57 },
+    'hash-spinner': { defaultSize: 50, innerMax: 61.2 },
+    'moon-spinner': { defaultSize: 60, innerMax: 105.4 },
+    'pacman-spinner': { defaultSize: 25, innerMax: 50 },
+    'propagate-spinner': { defaultSize: 15, innerMax: 0 },
+    'pulse-spinner': { defaultSize: 15, innerMax: 57 },
+    'ring-spinner': { defaultSize: 60, innerMax: 60 },
+    'rise-spinner': { defaultSize: 15, innerMax: 133.5 },
+    'rotate-spinner': { defaultSize: 15, innerMax: 76.9 },
+    'skew-spinner': { defaultSize: 20, innerMax: 42.4 },
+    'square-spinner': { defaultSize: 50, innerMax: 50 },
+    'sync-spinner': { defaultSize: 15, innerMax: 57 },
+    'rsc-circle-spinner': { defaultSize: 64, innerMax: 64 },
+    'default-spinner': { defaultSize: 80, innerMax: 80 },
+    'dual-ring-spinner': { defaultSize: 80, innerMax: 80 },
+    'ellipsis-spinner': { defaultSize: 80, innerMax: 80 },
+    'facebook-spinner': { defaultSize: 80, innerMax: 80 },
+    'rsc-grid-spinner': { defaultSize: 80, innerMax: 80 },
+    'heart-spinner': { defaultSize: 80, innerMax: 113.1 },
+    'hourglass-spinner': { defaultSize: 80, innerMax: 80 },
+    'rsc-ring-spinner': { defaultSize: 80, innerMax: 80 },
+    'ripple-spinner': { defaultSize: 80, innerMax: 80 }
+  });
+
+  static sizeLessDefaults = Object.freeze({
+    'orbitals-spinner': { innerMax: 80 },
+    'ouroboro-spinner': { innerMax: 64 },
+    'roller-spinner': { innerMax: 80 },
+    'spinner-spinner': { innerMax: 80 }
+  });
+
   // ----------------------------------------------------------
   // BLOCK 2: STATIC STYLES (REQUIRED)
   // ----------------------------------------------------------
@@ -117,12 +181,16 @@ export class TLoaderLit extends LitElement {
 
     /* Component container wrapper */
     .loader-wrapper {
-      display: flex;
+      display: inline-flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: var(--spacing-sm, 12px);
-      padding: var(--spacing-md, 16px);
+      gap: 0;
+      padding: 0;
+      width: fit-content;
+      height: fit-content;
+      min-width: 0;
+      min-height: 0;
     }
 
     /* Spinner container */
@@ -131,6 +199,11 @@ export class TLoaderLit extends LitElement {
       align-items: center;
       justify-content: center;
       position: relative;
+      width: var(--loader-size);
+      height: var(--loader-size);
+      flex: 0 0 var(--loader-size);
+      min-width: 0;
+      min-height: 0;
     }
 
     /* Apply terminal styling to all spinner components */
@@ -138,282 +211,13 @@ export class TLoaderLit extends LitElement {
       --color: var(--loader-color);
       --size: var(--loader-size);
       --duration: var(--loader-duration);
+      display: block;
+      min-width: 0;
+      min-height: 0;
+      transform-origin: center center;
     }
 
-    /* Spinner-specific size fixes */
-    /* These spinners have internal elements that don't respect the size property correctly */
-
-    /* Breeding rhombus spinner - has absolutely positioned children */
-    breeding-rhombus-spinner {
-      transform: scale(0.5);
-    }
-
-    /* Looping rhombuses - renders much larger */
-    looping-rhombuses-spinner {
-      transform: scale(0.3);
-    }
-
-    /* Intersecting circles - needs scaling */
-    intersecting-circles-spinner {
-      transform: scale(0.6);
-    }
-
-    /* Circles to rhombuses - large animation area */
-    circles-to-rhombuses-spinner {
-      transform: scale(0.25);
-    }
-
-    /* Fulfilling bouncing circle - bounces outside bounds */
-    fulfilling-bouncing-circle-spinner {
-      transform: scale(0.75);
-    }
-
-    /* Self building square - builds outside original size */
-    self-building-square-spinner {
-      transform: scale(0.2);
-    }
-
-    /* Swapping squares - swaps in larger area */
-    swapping-squares-spinner {
-      transform: scale(0.8);
-    }
-
-    /* Trinity rings - rings extend beyond size */
-    trinity-rings-spinner {
-      transform: scale(0.75);
-    }
-
-    /* Hollow dots - dots positioned outside */
-    hollow-dots-spinner {
-      transform: scale(0.35);
-    }
-
-    /* Scaling squares - scales beyond bounds */
-    scaling-squares-spinner {
-      transform: scale(0.7);
-    }
-
-    /* Pixel spinner - pixels spread out */
-    pixel-spinner {
-      transform: scale(0.85);
-    }
-
-    /* Grid spinner (React) - grid is too large */
-    grid-spinner {
-      transform: scale(0.325);
-    }
-
-    /* Propagate spinner - propagates wide */
-    propagate-spinner {
-      transform: scale(0.42);
-    }
-
-    /* Pacman spinner - mouth opens wide */
-    pacman-spinner {
-      transform: scale(0.325) translateX(-15%);
-    }
-
-    /* Sync spinner - circles spread out */
-    sync-spinner {
-      transform: scale(0.45);
-    }
-
-    /* Flower spinner - petals extend */
-    flower-spinner {
-      transform: scale(0.85);
-    }
-
-    /* Spring spinner - springs outward */
-    spring-spinner {
-      transform: scale(0.8);
-    }
-
-    /* Atom spinner - electrons orbit wide */
-    atom-spinner {
-      transform: scale(1.0);
-    }
-
-    /* Fingerprint spinner - rings are wide */
-    fingerprint-spinner {
-      transform: scale(1.0);
-    }
-
-    /* Radar spinner - sweep is large */
-    radar-spinner {
-      transform: scale(1.0);
-    }
-
-    /* Orbit spinner - orbits extend */
-    orbit-spinner {
-      transform: scale(1.0);
-    }
-
-    /* Half circle spinner */
-    half-circle-spinner {
-      transform: scale(1.0);
-    }
-
-    /* Fulfilling square spinner */
-    fulfilling-square-spinner {
-      transform: scale(0.8);
-    }
-
-    /* Semipolar spinner */
-    semipolar-spinner {
-      transform: scale(0.95);
-    }
-
-    /* Rise spinner - rises too high */
-    rise-spinner {
-      transform: scale(0.244);
-    }
-
-    /* Beat spinner */
-    beat-spinner {
-      transform: scale(0.375);
-    }
-
-    /* Climbing box spinner - climbs outside bounds */
-    climbing-box-spinner {
-      transform: scale(0.25);
-    }
-
-    /* Clip spinner - clips outside */
-    clip-spinner {
-      transform: scale(0.5);
-    }
-
-    /* Rotate spinner - rotates wide */
-    rotate-spinner {
-      transform: scale(0.4);
-    }
-
-    /* Pulse spinner (React) */
-    pulse-spinner {
-      transform: scale(0.3);
-    }
-
-    /* Roller spinner */
-    roller-spinner {
-      transform: scale(0.85);
-    }
-
-    /* Dual ring spinner */
-    dual-ring-spinner {
-      transform: scale(0.85);
-    }
-
-    /* Facebook spinner */
-    facebook-spinner {
-      transform: scale(0.8);
-    }
-
-    /* Hourglass spinner */
-    hourglass-spinner {
-      transform: scale(0.8);
-    }
-
-    /* Ellipsis spinner */
-    ellipsis-spinner {
-      transform: scale(0.75);
-    }
-
-    /* Orbitals spinner */
-    orbitals-spinner {
-      transform: scale(0.8);
-    }
-
-    /* Ouroboro spinner */
-    ouroboro-spinner {
-      transform: scale(0.85);
-    }
-
-    /* Additional spinner adjustments for better sizing */
-
-    /* Circle spinner - needs to be larger */
-    circle-spinner {
-      transform: scale(0.8);
-    }
-
-    /* Dot spinner - needs to be larger */
-    dot-spinner {
-      transform: scale(0.7);
-    }
-
-    /* Fade spinner - needs to be larger */
-    fade-spinner {
-      transform: scale(0.8);
-    }
-
-    /* Hash spinner - needs to be larger */
-    hash-spinner {
-      transform: scale(0.9);
-    }
-
-    /* Moon spinner - needs to be larger */
-    moon-spinner {
-      transform: scale(0.8);
-    }
-
-    /* Ring spinner - needs to be larger */
-    ring-spinner {
-      transform: scale(0.8);
-    }
-
-    /* Scale spinner - needs to be larger */
-    scale-spinner {
-      transform: scale(0.7);
-    }
-
-    /* Skew spinner - needs to be larger */
-    skew-spinner {
-      transform: scale(0.64);
-    }
-
-    /* Square spinner - needs to be larger */
-    square-spinner {
-      transform: scale(0.64);
-    }
-
-    /* Default spinner - needs to be larger */
-    default-spinner {
-      transform: scale(0.9);
-    }
-
-    /* RSC Circle spinner - needs to be larger */
-    rsc-circle-spinner {
-      transform: scale(0.8);
-    }
-
-    /* Heart spinner - needs to be larger */
-    heart-spinner {
-      transform: scale(0.9);
-    }
-
-    /* RSC Ring spinner - needs to be larger */
-    rsc-ring-spinner {
-      transform: scale(0.85);
-    }
-
-    /* Bounce spinner - slightly larger */
-    bounce-spinner {
-      transform: scale(0.85);
-    }
-
-    /* Bar spinner - slightly larger */
-    bar-spinner {
-      transform: scale(0.8);
-    }
-
-    /* Spinner-spinner - needs adjustment */
-    spinner-spinner {
-      transform: scale(0.8);
-    }
-
-    /* Ripple spinner - needs to be larger */
-    ripple-spinner {
-      transform: scale(0.9);
-    }
+    /* Spinner sizing normalized at runtime based on wc-spinners defaults. */
 
     /* Glow effect (disabled by default) */
     .spinner-container.glow > * {
@@ -583,16 +387,68 @@ export class TLoaderLit extends LitElement {
     this.style.setProperty('--loader-size', `${this.size}px`);
     this.style.setProperty('--loader-duration', `${this.duration}s`);
 
-    // Build the HTML string for the custom element
-    const spinnerHTML = `<${this.type}
-      color="${this.color}"
-      size="${this.size}"
-      duration="${this.duration}">
-    </${this.type}>`;
+    const widthHeightConfig = TLoaderLit.widthHeightDefaults[this.type];
+    const sizeConfig = TLoaderLit.sizeDefaults[this.type];
+    const sizeLessConfig = TLoaderLit.sizeLessDefaults[this.type];
+    const targetSize = Math.max(1, Number(this.size) || 60);
+    const formatNumber = (value) => {
+      const rounded = Math.round(value * 10) / 10;
+      return Number.isInteger(rounded) ? String(rounded) : String(rounded);
+    };
+    let spinnerHTML = '';
+
+    if (widthHeightConfig) {
+      const base = widthHeightConfig.base || Math.max(widthHeightConfig.width, widthHeightConfig.height, 1);
+      const scale = base ? targetSize / base : 1;
+      const width = Math.max(1, widthHeightConfig.width * scale);
+      const height = Math.max(1, widthHeightConfig.height * scale);
+      const attrs = [
+        `color="${this.color}"`,
+        `width="${formatNumber(width)}"`,
+        `height="${formatNumber(height)}"`
+      ];
+
+      if (widthHeightConfig.radius !== undefined) {
+        const radius = Math.max(1, widthHeightConfig.radius * scale);
+        attrs.push(`radius="${formatNumber(radius)}"`);
+      }
+
+      if (widthHeightConfig.margin !== undefined) {
+        const margin = Math.max(0, widthHeightConfig.margin * scale);
+        attrs.push(`margin="${formatNumber(margin)}"`);
+      }
+
+      spinnerHTML = `<${this.type} ${attrs.join(' ')}></${this.type}>`;
+    } else if (sizeConfig) {
+      const innerMax = sizeConfig.innerMax > 0 ? sizeConfig.innerMax : sizeConfig.defaultSize;
+      const ratio = innerMax ? sizeConfig.defaultSize / innerMax : 1;
+      const normalizedSize = Math.max(1, targetSize * ratio);
+      spinnerHTML = `<${this.type}
+        color="${this.color}"
+        size="${formatNumber(normalizedSize)}"
+        duration="${this.duration}">
+      </${this.type}>`;
+    } else if (sizeLessConfig) {
+      const innerMax = sizeLessConfig.innerMax || targetSize;
+      const scale = innerMax ? targetSize / innerMax : 1;
+      spinnerHTML = `<${this.type}
+        color="${this.color}"
+        duration="${this.duration}"
+        style="transform: scale(${formatNumber(scale)}); transform-origin: center;">
+      </${this.type}>`;
+    } else {
+      spinnerHTML = `<${this.type}
+        color="${this.color}"
+        size="${targetSize}"
+        duration="${this.duration}">
+      </${this.type}>`;
+    }
+
+    const typeClass = this.type ? `type-${this.type}` : '';
 
     return html`
       <div class="loader-wrapper" ?hidden="${this.hidden}">
-        <div class="spinner-container ${this.glow ? 'glow' : ''}">
+        <div class="spinner-container ${this.glow ? 'glow' : ''} ${typeClass}">
           ${unsafeHTML(spinnerHTML)}
         </div>
         ${this.text ? html`<div class="loader-text">${this.text}</div>` : ''}
