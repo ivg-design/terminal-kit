@@ -29,10 +29,16 @@ import { caretRightIcon, caretDownIcon } from '../utils/phosphor-icons.js';
  * @description Individual accordion panel with header and content
  */
 export class TAccordionItemLit extends LitElement {
+	// ----------------------------------------------------------
+	// BLOCK 1: STATIC METADATA (REQUIRED)
+	// ----------------------------------------------------------
 	static tagName = 't-accordion-item';
 	static version = '3.0.0';
 	static category = 'Container';
 
+	// ----------------------------------------------------------
+	// BLOCK 2: STATIC STYLES (REQUIRED)
+	// ----------------------------------------------------------
 	static styles = css`
 		:host {
 			display: block;
@@ -229,6 +235,15 @@ export class TAccordionItemLit extends LitElement {
 		}
 
 		/* Horizontal orientation styles */
+		:host([orientation="horizontal"]) {
+			flex: 0 0 auto;
+			min-width: fit-content;
+		}
+
+		:host([orientation="horizontal"][expanded]) {
+			flex: 1 1 auto;
+		}
+
 		:host([orientation="horizontal"]) .item {
 			display: flex;
 			flex-direction: row;
@@ -248,6 +263,7 @@ export class TAccordionItemLit extends LitElement {
 			padding: 12px 10px;
 			min-width: 40px;
 			height: 100%;
+			flex-shrink: 0;
 		}
 
 		:host([orientation="horizontal"][expanded]) .header {
@@ -260,33 +276,40 @@ export class TAccordionItemLit extends LitElement {
 		}
 
 		:host([orientation="horizontal"]) .content {
-			flex: 1;
 			height: 100%;
+			overflow: hidden;
 		}
 
 		:host([orientation="horizontal"]:not([animated])) .content {
 			display: none;
 			width: 0;
+			padding: 0;
 		}
 
 		:host([orientation="horizontal"]:not([animated])[expanded]) .content {
 			display: block;
+			flex: 1;
 			width: auto;
+			padding: 12px;
 		}
 
 		:host([orientation="horizontal"][animated]) .content {
-			max-width: 0;
+			width: 0;
 			max-height: none;
-			padding: 12px 0;
-			transition: max-width 0.3s ease-out, padding 0.3s ease-out;
+			padding: 0;
+			transition: width 0.3s ease-out, padding 0.3s ease-out;
 		}
 
 		:host([orientation="horizontal"][animated][expanded]) .content {
-			max-width: 500px;
+			width: auto;
+			flex: 1;
 			padding: 12px;
 		}
 	`;
 
+	// ----------------------------------------------------------
+	// BLOCK 3: REACTIVE PROPERTIES (REQUIRED)
+	// ----------------------------------------------------------
 	static properties = {
 		itemId: { type: String, attribute: 'item-id', reflect: true },
 		title: { type: String, reflect: true },
@@ -301,8 +324,18 @@ export class TAccordionItemLit extends LitElement {
 		orientation: { type: String, reflect: true }
 	};
 
+	// ----------------------------------------------------------
+	// BLOCK 4: INTERNAL STATE (N/A)
+	// ----------------------------------------------------------
+
+	// ----------------------------------------------------------
+	// BLOCK 5: LOGGER INSTANCE (REQUIRED)
+	// ----------------------------------------------------------
 	_logger = null;
 
+	// ----------------------------------------------------------
+	// BLOCK 6: CONSTRUCTOR (REQUIRED)
+	// ----------------------------------------------------------
 	constructor() {
 		super();
 		this._logger = componentLogger.for('TAccordionItemLit');
@@ -320,6 +353,9 @@ export class TAccordionItemLit extends LitElement {
 		this._logger.debug('Item constructed');
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 7: LIFECYCLE METHODS (REQUIRED)
+	// ----------------------------------------------------------
 	connectedCallback() {
 		super.connectedCallback();
 		this._logger.info('Item connected');
@@ -330,6 +366,9 @@ export class TAccordionItemLit extends LitElement {
 		this._logger.info('Item disconnected');
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 8: PUBLIC API METHODS
+	// ----------------------------------------------------------
 	/**
 	 * Toggle the expanded state
 	 * @public
@@ -372,17 +411,9 @@ export class TAccordionItemLit extends LitElement {
 		}
 	}
 
-	_handleClick() {
-		this.toggle();
-	}
-
-	_handleKeydown(e) {
-		if (e.key === 'Enter' || e.key === ' ') {
-			e.preventDefault();
-			this.toggle();
-		}
-	}
-
+	// ----------------------------------------------------------
+	// BLOCK 9: EVENT EMITTERS
+	// ----------------------------------------------------------
 	_emitEvent(name, detail = {}) {
 		this.dispatchEvent(new CustomEvent(name, {
 			detail,
@@ -391,6 +422,17 @@ export class TAccordionItemLit extends LitElement {
 		}));
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 10: NESTING SUPPORT (N/A)
+	// ----------------------------------------------------------
+
+	// ----------------------------------------------------------
+	// BLOCK 11: VALIDATION (N/A)
+	// ----------------------------------------------------------
+
+	// ----------------------------------------------------------
+	// BLOCK 12: RENDER METHOD (REQUIRED)
+	// ----------------------------------------------------------
 	render() {
 		return html`
 			<div class="item">
@@ -419,6 +461,20 @@ export class TAccordionItemLit extends LitElement {
 		`;
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 13: PRIVATE HELPERS
+	// ----------------------------------------------------------
+	_handleClick() {
+		this.toggle();
+	}
+
+	_handleKeydown(e) {
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			this.toggle();
+		}
+	}
+
 	static {
 		if (!customElements.get(this.tagName)) {
 			customElements.define(this.tagName, this);
@@ -436,19 +492,62 @@ export class TAccordionItemLit extends LitElement {
  * @description Terminal-style accordion container
  */
 export class TAccordionLit extends LitElement {
+	// ----------------------------------------------------------
+	// BLOCK 1: STATIC METADATA (REQUIRED)
+	// ----------------------------------------------------------
 	static tagName = 't-accordion';
 	static version = '3.0.0';
 	static category = 'Container';
 
+	// ----------------------------------------------------------
+	// BLOCK 2: STATIC STYLES (REQUIRED)
+	// ----------------------------------------------------------
 	static styles = css`
 		:host {
-			display: block;
+			display: flex;
+			flex-direction: column;
 			--accordion-border: var(--terminal-gray-dark, #333);
+			--scrollbar-width: 8px;
+			--scrollbar-track: var(--terminal-gray-darkest, #1a1a1a);
+			--scrollbar-thumb: var(--terminal-gray-dark, #333);
+			--scrollbar-thumb-hover: var(--terminal-gray, #555);
+			--scrollbar-radius: 4px;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			overflow: auto;
+		}
+
+		/* Terminal-styled scrollbars */
+		:host::-webkit-scrollbar {
+			width: var(--scrollbar-width);
+			height: var(--scrollbar-width);
+		}
+
+		:host::-webkit-scrollbar-track {
+			background: var(--scrollbar-track);
+			border-radius: var(--scrollbar-radius);
+		}
+
+		:host::-webkit-scrollbar-thumb {
+			background: var(--scrollbar-thumb);
+			border-radius: var(--scrollbar-radius);
+			border: 1px solid var(--scrollbar-track);
+		}
+
+		:host::-webkit-scrollbar-thumb:hover {
+			background: var(--scrollbar-thumb-hover);
+		}
+
+		:host::-webkit-scrollbar-corner {
+			background: var(--scrollbar-track);
 		}
 
 		.accordion {
 			display: flex;
 			flex-direction: column;
+			flex: 1;
+			min-height: 0;
 		}
 
 		/* Horizontal orientation */
@@ -457,8 +556,11 @@ export class TAccordionLit extends LitElement {
 		}
 
 		:host([orientation="horizontal"]) ::slotted(t-accordion-item) {
-			flex: 1;
 			min-width: 0;
+		}
+
+		:host([orientation="horizontal"]) ::slotted(t-accordion-item[expanded]) {
+			flex: 1;
 		}
 
 		/* Bordered variant */
@@ -467,6 +569,9 @@ export class TAccordionLit extends LitElement {
 		}
 	`;
 
+	// ----------------------------------------------------------
+	// BLOCK 3: REACTIVE PROPERTIES (REQUIRED)
+	// ----------------------------------------------------------
 	static properties = {
 		multiple: { type: Boolean, reflect: true },
 		bordered: { type: Boolean, reflect: true },
@@ -474,8 +579,18 @@ export class TAccordionLit extends LitElement {
 		orientation: { type: String, reflect: true }
 	};
 
+	// ----------------------------------------------------------
+	// BLOCK 4: INTERNAL STATE (N/A)
+	// ----------------------------------------------------------
+
+	// ----------------------------------------------------------
+	// BLOCK 5: LOGGER INSTANCE (REQUIRED)
+	// ----------------------------------------------------------
 	_logger = null;
 
+	// ----------------------------------------------------------
+	// BLOCK 6: CONSTRUCTOR (REQUIRED)
+	// ----------------------------------------------------------
 	constructor() {
 		super();
 		this._logger = componentLogger.for('TAccordionLit');
@@ -486,6 +601,9 @@ export class TAccordionLit extends LitElement {
 		this._logger.debug('Accordion constructed');
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 7: LIFECYCLE METHODS (REQUIRED)
+	// ----------------------------------------------------------
 	connectedCallback() {
 		super.connectedCallback();
 		this.addEventListener('item-toggle', this._handleItemToggle);
@@ -514,6 +632,87 @@ export class TAccordionLit extends LitElement {
 		}
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 8: PUBLIC API METHODS
+	// ----------------------------------------------------------
+	/**
+	 * Expand all items (only works if multiple=true)
+	 * @public
+	 */
+	expandAll() {
+		if (this.multiple) {
+			const items = this.querySelectorAll('t-accordion-item');
+			items.forEach(item => item.expand());
+			this._logger.debug('Expanded all items');
+		}
+	}
+
+	/**
+	 * Collapse all items
+	 * @public
+	 */
+	collapseAll() {
+		this._collapseAll();
+		this.expandedItems = [];
+		this._emitEvent('accordion-change', {
+			expandedItems: [],
+			itemId: null,
+			expanded: false
+		});
+		this._logger.debug('Collapsed all items');
+	}
+
+	/**
+	 * Get all accordion items
+	 * @public
+	 * @returns {Array} Array of item elements
+	 */
+	getItems() {
+		return Array.from(this.querySelectorAll('t-accordion-item'));
+	}
+
+	/**
+	 * Get expanded items
+	 * @public
+	 * @returns {Array} Array of expanded item elements
+	 */
+	getExpandedItems() {
+		return this.getItems().filter(item => item.expanded);
+	}
+
+	// ----------------------------------------------------------
+	// BLOCK 9: EVENT EMITTERS
+	// ----------------------------------------------------------
+	_emitEvent(name, detail = {}) {
+		this.dispatchEvent(new CustomEvent(name, {
+			detail,
+			bubbles: true,
+			composed: true
+		}));
+	}
+
+	// ----------------------------------------------------------
+	// BLOCK 10: NESTING SUPPORT (N/A)
+	// ----------------------------------------------------------
+
+	// ----------------------------------------------------------
+	// BLOCK 11: VALIDATION (N/A)
+	// ----------------------------------------------------------
+
+	// ----------------------------------------------------------
+	// BLOCK 12: RENDER METHOD (REQUIRED)
+	// ----------------------------------------------------------
+	render() {
+		return html`
+			<div class="accordion" role="tablist">
+				<slot></slot>
+			</div>
+		`;
+	}
+
+	// ----------------------------------------------------------
+	// BLOCK 13: PRIVATE HELPERS
+	// ----------------------------------------------------------
 	_propagateOrientation() {
 		const items = this.querySelectorAll('t-accordion-item');
 		items.forEach(item => {
@@ -566,67 +765,6 @@ export class TAccordionLit extends LitElement {
 				item.expanded = false;
 			}
 		});
-	}
-
-	/**
-	 * Expand all items (only works if multiple=true)
-	 * @public
-	 */
-	expandAll() {
-		if (this.multiple) {
-			const items = this.querySelectorAll('t-accordion-item');
-			items.forEach(item => item.expand());
-			this._logger.debug('Expanded all items');
-		}
-	}
-
-	/**
-	 * Collapse all items
-	 * @public
-	 */
-	collapseAll() {
-		this._collapseAll();
-		this.expandedItems = [];
-		this._emitEvent('accordion-change', {
-			expandedItems: [],
-			itemId: null,
-			expanded: false
-		});
-		this._logger.debug('Collapsed all items');
-	}
-
-	/**
-	 * Get all accordion items
-	 * @public
-	 * @returns {Array} Array of item elements
-	 */
-	getItems() {
-		return Array.from(this.querySelectorAll('t-accordion-item'));
-	}
-
-	/**
-	 * Get expanded items
-	 * @public
-	 * @returns {Array} Array of expanded item elements
-	 */
-	getExpandedItems() {
-		return this.getItems().filter(item => item.expanded);
-	}
-
-	_emitEvent(name, detail = {}) {
-		this.dispatchEvent(new CustomEvent(name, {
-			detail,
-			bubbles: true,
-			composed: true
-		}));
-	}
-
-	render() {
-		return html`
-			<div class="accordion" role="tablist">
-				<slot></slot>
-			</div>
-		`;
 	}
 
 	static {

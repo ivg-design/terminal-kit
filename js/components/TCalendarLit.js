@@ -13,14 +13,17 @@ import componentLogger from '../utils/ComponentLogger.js';
 import { caretLeftIcon, caretRightIcon } from '../utils/phosphor-icons.js';
 
 // ============================================================
-// Block 1: Static Metadata
+// BLOCK 1: Static Metadata
 // ============================================================
 
 /**
- * TCalendarLit - Date picker/calendar component
+ * @component TCalendarLit
+ * @tagname t-cal
+ * @description Date picker/calendar component with single/multiple/range selection.
+ * @category Form
+ * @since 3.0.0
  *
  * @element t-cal
- * @tagname t-cal
  *
  * @fires date-select - Fired when a date is selected
  * @fires month-change - Fired when the displayed month changes
@@ -48,45 +51,77 @@ class TCalendarLit extends LitElement {
 	static category = 'Form';
 
 	// ============================================================
-	// Block 2: Static Styles
+	// BLOCK 2: Static Styles
 	// ============================================================
 
 	static styles = css`
 		:host {
-			display: inline-block;
+			display: flex;
+			flex-direction: column;
 			font-family: var(--t-font-mono, 'JetBrains Mono', monospace);
 			background: var(--t-cal-bg, var(--terminal-gray-darkest, #1a1a1a));
 			border: 1px solid var(--t-cal-border, var(--terminal-gray-dark, #333));
 			color: var(--t-cal-color, var(--terminal-green, #00ff41));
-			padding: 12px;
-			min-width: 280px;
+			padding: 4px;
+			min-width: 160px;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			overflow: hidden;
+		}
+
+		:host([inline]) {
+			width: auto;
+			height: auto;
+			min-width: 250px;
+		}
+
+		:host([compact]) .calendar-footer {
+			display: none;
+		}
+
+		:host([compact]) .weekday {
+			padding: 1px;
+		}
+
+		:host([compact]) .day {
+			font-size: 10px;
+		}
+
+		.calendar {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			overflow: hidden;
 		}
 
 		.calendar-header {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			margin-bottom: 12px;
+			margin-bottom: 2px;
+			flex-shrink: 0;
 		}
 
 		.nav-btn {
 			background: transparent;
 			border: 1px solid var(--terminal-gray-dark, #333);
 			color: var(--terminal-green, #00ff41);
-			width: 28px;
-			height: 28px;
+			width: 20px;
+			height: 20px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			cursor: pointer;
 			font-family: inherit;
-			font-size: 14px;
+			font-size: 10px;
 			transition: all 0.15s ease;
+			flex-shrink: 0;
 		}
 
 		.nav-btn svg {
-			width: 14px;
-			height: 14px;
+			width: 10px;
+			height: 10px;
 			fill: currentColor;
 		}
 
@@ -103,13 +138,16 @@ class TCalendarLit extends LitElement {
 		}
 
 		.header-title {
-			font-size: 14px;
+			font-size: clamp(9px, 2.5vw, 12px);
 			font-weight: bold;
 			cursor: pointer;
-			padding: 4px 12px;
+			padding: 2px 6px;
 			transition: all 0.15s ease;
 			text-transform: uppercase;
-			letter-spacing: 0.05em;
+			letter-spacing: 0.02em;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 
 		.header-title:hover {
@@ -120,35 +158,40 @@ class TCalendarLit extends LitElement {
 		.weekdays {
 			display: grid;
 			grid-template-columns: repeat(7, 1fr);
-			gap: 2px;
-			margin-bottom: 8px;
+			gap: 1px;
+			margin-bottom: 1px;
+			flex-shrink: 0;
 		}
 
 		.weekday {
 			text-align: center;
-			font-size: 10px;
+			font-size: clamp(7px, 1.5vw, 9px);
 			color: var(--terminal-gray, #666);
-			padding: 4px;
+			padding: 1px;
 			text-transform: uppercase;
 		}
 
-		/* Days grid */
+		/* Days grid - auto rows that fill available space evenly */
 		.days-grid {
 			display: grid;
 			grid-template-columns: repeat(7, 1fr);
-			gap: 2px;
+			grid-auto-rows: 1fr;
+			gap: 1px;
+			flex: 1;
+			min-height: 0;
 		}
 
 		.day {
-			aspect-ratio: 1;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			font-size: 12px;
+			font-size: clamp(9px, 2vw, 12px);
 			cursor: pointer;
 			border: 1px solid transparent;
 			transition: all 0.15s ease;
 			position: relative;
+			min-width: 0;
+			min-height: 0;
 		}
 
 		.day:hover:not(.disabled):not(.outside) {
@@ -167,11 +210,11 @@ class TCalendarLit extends LitElement {
 		.day.today::after {
 			content: '';
 			position: absolute;
-			bottom: 2px;
+			bottom: 1px;
 			left: 50%;
 			transform: translateX(-50%);
-			width: 4px;
-			height: 4px;
+			width: 3px;
+			height: 3px;
 			background: var(--terminal-amber, #ffb000);
 			border-radius: 50%;
 		}
@@ -225,18 +268,24 @@ class TCalendarLit extends LitElement {
 		.years-grid {
 			display: grid;
 			grid-template-columns: repeat(4, 1fr);
-			gap: 8px;
+			grid-template-rows: repeat(3, 1fr);
+			gap: 4px;
+			flex: 1;
+			min-height: 0;
 		}
 
 		.month-cell,
 		.year-cell {
-			padding: 12px 8px;
+			padding: 4px;
 			text-align: center;
 			cursor: pointer;
-			font-size: 12px;
+			font-size: clamp(9px, 2vw, 11px);
 			border: 1px solid transparent;
 			transition: all 0.15s ease;
 			text-transform: uppercase;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 
 		.month-cell:hover,
@@ -266,18 +315,19 @@ class TCalendarLit extends LitElement {
 		.calendar-footer {
 			display: flex;
 			justify-content: space-between;
-			margin-top: 12px;
-			padding-top: 12px;
+			margin-top: 4px;
+			padding-top: 4px;
 			border-top: 1px solid var(--terminal-gray-dark, #333);
+			flex-shrink: 0;
 		}
 
 		.footer-btn {
 			background: transparent;
 			border: 1px solid var(--terminal-gray-dark, #333);
 			color: var(--terminal-green, #00ff41);
-			padding: 6px 12px;
+			padding: 3px 8px;
 			font-family: inherit;
-			font-size: 11px;
+			font-size: clamp(9px, 1.5vw, 11px);
 			cursor: pointer;
 			text-transform: uppercase;
 			transition: all 0.15s ease;
@@ -301,7 +351,7 @@ class TCalendarLit extends LitElement {
 	`;
 
 	// ============================================================
-	// Block 3: Reactive Properties
+	// BLOCK 3: Reactive Properties
 	// ============================================================
 
 	static properties = {
@@ -405,11 +455,19 @@ class TCalendarLit extends LitElement {
 		 * @property {Boolean} showClear
 		 * @default true
 		 */
-		showClear: { type: Boolean, attribute: 'show-clear' }
+		showClear: { type: Boolean, attribute: 'show-clear' },
+
+		/**
+		 * Compact mode - hides footer and reduces spacing
+		 * @property {Boolean} compact
+		 * @default false
+		 * @reflects
+		 */
+		compact: { type: Boolean, reflect: true }
 	};
 
 	// ============================================================
-	// Block 4: Internal State
+	// BLOCK 4: Internal State
 	// ============================================================
 
 	/** @private - Currently displayed month/year */
@@ -422,14 +480,14 @@ class TCalendarLit extends LitElement {
 	_rangeStart = null;
 
 	// ============================================================
-	// Block 5: Logger Instance
+	// BLOCK 5: Logger Instance
 	// ============================================================
 
 	/** @private */
 	_logger = null;
 
 	// ============================================================
-	// Block 6: Constructor
+	// BLOCK 6: Constructor
 	// ============================================================
 
 	constructor() {
@@ -453,12 +511,13 @@ class TCalendarLit extends LitElement {
 		this.inline = false;
 		this.showToday = true;
 		this.showClear = true;
+		this.compact = false;
 
 		this._logger.debug('Component constructed');
 	}
 
 	// ============================================================
-	// Block 7: Lifecycle Methods
+	// BLOCK 7: Lifecycle Methods
 	// ============================================================
 
 	connectedCallback() {
@@ -492,7 +551,7 @@ class TCalendarLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 8: Public API Methods
+	// BLOCK 8: Public API Methods
 	// ============================================================
 
 	/**
@@ -602,7 +661,7 @@ class TCalendarLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 9: Event Emitters
+	// BLOCK 9: Event Emitters
 	// ============================================================
 
 	/**
@@ -648,11 +707,11 @@ class TCalendarLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 10: Nesting Support (N/A)
+	// BLOCK 10: Nesting Support (N/A)
 	// ============================================================
 
 	// ============================================================
-	// Block 11: Validation
+	// BLOCK 11: Validation
 	// ============================================================
 
 	/**
@@ -679,7 +738,7 @@ class TCalendarLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 12: Render Method
+	// BLOCK 12: Render Method
 	// ============================================================
 
 	/**
@@ -701,7 +760,7 @@ class TCalendarLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 13: Private Helpers
+	// BLOCK 13: Private Helpers
 	// ============================================================
 
 	/**

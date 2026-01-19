@@ -2,11 +2,19 @@
 
 A compact, terminal-styled chat panel with markdown rendering, streaming support, message queueing, attachments, and export functionality.
 
-**Tag Name:** `<t-chat>`
+## Tag Names
 
----
+- `t-chat`
 
-## Usage
+## Static Metadata
+
+| Property | Value |
+| --- | --- |
+| tagName | `t-chat` |
+| version | `1.0.0` |
+| category | `Composite` |
+
+## Examples
 
 ```html
 <t-chat
@@ -22,8 +30,6 @@ A compact, terminal-styled chat panel with markdown rendering, streaming support
 ></t-chat>
 ```
 
----
-
 ## Properties
 
 | Property | Type | Attribute | Default | Description |
@@ -32,7 +38,7 @@ A compact, terminal-styled chat panel with markdown rendering, streaming support
 | `icon` | string | - | `noteBlankIcon` | SVG icon string for the header. |
 | `messages` | array | - | `[]` | Array of message objects. |
 | `queue` | array | - | `[]` | Array of queued message objects. |
-| `agentModes` | array | `agent-modes` | `[haiku, sonnet, opus]` | Dropdown options for agent selection. |
+| `agentModes` | array | `agent-modes` | `[{value:'haiku',label:'Haiku'},{value:'sonnet',label:'Sonnet'},{value:'opus',label:'Opus'}]` | Dropdown options for agent selection. |
 | `selectedMode` | string | `selected-mode` | `sonnet` | Current agent mode. |
 | `thinking` | boolean | `thinking` | `false` | Shows streaming bubble with spinner. |
 | `spinnerType` | string | `spinner-type` | `ellipsis-spinner` | Spinner type from `t-ldr`. |
@@ -62,7 +68,46 @@ A compact, terminal-styled chat panel with markdown rendering, streaming support
 }
 ```
 
----
+## Methods
+
+### clearChat()
+Clear all messages and streaming content.
+
+### exportChat(format = exportFormat)
+Export chat history.
+
+**Parameters:**
+- `format` (String): `markdown` or `json`
+
+### enqueueMessage(content, attachments = [])
+Queue a message while the agent is busy.
+
+**Parameters:**
+- `content` (String): Message content
+- `attachments` (File[]): Optional attachments
+
+### dequeueMessage()
+Remove and return the next queued message.
+
+**Returns:** `Object | null`
+
+### addMessage(message)
+Append a message to the chat.
+
+**Parameters:**
+- `message` (Object): Message object
+
+### setStreamingContent(content)
+Set assistant streaming content.
+
+**Parameters:**
+- `content` (String): Streaming text
+
+### receiveContext(context)
+Receives context from a parent container component.
+
+**Parameters:**
+- `context` (Object): Context object from parent
 
 ## Events
 
@@ -77,7 +122,28 @@ A compact, terminal-styled chat panel with markdown rendering, streaming support
 | `chat-export` | `{ format, payload }` | Fired before export download. |
 | `chat-cleared` | `{}` | Fired when the chat is cleared. |
 
----
+## Slots
+
+| Slot | Description |
+| --- | --- |
+| default | Main content area (inside t-pnl) |
+| actions | Header action buttons |
+
+## CSS Custom Properties
+
+| Property | Default | Description |
+| --- | --- | --- |
+| `--chat-max-height` | `100%` | Max height for the message stream |
+
+## Related Components
+
+- [TPanelLit](./TPanelLit.md) - Container panel
+- [TLoaderLit](./TLoaderLit.md) - Spinners for thinking state
+- [TDropdownLit](./TDropdownLit.md) - Mode selector
+
+## Third-Party Credits
+
+- marked and PrismJS for markdown and code highlighting. See [`../third-party.md`](../third-party.md).
 
 ## Notes
 

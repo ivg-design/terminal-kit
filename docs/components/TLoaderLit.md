@@ -1,5 +1,9 @@
 # TLoaderLit Component Documentation
 
+## Tag Names
+
+- `t-ldr`
+
 ## Overview
 
 The TLoaderLit component (`<t-ldr>`) is an advanced loading indicator with 55+ animation types from the wc-spinners library, wrapped in terminal/cyberpunk styling. It provides a comprehensive collection of spinners from Epic Spinners, React Spinners, and CSS Spinners libraries, all unified under a single component interface.
@@ -659,6 +663,10 @@ The component uses:
 - **Lit:** ^2.0.0
 - **wc-spinners:** Bundled in `/public/js/libs/wc-spinners.js`
 
+## Third-Party Credits
+
+- wc-spinners (includes Epic Spinners and React Spinners sets). See [`../third-party.md`](../third-party.md).
+
 ## Migration Guide
 
 ### From Previous Versions
@@ -731,3 +739,7 @@ loader.hide();
 For issues, feature requests, or questions:
 - GitHub Issues: [terminal-kit-loader/issues](https://github.com/terminal-kit/loader/issues)
 - Documentation: [Terminal Kit Docs](https://terminal-kit.dev/components/loader)
+
+## Slots
+
+None.

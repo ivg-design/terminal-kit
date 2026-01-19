@@ -42,10 +42,8 @@ This component was migrated from a hybrid Declarative Shadow DOM + StyleSheetMan
 | `compact` | boolean | `false` | Compact mode (20px header) |
 | `large` | boolean | `false` | Large mode (36px header) |
 | `loading` | boolean | `false` | Show loading state |
-| `resizable` | boolean | `false` | Enable resize handles |
-| `draggable` | boolean | `false` | Enable drag to reposition |
 | `icon` | string | `''` | SVG icon string for header |
-| `footerCollapsed` | boolean | `false` | Footer collapsed state |
+| `footerCollapsed` | boolean | `false` | Footer collapsed state (attribute: `footer-collapsed`) |
 
 ### Property Details
 
@@ -80,24 +78,25 @@ panel.collapse();
 #### `toggleCollapse()`
 Toggles panel collapsed state.
 
+**Returns:** `boolean` - New collapsed state
+
 ```javascript
-panel.toggleCollapse();
+const isCollapsed = panel.toggleCollapse();
 ```
 
-#### `setLoading(loading: boolean)`
-Sets loading state.
+#### `startLoading()`
+Shows loading state.
 
 ```javascript
-panel.setLoading(true);
+panel.startLoading();
 // ... async operation
-panel.setLoading(false);
 ```
 
-#### `setTitle(title: string)`
-Sets panel title.
+#### `stopLoading()`
+Hides loading state.
 
 ```javascript
-panel.setTitle('New Title');
+panel.stopLoading();
 ```
 
 ### Footer Methods
@@ -110,6 +109,18 @@ Toggles the footer collapsed state (slides down when collapsed, up when expanded
 ```javascript
 const footerCollapsed = panel.toggleFooterCollapse();
 console.log('Footer collapsed:', footerCollapsed);
+```
+
+### Context Methods
+
+#### `receiveContext(context)`
+Receives context from a parent component (for nesting support).
+
+**Parameters:**
+- `context` (Object): Context object with `size` ('compact', 'large', 'default') and `variant`
+
+```javascript
+panel.receiveContext({ size: 'compact', variant: 'standard' });
 ```
 
 ## Events
@@ -136,35 +147,36 @@ panel.addEventListener('panel-footer-collapsed', (e) => {
 });
 ```
 
-### `panel-drag-end`
-Fired when draggable panel is released.
+### `panel-loading-start`
+Fired when loading state starts.
 
-**Detail:** `{ left: string, top: string }`
+**Detail:** `{}`
 
 ```javascript
-panel.addEventListener('panel-drag-end', (e) => {
-  console.log('Panel position:', e.detail);
+panel.addEventListener('panel-loading-start', (e) => {
+  console.log('Panel loading started');
+});
+```
+
+### `panel-loading-end`
+Fired when loading state ends.
+
+**Detail:** `{}`
+
+```javascript
+panel.addEventListener('panel-loading-end', (e) => {
+  console.log('Panel loading ended');
 });
 ```
 
 ## Slots
 
 ### `default` (unnamed slot)
-Main panel content.
+Main panel content. Supports nesting other panels.
 
 ```html
 <t-pnl title="Panel">
   <p>Main content goes here</p>
-</t-pnl>
-```
-
-### `title`
-Custom title content (alternative to `title` attribute).
-
-```html
-<t-pnl>
-  <span slot="title">Custom <strong>Title</strong></span>
-  <p>Content</p>
 </t-pnl>
 ```
 
@@ -389,31 +401,15 @@ Footer features:
 
 <script>
   const panel = document.getElementById('dataPanel');
-  panel.setLoading(true);
+  panel.startLoading();
 
   fetch('/api/data')
     .then(response => response.json())
     .then(data => {
-      panel.setLoading(false);
+      panel.stopLoading();
       // Update content
     });
 </script>
-```
-
-### Draggable Panel
-
-```html
-<t-pnl title="Draggable Panel" draggable>
-  <p>Drag the header to move this panel</p>
-</t-pnl>
-```
-
-### Resizable Panel
-
-```html
-<t-pnl title="Resizable Panel" resizable>
-  <p>Use resize handles to adjust size</p>
-</t-pnl>
 ```
 
 ### Programmatic Control
@@ -433,15 +429,11 @@ Footer features:
   const panel = document.getElementById('myPanel');
 
   document.getElementById('togglePanel').addEventListener('click', () => {
-    panel.toggle();
+    panel.toggleCollapse();
   });
 
   document.getElementById('toggleFooter').addEventListener('click', () => {
-    if (panel.footerCollapsed) {
-      panel.expandFooter();
-    } else {
-      panel.collapseFooter();
-    }
+    panel.toggleFooterCollapse();
   });
 </script>
 ```
@@ -691,7 +683,7 @@ panel.variant = 'headless';
 ### Event Handling
 
 ```javascript
-panel.addEventListener('panel-toggle', (e) => {
+panel.addEventListener('panel-collapsed', (e) => {
   console.log('Collapsed:', e.detail.collapsed);
   localStorage.setItem('panelState', e.detail.collapsed);
 });

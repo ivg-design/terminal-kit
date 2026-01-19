@@ -241,9 +241,14 @@ const styles = css`
 `;
 
 /**
+ * @component TMenuLit
+ * @tagname t-menu
+ * @description Dropdown/context menu component with selection, keyboard navigation, and submenu support
+ * @category Core
+ * @since 3.0.0
+ *
  * TMenuLit - Dropdown/context menu component
  *
- * @element t-menu
  * @slot trigger - The trigger element that opens the menu
  *
  * @fires menu-select - Fired when a menu item is selected

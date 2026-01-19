@@ -73,14 +73,20 @@ export class TChatPanelLit extends LitElement {
       --spacing-md: var(--tk-spacing-md, 12px);
       --spacing-lg: var(--tk-spacing-lg, 16px);
 
-      display: block;
+      display: flex;
+      flex-direction: column;
       width: 100%;
       height: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
     }
 
     t-pnl {
       height: 100%;
-      display: block;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
     }
 
     .chat-root {
@@ -88,7 +94,8 @@ export class TChatPanelLit extends LitElement {
       flex-direction: column;
       height: 100%;
       width: 100%;
-      min-height: 280px;
+      min-height: 0;
+      flex: 1;
     }
 
     .chat-body {

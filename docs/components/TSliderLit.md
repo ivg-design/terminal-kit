@@ -1,5 +1,9 @@
 # TSliderLit Component
 
+## Tag Names
+
+- `t-sld`
+
 ## Overview
 
 The `TSliderLit` component (`<t-sld>`) is a terminal-themed range slider with comprehensive features including drag support, form integration, icons, multiple display modes, and extensive customization options. Built with Lit Element following the FORM-ADVANCED profile.
@@ -1095,3 +1099,8 @@ slider.addEventListener('slider-change', handler); // After drag
   - Form participation via ElementInternals
   - Comprehensive keyboard navigation
   - Touch and mouse drag support
+
+## Slots
+
+None.
+

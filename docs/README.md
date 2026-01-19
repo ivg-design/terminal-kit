@@ -1,58 +1,78 @@
 # Terminal UI Components Documentation
 
-A comprehensive library of terminal-styled web components built with vanilla JavaScript and CSS.
+A comprehensive library of terminal-styled web components built with Lit 3.x.
 
 ## Component List
 
-### Core Components
+### Form Components
 
-- [TerminalComponent](./components/TerminalComponent.md) - Base class for all components
-- [TerminalButton](./components/TerminalButton.md) - Button with variants and toggle support
-- [TerminalInput](./components/TerminalInput.md) - Text input with validation
-- [TerminalTextarea](./components/TerminalTextarea.md) - Multi-line text input with line numbers
-- [TerminalToggle](./components/TerminalToggle.md) - Toggle switch and checkbox variants
-- [TerminalSlider](./components/TerminalSlider.md) - Range slider with value display
+- [TButtonLit](./components/TButtonLit.md) - Button with variants and toggle support (`t-btn`)
+- [TInputLit](./components/TInputLit.md) - Text input with validation (`t-inp`)
+- [TTextareaLit](./components/TTextareaLit.md) - Multi-line text input with line numbers (`t-textarea`)
+- [TToggleLit](./components/TToggleLit.md) - Toggle switch and checkbox variants (`t-tog`)
+- [TSliderLit](./components/TSliderLit.md) - Range slider with value display (`t-sld`)
+- [TDropdownLit](./components/TDropdownLit.md) - Dropdown selector with search (`t-drp`)
+- [TColorPickerLit](./components/TColorPickerLit.md) - Color picker with swatches (`t-clr`)
 
 ### Layout Components
 
-- [TerminalPanel](./components/TerminalPanel.md) - Collapsible container panel
-- [TerminalModal](./components/TerminalModal.md) - Modal dialog with animations
-- [TerminalStatusBar](./components/TerminalStatusBar.md) - Status bar with dynamic fields
-- [TerminalStatusField](./components/terminal-status-field.md) - Individual status field component
+- [TPanelLit](./components/TPanelLit.md) - Collapsible container panel (`t-pnl`)
+- [TModalLit](./components/TModalLit.md) - Modal dialog with animations (`t-mdl`)
+- [TCardLit](./components/TCardLit.md) - Content card with header and actions (`t-card`)
+- [TAccordionLit](./components/TAccordionLit.md) - Collapsible accordion sections (`t-accordion`)
+- [TSplitterLit](./components/TSplitterLit.md) - Resizable split panes (`t-split`)
+- [TGridLit](./components/TGridLit.md) - Dashboard grid layout (`t-grid`)
+- [TTabsLit](./components/TTabsLit.md) - Tab navigation with panels (`t-tabs`)
 
-### Interactive Components
+### Data Display Components
 
-- [TerminalDropdown](./components/TerminalDropdown.md) - Dropdown selector with search
-- [TerminalColorPicker](./components/TerminalColorPicker.md) - Color picker with swatches
-- [TerminalTreeView](./components/TerminalTreeView.md) - Tree view with expand/collapse
-- [TerminalTreeNode](./components/TerminalTreeNode.md) - Individual tree node (internal)
-- [TerminalDynamicControls](./components/TerminalDynamicControls.md) - Dynamic form controls from JSON
+- [TListLit](./components/TListLit.md) - Virtualized list with selection (`t-list`)
+- [TTreeLit](./components/TTreeLit.md) - Hierarchical tree view (`t-tree`)
+- [TMenuLit](./components/TMenuLit.md) - Dropdown/context menu (`t-menu`)
+- [TTimelineLit](./components/TTimelineLit.md) - Vertical timeline display (`t-tmln`)
+- [TCalendarLit](./components/TCalendarLit.md) - Date picker calendar (`t-cal`)
+- [TChartLit](./components/TChartLit.md) - Simple data visualizations (`t-chart`)
+- [TKanbanLit](./components/TKanbanLit.md) - Kanban board with drag-and-drop (`t-kanban`)
+
+### Log Components
+
+- [TLogListLit](./components/TLogListLit.md) - Log viewer with filtering (`t-log-list`)
+- [TLogEntryLit](./components/TLogEntryLit.md) - Individual log entry (`t-log-entry`)
 
 ### Feedback Components
 
-- [TerminalLoader](./components/TerminalLoader.md) - Loading spinner with variants
-- [TerminalToast](./components/TerminalToast.md) - Toast notifications
+- [TLoaderLit](./components/TLoaderLit.md) - Loading spinner with variants (`t-ldr`)
+- [TToastLit](./components/TToastLit.md) - Toast notifications (`t-tst`)
+- [TProgressLit](./components/TProgressLit.md) - Progress bar/ring indicators (`t-prg`)
+- [TSkeletonLit](./components/TSkeletonLit.md) - Loading placeholder shapes (`t-skel`)
+- [TTooltipLit](./components/TTooltipLit.md) - Hover tooltips (`t-tip`)
 
-### Menu Components
+### UI Components
 
-- [TerminalUserMenu](./components/TerminalUserMenu.md) - User avatar and dropdown menu
+- [TBadgeLit](./components/TBadgeLit.md) - Count/status badges (`t-bdg`)
+- [TChipLit](./components/TChipLit.md) - Tag/filter chips (`t-chip`)
+- [TAvatarLit](./components/TAvatarLit.md) - User avatar display (`t-avt`)
+- [TStatusBarLit](./components/TStatusBarLit.md) - Status bar with dynamic fields (`t-sta`)
+- [TStatusFieldLit](./components/TStatusFieldLit.md) - Individual status field (`t-sta-field`)
+- [TUserMenuLit](./components/TUserMenuLit.md) - User menu dropdown (`t-usr`)
+
+### Specialized Components
+
+- [TDynamicControlsLit](./components/TDynamicControlsLit.md) - Schema-driven form controls (`t-dynamic-controls`)
+- [TChatPanelLit](./components/TChatPanelLit.md) - Chat interface panel (`t-chat`)
 
 ## Getting Started
 
 ### Installation
 
 ```html
-<!-- Include base styles -->
+<!-- Include theme styles -->
 <link rel="stylesheet" href="css/theme/terminal.css">
-<link rel="stylesheet" href="css/components/form.css">
-<link rel="stylesheet" href="css/components/button.css">
-<!-- Add other component styles as needed -->
 
 <!-- Import components -->
 <script type="module">
-  import './js/components/TerminalComponent.js';
-  import './js/components/TerminalInput.js';
-  import './js/components/TerminalButton.js';
+  import './js/components/TButtonLit.js';
+  import './js/components/TInputLit.js';
   // Import other components as needed
 </script>
 ```
@@ -61,37 +81,37 @@ A comprehensive library of terminal-styled web components built with vanilla Jav
 
 ```html
 <!-- Simple button -->
-<terminal-button variant="primary">Click Me</terminal-button>
+<t-btn variant="primary">Click Me</t-btn>
 
 <!-- Input with validation -->
-<terminal-input
+<t-inp
   type="email"
   placeholder="Enter email"
   required>
-</terminal-input>
+</t-inp>
 
 <!-- Toggle switch -->
-<terminal-toggle
+<t-tog
   label="Enable feature"
   checked>
-</terminal-toggle>
+</t-tog>
 ```
 
 ### Component Architecture
 
-All components extend from `TerminalComponent` base class which provides:
-- Property management with automatic re-rendering
-- Event emission system
-- Lifecycle hooks (onMount, afterRender, etc.)
-- DOM querying utilities
-- Event listener management with auto-cleanup
+All components are built with Lit 3.x and follow a 13-block schema structure:
+- Shadow DOM encapsulation
+- Reactive properties with automatic updates
+- Custom event system with bubbles and composed
+- CSS custom properties for theming
+- Comprehensive logging via ComponentLogger
 
 ### Styling
 
 Components use a terminal-inspired design system with:
 - Green-on-black color scheme
-- Monospace fonts (SF Mono, Monaco)
-- Retro CRT-like effects (glow, scanlines)
+- Monospace fonts (JetBrains Mono, SF Mono)
+- CRT-inspired effects (glow, scanlines)
 - CSS variables for theming
 
 Key CSS variables:
@@ -99,65 +119,88 @@ Key CSS variables:
 --terminal-green: #00ff41;
 --terminal-green-dim: #00cc33;
 --terminal-black: #0a0a0a;
---terminal-gray-dark: #242424;
---terminal-gray-light: #333333;
---terminal-red: #ff3333;
---terminal-yellow: #ffcc00;
+--terminal-gray-dark: #333;
+--terminal-gray-darkest: #1a1a1a;
+--terminal-red: #ff003c;
+--terminal-amber: #ffb000;
+--terminal-cyan: #00ffff;
 ```
 
 ### Events
 
 Components emit custom events that bubble and compose:
 ```javascript
-// Listen to events
-const input = document.querySelector('terminal-input');
-input.addEventListener('input-value', (e) => {
+const input = document.querySelector('t-inp');
+input.addEventListener('input-change', (e) => {
   console.log('Value changed:', e.detail.value);
-});
-
-input.addEventListener('input-error', (e) => {
-  console.log('Validation error:', e.detail.message);
 });
 ```
 
 ### Form Integration
 
-Components work with native HTML forms:
+Components work with native HTML forms via ElementInternals:
 ```html
 <form id="myForm">
-  <terminal-input name="email" type="email" required></terminal-input>
-  <terminal-toggle name="subscribe"></terminal-toggle>
-  <terminal-button type="submit">Submit</terminal-button>
+  <t-inp name="email" type="email" required></t-inp>
+  <t-tog name="subscribe"></t-tog>
+  <t-btn type="submit">Submit</t-btn>
 </form>
 ```
-
-### Advanced Features
-
-- **Validation**: Built-in HTML5 validation with custom error messages
-- **Accessibility**: ARIA labels, keyboard navigation, screen reader support
-- **Theming**: CSS variable overrides for custom color schemes
-- **Performance**: Efficient rendering with minimal DOM updates
-- **TypeScript**: Full TypeScript definitions available
 
 ## Demos
 
 Interactive demos are available in the `/demos` directory:
 
+### Featured Demos
+- [dashboard.html](../demos/dashboard.html) - Comprehensive component showcase
+- [dynamic-controls.html](../demos/dynamic-controls.html) - Schema-driven control generation
+- [chat-panel.html](../demos/chat-panel.html) - Chat interface demo
+
+### Form Components
 - [input.html](../demos/input.html) - Input validation examples
 - [buttons.html](../demos/buttons.html) - Button variants and states
-- [dropdown.html](../demos/dropdown.html) - Dropdown with search and metadata
-- [color-picker.html](../demos/color-picker.html) - Color picker with Supabase integration
-- [dynamic-controls.html](../demos/dynamic-controls.html) - Dynamic form generation
-- [loader.html](../demos/loader.html) - Loading animations
-- [modal.html](../demos/modal.html) - Modal dialogs
-- [panel.html](../demos/panel.html) - Collapsible panels
+- [dropdown.html](../demos/dropdown.html) - Dropdown with search
+- [color-picker.html](../demos/color-picker.html) - Color picker
 - [slider.html](../demos/slider.html) - Range sliders
-- [status-bar.html](../demos/status-bar.html) - Status bar with fields
 - [textarea.html](../demos/textarea.html) - Textarea with line numbers
-- [toast.html](../demos/toast.html) - Toast notifications
 - [toggle.html](../demos/toggle.html) - Toggle switches
+
+### Layout Components
+- [panel.html](../demos/panel.html) - Collapsible panels
+- [modal.html](../demos/modal.html) - Modal dialogs
+- [accordion.html](../demos/accordion.html) - Accordion sections
+- [tabs.html](../demos/tabs.html) - Tab navigation
+- [splitter.html](../demos/splitter.html) - Resizable panes
+- [grid.html](../demos/grid.html) - Dashboard grid layout
+
+### Data Display
+- [list.html](../demos/list.html) - Virtualized list
 - [tree.html](../demos/tree.html) - Tree view navigation
+- [timeline.html](../demos/timeline.html) - Timeline display
+- [calendar.html](../demos/calendar.html) - Date picker
+- [chart.html](../demos/chart.html) - Data visualizations
+- [kanban.html](../demos/kanban.html) - Kanban board
+
+### Feedback
+- [loader.html](../demos/loader.html) - Loading animations
+- [toast.html](../demos/toast.html) - Toast notifications
+- [progress.html](../demos/progress.html) - Progress indicators
+- [skeleton.html](../demos/skeleton.html) - Loading skeletons
+- [tooltip.html](../demos/tooltip.html) - Tooltips
+
+### UI Components
+- [status-bar.html](../demos/status-bar.html) - Status bar
 - [user-menu.html](../demos/user-menu.html) - User menu dropdown
+- [badge.html](../demos/badge.html) - Badges
+- [chip.html](../demos/chip.html) - Chips
+- [avatar.html](../demos/avatar.html) - Avatars
+- [menu.html](../demos/menu.html) - Context menus
+
+## Third-Party Notices
+
+Runtime dependencies and bundled assets are listed in [`third-party.md`](./third-party.md).
+
+Icons are provided by Phosphor Icons (MIT). See the notices for details.
 
 ## Browser Support
 
@@ -168,13 +211,36 @@ Interactive demos are available in the `/demos` directory:
 
 Components use modern web standards:
 - Custom Elements v1
+- Shadow DOM v1
 - ES6 modules
 - CSS Grid/Flexbox
 - CSS Custom Properties
 
-## Contributing
+## Development
 
-See [COMPONENTS_API_AUDIT.md](./COMPONENTS_API_AUDIT.md) for implementation status and known issues.
+### Running Locally
+
+```bash
+# Install dependencies
+yarn install
+
+# Start dev server
+yarn dev
+
+# Run tests
+yarn test
+
+# Build docs
+yarn docs:build
+```
+
+### Component Schema
+
+See [COMPONENT_SCHEMA.md](./COMPONENT_SCHEMA.md) for the 13-block structure all components follow.
+
+### Component Specifications
+
+See [COMPONENT_SPECIFICATIONS.md](./COMPONENT_SPECIFICATIONS.md) for detailed specs per component.
 
 ## License
 

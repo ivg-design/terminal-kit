@@ -54,7 +54,6 @@ This component was built from the ground up as Pure Lit because:
 | `label` | string | `''` | ✅ | Optional label above input |
 | `helperText` | string | `''` | ✅ | Optional helper text below input |
 | `icon` | string | `''` | ❌ | Optional icon SVG string |
-| `name` | string | `''` | ✅ | Form field name for native form submission |
 
 ### Property Details
 
@@ -110,15 +109,6 @@ Optional icon displayed on left side of input. Pass SVG string from `phosphor-ic
 ```javascript
 import { userIcon } from '../utils/phosphor-icons.js';
 input.icon = userIcon;
-```
-
-#### `name`
-Form field name for native form submission via ElementInternals API. Required for form participation:
-```html
-<form>
-  <t-inp name="username"></t-inp>
-  <t-inp name="email" type="email"></t-inp>
-</form>
 ```
 
 ---
@@ -1173,8 +1163,8 @@ import './js/components/TInputLit.js';
 
 ## API Reference Summary
 
-### Properties (16)
-`type`, `placeholder`, `value`, `disabled`, `readonly`, `required`, `min`, `max`, `minlength`, `maxlength`, `pattern`, `autocomplete`, `label`, `helperText`, `icon`, `name`
+### Properties (15)
+`type`, `placeholder`, `value`, `disabled`, `readonly`, `required`, `min`, `max`, `minlength`, `maxlength`, `pattern`, `autocomplete`, `label`, `helperText`, `icon`
 
 ### Methods (8)
 **Instance:** `setValue()`, `getValue()`, `focus()`, `blur()`, `validate()`, `setError()`, `clear()`
@@ -1208,3 +1198,8 @@ Part of Terminal Kit component library.
 - ✅ Type-specific features complete
 - ✅ Comprehensive validation
 - ✅ Production-ready
+
+## Slots
+
+None.
+

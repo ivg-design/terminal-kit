@@ -35,7 +35,7 @@ const tagName = 't-dynamic-controls';
  */
 export class TDynamicControlsLit extends LitElement {
 	// ============================================================
-	// Block 1: Static Metadata
+	// BLOCK 1: Static Metadata
 	// ============================================================
 
 	static tagName = tagName;
@@ -43,7 +43,7 @@ export class TDynamicControlsLit extends LitElement {
 	static category = 'Container';
 
 	// ============================================================
-	// Block 2: Static Styles
+	// BLOCK 2: Static Styles
 	// ============================================================
 
 	static styles = css`
@@ -75,10 +75,6 @@ export class TDynamicControlsLit extends LitElement {
 		}
 
 		/* Control sections */
-		.section {
-			border: 1px solid var(--dyn-border);
-			background: var(--dyn-bg);
-		}
 
 		.section-header {
 			display: flex;
@@ -114,10 +110,17 @@ export class TDynamicControlsLit extends LitElement {
 
 		.section-content {
 			padding: 12px;
+			overflow: visible;
 		}
 
 		.section-content.collapsed {
 			display: none;
+		}
+
+		.section {
+			border: 1px solid var(--dyn-border);
+			background: var(--dyn-bg);
+			overflow: visible;
 		}
 
 		/* Nested sections */
@@ -144,6 +147,7 @@ export class TDynamicControlsLit extends LitElement {
 			gap: 12px;
 			padding: 6px 0;
 			border-bottom: 1px solid rgba(51, 51, 51, 0.5);
+			position: relative;
 		}
 
 		.control-row:last-child {
@@ -162,6 +166,16 @@ export class TDynamicControlsLit extends LitElement {
 		.control-input {
 			flex: 1;
 			min-width: 0;
+			max-width: 200px;
+		}
+
+		/* Ensure color picker and dropdown fit within container */
+		.control-input t-clr {
+			width: auto;
+		}
+
+		.control-input t-drp {
+			width: 100%;
 		}
 
 		/* Type indicator */
@@ -183,7 +197,7 @@ export class TDynamicControlsLit extends LitElement {
 	`;
 
 	// ============================================================
-	// Block 3: Reactive Properties
+	// BLOCK 3: Reactive Properties
 	// ============================================================
 
 	static properties = {
@@ -229,7 +243,7 @@ export class TDynamicControlsLit extends LitElement {
 	};
 
 	// ============================================================
-	// Block 4: Internal State
+	// BLOCK 4: Internal State
 	// ============================================================
 
 	/**
@@ -245,7 +259,7 @@ export class TDynamicControlsLit extends LitElement {
 	_collapsedSections = new Set();
 
 	// ============================================================
-	// Block 5: Logger Instance
+	// BLOCK 5: Logger Instance
 	// ============================================================
 
 	/**
@@ -254,7 +268,7 @@ export class TDynamicControlsLit extends LitElement {
 	_logger = null;
 
 	// ============================================================
-	// Block 6: Constructor
+	// BLOCK 6: Constructor
 	// ============================================================
 
 	constructor() {
@@ -268,7 +282,7 @@ export class TDynamicControlsLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 7: Lifecycle Methods
+	// BLOCK 7: Lifecycle Methods
 	// ============================================================
 
 	connectedCallback() {
@@ -294,7 +308,7 @@ export class TDynamicControlsLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 8: Public API Methods
+	// BLOCK 8: Public API Methods
 	// ============================================================
 
 	/**
@@ -358,7 +372,7 @@ export class TDynamicControlsLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 9: Event Emitters
+	// BLOCK 9: Event Emitters
 	// ============================================================
 
 	/**
@@ -373,7 +387,7 @@ export class TDynamicControlsLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 12: Render Method
+	// BLOCK 12: Render Method
 	// ============================================================
 
 	render() {
@@ -392,7 +406,7 @@ export class TDynamicControlsLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 13: Private Helpers
+	// BLOCK 13: Private Helpers
 	// ============================================================
 
 	/**
@@ -507,6 +521,7 @@ export class TDynamicControlsLit extends LitElement {
 			case 'boolean':
 				controlHtml = html`
 					<t-tog
+						size="sm"
 						?checked=${!!value}
 						?disabled=${this.disabled}
 						@toggle-change=${(e) => this._handleValueChange(path, e.detail.checked)}
@@ -518,6 +533,7 @@ export class TDynamicControlsLit extends LitElement {
 				controlHtml = html`
 					<t-inp
 						type="number"
+						size="sm"
 						.value=${String(value ?? 0)}
 						min=${config.min ?? ''}
 						max=${config.max ?? ''}
@@ -532,6 +548,7 @@ export class TDynamicControlsLit extends LitElement {
 				controlHtml = html`
 					<t-inp
 						type="text"
+						size="sm"
 						.value=${value ?? ''}
 						?disabled=${this.disabled}
 						@input-change=${(e) => this._handleValueChange(path, e.detail.value)}
@@ -543,7 +560,8 @@ export class TDynamicControlsLit extends LitElement {
 				controlHtml = html`
 					<t-clr
 						value=${this._argbToHex(value)}
-						variant="minimal"
+						elements="swatch,input"
+						size="compact"
 						?disabled=${this.disabled}
 						@color-change=${(e) => this._handleValueChange(path, this._hexToArgb(e.detail.value))}
 					></t-clr>
@@ -554,6 +572,7 @@ export class TDynamicControlsLit extends LitElement {
 				const options = config.metadata?.enumValues || config.values || [];
 				controlHtml = html`
 					<t-drp
+						size="sm"
 						.value=${value ?? ''}
 						.options=${options.map(v => ({ value: v, label: v }))}
 						?disabled=${this.disabled}

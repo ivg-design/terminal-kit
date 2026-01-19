@@ -6,6 +6,10 @@
 **Version:** 1.0.0
 **Profile:** FORM (with validation support)
 
+## Tag Names
+
+- `t-drp`
+
 ## Overview
 
 TDropdownLit is a terminal-styled dropdown component featuring a hierarchical tree structure with folders and files, real-time search capabilities, metadata support, and comprehensive keyboard navigation. It supports both nested tree structures and simple flat lists.
@@ -44,6 +48,7 @@ import './js/components/TDropdownLit.js'; // Auto-registers as <t-drp>
 | `data` | Object | `null` | ❌ | Tree structure data object |
 | `metadata` | Object | `{}` | ❌ | Metadata for files |
 | `options` | Array | `[]` | ❌ | Simple options array (alternative to data) |
+| `isOpen` | Boolean | `false` | ✅ | Dropdown open state (read/write) |
 
 ### HTML Attributes
 
@@ -275,7 +280,6 @@ These properties are managed internally but can be accessed if needed:
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `_isOpen` | Boolean | Dropdown panel open state |
 | `_searchTerm` | String | Current search query |
 | `_folderStates` | Object | Map of folder paths to expanded state |
 | `_selectedValue` | String | Internal selected value |
@@ -341,6 +345,11 @@ These properties are managed internally but can be accessed if needed:
 - Clicking outside closes the dropdown
 - Opening one dropdown closes any other open dropdowns
 - Prevents multiple dropdowns being open simultaneously
+
+## Slots
+
+None.
+
 
 ## CSS Custom Properties
 

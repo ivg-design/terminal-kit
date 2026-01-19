@@ -187,20 +187,24 @@ export class TModalLit extends LitElement {
       display: flex;
     }
 
-    /* Modal Sizes */
-    :host([size="small"]) .modal {
+    /* Modal Sizes - full names */
+    :host([size="small"]) .modal,
+    :host([size="sm"]) .modal {
       width: 400px;
     }
 
-    :host([size="medium"]) .modal {
+    :host([size="medium"]) .modal,
+    :host([size="md"]) .modal {
       width: 600px;
     }
 
-    :host([size="large"]) .modal {
+    :host([size="large"]) .modal,
+    :host([size="lg"]) .modal {
       width: 800px;
     }
 
-    :host([size="xlarge"]) .modal {
+    :host([size="xlarge"]) .modal,
+    :host([size="xl"]) .modal {
       width: 1200px;
     }
 
@@ -849,10 +853,11 @@ export class TModalLit extends LitElement {
       },
       size: {
         validate: (value) => {
-          const valid = ['small', 'medium', 'large', 'xlarge', 'full'].includes(value);
+          // Allow short aliases: sm, md, lg, xl + full names
+          const valid = ['sm', 'small', 'md', 'medium', 'lg', 'large', 'xl', 'xlarge', 'full'].includes(value);
           return {
             valid,
-            errors: valid ? [] : [`size must be one of: small, medium, large, xlarge, full. Got: ${value}`]
+            errors: valid ? [] : [`size must be one of: sm, small, md, medium, lg, large, xl, xlarge, full. Got: ${value}`]
           };
         }
       }
@@ -1191,8 +1196,12 @@ export class TModalLit extends LitElement {
   _handlePropertyChanges(changedProperties) {
     changedProperties.forEach((oldValue, propName) => {
       const newValue = this[propName];
-      if (!this._validateProperty(propName, newValue)) {
-        // Revert to old value if validation fails
+      // Skip if new value is valid
+      if (this._validateProperty(propName, newValue)) {
+        return;
+      }
+      // Only revert if old value is also valid (prevents infinite loop)
+      if (this._validateProperty(propName, oldValue)) {
         this[propName] = oldValue;
         this._logger.warn('Property reverted due to validation failure', {
           propName,
@@ -1200,6 +1209,7 @@ export class TModalLit extends LitElement {
           reverted: oldValue
         });
       }
+      // If both are invalid, just log warning but don't revert (prevents loop)
     });
   }
 }

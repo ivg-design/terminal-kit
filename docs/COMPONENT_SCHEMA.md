@@ -8,20 +8,20 @@
 
 ## Table of Contents
 
-1. [Schema Overview](#schema-overview) ⭐ **START HERE**
-2. [Schema Profiles](#schema-profiles) 🎯 **Choose Your Profile**
+1. [Schema Overview](#schema-overview) **START HERE**
+2. [Schema Profiles](#schema-profiles) **Choose Your Profile**
 3. [Plan Summary](#plan-summary)
 4. [Core Principles](#core-principles)
 5. [The Inviolate Schema](#the-inviolate-schema)
-6. [Cleanup Patterns](#cleanup-patterns) 🧹 **Memory Leak Prevention**
-7. [Shared Validation Utilities](#shared-validation-utilities) ♻️ **DRY Validation**
+6. [Cleanup Patterns](#cleanup-patterns) **Memory Leak Prevention**
+7. [Shared Validation Utilities](#shared-validation-utilities) **DRY Validation**
 8. [Nesting Architecture](#nesting-architecture)
 9. [Logging System](#logging-system)
 10. [Safety Mechanisms](#safety-mechanisms)
 11. [JSDoc Requirements](#jsdoc-requirements)
 12. [Unit Testing Requirements](#unit-testing-requirements)
 13. [Build-Time Generation](#build-time-generation)
-14. [CSS Migration Strategy](#css-migration-strategy) 🎨 **Shared → Static Styles**
+14. [CSS Migration Strategy](#css-migration-strategy) **Shared → Static Styles**
 15. [Complete Example](#complete-example)
 
 ---

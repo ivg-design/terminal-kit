@@ -2,6 +2,10 @@
 
 A **LitElement-based** status bar component for terminal-style user interfaces. Provides dynamic field management, flexible display modes, alignment zones, hover interactions, and automatic width validation with full Shadow DOM encapsulation.
 
+## Tag Names
+
+- `t-sta`
+
 ## Architecture
 
 **Tag Name:** `<t-sta>`
@@ -45,6 +49,8 @@ Sets all fields at once, replacing any existing fields.
 
 **Returns:** `void`
 
+**Throws:** `Error` if fields is not an array
+
 **Example:**
 ```javascript
 statusBar.setFields([
@@ -54,45 +60,16 @@ statusBar.setFields([
 ]);
 ```
 
-### `addField(field)`
-Adds a new field to the end of the status bar.
-
-**Parameters:**
-- `field` (Object): Field configuration object
-
-**Returns:** `void`
-
-**Example:**
-```javascript
-statusBar.addField({
-  label: 'Network',
-  value: '1.2 MB/s',
-  width: '25%',
-  icon: networkIcon
-});
-```
-
-### `removeField(index)`
-Removes a field at the specified index.
-
-**Parameters:**
-- `index` (number): Zero-based index of the field to remove
-
-**Returns:** `void`
-
-**Example:**
-```javascript
-statusBar.removeField(2); // Removes the third field
-```
-
-### `updateField(index, updates)`
+### `updateField(index, field)`
 Updates specific properties of a field without replacing it entirely.
 
 **Parameters:**
 - `index` (number): Zero-based index of the field
-- `updates` (Object): Partial field object with properties to update
+- `field` (Object): Partial field object with properties to update
 
 **Returns:** `void`
+
+**Throws:** `Error` if index is out of bounds
 
 **Example:**
 ```javascript
@@ -117,16 +94,6 @@ Convenience method to update only a field's value.
 statusBar.updateFieldValue(1, '2.4GB');
 ```
 
-### `clearFields()`
-Removes all fields from the status bar.
-
-**Returns:** `void`
-
-**Example:**
-```javascript
-statusBar.clearFields();
-```
-
 ### `receiveContext(context)`
 Used internally for nested component communication. Called automatically by parent containers.
 
@@ -134,6 +101,8 @@ Used internally for nested component communication. Called automatically by pare
 - `context` (Object): Context object from parent
 
 **Returns:** `void`
+
+**Throws:** `Error` if maximum nesting depth (10) is exceeded
 
 ## Events
 
@@ -332,20 +301,24 @@ statusBar.updateField(1, {
   displayMode: 'icon'
 });
 
-// Add new field dynamically
-statusBar.addField({
-  label: 'Network',
-  value: '1.2 MB/s',
-  width: '20%',
-  icon: networkIcon,
-  marquee: true
-});
+// To add a field, get current fields, add new one, and set all
+const currentFields = statusBar.fields;
+statusBar.setFields([
+  ...currentFields,
+  {
+    label: 'Network',
+    value: '1.2 MB/s',
+    width: '20%',
+    icon: networkIcon,
+    marquee: true
+  }
+]);
 
-// Remove field by index
-statusBar.removeField(2);
+// To remove a field, filter out by index and set all
+statusBar.setFields(statusBar.fields.filter((_, i) => i !== 2));
 
-// Clear all fields
-statusBar.clearFields();
+// To clear all fields
+statusBar.setFields([]);
 ```
 
 ## CSS Customization
@@ -563,18 +536,21 @@ setInterval(() => {
 
 // Add a new field dynamically
 document.getElementById('addNetworkField').addEventListener('click', () => {
-  statusBar.addField({
-    label: 'Network',
-    value: '0 KB/s',
-    width: '20%',
-    icon: networkIcon,
-    marquee: true
-  });
+  statusBar.setFields([
+    ...statusBar.fields,
+    {
+      label: 'Network',
+      value: '0 KB/s',
+      width: '20%',
+      icon: networkIcon,
+      marquee: true
+    }
+  ]);
 });
 
 // Clear all fields
 document.getElementById('clearStatus').addEventListener('click', () => {
-  statusBar.clearFields();
+  statusBar.setFields([]);
 });
 ```
 
@@ -604,11 +580,8 @@ interface TStatusBarLit extends LitElement {
   fields: FieldConfig[];
 
   setFields(fields: FieldConfig[]): void;
-  addField(field: FieldConfig): void;
-  removeField(index: number): void;
-  updateField(index: number, updates: Partial<FieldConfig>): void;
+  updateField(index: number, field: Partial<FieldConfig>): void;
   updateFieldValue(index: number, value: string): void;
-  clearFields(): void;
   receiveContext(context: Object): void;
 }
 
@@ -681,6 +654,13 @@ const newBar = document.createElement('t-sta');
 7. Reactive properties with automatic re-rendering
 8. CSS variable theming system
 9. Container profile capabilities for nested components
+
+## Slots
+
+| Slot | Description |
+| --- | --- |
+| default | `t-sta-field` elements |
+
 
 ## Related Components
 

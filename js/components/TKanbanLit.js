@@ -38,10 +38,16 @@ import {
  * @description Individual kanban card with expandable content
  */
 export class TKanbanCardLit extends LitElement {
+	// ----------------------------------------------------------
+	// BLOCK 1: STATIC METADATA (REQUIRED)
+	// ----------------------------------------------------------
 	static tagName = 't-kanban-card';
 	static version = '3.0.0';
 	static category = 'Container';
 
+	// ----------------------------------------------------------
+	// BLOCK 2: STATIC STYLES (REQUIRED)
+	// ----------------------------------------------------------
 	static styles = css`
 		:host {
 			display: block;
@@ -211,6 +217,9 @@ export class TKanbanCardLit extends LitElement {
 		}
 	`;
 
+	// ----------------------------------------------------------
+	// BLOCK 3: REACTIVE PROPERTIES (REQUIRED)
+	// ----------------------------------------------------------
 	static properties = {
 		cardId: { type: String, attribute: 'card-id', reflect: true },
 		title: { type: String, reflect: true },
@@ -223,8 +232,19 @@ export class TKanbanCardLit extends LitElement {
 		dueDate: { type: String, attribute: 'due-date' }
 	};
 
+	// ----------------------------------------------------------
+	// BLOCK 4: INTERNAL STATE (REQUIRED)
+	// ----------------------------------------------------------
+	// No additional internal state beyond reactive properties.
+
+	// ----------------------------------------------------------
+	// BLOCK 5: LOGGER INSTANCE (REQUIRED)
+	// ----------------------------------------------------------
 	_logger = null;
 
+	// ----------------------------------------------------------
+	// BLOCK 6: CONSTRUCTOR (REQUIRED)
+	// ----------------------------------------------------------
 	constructor() {
 		super();
 		this._logger = componentLogger.for('TKanbanCardLit');
@@ -240,6 +260,9 @@ export class TKanbanCardLit extends LitElement {
 		this._logger.debug('Card constructed');
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 7: LIFECYCLE METHODS (REQUIRED)
+	// ----------------------------------------------------------
 	connectedCallback() {
 		super.connectedCallback();
 		this.setAttribute('draggable', 'true');
@@ -255,31 +278,14 @@ export class TKanbanCardLit extends LitElement {
 		this._logger.info('Card disconnected');
 	}
 
-	_handleDragStart = (e) => {
-		this.dragging = true;
-		e.dataTransfer.effectAllowed = 'move';
-		e.dataTransfer.setData('text/plain', this.cardId);
-		this._emitEvent('card-drag-start', { cardId: this.cardId });
-	};
+	// ----------------------------------------------------------
+	// BLOCK 8: PUBLIC API METHODS (NONE FOR CORE PROFILE)
+	// ----------------------------------------------------------
+	// No public API methods.
 
-	_handleDragEnd = () => {
-		this.dragging = false;
-		this._emitEvent('card-drag-end', { cardId: this.cardId });
-	};
-
-	_toggleExpand() {
-		this.expanded = !this.expanded;
-		this._emitEvent('card-expand', { cardId: this.cardId, expanded: this.expanded });
-	}
-
-	_handleEdit() {
-		this._emitEvent('card-edit', { cardId: this.cardId });
-	}
-
-	_handleDelete() {
-		this._emitEvent('card-delete', { cardId: this.cardId });
-	}
-
+	// ----------------------------------------------------------
+	// BLOCK 9: EVENT EMITTERS (REQUIRED)
+	// ----------------------------------------------------------
 	_emitEvent(name, detail = {}) {
 		this.dispatchEvent(new CustomEvent(name, {
 			detail,
@@ -288,6 +294,19 @@ export class TKanbanCardLit extends LitElement {
 		}));
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 10: NESTING SUPPORT (NOT NEEDED)
+	// ----------------------------------------------------------
+	// Not a container component.
+
+	// ----------------------------------------------------------
+	// BLOCK 11: VALIDATION (NOT NEEDED)
+	// ----------------------------------------------------------
+	// No validation required.
+
+	// ----------------------------------------------------------
+	// BLOCK 12: RENDER METHOD (REQUIRED)
+	// ----------------------------------------------------------
 	render() {
 		const hasContent = this.description || this.tags?.length > 0 || this.assignee || this.dueDate;
 		const cardClasses = {
@@ -335,6 +354,34 @@ export class TKanbanCardLit extends LitElement {
 		`;
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 13: PRIVATE HELPERS (REQUIRED)
+	// ----------------------------------------------------------
+	_handleDragStart = (e) => {
+		this.dragging = true;
+		e.dataTransfer.effectAllowed = 'move';
+		e.dataTransfer.setData('text/plain', this.cardId);
+		this._emitEvent('card-drag-start', { cardId: this.cardId });
+	};
+
+	_handleDragEnd = () => {
+		this.dragging = false;
+		this._emitEvent('card-drag-end', { cardId: this.cardId });
+	};
+
+	_toggleExpand() {
+		this.expanded = !this.expanded;
+		this._emitEvent('card-expand', { cardId: this.cardId, expanded: this.expanded });
+	}
+
+	_handleEdit() {
+		this._emitEvent('card-edit', { cardId: this.cardId });
+	}
+
+	_handleDelete() {
+		this._emitEvent('card-delete', { cardId: this.cardId });
+	}
+
 	static {
 		if (!customElements.get(this.tagName)) {
 			customElements.define(this.tagName, this);
@@ -352,10 +399,16 @@ export class TKanbanCardLit extends LitElement {
  * @description Column container for kanban cards
  */
 export class TKanbanColumnLit extends LitElement {
+	// ----------------------------------------------------------
+	// BLOCK 1: STATIC METADATA (REQUIRED)
+	// ----------------------------------------------------------
 	static tagName = 't-kanban-column';
 	static version = '3.0.0';
 	static category = 'Container';
 
+	// ----------------------------------------------------------
+	// BLOCK 2: STATIC STYLES (REQUIRED)
+	// ----------------------------------------------------------
 	static styles = [
 		scrollbarStyles,
 		css`
@@ -484,6 +537,9 @@ export class TKanbanColumnLit extends LitElement {
 		`
 	];
 
+	// ----------------------------------------------------------
+	// BLOCK 3: REACTIVE PROPERTIES (REQUIRED)
+	// ----------------------------------------------------------
 	static properties = {
 		...scrollbarProperties,
 		columnId: { type: String, attribute: 'column-id', reflect: true },
@@ -494,11 +550,21 @@ export class TKanbanColumnLit extends LitElement {
 		maxCards: { type: Number, attribute: 'max-cards' }
 	};
 
-	_logger = null;
+	// ----------------------------------------------------------
+	// BLOCK 4: INTERNAL STATE (REQUIRED)
+	// ----------------------------------------------------------
 	_cardCount = 0;
 	_dragOver = false;
 	_dragLeaveTimeout = null;
 
+	// ----------------------------------------------------------
+	// BLOCK 5: LOGGER INSTANCE (REQUIRED)
+	// ----------------------------------------------------------
+	_logger = null;
+
+	// ----------------------------------------------------------
+	// BLOCK 6: CONSTRUCTOR (REQUIRED)
+	// ----------------------------------------------------------
 	constructor() {
 		super();
 		this._logger = componentLogger.for('TKanbanColumnLit');
@@ -512,6 +578,9 @@ export class TKanbanColumnLit extends LitElement {
 		this._logger.debug('Column constructed');
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 7: LIFECYCLE METHODS (REQUIRED)
+	// ----------------------------------------------------------
 	connectedCallback() {
 		super.connectedCallback();
 		this._updateCardCount();
@@ -532,6 +601,74 @@ export class TKanbanColumnLit extends LitElement {
 		}
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 8: PUBLIC API METHODS (NONE FOR CORE PROFILE)
+	// ----------------------------------------------------------
+	// No public API methods.
+
+	// ----------------------------------------------------------
+	// BLOCK 9: EVENT EMITTERS (REQUIRED)
+	// ----------------------------------------------------------
+	_emitEvent(name, detail = {}) {
+		this.dispatchEvent(new CustomEvent(name, {
+			detail,
+			bubbles: true,
+			composed: true
+		}));
+	}
+
+	// ----------------------------------------------------------
+	// BLOCK 10: NESTING SUPPORT (NOT NEEDED)
+	// ----------------------------------------------------------
+	// Not a container component.
+
+	// ----------------------------------------------------------
+	// BLOCK 11: VALIDATION (NOT NEEDED)
+	// ----------------------------------------------------------
+	// No validation required.
+
+	// ----------------------------------------------------------
+	// BLOCK 12: RENDER METHOD (REQUIRED)
+	// ----------------------------------------------------------
+	render() {
+		const bodyClasses = {
+			'column-body': true,
+			'drag-over': this._dragOver
+		};
+
+		return html`
+			<div class="column">
+				<div class="column-header">
+					<span class="column-title">${this.title}</span>
+					<span class="column-count">${this._cardCount}</span>
+					<div class="column-actions">
+						<button class="column-btn" @click=${this._handleAddCard} title="Add Card">
+							${unsafeHTML(plusSquareIcon)}
+						</button>
+						<button class="column-btn" @click=${this._handleMenu} title="Menu">
+							${unsafeHTML(dotsThreeCircleVerticalIcon)}
+						</button>
+					</div>
+				</div>
+				<div
+					class=${classMap(bodyClasses)}
+					@dragover=${this._handleDragOver}
+					@dragleave=${this._handleDragLeave}
+					@drop=${this._handleDrop}
+				>
+					<slot></slot>
+					<div class="drop-placeholder"></div>
+					${this._cardCount === 0 ? html`
+						<div class="empty-state">No cards</div>
+					` : ''}
+				</div>
+			</div>
+		`;
+	}
+
+	// ----------------------------------------------------------
+	// BLOCK 13: PRIVATE HELPERS (REQUIRED)
+	// ----------------------------------------------------------
 	_updateCardCount() {
 		const cards = this.querySelectorAll('t-kanban-card');
 		this._cardCount = cards.length;
@@ -587,50 +724,6 @@ export class TKanbanColumnLit extends LitElement {
 		this._emitEvent('column-menu', { columnId: this.columnId });
 	}
 
-	_emitEvent(name, detail = {}) {
-		this.dispatchEvent(new CustomEvent(name, {
-			detail,
-			bubbles: true,
-			composed: true
-		}));
-	}
-
-	render() {
-		const bodyClasses = {
-			'column-body': true,
-			'drag-over': this._dragOver
-		};
-
-		return html`
-			<div class="column">
-				<div class="column-header">
-					<span class="column-title">${this.title}</span>
-					<span class="column-count">${this._cardCount}</span>
-					<div class="column-actions">
-						<button class="column-btn" @click=${this._handleAddCard} title="Add Card">
-							${unsafeHTML(plusSquareIcon)}
-						</button>
-						<button class="column-btn" @click=${this._handleMenu} title="Menu">
-							${unsafeHTML(dotsThreeCircleVerticalIcon)}
-						</button>
-					</div>
-				</div>
-				<div
-					class=${classMap(bodyClasses)}
-					@dragover=${this._handleDragOver}
-					@dragleave=${this._handleDragLeave}
-					@drop=${this._handleDrop}
-				>
-					<slot></slot>
-					<div class="drop-placeholder"></div>
-					${this._cardCount === 0 ? html`
-						<div class="empty-state">No cards</div>
-					` : ''}
-				</div>
-			</div>
-		`;
-	}
-
 	static {
 		if (!customElements.get(this.tagName)) {
 			customElements.define(this.tagName, this);
@@ -648,27 +741,39 @@ export class TKanbanColumnLit extends LitElement {
  * @description Terminal-style kanban board with drag-and-drop
  */
 export class TKanbanLit extends LitElement {
+	// ----------------------------------------------------------
+	// BLOCK 1: STATIC METADATA (REQUIRED)
+	// ----------------------------------------------------------
 	static tagName = 't-kanban';
 	static version = '3.0.0';
 	static category = 'Container';
 
+	// ----------------------------------------------------------
+	// BLOCK 2: STATIC STYLES (REQUIRED)
+	// ----------------------------------------------------------
 	static styles = [
 		scrollbarStyles,
 		css`
 			:host {
-				display: block;
+				display: flex;
+				flex-direction: column;
 				--board-bg: var(--terminal-black, #0a0a0a);
 				--board-border: var(--terminal-gray-dark, #333);
+				width: 100%;
+				height: 100%;
+				box-sizing: border-box;
+				overflow: hidden;
 			}
 
 			.board {
 				display: flex;
-				gap: 12px;
-				padding: 12px;
+				gap: 8px;
+				padding: 8px;
 				background: var(--board-bg);
 				border: 1px solid var(--board-border);
 				overflow-x: auto;
-				min-height: 300px;
+				flex: 1;
+				min-height: 0;
 			}
 
 			.board-header {
@@ -723,14 +828,28 @@ export class TKanbanLit extends LitElement {
 		`
 	];
 
+	// ----------------------------------------------------------
+	// BLOCK 3: REACTIVE PROPERTIES (REQUIRED)
+	// ----------------------------------------------------------
 	static properties = {
 		...scrollbarProperties,
 		title: { type: String, reflect: true },
 		showHeader: { type: Boolean, attribute: 'show-header', reflect: true }
 	};
 
+	// ----------------------------------------------------------
+	// BLOCK 4: INTERNAL STATE (REQUIRED)
+	// ----------------------------------------------------------
+	// No additional internal state beyond reactive properties.
+
+	// ----------------------------------------------------------
+	// BLOCK 5: LOGGER INSTANCE (REQUIRED)
+	// ----------------------------------------------------------
 	_logger = null;
 
+	// ----------------------------------------------------------
+	// BLOCK 6: CONSTRUCTOR (REQUIRED)
+	// ----------------------------------------------------------
 	constructor() {
 		super();
 		this._logger = componentLogger.for('TKanbanLit');
@@ -740,6 +859,9 @@ export class TKanbanLit extends LitElement {
 		this._logger.debug('Board constructed');
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 7: LIFECYCLE METHODS (REQUIRED)
+	// ----------------------------------------------------------
 	connectedCallback() {
 		super.connectedCallback();
 		this.addEventListener('card-drop', this._handleCardDrop);
@@ -752,16 +874,9 @@ export class TKanbanLit extends LitElement {
 		this._logger.info('Board disconnected');
 	}
 
-	_handleCardDrop = (e) => {
-		const { cardId, columnId } = e.detail;
-		this._logger.debug('Card dropped', { cardId, columnId });
-		this._emitEvent('card-move', { cardId, columnId });
-	};
-
-	_handleAddColumn() {
-		this._emitEvent('add-column');
-	}
-
+	// ----------------------------------------------------------
+	// BLOCK 8: PUBLIC API METHODS (REQUIRED)
+	// ----------------------------------------------------------
 	/**
 	 * Move a card to a different column
 	 * @public
@@ -799,6 +914,9 @@ export class TKanbanLit extends LitElement {
 		return Array.from(this.querySelectorAll('t-kanban-column'));
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 9: EVENT EMITTERS (REQUIRED)
+	// ----------------------------------------------------------
 	_emitEvent(name, detail = {}) {
 		this.dispatchEvent(new CustomEvent(name, {
 			detail,
@@ -807,6 +925,19 @@ export class TKanbanLit extends LitElement {
 		}));
 	}
 
+	// ----------------------------------------------------------
+	// BLOCK 10: NESTING SUPPORT (NOT IMPLEMENTED)
+	// ----------------------------------------------------------
+	// Nesting support not implemented for this component.
+
+	// ----------------------------------------------------------
+	// BLOCK 11: VALIDATION (NOT NEEDED)
+	// ----------------------------------------------------------
+	// No validation required.
+
+	// ----------------------------------------------------------
+	// BLOCK 12: RENDER METHOD (REQUIRED)
+	// ----------------------------------------------------------
 	render() {
 		return html`
 			${this.showHeader ? html`
@@ -823,6 +954,19 @@ export class TKanbanLit extends LitElement {
 				<slot></slot>
 			</div>
 		`;
+	}
+
+	// ----------------------------------------------------------
+	// BLOCK 13: PRIVATE HELPERS (REQUIRED)
+	// ----------------------------------------------------------
+	_handleCardDrop = (e) => {
+		const { cardId, columnId } = e.detail;
+		this._logger.debug('Card dropped', { cardId, columnId });
+		this._emitEvent('card-move', { cardId, columnId });
+	};
+
+	_handleAddColumn() {
+		this._emitEvent('add-column');
 	}
 
 	static {

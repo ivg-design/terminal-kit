@@ -1,5 +1,9 @@
 # TStatusFieldLit API Reference
 
+## Tag Names
+
+- `t-sta-field`
+
 ## Component Definition
 
 ```javascript
@@ -30,19 +34,11 @@ TStatusFieldLit is a reusable atomic component for displaying status information
 |----------|-----------|------|---------|----------|-------------|
 | `label` | `label` | `string` | `''` | ✅ | Field label text |
 | `value` | `value` | `string` | `''` | ✅ | Field value (always displayed) |
-| `icon` | `icon` | `string` | `''` | ✅ | SVG string for icon display |
+| `icon` | `icon` | `string` | `''` | ❌ | SVG string for icon display |
 | `width` | `width` | `string` | `'auto'` | ✅ | Field width (auto, percentage, or pixels) |
 | `align` | `align` | `'left' \| 'center' \| 'right'` | `'left'` | ✅ | Text alignment within the field |
-| `displayMode` | `display-mode` | `string` | `'text'` | ✅ | Display mode for field rendering |
 
-### Display Modes
-
-- `'text'` - Shows label and value (default)
-- `'icon'` - Shows icon and value only
-- `'icon-text'` - Shows icon, label, and value
-- `'compact'` - Minimal spacing
-- `'label-only'` - Only displays the label
-- `'value-only'` - Only displays the value
+**Note:** The `displayMode` property is available when using fields programmatically via `TStatusBarLit.setFields()`. The standalone `TStatusFieldLit` component always renders: icon (if set) + label (if set) + value.
 
 ## Methods
 
@@ -60,7 +56,11 @@ receiveContext(context: any): void
 
 **Note:** This method is primarily used internally by container components like TStatusBarLit for context propagation.
 
-## Usage Scenarios
+## Events
+
+None.
+
+## Examples
 
 ### 1. Within Status Bars (Original Use Case)
 
@@ -103,7 +103,7 @@ Add metadata to card footers:
     <h3>Document.pdf</h3>
   </div>
   <div class="card-footer">
-    <t-sta-field label="Size" value="1.2MB" display-mode="compact"></t-sta-field>
+    <t-sta-field label="Size" value="1.2MB"></t-sta-field>
     <t-sta-field label="Modified" value="2 hours ago"></t-sta-field>
     <t-sta-field label="Owner" value="Admin" icon="${userIcon}"></t-sta-field>
   </div>
@@ -122,8 +122,8 @@ Create consistent toolbar status displays:
   </div>
   <div class="toolbar-right">
     <t-sta-field label="User" value="john.doe" icon="${userIcon}"></t-sta-field>
-    <t-sta-field label="Mode" value="Editor" display-mode="value-only"></t-sta-field>
-    <t-sta-field value="14:30" display-mode="value-only"></t-sta-field>
+    <t-sta-field label="Mode" value="Editor"></t-sta-field>
+    <t-sta-field value="14:30"></t-sta-field>
   </div>
 </div>
 ```
@@ -136,13 +136,13 @@ Display item metadata in lists:
 <ul class="file-list">
   <li class="file-item">
     <span class="file-name">report.xlsx</span>
-    <t-sta-field label="Size" value="524KB" display-mode="compact"></t-sta-field>
-    <t-sta-field value="Yesterday" display-mode="value-only"></t-sta-field>
+    <t-sta-field label="Size" value="524KB"></t-sta-field>
+    <t-sta-field value="Yesterday"></t-sta-field>
   </li>
   <li class="file-item">
     <span class="file-name">presentation.pptx</span>
-    <t-sta-field label="Size" value="2.1MB" display-mode="compact"></t-sta-field>
-    <t-sta-field value="2 days ago" display-mode="value-only"></t-sta-field>
+    <t-sta-field label="Size" value="2.1MB"></t-sta-field>
+    <t-sta-field value="2 days ago"></t-sta-field>
   </li>
 </ul>
 ```
@@ -159,8 +159,7 @@ Show form validation or status information:
     <t-sta-field
       label="Status"
       value="Available"
-      icon="${checkCircleIcon}"
-      display-mode="icon-text">
+      icon="${checkCircleIcon}">
     </t-sta-field>
   </div>
 
@@ -183,21 +182,18 @@ Create consistent metric displays:
       label="CPU"
       value="42%"
       icon="${cpuIcon}"
-      display-mode="icon-text"
       width="33%">
     </t-sta-field>
     <t-sta-field
       label="RAM"
       value="8.2GB"
       icon="${memoryIcon}"
-      display-mode="icon-text"
       width="33%">
     </t-sta-field>
     <t-sta-field
       label="Disk"
       value="67%"
       icon="${diskIcon}"
-      display-mode="icon-text"
       width="34%">
     </t-sta-field>
   </div>
@@ -283,16 +279,13 @@ Adjust display based on screen size:
   class="responsive-field"
   label="Temperature"
   value="72°F"
-  display-mode="icon-text">
+  icon="${thermometerIcon}">
 </t-sta-field>
 
 <style>
   @media (max-width: 768px) {
     .responsive-field {
       --terminal-font-size: 10px;
-    }
-    .responsive-field[display-mode="icon-text"] {
-      display-mode: icon; /* Simplified on mobile */
     }
   }
 </style>
@@ -335,16 +328,16 @@ function renderStatusFields(status) {
 <t-sta-field label="Val" value="42"></t-sta-field>
 ```
 
-### 2. Consistent Display Modes
+### 2. Consistent Presentation
 
-When using multiple fields together, maintain consistent display modes:
+When using multiple fields together, maintain consistent structure:
 
 ```html
-<!-- Good: Consistent display modes -->
+<!-- Good: Consistent use of icons and labels -->
 <div class="metrics">
-  <t-sta-field label="CPU" value="42%" display-mode="icon-text"></t-sta-field>
-  <t-sta-field label="RAM" value="8GB" display-mode="icon-text"></t-sta-field>
-  <t-sta-field label="Disk" value="67%" display-mode="icon-text"></t-sta-field>
+  <t-sta-field label="CPU" value="42%" icon="${cpuIcon}"></t-sta-field>
+  <t-sta-field label="RAM" value="8GB" icon="${memoryIcon}"></t-sta-field>
+  <t-sta-field label="Disk" value="67%" icon="${diskIcon}"></t-sta-field>
 </div>
 ```
 
@@ -425,7 +418,6 @@ interface TStatusFieldLit extends LitElement {
   icon: string;
   width: string;
   align: 'left' | 'center' | 'right';
-  displayMode: 'text' | 'icon' | 'icon-text' | 'compact' | 'label-only' | 'value-only';
 
   receiveContext(context: any): void;
 }
@@ -444,3 +436,7 @@ interface TStatusFieldLit extends LitElement {
 - [TStatusBarLit API Reference](./TStatusBarLit-API.md) - Technical API documentation
 - [TPanelLit](./TPanelLit.md) - Panel component that can host status fields
 - [Terminal Kit Component Guidelines](../COMPONENT_SCHEMA.md) - Component architecture
+
+## Slots
+
+None.

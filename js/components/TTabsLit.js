@@ -38,13 +38,18 @@ export class TTabsLit extends LitElement {
 
 		/* Host styles */
 		:host {
-			display: block;
+			display: flex;
+			flex-direction: column;
 			--tabs-bg: var(--terminal-gray-darkest, #1a1a1a);
 			--tabs-color: var(--terminal-green, #00ff41);
 			--tabs-color-dim: var(--terminal-green-dim, #00cc33);
 			--tabs-border: var(--terminal-gray-dark, #2a2a2a);
 			--tabs-active-bg: var(--terminal-gray-dark, #2a2a2a);
 			--tabs-glow: rgba(0, 255, 65, 0.3);
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			overflow: hidden;
 		}
 
 		:host([hidden]) {
@@ -206,17 +211,22 @@ export class TTabsLit extends LitElement {
 
 		/* Tab panels container */
 		.tab-panels {
-			padding: 16px;
+			padding: 8px;
 			background: var(--tabs-bg);
+			flex: 1;
+			min-height: 0;
+			overflow: auto;
 		}
 
 		/* Individual panel */
 		.tab-panel {
 			display: none;
+			height: 100%;
 		}
 
 		.tab-panel.active {
-			display: block;
+			display: flex;
+			flex-direction: column;
 		}
 
 		/* Size variants */

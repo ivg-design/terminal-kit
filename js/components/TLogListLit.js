@@ -26,14 +26,17 @@ import {
 import './TLogEntryLit.js';
 
 // ============================================================
-// Block 1: Static Metadata
+// BLOCK 1: Static Metadata
 // ============================================================
 
 /**
- * TLogListLit - Container for log entries
+ * @component TLogListLit
+ * @tagname t-log-list
+ * @description Log viewer with filtering, search, and virtualization.
+ * @category Container
+ * @since 3.0.0
  *
  * @element t-log-list
- * @tagname t-log-list
  *
  * @fires entry-click - Bubbles from child entries
  * @fires entry-expand - Bubbles from child entries
@@ -60,7 +63,7 @@ class TLogListLit extends LitElement {
 	static category = 'Container';
 
 	// ============================================================
-	// Block 2: Static Styles
+	// BLOCK 2: Static Styles
 	// ============================================================
 
 	static styles = [
@@ -73,7 +76,9 @@ class TLogListLit extends LitElement {
 			background: var(--t-log-bg, var(--terminal-gray-darkest, #1a1a1a));
 			border: 1px solid var(--t-log-border, var(--terminal-gray-dark, #333));
 			color: var(--t-log-color, var(--terminal-green, #00ff41));
+			width: 100%;
 			height: 100%;
+			box-sizing: border-box;
 			overflow: hidden;
 		}
 
@@ -362,7 +367,7 @@ class TLogListLit extends LitElement {
 	`];
 
 	// ============================================================
-	// Block 3: Reactive Properties
+	// BLOCK 3: Reactive Properties
 	// ============================================================
 
 	static properties = {
@@ -523,7 +528,7 @@ class TLogListLit extends LitElement {
 	};
 
 	// ============================================================
-	// Block 4: Internal State
+	// BLOCK 4: Internal State
 	// ============================================================
 
 	/**
@@ -550,13 +555,13 @@ class TLogListLit extends LitElement {
 	};
 
 	// ============================================================
-	// Block 5: Logger Instance
+	// BLOCK 5: Logger Instance
 	// ============================================================
 
-	// (Combined with Block 4)
+	// (Combined with BLOCK 4)
 
 	// ============================================================
-	// Block 6: Constructor
+	// BLOCK 6: Constructor
 	// ============================================================
 
 	constructor() {
@@ -588,7 +593,7 @@ class TLogListLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 7: Lifecycle Methods
+	// BLOCK 7: Lifecycle Methods
 	// ============================================================
 
 	connectedCallback() {
@@ -618,7 +623,7 @@ class TLogListLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 8: Public API Methods
+	// BLOCK 8: Public API Methods
 	// ============================================================
 
 	/**
@@ -730,7 +735,7 @@ class TLogListLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 9: Event Emitters
+	// BLOCK 9: Event Emitters
 	// ============================================================
 
 	/**
@@ -750,19 +755,19 @@ class TLogListLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 10: Nesting Support
+	// BLOCK 10: Nesting Support
 	// ============================================================
 
 	// Manages child t-log-entry elements
 
 	// ============================================================
-	// Block 11: Validation
+	// BLOCK 11: Validation
 	// ============================================================
 
 	// No validation needed
 
 	// ============================================================
-	// Block 12: Render Method
+	// BLOCK 12: Render Method
 	// ============================================================
 
 	/**
@@ -807,7 +812,7 @@ class TLogListLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 13: Private Helpers
+	// BLOCK 13: Private Helpers
 	// ============================================================
 
 	/**

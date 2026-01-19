@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breadcrumbs - Terminal Components</title>
+    <link rel="stylesheet" href="../css/theme/terminal.css">
+    <style>
+        :root {
+            --terminal-black: #0a0a0a;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-gray-dark: #333;
+            --terminal-gray: #666;
+            --terminal-gray-light: #888;
+            --terminal-green: #00ff41;
+            --terminal-cyan: #00ffff;
+            --terminal-amber: #ffb000;
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--terminal-black);
+            color: var(--terminal-green);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 24px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--terminal-cyan);
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .demo-section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: var(--terminal-green);
+            margin-bottom: 16px;
+            padding: 8px 12px;
+            background: var(--terminal-gray-darkest);
+            border-left: 3px solid var(--terminal-green);
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 16px;
+        }
+
+        .demo-box {
+            border: 1px solid var(--terminal-gray-dark);
+            padding: 20px;
+            background: var(--terminal-gray-darkest);
+        }
+
+        .demo-label {
+            font-size: 10px;
+            color: var(--terminal-gray-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .event-log {
+            margin-top: 24px;
+            padding: 12px;
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
+            font-size: 11px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .event-entry {
+            color: #888;
+            padding: 2px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .event-entry:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Demos</a>
+    <h1>Breadcrumbs Component</h1>
+    <p class="subtitle">Navigation breadcrumb trails with multiple style variants</p>
+
+    <!-- Default Variant -->
+    <div class="demo-section">
+        <h2 class="section-title">Default Variant (Slash Separator)</h2>
+        <div class="demo-grid">
+            <div class="demo-box">
+                <div class="demo-label">Standard Navigation</div>
+                <t-bread id="default-bread"></t-bread>
+            </div>
+            <div class="demo-box">
+                <div class="demo-label">Short Path</div>
+                <t-bread id="short-bread"></t-bread>
+            </div>
+        </div>
+    </div>
+
+    <!-- Arrow Variant -->
+    <div class="demo-section">
+        <h2 class="section-title">Arrows Variant (Chevron Separator)</h2>
+        <div class="demo-grid">
+            <div class="demo-box">
+                <div class="demo-label">Chevron Style</div>
+                <t-bread variant="arrows" id="arrows-bread"></t-bread>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dots & Dashes -->
+    <div class="demo-section">
+        <h2 class="section-title">Dots & Dashes Variants</h2>
+        <div class="demo-grid">
+            <div class="demo-box">
+                <div class="demo-label">Dots Separator</div>
+                <t-bread variant="dots" id="dots-bread"></t-bread>
+            </div>
+            <div class="demo-box">
+                <div class="demo-label">Dashes Separator</div>
+                <t-bread variant="dashes" id="dashes-bread"></t-bread>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terminal Styles -->
+    <div class="demo-section">
+        <h2 class="section-title">Terminal Style Variants</h2>
+        <div class="demo-grid">
+            <div class="demo-box">
+                <div class="demo-label">Brackets Style</div>
+                <t-bread variant="brackets" id="brackets-bread"></t-bread>
+            </div>
+            <div class="demo-box">
+                <div class="demo-label">Path Style</div>
+                <t-bread variant="path" id="path-bread"></t-bread>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pills & Steps -->
+    <div class="demo-section">
+        <h2 class="section-title">Pills & Steps Variants</h2>
+        <div class="demo-grid">
+            <div class="demo-box">
+                <div class="demo-label">Pills Style</div>
+                <t-bread variant="pills" id="pills-bread"></t-bread>
+            </div>
+            <div class="demo-box">
+                <div class="demo-label">Steps Style (Numbered)</div>
+                <t-bread variant="steps" id="steps-bread"></t-bread>
+            </div>
+        </div>
+    </div>
+
+    <!-- Underline -->
+    <div class="demo-section">
+        <h2 class="section-title">Underline Variant</h2>
+        <div class="demo-grid">
+            <div class="demo-box">
+                <div class="demo-label">Underline Style</div>
+                <t-bread variant="underline" id="underline-bread"></t-bread>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sizes -->
+    <div class="demo-section">
+        <h2 class="section-title">Size Variants</h2>
+        <div class="demo-grid">
+            <div class="demo-box">
+                <div class="demo-label">Small</div>
+                <t-bread size="sm" id="sm-bread"></t-bread>
+            </div>
+            <div class="demo-box">
+                <div class="demo-label">Medium (Default)</div>
+                <t-bread size="md" id="md-bread"></t-bread>
+            </div>
+            <div class="demo-box">
+                <div class="demo-label">Large</div>
+                <t-bread size="lg" id="lg-bread"></t-bread>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collapsing -->
+    <div class="demo-section">
+        <h2 class="section-title">Collapsing (Long Paths)</h2>
+        <div class="demo-grid">
+            <div class="demo-box">
+                <div class="demo-label">Max 3 Items (Click ... to expand)</div>
+                <t-bread max-items="3" id="collapsed-bread"></t-bread>
+            </div>
+            <div class="demo-box">
+                <div class="demo-label">Full Path (No Collapse)</div>
+                <t-bread id="full-bread"></t-bread>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Separator -->
+    <div class="demo-section">
+        <h2 class="section-title">Custom Separators</h2>
+        <div class="demo-grid">
+            <div class="demo-box">
+                <div class="demo-label">Arrow Character</div>
+                <t-bread separator="→" id="arrow-sep-bread"></t-bread>
+            </div>
+            <div class="demo-box">
+                <div class="demo-label">Double Colon</div>
+                <t-bread separator="::" id="colon-sep-bread"></t-bread>
+            </div>
+            <div class="demo-box">
+                <div class="demo-label">Pipe</div>
+                <t-bread separator="|" id="pipe-sep-bread"></t-bread>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Log -->
+    <div class="demo-section">
+        <h2 class="section-title">Event Log</h2>
+        <div class="event-log" id="event-log">
+            Click any breadcrumb to see events...
+        </div>
+    </div>
+
+    <script type="module">
+        import '../js/components/TBreadcrumbsLit.js';
+
+        // Sample data
+        const standardItems = [
+            { label: 'Home', href: '/' },
+            { label: 'Products', href: '/products' },
+            { label: 'Electronics', href: '/products/electronics' },
+            { label: 'Laptops' }
+        ];
+
+        const shortItems = [
+            { label: 'Dashboard', href: '/dashboard' },
+            { label: 'Settings' }
+        ];
+
+        const longItems = [
+            { label: 'Root', href: '/' },
+            { label: 'Users', href: '/users' },
+            { label: 'Admin', href: '/users/admin' },
+            { label: 'Permissions', href: '/users/admin/permissions' },
+            { label: 'Roles', href: '/users/admin/permissions/roles' },
+            { label: 'Editor Role' }
+        ];
+
+        const stepsItems = [
+            { label: 'Cart', href: '#' },
+            { label: 'Shipping', href: '#' },
+            { label: 'Payment', href: '#' },
+            { label: 'Review' }
+        ];
+
+        const pathItems = [
+            { label: 'home', href: '#' },
+            { label: 'user', href: '#' },
+            { label: 'projects', href: '#' },
+            { label: 'terminal-kit' }
+        ];
+
+        // Set items on all breadcrumbs
+        document.getElementById('default-bread').items = standardItems;
+        document.getElementById('short-bread').items = shortItems;
+        document.getElementById('arrows-bread').items = standardItems;
+        document.getElementById('dots-bread').items = standardItems;
+        document.getElementById('dashes-bread').items = standardItems;
+        document.getElementById('brackets-bread').items = pathItems;
+        document.getElementById('path-bread').items = pathItems;
+        document.getElementById('pills-bread').items = standardItems;
+        document.getElementById('steps-bread').items = stepsItems;
+        document.getElementById('underline-bread').items = standardItems;
+        document.getElementById('sm-bread').items = standardItems;
+        document.getElementById('md-bread').items = standardItems;
+        document.getElementById('lg-bread').items = standardItems;
+        document.getElementById('collapsed-bread').items = longItems;
+        document.getElementById('full-bread').items = longItems;
+        document.getElementById('arrow-sep-bread').items = standardItems;
+        document.getElementById('colon-sep-bread').items = pathItems;
+        document.getElementById('pipe-sep-bread').items = standardItems;
+
+        // Event logging
+        const eventLog = document.getElementById('event-log');
+
+        function logEvent(type, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${type}: ${JSON.stringify(detail)}`;
+            eventLog.insertBefore(entry, eventLog.firstChild);
+        }
+
+        // Add event listeners to all breadcrumbs
+        document.querySelectorAll('t-bread').forEach(bread => {
+            bread.addEventListener('breadcrumb-click', (e) => {
+                e.preventDefault();
+                logEvent('breadcrumb-click', { index: e.detail.index, label: e.detail.item.label });
+            });
+
+            bread.addEventListener('breadcrumb-expand', (e) => {
+                logEvent('breadcrumb-expand', {});
+            });
+        });
+    </script>
+</body>
+</html>

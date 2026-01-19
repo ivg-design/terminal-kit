@@ -106,6 +106,57 @@ const styles = [
 		pointer-events: none;
 	}
 
+	/* Collapse buttons in gutter */
+	.gutter .collapse-btn {
+		position: absolute;
+		background: transparent;
+		border: none;
+		color: var(--splitter-green);
+		width: 16px;
+		height: 16px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		opacity: 0;
+		transition: opacity 0.15s ease;
+		padding: 0;
+		z-index: 1;
+	}
+
+	.gutter:hover .collapse-btn {
+		opacity: 1;
+	}
+
+	.gutter .collapse-btn:hover {
+		background: var(--splitter-green);
+		color: var(--splitter-bg);
+	}
+
+	.gutter .collapse-btn svg {
+		width: 10px;
+		height: 10px;
+		fill: currentColor;
+	}
+
+	/* Horizontal gutter collapse buttons */
+	.splitter:not(.vertical) .gutter .collapse-pane-0 {
+		top: 4px;
+	}
+
+	.splitter:not(.vertical) .gutter .collapse-pane-1 {
+		bottom: 4px;
+	}
+
+	/* Vertical gutter collapse buttons */
+	.splitter.vertical .gutter .collapse-pane-0 {
+		left: 4px;
+	}
+
+	.splitter.vertical .gutter .collapse-pane-1 {
+		right: 4px;
+	}
+
 	.splitter:not(.vertical) .gutter-handle {
 		flex-direction: column;
 	}
@@ -185,9 +236,14 @@ const styles = [
 `];
 
 /**
+ * @component TSplitterLit
+ * @tagname t-split
+ * @description Resizable panel divider component with drag-to-resize and collapsible panes
+ * @category Container
+ * @since 3.0.0
+ *
  * TSplitterLit - Resizable panel divider component
  *
- * @element t-split
  * @slot pane-0 - First pane content
  * @slot pane-1 - Second pane content
  *
@@ -609,11 +665,17 @@ class TSplitterLit extends LitElement {
 					@dblclick=${this._handleDoubleClick}
 					title="Double-click to collapse, drag to resize"
 				>
+					${this.collapsible[0] && !this.collapsed[0]
+						? this._renderCollapseButton(0, false)
+						: ''}
 					<div class="gutter-handle">
 						<span class="gutter-handle-dot"></span>
 						<span class="gutter-handle-dot"></span>
 						<span class="gutter-handle-dot"></span>
 					</div>
+					${this.collapsible[1] && !this.collapsed[1]
+						? this._renderCollapseButton(1, false)
+						: ''}
 				</div>
 
 				<div

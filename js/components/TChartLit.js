@@ -11,14 +11,17 @@ import { LitElement, html, css, svg } from 'lit';
 import componentLogger from '../utils/ComponentLogger.js';
 
 // ============================================================
-// Block 1: Static Metadata
+// BLOCK 1: Static Metadata
 // ============================================================
 
 /**
- * TChartLit - Simple data visualization component
+ * @component TChartLit
+ * @tagname t-chart
+ * @description Simple data visualization component (bar, line, pie, donut).
+ * @category Display
+ * @since 3.0.0
  *
  * @element t-chart
- * @tagname t-chart
  *
  * @fires segment-click - Fired when a chart segment is clicked
  * @fires segment-hover - Fired when hovering over a segment
@@ -43,35 +46,48 @@ class TChartLit extends LitElement {
 	static category = 'Display';
 
 	// ============================================================
-	// Block 2: Static Styles
+	// BLOCK 2: Static Styles
 	// ============================================================
 
 	static styles = css`
 		:host {
-			display: block;
+			display: flex;
+			flex-direction: column;
 			font-family: var(--t-font-mono, 'JetBrains Mono', monospace);
 			background: var(--t-chart-bg, var(--terminal-gray-darkest, #1a1a1a));
 			border: 1px solid var(--t-chart-border, var(--terminal-gray-dark, #333));
 			color: var(--t-chart-color, var(--terminal-green, #00ff41));
-			padding: 16px;
+			padding: 8px;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			overflow: hidden;
 		}
 
 		.chart-container {
 			position: relative;
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			min-height: 0;
 		}
 
 		.chart-title {
-			font-size: 14px;
+			font-size: clamp(10px, 2vw, 13px);
 			font-weight: bold;
 			text-transform: uppercase;
-			letter-spacing: 0.05em;
-			margin-bottom: 12px;
+			letter-spacing: 0.03em;
+			margin-bottom: 6px;
 			text-align: center;
+			flex-shrink: 0;
 		}
 
 		svg {
 			display: block;
 			width: 100%;
+			height: 100%;
+			flex: 1;
+			min-height: 0;
 			overflow: visible;
 		}
 
@@ -213,7 +229,7 @@ class TChartLit extends LitElement {
 	`;
 
 	// ============================================================
-	// Block 3: Reactive Properties
+	// BLOCK 3: Reactive Properties
 	// ============================================================
 
 	static properties = {
@@ -326,7 +342,7 @@ class TChartLit extends LitElement {
 	};
 
 	// ============================================================
-	// Block 4: Internal State
+	// BLOCK 4: Internal State
 	// ============================================================
 
 	/** @private - Tooltip state */
@@ -394,14 +410,14 @@ class TChartLit extends LitElement {
 	_defaultColors = TChartLit._colorSchemes.terminal;
 
 	// ============================================================
-	// Block 5: Logger Instance
+	// BLOCK 5: Logger Instance
 	// ============================================================
 
 	/** @private */
 	_logger = null;
 
 	// ============================================================
-	// Block 6: Constructor
+	// BLOCK 6: Constructor
 	// ============================================================
 
 	constructor() {
@@ -430,7 +446,7 @@ class TChartLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 7: Lifecycle Methods
+	// BLOCK 7: Lifecycle Methods
 	// ============================================================
 
 	connectedCallback() {
@@ -452,7 +468,7 @@ class TChartLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 8: Public API Methods
+	// BLOCK 8: Public API Methods
 	// ============================================================
 
 	/**
@@ -514,7 +530,7 @@ class TChartLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 9: Event Emitters
+	// BLOCK 9: Event Emitters
 	// ============================================================
 
 	/**
@@ -546,15 +562,15 @@ class TChartLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 10: Nesting Support (N/A)
+	// BLOCK 10: Nesting Support (N/A)
 	// ============================================================
 
 	// ============================================================
-	// Block 11: Validation (N/A)
+	// BLOCK 11: Validation (N/A)
 	// ============================================================
 
 	// ============================================================
-	// Block 12: Render Method
+	// BLOCK 12: Render Method
 	// ============================================================
 
 	/**
@@ -581,7 +597,7 @@ class TChartLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 13: Private Helpers
+	// BLOCK 13: Private Helpers
 	// ============================================================
 
 	/**

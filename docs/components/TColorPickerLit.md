@@ -1,13 +1,17 @@
-# TColorPickerLit (t-clr-pick)
+# TColorPickerLit (t-clr)
 
 A modern color selection component built with **iro.js** and **Lit**, featuring terminal aesthetics, transparency support, multiple color formats, and persistent custom swatches. Supports HEXA, RGBA, and HSLA color modes with systematic element control and flexible ordering.
 
+## Tag Names
+
+- `t-clr`
+
 ## Architecture
 
-**Tag Name:** `<t-clr-pick>`
+**Tag Name:** `<t-clr>`
 **Extends:** `LitElement`
-**Category:** Input
-**Profile:** CORE
+**Category:** Form Controls
+**Profile:** FORM-ADVANCED
 **Version:** 1.0.0
 
 ## Features
@@ -40,15 +44,26 @@ A modern color selection component built with **iro.js** and **Lit**, featuring 
 
 ## Properties
 
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `value` | string | `'#00ff41ff'` | Current color value in hex8 format (e.g., `#00ff41ff`) |
+| `label1` | string | `'Color'` | First line of label text (when `label` element included) |
+| `label2` | string | `'Picker'` | Second line of label text (when `label` element included) |
+| `disabled` | boolean | `false` | Disabled state (dims and disables interaction) |
+| `variant` | string | `'large'` | Size variant: `'large'` (48px), `'standard'` (32px), or `'compact'` (minimal) |
+| `elements` | string | `'icon,label,swatch,input'` | Comma-separated list of elements to render in order |
+| `showClearButton` | boolean | `false` | Show trash button in picker for clearing all custom swatches |
+| `swatches` | array | `[]` | Predefined swatches (deprecated - not implemented, uses localStorage system instead) |
+
+### Internal State (Read-only)
+
+These are internal state properties that can be accessed but should not be modified directly:
+
 | Property | Type | Description |
 |----------|------|-------------|
-| `value` | string | Current color value in hex8 format (e.g., `#00ff41ff`) |
-| `customSwatches` | string[] | Array of custom swatch colors (max 20) |
-| `colorPicker` | IroColorPicker | iro.js color picker instance |
-| `disabled` | boolean | Disabled state |
-| `variant` | string | Current variant: `'large'`, `'standard'`, or `'compact'` |
-| `elements` | string | Current element configuration |
-| `customIcon` | string | Custom icon SVG string |
+| `_customSwatches` | string[] | Array of custom swatch colors stored in localStorage (max 20) |
+| `_colorPicker` | IroColorPicker | iro.js color picker instance (null when picker is closed) |
+| `_customIcon` | string | Custom icon SVG string set via `setIcon()` method |
 
 ## Methods
 
@@ -62,7 +77,7 @@ Sets a custom Phosphor icon for the picker.
 
 ```javascript
 import { paintBucketIcon } from '../js/utils/phosphor-icons.js';
-const picker = document.querySelector('t-clr-pick');
+const picker = document.querySelector('t-clr');
 picker.setIcon(paintBucketIcon);
 ```
 
@@ -72,7 +87,7 @@ Clears all custom swatches from storage and display. When called via trash butto
 **Returns:** void
 
 ```javascript
-const picker = document.querySelector('t-clr-pick');
+const picker = document.querySelector('t-clr');
 picker.clearAllCustomSwatches();
 ```
 
@@ -224,7 +239,7 @@ Full-size variant with all elements available.
   label1="Theme"
   label2="Color"
   elements="icon,label,swatch,input">
-</t-clr-pick>
+</t-clr>
 ```
 
 ### Standard Variant (32px height)
@@ -237,7 +252,7 @@ Compact version with all elements available but smaller sizing.
   label1="Accent"
   label2="Color"
   elements="icon,label,swatch,input">
-</t-clr-pick>
+</t-clr>
 ```
 
 ### Compact Variant (Minimal)
@@ -248,7 +263,7 @@ Ultra-compact design for inline use. All elements available.
   variant="compact"
   value="#ff00ff"
   elements="swatch,input">
-</t-clr-pick>
+</t-clr>
 ```
 
 ## Element System
@@ -268,16 +283,16 @@ Elements render in the **exact order** specified in the `elements` attribute. Th
 
 ```html
 <!-- Default order -->
-<t-clr-pick elements="icon,label,swatch,input"></t-clr-pick>
+<t-clr elements="icon,label,swatch,input"></t-clr>
 
 <!-- Swatch first -->
-<t-clr-pick elements="swatch,icon,label,input"></t-clr-pick>
+<t-clr elements="swatch,icon,label,input"></t-clr>
 
 <!-- Input before swatch -->
-<t-clr-pick elements="icon,label,input,swatch"></t-clr-pick>
+<t-clr elements="icon,label,input,swatch"></t-clr>
 
 <!-- Input in the middle -->
-<t-clr-pick elements="icon,input,label,swatch"></t-clr-pick>
+<t-clr elements="icon,input,label,swatch"></t-clr>
 ```
 
 ### Element Combinations
@@ -286,19 +301,19 @@ Any combination of elements is allowed (except swatch which is mandatory).
 
 ```html
 <!-- Icon + Swatch only (no label, no input) -->
-<t-clr-pick elements="icon,swatch"></t-clr-pick>
+<t-clr elements="icon,swatch"></t-clr>
 
 <!-- Label + Swatch only -->
-<t-clr-pick elements="label,swatch" label1="Color" label2="Picker"></t-clr-pick>
+<t-clr elements="label,swatch" label1="Color" label2="Picker"></t-clr>
 
 <!-- Swatch + Input only -->
-<t-clr-pick elements="swatch,input"></t-clr-pick>
+<t-clr elements="swatch,input"></t-clr>
 
 <!-- Swatch only -->
-<t-clr-pick elements="swatch"></t-clr-pick>
+<t-clr elements="swatch"></t-clr>
 
 <!-- All elements -->
-<t-clr-pick elements="icon,label,swatch,input"></t-clr-pick>
+<t-clr elements="icon,label,swatch,input"></t-clr>
 ```
 
 ### Variant + Element Examples
@@ -307,16 +322,16 @@ All variants support all elements in any order.
 
 ```html
 <!-- Large: Icon + Swatch only -->
-<t-clr-pick variant="large" elements="icon,swatch"></t-clr-pick>
+<t-clr variant="large" elements="icon,swatch"></t-clr>
 
 <!-- Standard: Label + Swatch only -->
-<t-clr-pick variant="standard" elements="label,swatch" label1="Theme"></t-clr-pick>
+<t-clr variant="standard" elements="label,swatch" label1="Theme"></t-clr>
 
 <!-- Compact: Swatch + Input (reversed) -->
-<t-clr-pick variant="compact" elements="input,swatch"></t-clr-pick>
+<t-clr variant="compact" elements="input,swatch"></t-clr>
 
 <!-- Standard: Reordered with swatch first -->
-<t-clr-pick variant="standard" elements="swatch,icon,label,input"></t-clr-pick>
+<t-clr variant="standard" elements="swatch,icon,label,input"></t-clr>
 ```
 
 ## Custom Icons
@@ -326,7 +341,7 @@ Use Phosphor icons from the utils library or any SVG string.
 ```javascript
 import { paintBucketIcon, paletteIcon } from '../js/utils/phosphor-icons.js';
 
-const picker = document.querySelector('t-clr-pick');
+const picker = document.querySelector('t-clr');
 picker.setIcon(paintBucketIcon);
 ```
 
@@ -348,7 +363,7 @@ Add a trash button to the picker panel that clears all custom swatches with a co
   label2="Swatches"
   elements="icon,label,swatch,input"
   show-clear-button>
-</t-clr-pick>
+</t-clr>
 ```
 
 When clicked, the trash button shows a confirmation modal:
@@ -389,7 +404,7 @@ When clicked, the trash button shows a confirmation modal:
 ### Managing Swatches Programmatically
 
 ```javascript
-const picker = document.querySelector('t-clr-pick');
+const picker = document.querySelector('t-clr');
 
 // Access custom swatches
 console.log(picker.customSwatches);
@@ -489,7 +504,7 @@ Hue, Saturation, Lightness, Alpha values
   label1="Theme"
   label2="Color"
   elements="icon,label,swatch,input">
-</t-clr-pick>
+</t-clr>
 ```
 
 ### Icon + Swatch Only
@@ -498,7 +513,7 @@ Hue, Saturation, Lightness, Alpha values
 <t-clr
   value="#00aaff"
   elements="icon,swatch">
-</t-clr-pick>
+</t-clr>
 ```
 
 ### Label + Swatch Only
@@ -509,7 +524,7 @@ Hue, Saturation, Lightness, Alpha values
   label1="Accent"
   label2="Color"
   elements="label,swatch">
-</t-clr-pick>
+</t-clr>
 ```
 
 ### Swatch + Input Only
@@ -518,7 +533,7 @@ Hue, Saturation, Lightness, Alpha values
 <t-clr
   value="#ffcc00"
   elements="swatch,input">
-</t-clr-pick>
+</t-clr>
 ```
 
 ### Reordered Elements
@@ -530,13 +545,13 @@ Hue, Saturation, Lightness, Alpha values
   label1="Error"
   label2="Color"
   elements="swatch,icon,label,input">
-</t-clr-pick>
+</t-clr>
 
 <!-- Input first -->
 <t-clr
   value="#00ff41"
   elements="input,icon,label,swatch">
-</t-clr-pick>
+</t-clr>
 ```
 
 ### Standard Variant with Custom Icon
@@ -549,7 +564,7 @@ Hue, Saturation, Lightness, Alpha values
   label1="Paint"
   label2="Bucket"
   elements="icon,label,swatch,input">
-</t-clr-pick>
+</t-clr>
 
 <script type="module">
   import { paintBucketIcon } from '../js/utils/phosphor-icons.js';
@@ -565,7 +580,7 @@ Hue, Saturation, Lightness, Alpha values
   variant="compact"
   value="#00aaff"
   elements="input,swatch">
-</t-clr-pick>
+</t-clr>
 ```
 
 ### With Clear Button
@@ -577,7 +592,7 @@ Hue, Saturation, Lightness, Alpha values
   label2="Swatches"
   elements="icon,label,swatch,input"
   show-clear-button>
-</t-clr-pick>
+</t-clr>
 ```
 
 ### Disabled State
@@ -589,13 +604,13 @@ Hue, Saturation, Lightness, Alpha values
   label2="Color"
   elements="icon,label,swatch,input"
   disabled>
-</t-clr-pick>
+</t-clr>
 ```
 
 ### Programmatic Control
 
 ```html
-<t-clr-pick id="myPicker" value="#00ff41ff"></t-clr-pick>
+<t-clr id="myPicker" value="#00ff41ff"></t-clr>
 
 <script>
   const picker = document.getElementById('myPicker');
@@ -629,7 +644,7 @@ Hue, Saturation, Lightness, Alpha values
     label2="Color"
     value="#00ff41ff"
     elements="icon,label,swatch,input">
-  </t-clr-pick>
+  </t-clr>
 
   <button type="submit">Save Theme</button>
 </form>
@@ -732,6 +747,10 @@ npm install lit @jaames/iro
 import './js/components/TColorPickerLit.js';
 ```
 
+## Third-Party Credits
+
+- iro.js. See [`../third-party.md`](../third-party.md).
+
 ## Browser Support
 
 - Chrome 67+
@@ -749,7 +768,7 @@ import './js/components/TColorPickerLit.js';
 
 ### Picker not opening
 - Check that iro.js is properly imported
-- Verify component is registered: `customElements.get('t-clr-pick')`
+- Verify component is registered: `customElements.get('t-clr')`
 - Check console for errors
 
 ### Swatches not persisting
@@ -785,3 +804,7 @@ import './js/components/TColorPickerLit.js';
 - Swatches grid: 5 columns, scrollable with styled scrollbar
 - Confirmation modal shown when clearing swatches via trash button
 - Elements render in exact order specified - no automatic filtering or reordering
+
+## Slots
+
+None.

@@ -13,33 +13,58 @@
 5. **Reactive Properties** - Data binding with `@property()` decorator
 6. **Lifecycle Methods** - Use Lit lifecycle: `firstUpdated()`, `updated()`, `connectedCallback()`
 
-### ⚠️ Migration from Legacy Components
-
-If you see references to:
-- `TerminalComponent` base class
-- `DSD` (Declarative Shadow DOM)
-- External CSS files
-- `setHTMLUnsafe()`
-- Hybrid architecture
-
-**These are DEPRECATED.** All components are now Pure Lit.
-
 ## Table of Contents
 
-### Lit Components (Current)
-- [TPanelLit](./components/TPanelLit.md) - Panel with collapsible header/footer ✅ **CURRENT**
-- [TButtonLit](./components/TButton.md) - Interactive button component ✅ **CURRENT**
-- [TInputLit](./components/TerminalInput.md) - Text input field component
-- [TDropdownLit](./components/TerminalDropdown.md) - Nested dropdown with search
-- [TColorPickerLit](./components/TerminalColorPicker.md) - Color selection component
-- [TSliderLit](./components/TerminalSlider.md) - Range slider component
-- [TToggleLit](./components/TToggleLit.md) - Toggle switch and checkbox component ✅ **CURRENT**
-- [TTextareaLit](./components/TerminalTextarea.md) - Multiline text input
-- [TLoaderLit](./components/TerminalLoader.md) - Loading indicators
+### Form Components
+- [TButtonLit](./components/TButtonLit.md) - Button with variants and toggle support (`t-btn`)
+- [TInputLit](./components/TInputLit.md) - Text input with validation (`t-inp`)
+- [TTextareaLit](./components/TTextareaLit.md) - Multi-line text input with line numbers (`t-textarea`)
+- [TToggleLit](./components/TToggleLit.md) - Toggle switch and checkbox variants (`t-tog`)
+- [TSliderLit](./components/TSliderLit.md) - Range slider with value display (`t-sld`)
+- [TDropdownLit](./components/TDropdownLit.md) - Dropdown selector with search (`t-drp`)
+- [TColorPickerLit](./components/TColorPickerLit.md) - Color picker with swatches (`t-clr`)
 
-### Legacy Components (Deprecated)
-- [TerminalComponent](./components/TerminalComponent.md) - ⚠️ DEPRECATED: Old base class
-- [TerminalPanel](./components/TerminalPanel.md) - ⚠️ DEPRECATED: Use TPanelLit instead
+### Layout Components
+- [TPanelLit](./components/TPanelLit.md) - Collapsible container panel (`t-pnl`)
+- [TModalLit](./components/TModalLit.md) - Modal dialog with animations (`t-mdl`)
+- [TCardLit](./components/TCardLit.md) - Content card with header and actions (`t-card`)
+- [TAccordionLit](./components/TAccordionLit.md) - Collapsible accordion sections (`t-accordion`)
+- [TSplitterLit](./components/TSplitterLit.md) - Resizable split panes (`t-split`)
+- [TGridLit](./components/TGridLit.md) - Dashboard grid layout (`t-grid`)
+- [TTabsLit](./components/TTabsLit.md) - Tab navigation with panels (`t-tabs`)
+
+### Data Display Components
+- [TListLit](./components/TListLit.md) - Virtualized list with selection (`t-list`)
+- [TTreeLit](./components/TTreeLit.md) - Hierarchical tree view (`t-tree`)
+- [TMenuLit](./components/TMenuLit.md) - Dropdown/context menu (`t-menu`)
+- [TTimelineLit](./components/TTimelineLit.md) - Vertical timeline display (`t-tmln`)
+- [TCalendarLit](./components/TCalendarLit.md) - Date picker calendar (`t-cal`)
+- [TChartLit](./components/TChartLit.md) - Simple data visualizations (`t-chart`)
+- [TKanbanLit](./components/TKanbanLit.md) - Kanban board with drag-and-drop (`t-kanban`)
+
+### Log Components
+- [TLogListLit](./components/TLogListLit.md) - Log viewer with filtering (`t-log-list`)
+- [TLogEntryLit](./components/TLogEntryLit.md) - Individual log entry (`t-log-entry`)
+
+### Feedback Components
+- [TLoaderLit](./components/TLoaderLit.md) - Loading spinner with variants (`t-ldr`)
+- [TToastLit](./components/TToastLit.md) - Toast notifications (`t-tst`)
+- [TProgressLit](./components/TProgressLit.md) - Progress bar/ring indicators (`t-prg`)
+- [TSkeletonLit](./components/TSkeletonLit.md) - Loading placeholder shapes (`t-skel`)
+- [TTooltipLit](./components/TTooltipLit.md) - Hover tooltips (`t-tip`)
+
+### UI Components
+- [TBadgeLit](./components/TBadgeLit.md) - Count/status badges (`t-bdg`)
+- [TChipLit](./components/TChipLit.md) - Tag/filter chips (`t-chip`)
+- [TAvatarLit](./components/TAvatarLit.md) - User avatar display (`t-avt`)
+- [TStatusBarLit](./components/TStatusBarLit.md) - Status bar with dynamic fields (`t-sta`)
+- [TStatusFieldLit](./components/TStatusFieldLit.md) - Individual status field (`t-sta-field`)
+- [TUserMenuLit](./components/TUserMenuLit.md) - User menu dropdown (`t-usr`)
+- [TBreadcrumbsLit](./components/TBreadcrumbsLit.md) - Navigation breadcrumbs (`t-breadcrumbs`)
+
+### Specialized Components
+- [TDynamicControlsLit](./components/TDynamicControlsLit.md) - Schema-driven form controls (`t-dynamic-controls`)
+- [TChatPanelLit](./components/TChatPanelLit.md) - Chat interface panel (`t-chat`)
 
 ## Quick Start
 
@@ -80,10 +105,10 @@ If you see references to:
 All Lit components share these features:
 
 ### Shadow DOM Encapsulation
-- ✅ Complete CSS isolation
-- ✅ No style conflicts
-- ✅ Predictable styling
-- ✅ `::part()` for external styling
+- Complete CSS isolation
+- No style conflicts
+- Predictable styling
+- `::part()` for external styling
 
 ### Reactive Properties
 ```javascript
@@ -185,64 +210,64 @@ Most components support size variants:
 
 ## Browser Support
 
-- Chrome/Edge 90+ (native Lit support)
-- Firefox 90+ (native Lit support)
-- Safari 16.4+ (native Lit support)
+- Chrome/Edge 88+ (native Lit support)
+- Firefox 85+ (native Lit support)
+- Safari 14+ (native Lit support)
 - Older browsers: Use Lit polyfills
 
 ## Development Setup
 
 ```bash
 # Install dependencies (includes Lit 3.x)
-npm install
+yarn install
 
 # Start development server with hot reload
-npm run dev
+yarn dev
 
 # Build for production
-npm run build
+yarn build
 ```
 
 ## Architecture Rules (MUST FOLLOW)
 
-### ❌ NEVER DO THIS:
+### NEVER DO THIS:
 ```javascript
-// ❌ External CSS loading
+// External CSS loading
 import './styles.css';
 
-// ❌ adoptedStyleSheets
+// adoptedStyleSheets
 this.shadowRoot.adoptedStyleSheets = [sheet];
 
-// ❌ innerHTML in constructor
+// innerHTML in constructor
 constructor() {
   this.innerHTML = '...';
 }
 
-// ❌ Mixing Lit and non-Lit patterns
+// Mixing Lit and non-Lit patterns
 class MyComponent extends HTMLElement {
   render() { return html`...`; } // Wrong!
 }
 ```
 
-### ✅ ALWAYS DO THIS:
+### ALWAYS DO THIS:
 ```javascript
-// ✅ Static styles block
+// Static styles block
 static styles = css`
   :host {
     display: block;
   }
 `;
 
-// ✅ Reactive properties
+// Reactive properties
 @property({ type: Boolean })
 collapsed = false;
 
-// ✅ Lit render method
+// Lit render method
 render() {
   return html`<div>${this.title}</div>`;
 }
 
-// ✅ Extend LitElement
+// Extend LitElement
 class MyComponent extends LitElement {
   // ...
 }

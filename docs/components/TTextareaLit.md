@@ -5,6 +5,10 @@
 **Profile:** FORM-ADVANCED
 **Version:** 1.0.0
 
+## Tag Names
+
+- `t-textarea`
+
 ## Description
 
 Multiline text input component with advanced code editor features including line numbers, IDE keyboard shortcuts, and text manipulation capabilities. Follows the FORM-ADVANCED profile with full form participation via ElementInternals API.
@@ -17,8 +21,9 @@ Multiline text input component with advanced code editor features including line
 - ✅ Optional line numbers display
 - ✅ Auto-indent on Enter key
 - ✅ Tab/Shift+Tab for indent/outdent
-- ✅ Ctrl/Cmd+/ for toggle comments
 - ✅ Ctrl/Cmd+D for duplicate line
+- ✅ Syntax highlighting via Prism.js (when `language` attribute is set)
+- ✅ Resizable textarea (configurable via `resize` attribute)
 - ✅ Maxlength validation
 - ✅ Disabled and readonly states
 - ✅ Custom scrollbar styling
@@ -56,6 +61,21 @@ Multiple lines supported."
 </t-textarea>
 ```
 
+### With Syntax Highlighting
+
+```html
+<!-- Requires Prism.js to be loaded globally -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+<t-textarea
+  code-mode
+  show-line-numbers
+  language="javascript"
+  rows="15">
+</t-textarea>
+```
+
 ### With Validation
 
 ```html
@@ -88,8 +108,10 @@ Multiple lines supported."
 | `readonly` | Boolean | `false` | Makes textarea read-only |
 | `required` | Boolean | `false` | Marks field as required for forms |
 | `maxlength` | Number | `null` | Maximum character length (validated) |
-| `codeMode` | Boolean | `false` | Enables code editor features |
+| `codeMode` | Boolean | `false` | Enables code editor features with IDE shortcuts |
 | `showLineNumbers` | Boolean | `false` | Shows line numbers (only visible when true) |
+| `resize` | String | `'both'` | CSS resize behavior: `'both'`, `'horizontal'`, `'vertical'`, `'none'` |
+| `language` | String | `null` | Programming language for syntax highlighting via Prism.js (e.g., `'javascript'`, `'css'`, `'html'`, `'json'`) |
 
 ### Property Details
 
@@ -113,6 +135,19 @@ Multiple lines supported."
 - Validates on property change
 - Must be positive number or null
 - Logs warning if validation fails
+
+#### `resize`
+- Controls CSS resize behavior of the textarea
+- Valid values: `'both'`, `'horizontal'`, `'vertical'`, `'none'`
+- In code-mode, resize is disabled on the textarea but the container is resizable
+- Disabled and readonly states force resize to `'none'`
+
+#### `language`
+- Enables syntax highlighting via Prism.js
+- Supported languages: `'javascript'`, `'typescript'`, `'css'`, `'html'`, `'json'`, `'markup'`, `'plaintext'`, `'none'`
+- Requires Prism.js to be loaded globally (window.Prism)
+- When set, textarea text becomes transparent and highlighting layer shows on top
+- Falls back to plain text if grammar not found
 
 ## Methods
 
@@ -172,6 +207,58 @@ textarea.blur();
 ```
 
 **Fires:** `textarea-blur` event
+
+---
+
+### `selectAll(): void`
+
+Select all text in the textarea.
+
+```javascript
+const textarea = document.querySelector('t-textarea');
+textarea.selectAll();
+```
+
+---
+
+### `clear(): void`
+
+Clear the textarea value (sets value to empty string).
+
+```javascript
+const textarea = document.querySelector('t-textarea');
+textarea.clear();
+```
+
+**Fires:** `textarea-input` event with empty value
+
+---
+
+### `receiveContext(context: Object): void`
+
+Receive context from a parent component for nesting support.
+
+```javascript
+const textarea = document.querySelector('t-textarea');
+textarea.receiveContext({ theme: 'dark', size: 'large' });
+```
+
+**Parameters:**
+- `context` (Object): Context object from parent component
+
+---
+
+### `getContext(): Object`
+
+Get the current context received from parent.
+
+```javascript
+const textarea = document.querySelector('t-textarea');
+const ctx = textarea.getContext();
+console.log(ctx); // { theme: 'dark', size: 'large' }
+```
+
+**Returns:** Current context object or null if none set
 
 ## Events
 
@@ -259,7 +346,6 @@ When `code-mode` is enabled, the following IDE shortcuts are available:
 | **Tab** | Indent | Inserts tab or indents selected lines |
 | **Shift+Tab** | Outdent | Removes indentation from current/selected lines |
 | **Enter** | Auto-indent | New line with same indentation as previous |
-| **Ctrl/Cmd+/** | Toggle Comment | Adds/removes `//` comments on line(s) |
 | **Ctrl/Cmd+D** | Duplicate Line | Duplicates the current line below |
 
 ### Keyboard Shortcut Examples
@@ -283,18 +369,6 @@ const y = 2;
 // Press Tab:
 	const x = 1;
 	const y = 2;
-```
-
-#### Toggle Comments
-```javascript
-// Before:
-const value = 42;
-
-// Press Ctrl+/ or Cmd+/:
-// const value = 42;
-
-// Press again:
-const value = 42;
 ```
 
 #### Duplicate Line
@@ -561,8 +635,9 @@ npm run test:coverage
 
 - Line numbers don't support custom formatting
 - Code mode shortcuts are JavaScript-centric (`//` comments)
-- No syntax highlighting (use external library if needed)
+- Syntax highlighting requires Prism.js to be loaded globally (`window.Prism`)
 - Keyboard shortcuts only work when `code-mode` is enabled
+- Toggle comment shortcut (`Ctrl/Cmd+/`) is documented but not implemented in the component
 
 ## Troubleshooting
 
@@ -613,3 +688,8 @@ textarea.setValue('New value');
 **Component Status:** ✅ Production Ready
 **Last Updated:** 2025-09-28
 **Follows:** COMPONENT_SCHEMA.md FORM-ADVANCED profile
+
+## Slots
+
+None.
+

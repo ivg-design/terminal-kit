@@ -22,14 +22,19 @@ import {
 } from '../utils/phosphor-icons.js';
 
 // ============================================================
-// Block 1: Static Metadata
+// BLOCK 1: Static Metadata
 // ============================================================
 
 /**
+ * @component TTreeLit
+ * @tagname t-tree
+ * @description Hierarchical tree structure with expand/collapse, selection, and drag-and-drop
+ * @category Container
+ * @since 3.0.0
+ *
  * TTreeLit - Hierarchical tree structure component
  *
  * @element t-tree
- * @tagname t-tree
  *
  * @fires node-click - Fired when a node is clicked
  * @fires node-expand - Fired when a node is expanded/collapsed
@@ -59,24 +64,30 @@ class TTreeLit extends LitElement {
 	static category = 'Container';
 
 	// ============================================================
-	// Block 2: Static Styles
+	// BLOCK 2: Static Styles
 	// ============================================================
 
 	static styles = [
 		scrollbarStyles,
 		css`
 		:host {
-			display: block;
+			display: flex;
+			flex-direction: column;
 			font-family: var(--t-font-mono, 'JetBrains Mono', monospace);
 			background: var(--t-tree-bg, var(--terminal-gray-darkest, #1a1a1a));
 			color: var(--t-tree-color, var(--terminal-green, #00ff41));
-			font-size: 13px;
+			font-size: clamp(11px, 2vw, 13px);
 			line-height: 1.4;
 			overflow: auto;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
 		}
 
 		.tree {
-			padding: 8px;
+			padding: 6px;
+			flex: 1;
+			min-height: 0;
 		}
 
 		.tree-node {
@@ -303,7 +314,7 @@ class TTreeLit extends LitElement {
 	`];
 
 	// ============================================================
-	// Block 3: Reactive Properties
+	// BLOCK 3: Reactive Properties
 	// ============================================================
 
 	static properties = {
@@ -394,7 +405,7 @@ class TTreeLit extends LitElement {
 	};
 
 	// ============================================================
-	// Block 4: Internal State
+	// BLOCK 4: Internal State
 	// ============================================================
 
 	/** @private */
@@ -413,14 +424,14 @@ class TTreeLit extends LitElement {
 	_nodeMap = new Map();
 
 	// ============================================================
-	// Block 5: Logger Instance
+	// BLOCK 5: Logger Instance
 	// ============================================================
 
 	/** @private */
 	_logger = null;
 
 	// ============================================================
-	// Block 6: Constructor
+	// BLOCK 6: Constructor
 	// ============================================================
 
 	constructor() {
@@ -453,7 +464,7 @@ class TTreeLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 7: Lifecycle Methods
+	// BLOCK 7: Lifecycle Methods
 	// ============================================================
 
 	connectedCallback() {
@@ -484,7 +495,7 @@ class TTreeLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 8: Public API Methods
+	// BLOCK 8: Public API Methods
 	// ============================================================
 
 	/**
@@ -646,7 +657,7 @@ class TTreeLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 9: Event Emitters
+	// BLOCK 9: Event Emitters
 	// ============================================================
 
 	/**
@@ -715,11 +726,11 @@ class TTreeLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 10: Nesting Support (N/A - tree is self-contained)
+	// BLOCK 10: Nesting Support (N/A - tree is self-contained)
 	// ============================================================
 
 	// ============================================================
-	// Block 11: Validation
+	// BLOCK 11: Validation
 	// ============================================================
 
 	/**
@@ -739,7 +750,7 @@ class TTreeLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 12: Render Method
+	// BLOCK 12: Render Method
 	// ============================================================
 
 	/**
@@ -775,7 +786,7 @@ class TTreeLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 13: Private Helpers
+	// BLOCK 13: Private Helpers
 	// ============================================================
 
 	/**

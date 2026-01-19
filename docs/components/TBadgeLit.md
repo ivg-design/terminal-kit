@@ -1,6 +1,10 @@
-# TBadgeLit (t-badge)
+# TBadgeLit (t-bdg)
 
 A **Pure Lit** badge component for displaying counts, status indicators, and notifications. Built with Lit 3.x for terminal/cyberpunk styling.
+
+## Tag Names
+
+- `t-bdg`
 
 ## Architecture
 
@@ -10,22 +14,53 @@ A **Pure Lit** badge component for displaying counts, status indicators, and not
 - ✅ Zero FOUC (Flash of Unstyled Content)
 - ✅ Complete Shadow DOM encapsulation
 
-## Tag Name
-```html
-<t-badge></t-badge>
-```
+## Static Metadata
+
+| Property | Value |
+|----------|-------|
+| tagName | `t-bdg` |
+| version | `3.0.0` |
+| category | `Core` |
 
 ## Properties
 
 | Property | Type | Default | Reflects | Description |
 |----------|------|---------|----------|-------------|
-| `count` | Number | `null` | ✅ | Numeric count to display |
-| `max` | Number | `99` | ✅ | Maximum count before showing "99+" |
-| `dot` | Boolean | `false` | ✅ | Show as dot indicator instead of count |
-| `variant` | String | `'default'` | ✅ | Color variant: 'default', 'success', 'warning', 'error', 'info' |
-| `size` | String | `'md'` | ✅ | Size: 'sm', 'md', 'lg' |
-| `pulse` | Boolean | `false` | ✅ | Add pulsing animation |
-| `hidden` | Boolean | `false` | ✅ | Hide the badge |
+| `count` | Number | `null` | Yes | Numeric count to display |
+| `max` | Number | `99` | Yes | Maximum count before showing "99+" |
+| `dot` | Boolean | `false` | Yes | Show as dot indicator instead of count |
+| `variant` | String | `'default'` | Yes | Color variant: `'default'`, `'success'`, `'warning'`, `'error'`, `'info'` |
+| `size` | String | `'md'` | Yes | Size: `'sm'`, `'md'`, `'lg'` |
+| `pulse` | Boolean | `false` | Yes | Add pulsing animation |
+| `position` | String | `null` | Yes | Position relative to slot content: `'top-right'`, `'top-left'`, `'bottom-right'`, `'bottom-left'` |
+| `hidden` | Boolean | `false` | Yes | Hide the badge |
+| `clickable` | Boolean | `false` | Yes | Make badge clickable |
+
+## Methods
+
+### show()
+Show the badge.
+
+### hide()
+Hide the badge.
+
+### setCount(value)
+Set the count value.
+
+**Parameters:**
+- `value` (Number): Count to display
+
+### increment(amount = 1)
+Increment the count.
+
+**Parameters:**
+- `amount` (Number): Amount to increment by
+
+### decrement(amount = 1)
+Decrement the count.
+
+**Parameters:**
+- `amount` (Number): Amount to decrement by
 
 ## Events
 
@@ -44,26 +79,32 @@ Fired when badge is clicked.
 
 ### Basic Badge
 ```html
-<t-badge count="5"></t-badge>
-<t-badge count="42" variant="success"></t-badge>
-<t-badge count="100" max="99" variant="warning"></t-badge>
+<t-bdg count="5"></t-bdg>
+<t-bdg count="42" variant="success"></t-bdg>
+<t-bdg count="100" max="99" variant="warning"></t-bdg>
 ```
 
 ### Dot Badge
 ```html
-<t-badge dot variant="error"></t-badge>
-<t-badge dot variant="success" pulse></t-badge>
+<t-bdg dot variant="error"></t-bdg>
+<t-bdg dot variant="success" pulse></t-bdg>
 ```
 
 ### With Positioning
 ```html
 <div style="position: relative; display: inline-block;">
   <t-button>Notifications</t-button>
-  <t-badge count="3" style="position: absolute; top: -5px; right: -5px;"></t-badge>
+  <t-bdg count="3" style="position: absolute; top: -5px; right: -5px;"></t-bdg>
 </div>
 ```
 
-## CSS Variables
+## Slots
+
+| Slot | Description |
+| --- | --- |
+| default | Anchor content wrapped by the badge |
+
+## CSS Custom Properties
 
 ```css
 :root {
@@ -75,6 +116,12 @@ Fired when badge is clicked.
   --badge-info: var(--terminal-cyan);
 }
 ```
+
+## Related Components
+
+- [TChipLit](./TChipLit.md) - Compact status labels
+- [TAvatarLit](./TAvatarLit.md) - Avatar with optional status
+- [TTooltipLit](./TTooltipLit.md) - Tooltip for badge details
 
 ## Accessibility
 

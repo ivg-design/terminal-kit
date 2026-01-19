@@ -314,9 +314,14 @@ const styles = css`
 `;
 
 /**
+ * @component TCardLit
+ * @tagname t-card
+ * @description Standardized content card container with slots for header, media, content, and actions
+ * @category Container
+ * @since 3.0.0
+ *
  * TCardLit - Standardized content card container
  *
- * @element t-card
  * @slot - Default slot for card content
  * @slot header - Card header content
  * @slot media - Card media (images, videos)

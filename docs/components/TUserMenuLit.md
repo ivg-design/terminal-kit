@@ -1,5 +1,9 @@
 # TUserMenuLit Component - Complete API Documentation
 
+## Tag Names
+
+- `t-usr`
+
 ## Table of Contents
 1. [Overview](#overview)
 2. [Installation & Import](#installation--import)
@@ -947,3 +951,8 @@ MIT License
 *Documentation Version: 2.0.0*
 *Last Updated: September 2024*
 *Component Version: 1.0.0*
+
+## Slots
+
+None.
+

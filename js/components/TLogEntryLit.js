@@ -31,14 +31,17 @@ import {
 } from '../utils/phosphor-icons.js';
 
 // ============================================================
-// Block 1: Static Metadata
+// BLOCK 1: Static Metadata
 // ============================================================
 
 /**
- * TLogEntryLit - Complex log entry list item component
+ * @component TLogEntryLit
+ * @tagname t-log-entry
+ * @description Structured log entry row with expandable details and tags.
+ * @category Container
+ * @since 3.0.0
  *
  * @element t-log-entry
- * @tagname t-log-entry
  *
  * @fires entry-click - Fired when entry row is clicked
  * @fires entry-expand - Fired when entry is expanded/collapsed
@@ -67,7 +70,7 @@ class TLogEntryLit extends LitElement {
 	static category = 'Container';
 
 	// ============================================================
-	// Block 2: Static Styles
+	// BLOCK 2: Static Styles
 	// ============================================================
 
 	static styles = [
@@ -439,7 +442,7 @@ class TLogEntryLit extends LitElement {
 	`];
 
 	// ============================================================
-	// Block 3: Reactive Properties
+	// BLOCK 3: Reactive Properties
 	// ============================================================
 
 	static properties = {
@@ -622,7 +625,7 @@ class TLogEntryLit extends LitElement {
 	};
 
 	// ============================================================
-	// Block 4: Internal State
+	// BLOCK 4: Internal State
 	// ============================================================
 
 	/**
@@ -631,13 +634,13 @@ class TLogEntryLit extends LitElement {
 	_logger = null;
 
 	// ============================================================
-	// Block 5: Logger Instance
+	// BLOCK 5: Logger Instance
 	// ============================================================
 
-	// (Combined with Block 4)
+	// (Combined with BLOCK 4)
 
 	// ============================================================
-	// Block 6: Constructor
+	// BLOCK 6: Constructor
 	// ============================================================
 
 	constructor() {
@@ -669,7 +672,7 @@ class TLogEntryLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 7: Lifecycle Methods
+	// BLOCK 7: Lifecycle Methods
 	// ============================================================
 
 	connectedCallback() {
@@ -691,7 +694,7 @@ class TLogEntryLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 8: Public API Methods
+	// BLOCK 8: Public API Methods
 	// ============================================================
 
 	/**
@@ -734,7 +737,7 @@ class TLogEntryLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 9: Event Emitters
+	// BLOCK 9: Event Emitters
 	// ============================================================
 
 	/**
@@ -754,19 +757,19 @@ class TLogEntryLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 10: Nesting Support
+	// BLOCK 10: Nesting Support
 	// ============================================================
 
 	// No nesting support needed
 
 	// ============================================================
-	// Block 11: Validation
+	// BLOCK 11: Validation
 	// ============================================================
 
 	// No validation needed
 
 	// ============================================================
-	// Block 12: Render Method
+	// BLOCK 12: Render Method
 	// ============================================================
 
 	/**
@@ -850,7 +853,7 @@ class TLogEntryLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 13: Private Helpers
+	// BLOCK 13: Private Helpers
 	// ============================================================
 
 	/**

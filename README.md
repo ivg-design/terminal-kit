@@ -28,8 +28,10 @@ A retro-futuristic web components library with terminal aesthetics. Built with *
 - **TButton** (`<t-btn>`) - Terminal-style buttons with size/variant options
 - **TBadge** (`<t-bdg>`) - Count and status indicator badges
 - **TChip** (`<t-chip>`) - Tag and filter chips with selection
+- **TAccordion** (`<t-accordion>`) - Collapsible accordion container
 - **TPanel** (`<t-pnl>`) - Collapsible panels with header, footer, and actions
-- **TModal** (`<t-modal>`) - Modal dialogs with layouts
+- **TCard** (`<t-card>`) - Flexible content card container
+- **TModal** (`<t-mdl>`) - Modal dialogs with layouts
 - **TTooltip** (`<t-tip>`) - Information tooltips
 
 ### Form Components
@@ -40,19 +42,22 @@ A retro-futuristic web components library with terminal aesthetics. Built with *
 - **TToggle** (`<t-tog>`) - Toggle switches and checkboxes
 - **TColorPicker** (`<t-clr>`) - Color picker with swatches
 - **TCalendar** (`<t-cal>`) - Date picker with single/multiple/range modes
+- **TDynamicControls** (`<t-dynamic-controls>`) - JSON-driven form control generator
 
 ### Display Components
 - **TAvatar** (`<t-avt>`) - User avatar with image, initials, status
-- **TCard** (`<t-card>`) - Flexible content card container
 - **TTimeline** (`<t-tmln>`) - Vertical timeline for events
 - **TChart** (`<t-chart>`) - Data visualizations (bar, line, pie, donut)
 - **TSkeleton** (`<t-skel>`) - Loading placeholder shapes
+- **TLogEntry** (`<t-log-entry>`) - Structured log row
+- **TLogList** (`<t-log-list>`) - Scrollable log list
 
 ### Status & Feedback
 - **TLoader** (`<t-ldr>`) - Loading indicators
 - **TProgress** (`<t-prg>`) - Progress bars and rings
-- **TToast** (`<t-toast>`) - Toast notifications
-- **TStatusBar** (`<t-stat>`) - Status bar with fields
+- **TToast** (`<t-tst>`) - Toast notifications
+- **TStatusBar** (`<t-sta>`) - Status bar with fields
+- **TStatusField** (`<t-sta-field>`) - Individual status fields
 
 ### Navigation
 - **TMenu** (`<t-menu>`) - Dropdown/context menus
@@ -63,6 +68,8 @@ A retro-futuristic web components library with terminal aesthetics. Built with *
 - **TSplitter** (`<t-split>`) - Resizable panel divider
 - **TList** (`<t-list>`) - Virtualized scrollable list
 - **TTree** (`<t-tree>`) - Hierarchical tree structure
+- **TKanban** (`<t-kanban>`) - Kanban board layout
+- **TGrid** (`<t-grid>`) - Dashboard grid layout (`<t-grid-item>`)
 
 ### Composite Components
 - **TChatPanel** (`<t-chat>`) - Chat UI with markdown, streaming, attachments
@@ -212,9 +219,13 @@ npm test
 Full API documentation available in [`docs/API.md`](./docs/API.md)
 
 ### Component Documentation
-- [TPanelLit](./docs/components/TPanelLit.md) - Complete panel API
-- [TButton](./docs/components/TButton.md) - Button variants and sizes
-- [Component Creation Guide](./docs/COMPONENT_CREATION_GUIDE.md) - How to create new components
+- Documentation lives in `docs/components/` (full coverage).
+- Component list and demos: [`docs/README.md`](./docs/README.md).
+- Component schema reference: [`docs/COMPONENT_SCHEMA.md`](./docs/COMPONENT_SCHEMA.md).
+
+## Third-Party Notices
+
+This project bundles and depends on third-party libraries (Lit, GridStack, iro.js, marked, PrismJS, Phosphor Icons, wc-spinners, and spinner sets). See [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md) for license details.
 
 ## Architecture Rules
 

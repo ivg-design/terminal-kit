@@ -1,5 +1,9 @@
 # TToggleLit Component Documentation
 
+## Tag Names
+
+- `t-tog`
+
 ## Overview
 
 `TToggleLit` is a fully-featured toggle/checkbox component built with LitElement that provides switch and checkbox variants with extensive customization options. It follows the Terminal Kit design system and implements the FORM-ADVANCED profile specification.
@@ -142,6 +146,11 @@ toggle.addEventListener('toggle-change', (e) => {
   console.log('Toggle changed to:', e.detail.checked);
 });
 ```
+
+## Slots
+
+None.
+
 
 ## CSS Custom Properties
 

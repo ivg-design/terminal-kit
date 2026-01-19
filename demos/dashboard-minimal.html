@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Debug</title>
+    <link rel="stylesheet" href="../css/theme/terminal.css">
+    <style>
+        body {
+            font-family: monospace;
+            background: #0a0a0a;
+            color: #00ff41;
+            padding: 20px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #333;
+        }
+        h3 { margin: 0 0 10px 0; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>Dashboard Component Debug</h1>
+
+    <div class="section">
+        <h3>1. Button</h3>
+        <t-btn variant="primary">Test Button</t-btn>
+    </div>
+
+    <div class="section">
+        <h3>2. Menu</h3>
+        <t-menu id="test-menu" orientation="vertical"></t-menu>
+    </div>
+
+    <div class="section">
+        <h3>3. Timeline</h3>
+        <t-tmln id="test-timeline" dense></t-tmln>
+    </div>
+
+    <div class="section">
+        <h3>4. List</h3>
+        <t-list id="test-list" selectable="single" dense></t-list>
+    </div>
+
+    <div class="section">
+        <h3>5. Kanban</h3>
+        <t-kanban id="test-kanban"></t-kanban>
+    </div>
+
+    <div class="section">
+        <h3>6. Tree</h3>
+        <t-tree id="test-tree" selectable="single"></t-tree>
+    </div>
+
+    <div class="section">
+        <h3>7. Tabs</h3>
+        <t-tabs id="test-tabs"></t-tabs>
+    </div>
+
+    <div class="section">
+        <h3>8. Chart</h3>
+        <t-chart id="test-chart" type="line" height="100px"></t-chart>
+    </div>
+
+    <div class="section">
+        <h3>9. Log List</h3>
+        <t-log-list id="test-logs" max-entries="10"></t-log-list>
+    </div>
+
+    <script type="module">
+        import '../js/components/TButtonLit.js';
+        import '../js/components/TMenuLit.js';
+        import '../js/components/TTimelineLit.js';
+        import '../js/components/TListLit.js';
+        import '../js/components/TKanbanLit.js';
+        import '../js/components/TTreeLit.js';
+        import '../js/components/TTabsLit.js';
+        import '../js/components/TChartLit.js';
+        import '../js/components/TLogListLit.js';
+
+        console.log('Starting component initialization...');
+
+        // Wait for all components
+        await Promise.all([
+            customElements.whenDefined('t-btn'),
+            customElements.whenDefined('t-menu'),
+            customElements.whenDefined('t-tmln'),
+            customElements.whenDefined('t-list'),
+            customElements.whenDefined('t-kanban'),
+            customElements.whenDefined('t-kanban-column'),
+            customElements.whenDefined('t-kanban-card'),
+            customElements.whenDefined('t-tree'),
+            customElements.whenDefined('t-tabs'),
+            customElements.whenDefined('t-chart'),
+            customElements.whenDefined('t-log-list')
+        ]);
+
+        console.log('All components defined');
+
+        // Test 2: Menu
+        try {
+            console.log('Initializing menu...');
+            const menu = document.getElementById('test-menu');
+            menu.items = [
+                { id: 'a', label: 'Item A' },
+                { id: 'b', label: 'Item B' }
+            ];
+            console.log('Menu initialized');
+        } catch (e) {
+            console.error('Menu error:', e);
+        }
+
+        // Test 3: Timeline
+        try {
+            console.log('Initializing timeline...');
+            const timeline = document.getElementById('test-timeline');
+            timeline.items = [
+                { id: '1', title: 'Event 1', time: '1 min ago' },
+                { id: '2', title: 'Event 2', time: '5 min ago' }
+            ];
+            console.log('Timeline initialized');
+        } catch (e) {
+            console.error('Timeline error:', e);
+        }
+
+        // Test 4: List
+        try {
+            console.log('Initializing list...');
+            const list = document.getElementById('test-list');
+            list.items = [
+                { id: '1', label: 'Item 1' },
+                { id: '2', label: 'Item 2' }
+            ];
+            console.log('List initialized');
+        } catch (e) {
+            console.error('List error:', e);
+        }
+
+        // Test 5: Kanban
+        try {
+            console.log('Initializing kanban...');
+            const kanban = document.getElementById('test-kanban');
+            kanban.innerHTML = `
+                <t-kanban-column column-id="todo" title="To Do">
+                    <t-kanban-card card-id="1" title="Task 1"></t-kanban-card>
+                </t-kanban-column>
+            `;
+            console.log('Kanban initialized');
+        } catch (e) {
+            console.error('Kanban error:', e);
+        }
+
+        // Test 6: Tree
+        try {
+            console.log('Initializing tree...');
+            const tree = document.getElementById('test-tree');
+            tree.nodes = [
+                { id: '1', label: 'Node 1', children: [{ id: '1a', label: 'Child' }] }
+            ];
+            console.log('Tree initialized');
+        } catch (e) {
+            console.error('Tree error:', e);
+        }
+
+        // Test 7: Tabs
+        try {
+            console.log('Initializing tabs...');
+            const tabs = document.getElementById('test-tabs');
+            tabs.tabs = [
+                { id: 'tab1', label: 'Tab 1', content: '<div>Content 1</div>' },
+                { id: 'tab2', label: 'Tab 2', content: '<div>Content 2</div>' }
+            ];
+            console.log('Tabs initialized');
+        } catch (e) {
+            console.error('Tabs error:', e);
+        }
+
+        // Test 8: Chart
+        try {
+            console.log('Initializing chart...');
+            const chart = document.getElementById('test-chart');
+            chart.setData([
+                { label: 'Series 1', values: [1, 2, 3, 4, 5] }
+            ]);
+            console.log('Chart initialized');
+        } catch (e) {
+            console.error('Chart error:', e);
+        }
+
+        // Test 9: Log List
+        try {
+            console.log('Initializing log list...');
+            const logs = document.getElementById('test-logs');
+            logs.addEntry({ level: 'info', message: 'Test log', timestamp: new Date().toISOString() });
+            console.log('Log list initialized');
+        } catch (e) {
+            console.error('Log list error:', e);
+        }
+
+        console.log('All components initialized successfully!');
+    </script>
+</body>
+</html>

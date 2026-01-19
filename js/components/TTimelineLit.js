@@ -37,13 +37,20 @@ const styles = css`
 		--timeline-line-width: 2px;
 		--timeline-dot-size: 12px;
 
-		display: block;
+		display: flex;
+		flex-direction: column;
 		font-family: var(--font-mono, 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace);
+		width: 100%;
+		height: 100%;
+		box-sizing: border-box;
+		overflow: auto;
 	}
 
 	.timeline {
 		position: relative;
 		padding-left: 30px;
+		flex: 1;
+		min-height: 0;
 	}
 
 	/* Vertical line */
@@ -266,9 +273,14 @@ const styles = css`
 `;
 
 /**
+ * @component TTimelineLit
+ * @tagname t-tmln
+ * @description Vertical timeline display with chronological events and expandable content
+ * @category Container
+ * @since 3.0.0
+ *
  * TTimelineLit - Vertical timeline display component
  *
- * @element t-tmln
  * @slot item-{id} - Custom content for specific timeline items
  * @slot icon-{id} - Custom icon for specific timeline items
  *

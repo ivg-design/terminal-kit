@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGridLit Component Demo</title>
+    <link rel="stylesheet" href="../css/theme/terminal.css">
+    <!-- GridStack CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack.min.css" rel="stylesheet"/>
+    <style>
+        :root {
+            --terminal-black: #0a0a0a;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-gray-dark: #333;
+            --terminal-gray: #666;
+            --terminal-gray-light: #888;
+            --terminal-green: #00ff41;
+            --terminal-cyan: #00ffff;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff003c;
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--terminal-black);
+            color: var(--terminal-green);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .demo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: var(--terminal-gray-darkest);
+            border-bottom: 1px solid var(--terminal-gray-dark);
+            flex-shrink: 0;
+        }
+
+        .demo-header h1 {
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Main layout */
+        .demo-layout {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Widget bank sidebar */
+        .widget-bank {
+            width: 250px;
+            background: var(--terminal-gray-darkest);
+            border-right: 1px solid var(--terminal-gray-dark);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: width 0.2s ease, margin-left 0.2s ease;
+        }
+
+        .widget-bank.collapsed {
+            width: 0;
+            margin-left: -1px;
+            overflow: hidden;
+        }
+
+        .widget-bank-header {
+            padding: 12px 16px;
+            background: var(--terminal-black);
+            border-bottom: 1px solid var(--terminal-gray-dark);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            white-space: nowrap;
+        }
+
+        .widget-bank-toggle {
+            position: absolute;
+            left: 250px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 48px;
+            background: var(--terminal-gray-darkest);
+            border: 1px solid var(--terminal-gray-dark);
+            border-left: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--terminal-gray);
+            transition: left 0.2s ease, color 0.15s ease;
+            z-index: 100;
+        }
+
+        .widget-bank-toggle:hover {
+            color: var(--terminal-green);
+        }
+
+        .widget-bank-toggle svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .widget-bank.collapsed + .widget-bank-toggle {
+            left: 0;
+        }
+
+        .widget-bank.collapsed + .widget-bank-toggle svg {
+            transform: rotate(180deg);
+        }
+
+        .widget-bank-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .widget-template {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .widget-template:hover {
+            border-color: var(--terminal-green);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
+        }
+
+        .widget-template.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .widget-template-name {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .widget-template-desc {
+            font-size: 10px;
+            color: var(--terminal-gray);
+        }
+
+        .widget-template-size {
+            font-size: 9px;
+            color: var(--terminal-cyan);
+            margin-top: 4px;
+        }
+
+        /* Main grid area */
+        .demo-main {
+            flex: 1;
+            overflow: hidden;
+            padding: 16px;
+        }
+
+        /* Widget content styling */
+        .widget-content {
+            padding: 12px;
+            height: 100%;
+            overflow: auto;
+        }
+
+        .widget-text {
+            font-size: 12px;
+            color: var(--terminal-gray-light);
+            line-height: 1.5;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--terminal-green);
+        }
+
+        .stat-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--terminal-gray);
+            margin-top: 4px;
+        }
+
+        .mini-chart {
+            height: 60px;
+            margin-top: 12px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                var(--terminal-green) 20%,
+                var(--terminal-green) 30%,
+                transparent 50%,
+                var(--terminal-cyan) 60%,
+                var(--terminal-cyan) 80%,
+                transparent 100%
+            );
+            opacity: 0.3;
+            border-radius: 4px;
+        }
+
+        /* Widget controls in header */
+        .widget-header-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .widget-control-btn {
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            background: transparent;
+            border: none;
+            color: var(--terminal-gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: color 0.15s ease;
+            pointer-events: auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .widget-control-btn:hover {
+            color: var(--terminal-green);
+        }
+
+        .widget-control-btn.active {
+            color: var(--terminal-amber);
+        }
+
+        .widget-control-btn.remove:hover {
+            color: var(--terminal-red);
+        }
+
+        .widget-control-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Styled scrollbars */
+        .widget-content::-webkit-scrollbar,
+        .widget-bank-content::-webkit-scrollbar,
+        .event-log-content::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .widget-content::-webkit-scrollbar-track,
+        .widget-bank-content::-webkit-scrollbar-track,
+        .event-log-content::-webkit-scrollbar-track {
+            background: var(--terminal-black);
+        }
+
+        .widget-content::-webkit-scrollbar-thumb,
+        .widget-bank-content::-webkit-scrollbar-thumb,
+        .event-log-content::-webkit-scrollbar-thumb {
+            background: var(--terminal-gray-dark);
+            border-radius: 3px;
+        }
+
+        .widget-content::-webkit-scrollbar-thumb:hover,
+        .widget-bank-content::-webkit-scrollbar-thumb:hover,
+        .event-log-content::-webkit-scrollbar-thumb:hover {
+            background: var(--terminal-gray);
+        }
+
+        /* Firefox scrollbar */
+        .widget-content,
+        .widget-bank-content,
+        .event-log-content {
+            scrollbar-width: thin;
+            scrollbar-color: var(--terminal-gray-dark) var(--terminal-black);
+        }
+
+        /* Event log */
+        .event-log {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            max-height: 200px;
+            background: var(--terminal-gray-darkest);
+            border: 1px solid var(--terminal-gray-dark);
+            border-radius: 4px;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .event-log-header {
+            padding: 8px 12px;
+            background: var(--terminal-black);
+            border-bottom: 1px solid var(--terminal-gray-dark);
+            font-size: 11px;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .event-log-content {
+            padding: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 10px;
+        }
+
+        .event-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(51, 51, 51, 0.5);
+            color: var(--terminal-gray-light);
+        }
+
+        .event-entry:last-child {
+            border-bottom: none;
+        }
+
+        .event-entry .event-type {
+            color: var(--terminal-cyan);
+        }
+
+        /* Lock indicators */
+        .lock-indicator {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            font-size: 10px;
+            color: var(--terminal-amber);
+            z-index: 10;
+        }
+
+        /* TGridLit Light DOM styles */
+        t-grid {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: var(--terminal-black);
+            position: relative;
+        }
+
+        t-grid.grid-stack {
+            min-height: 100%;
+        }
+
+        /* Grid item styling */
+        t-grid > .grid-stack-item > .grid-stack-item-content {
+            background: var(--terminal-gray-darkest);
+            border: 1px solid var(--terminal-gray-dark);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Placeholder during drag */
+        t-grid > .grid-stack-placeholder > .placeholder-content {
+            background: rgba(0, 255, 65, 0.1);
+            border: 2px dashed var(--terminal-green);
+            border-radius: 4px;
+        }
+
+        /* Resize handles */
+        t-grid > .grid-stack-item > .ui-resizable-se::before {
+            content: '';
+            position: absolute;
+            right: 4px;
+            bottom: 4px;
+            width: 8px;
+            height: 8px;
+            border-right: 2px solid var(--terminal-green);
+            border-bottom: 2px solid var(--terminal-green);
+            opacity: 0.5;
+            transition: opacity 0.15s ease;
+        }
+
+        t-grid > .grid-stack-item:hover > .ui-resizable-se::before {
+            opacity: 1;
+        }
+
+        /* Grid overlay */
+        t-grid .grid-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+            z-index: 1000;
+        }
+
+        t-grid .grid-overlay.visible {
+            opacity: 1;
+        }
+
+        t-grid .grid-overlay-cell {
+            position: absolute;
+            border: 1px dashed rgba(0, 255, 65, 0.2);
+            box-sizing: border-box;
+        }
+
+        /* Item hover effect */
+        t-grid > .grid-stack-item > .grid-stack-item-content:hover {
+            box-shadow: 0 0 0 1px var(--terminal-green);
+        }
+
+        /* t-grid-item Light DOM styles */
+        t-grid-item {
+            display: block;
+        }
+
+        t-grid-item .grid-item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: var(--terminal-black);
+            border-bottom: 1px solid var(--terminal-gray-dark);
+            cursor: move;
+        }
+
+        t-grid-item .grid-item-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--terminal-green);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        t-grid-item .grid-item-content {
+            flex: 1;
+            padding: 12px;
+            overflow: auto;
+        }
+
+        t-grid-item .grid-item-controls {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            /* Exclude controls from drag handle */
+            cursor: default;
+        }
+
+        /* Styled scrollbar for grid item content */
+        t-grid-item .grid-item-content::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        t-grid-item .grid-item-content::-webkit-scrollbar-track {
+            background: var(--terminal-black);
+        }
+
+        t-grid-item .grid-item-content::-webkit-scrollbar-thumb {
+            background: var(--terminal-gray-dark);
+            border-radius: 3px;
+        }
+
+        t-grid-item .grid-item-content::-webkit-scrollbar-thumb:hover {
+            background: var(--terminal-gray);
+        }
+
+        t-grid-item .grid-item-content {
+            scrollbar-width: thin;
+            scrollbar-color: var(--terminal-gray-dark) var(--terminal-black);
+        }
+    </style>
+</head>
+<body>
+    <header class="demo-header">
+        <h1>> TGridLit Dashboard</h1>
+        <div class="demo-controls">
+            <t-btn id="save-layout" variant="primary" size="sm">Save Layout</t-btn>
+            <t-btn id="load-layout" variant="secondary" size="sm">Load Layout</t-btn>
+            <t-btn id="compact-grid" variant="ghost" size="sm">Compact</t-btn>
+            <t-btn id="reset-grid" variant="ghost" size="sm">Reset</t-btn>
+            <t-tog id="toggle-overlay" label="Grid Overlay" size="sm" checked title="Shows grid lines during drag/resize operations"></t-tog>
+            <t-tog id="toggle-float" label="Float Mode" size="sm" checked title="When enabled, widgets stay where dropped. When disabled, widgets auto-compact vertically."></t-tog>
+            <t-tog id="toggle-lock" label="Lock Dashboard" size="sm" title="Prevents all widget movement and resizing"></t-tog>
+        </div>
+    </header>
+
+    <div class="demo-layout">
+        <!-- Widget Bank Sidebar -->
+        <aside class="widget-bank" id="widget-bank-sidebar">
+            <div class="widget-bank-header">Available Widgets</div>
+            <div class="widget-bank-content" id="widget-bank">
+                <!-- Widget templates will be populated here -->
+            </div>
+        </aside>
+        <button class="widget-bank-toggle" id="toggle-sidebar" title="Toggle Widget Bank"></button>
+
+        <!-- Main Grid -->
+        <main class="demo-main">
+            <t-grid id="demo-grid" columns="12" cell-height="100" margin="10" show-overlay float>
+                <!-- Widgets will be added dynamically -->
+            </t-grid>
+        </main>
+    </div>
+
+    <div class="event-log">
+        <div class="event-log-header">
+            <span>Event Log</span>
+            <button class="widget-control-btn" id="clear-log" title="Clear"></button>
+        </div>
+        <div class="event-log-content" id="event-log">
+            <div class="event-entry">Click widgets in the sidebar to add them</div>
+        </div>
+    </div>
+
+    <!-- GridStack library (required by TGridLit) -->
+    <script src="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack-all.min.js"></script>
+
+    <script type="module">
+        import '../js/components/TGridLit.js';
+        import '../js/components/TButtonLit.js';
+        import '../js/components/TToggleLit.js';
+        import { pushPinIcon, boundingBoxIcon, xIcon, caretLeftIcon } from '../js/utils/phosphor-icons.js';
+
+        const grid = document.getElementById('demo-grid');
+        const widgetBank = document.getElementById('widget-bank');
+        const widgetBankSidebar = document.getElementById('widget-bank-sidebar');
+        const eventLog = document.getElementById('event-log');
+
+        // Set up sidebar toggle
+        const toggleSidebar = document.getElementById('toggle-sidebar');
+        toggleSidebar.innerHTML = caretLeftIcon;
+        toggleSidebar.addEventListener('click', () => {
+            widgetBankSidebar.classList.toggle('collapsed');
+        });
+
+        // Widget template definitions
+        const widgetTemplates = [
+            {
+                id: 'stats',
+                name: 'System Stats',
+                description: 'Active users counter with chart',
+                w: 3, h: 2,
+                content: `
+                    <div class="widget-content">
+                        <div class="stat-value">1,247</div>
+                        <div class="stat-label">Active Users</div>
+                        <div class="mini-chart"></div>
+                    </div>
+                `
+            },
+            {
+                id: 'performance',
+                name: 'Performance',
+                description: 'Uptime and performance metrics',
+                w: 3, h: 2,
+                content: `
+                    <div class="widget-content">
+                        <div class="stat-value">89.2%</div>
+                        <div class="stat-label">Uptime</div>
+                        <div class="mini-chart"></div>
+                    </div>
+                `
+            },
+            {
+                id: 'chart',
+                name: 'Activity Chart',
+                description: 'Real-time activity monitoring',
+                w: 6, h: 2,
+                content: `
+                    <div class="widget-content">
+                        <p class="widget-text">Real-time activity monitoring chart</p>
+                        <div class="mini-chart" style="height: 100px;"></div>
+                    </div>
+                `
+            },
+            {
+                id: 'events',
+                name: 'Recent Events',
+                description: 'Event log display',
+                w: 4, h: 3,
+                content: `
+                    <div class="widget-content">
+                        <p class="widget-text">
+                            [10:32:15] User login: admin@example.com<br>
+                            [10:31:42] API request: GET /users<br>
+                            [10:30:18] Cache invalidated: user_sessions<br>
+                            [10:29:55] Database query: 42ms<br>
+                            [10:28:33] WebSocket connected: client_4521
+                        </p>
+                    </div>
+                `
+            },
+            {
+                id: 'servers',
+                name: 'Server Status',
+                description: 'Server health overview',
+                w: 4, h: 3,
+                content: `
+                    <div class="widget-content">
+                        <p class="widget-text">
+                            <strong style="color: var(--terminal-green);">Server 1:</strong> Online (45% CPU)<br>
+                            <strong style="color: var(--terminal-green);">Server 2:</strong> Online (32% CPU)<br>
+                            <strong style="color: var(--terminal-amber);">Server 3:</strong> High Load (89% CPU)<br>
+                            <strong style="color: var(--terminal-green);">Server 4:</strong> Online (21% CPU)
+                        </p>
+                    </div>
+                `
+            },
+            {
+                id: 'actions',
+                name: 'Quick Actions',
+                description: 'Action buttons panel',
+                w: 4, h: 3,
+                content: `
+                    <div class="widget-content" style="display: flex; flex-direction: column; gap: 8px;">
+                        <button style="padding: 8px; background: var(--terminal-green); color: black; border: none; cursor: pointer;">Deploy to Production</button>
+                        <button style="padding: 8px; background: transparent; color: var(--terminal-green); border: 1px solid var(--terminal-green); cursor: pointer;">Run Tests</button>
+                        <button style="padding: 8px; background: transparent; color: var(--terminal-gray); border: 1px solid var(--terminal-gray-dark); cursor: pointer;">View Logs</button>
+                    </div>
+                `
+            },
+            {
+                id: 'memory',
+                name: 'Memory Usage',
+                description: 'RAM utilization display',
+                w: 3, h: 2,
+                content: `
+                    <div class="widget-content">
+                        <div class="stat-value">4.2GB</div>
+                        <div class="stat-label">Memory Used / 16GB</div>
+                        <div class="mini-chart"></div>
+                    </div>
+                `
+            },
+            {
+                id: 'network',
+                name: 'Network Traffic',
+                description: 'Bandwidth monitoring',
+                w: 6, h: 2,
+                content: `
+                    <div class="widget-content">
+                        <p class="widget-text">↓ 125 MB/s  |  ↑ 42 MB/s</p>
+                        <div class="mini-chart" style="height: 80px;"></div>
+                    </div>
+                `
+            }
+        ];
+
+        // Track active widgets
+        const activeWidgets = new Map();
+        let widgetIdCounter = 0;
+
+        // Render widget bank
+        function renderWidgetBank() {
+            widgetBank.innerHTML = '';
+            widgetTemplates.forEach(template => {
+                const el = document.createElement('div');
+                el.className = 'widget-template';
+                el.dataset.templateId = template.id;
+                el.innerHTML = `
+                    <div class="widget-template-name">${template.name}</div>
+                    <div class="widget-template-desc">${template.description}</div>
+                    <div class="widget-template-size">${template.w}×${template.h} cells</div>
+                `;
+                el.addEventListener('click', () => addWidgetFromTemplate(template));
+                widgetBank.appendChild(el);
+            });
+        }
+
+        // Add widget from template
+        function addWidgetFromTemplate(template) {
+            widgetIdCounter++;
+            const widgetId = `widget-${template.id}-${widgetIdCounter}`;
+
+            const item = document.createElement('t-grid-item');
+            item.setAttribute('gs-w', template.w);
+            item.setAttribute('gs-h', template.h);
+            item.setAttribute('item-id', widgetId);
+            item.setAttribute('widget-title', template.name);
+
+            // Create header with controls
+            const headerControls = document.createElement('div');
+            headerControls.className = 'widget-header-controls';
+            headerControls.setAttribute('slot', 'controls');
+            headerControls.innerHTML = `
+                <button class="widget-control-btn lock-move" title="Lock Position">${pushPinIcon}</button>
+                <button class="widget-control-btn lock-resize" title="Lock Size">${boundingBoxIcon}</button>
+                <button class="widget-control-btn remove" title="Remove">${xIcon}</button>
+            `;
+
+            item.appendChild(headerControls);
+
+            // Add content
+            const contentDiv = document.createElement('div');
+            contentDiv.innerHTML = template.content;
+            item.appendChild(contentDiv.firstElementChild);
+
+            grid.appendChild(item);
+
+            // Track widget
+            activeWidgets.set(widgetId, {
+                id: widgetId,
+                templateId: template.id,
+                element: item,
+                lockedMove: false,
+                lockedResize: false
+            });
+
+            // Set up control handlers after element is in DOM and wrapped
+            // Wait for grid to process the item (mutation observer uses 50ms + processing time)
+            setTimeout(() => setupWidgetControls(item, widgetId), 200);
+
+            logEvent('added', { widget: template.name });
+        }
+
+        // Setup widget control buttons
+        function setupWidgetControls(item, widgetId, retryCount = 0) {
+            // Query buttons - they should be deep inside the wrapped content
+            const lockMoveBtn = item.querySelector('.lock-move');
+            const lockResizeBtn = item.querySelector('.lock-resize');
+            const removeBtn = item.querySelector('.remove');
+
+            const widgetData = activeWidgets.get(widgetId);
+            if (!widgetData) {
+                console.warn('Widget data not found for', widgetId);
+                return;
+            }
+
+            if (!lockMoveBtn || !lockResizeBtn || !removeBtn) {
+                if (retryCount < 5) {
+                    // Retry after a short delay (DOM might not be ready)
+                    setTimeout(() => setupWidgetControls(item, widgetId, retryCount + 1), 100);
+                } else {
+                    console.error('Failed to find control buttons for', widgetId, 'after', retryCount, 'retries');
+                }
+                return;
+            }
+
+            lockMoveBtn?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                widgetData.lockedMove = !widgetData.lockedMove;
+                lockMoveBtn.classList.toggle('active', widgetData.lockedMove);
+
+                // Toggle gridstack no-move
+                if (widgetData.lockedMove) {
+                    item.setAttribute('gs-no-move', '');
+                } else {
+                    item.removeAttribute('gs-no-move');
+                }
+
+                // Use public API to update gridstack
+                grid.updateWidget(item, { noMove: widgetData.lockedMove });
+
+                logEvent('lock-move', { widget: widgetId, locked: widgetData.lockedMove });
+            });
+
+            lockResizeBtn?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                widgetData.lockedResize = !widgetData.lockedResize;
+                lockResizeBtn.classList.toggle('active', widgetData.lockedResize);
+
+                // Toggle gridstack no-resize
+                if (widgetData.lockedResize) {
+                    item.setAttribute('gs-no-resize', '');
+                } else {
+                    item.removeAttribute('gs-no-resize');
+                }
+
+                // Use public API to update gridstack
+                grid.updateWidget(item, { noResize: widgetData.lockedResize });
+
+                logEvent('lock-resize', { widget: widgetId, locked: widgetData.lockedResize });
+            });
+
+            removeBtn?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                removeWidget(widgetId);
+            });
+        }
+
+        // Remove widget
+        function removeWidget(widgetId) {
+            const widgetData = activeWidgets.get(widgetId);
+            if (!widgetData) return;
+
+            // Use public API
+            grid.removeWidget(widgetData.element, true);
+
+            activeWidgets.delete(widgetId);
+            logEvent('removed', { widget: widgetId });
+        }
+
+        // Log events
+        function logEvent(type, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            const detailStr = typeof detail === 'object' ? JSON.stringify(detail) : detail;
+            entry.innerHTML = `<span class="event-type">${type}</span>: ${detailStr.slice(0, 40)}`;
+            eventLog.insertBefore(entry, eventLog.firstChild);
+            if (eventLog.children.length > 15) {
+                eventLog.removeChild(eventLog.lastChild);
+            }
+        }
+
+        // Save layout to localStorage
+        function saveLayout() {
+            const layout = grid.getLayout();
+            const widgetStates = {};
+
+            activeWidgets.forEach((data, id) => {
+                widgetStates[id] = {
+                    templateId: data.templateId,
+                    lockedMove: data.lockedMove,
+                    lockedResize: data.lockedResize
+                };
+            });
+
+            const saveData = {
+                layout,
+                widgetStates,
+                timestamp: new Date().toISOString()
+            };
+
+            localStorage.setItem('demo-grid-full-layout', JSON.stringify(saveData));
+            logEvent('saved', { widgets: activeWidgets.size });
+        }
+
+        // Load layout from localStorage
+        function loadLayout() {
+            try {
+                const saved = localStorage.getItem('demo-grid-full-layout');
+                if (!saved) {
+                    logEvent('load-failed', 'No saved layout');
+                    return;
+                }
+
+                const saveData = JSON.parse(saved);
+
+                // Clear current widgets
+                activeWidgets.forEach((data, id) => {
+                    data.element.remove();
+                });
+                activeWidgets.clear();
+
+                // Recreate widgets based on layout
+                saveData.layout.forEach(item => {
+                    const widgetState = saveData.widgetStates[item.id];
+                    if (!widgetState) return;
+
+                    const template = widgetTemplates.find(t => t.id === widgetState.templateId);
+                    if (!template) return;
+
+                    // Create widget at specific position
+                    const el = document.createElement('t-grid-item');
+                    el.setAttribute('gs-x', item.x);
+                    el.setAttribute('gs-y', item.y);
+                    el.setAttribute('gs-w', item.w);
+                    el.setAttribute('gs-h', item.h);
+                    el.setAttribute('item-id', item.id);
+                    el.setAttribute('widget-title', template.name);
+
+                    if (widgetState.lockedMove) el.setAttribute('gs-no-move', '');
+                    if (widgetState.lockedResize) el.setAttribute('gs-no-resize', '');
+
+                    const headerControls = document.createElement('div');
+                    headerControls.className = 'widget-header-controls';
+                    headerControls.setAttribute('slot', 'controls');
+                    headerControls.innerHTML = `
+                        <button class="widget-control-btn lock-move ${widgetState.lockedMove ? 'active' : ''}" title="Lock Position">${pushPinIcon}</button>
+                        <button class="widget-control-btn lock-resize ${widgetState.lockedResize ? 'active' : ''}" title="Lock Size">${boundingBoxIcon}</button>
+                        <button class="widget-control-btn remove" title="Remove">${xIcon}</button>
+                    `;
+                    el.appendChild(headerControls);
+
+                    const contentDiv = document.createElement('div');
+                    contentDiv.innerHTML = template.content;
+                    el.appendChild(contentDiv.firstElementChild);
+
+                    grid.appendChild(el);
+
+                    activeWidgets.set(item.id, {
+                        id: item.id,
+                        templateId: widgetState.templateId,
+                        element: el,
+                        lockedMove: widgetState.lockedMove,
+                        lockedResize: widgetState.lockedResize
+                    });
+
+                    setTimeout(() => setupWidgetControls(el, item.id), 100);
+                });
+
+                logEvent('loaded', { widgets: activeWidgets.size });
+            } catch (e) {
+                logEvent('load-error', e.message);
+            }
+        }
+
+        // Initialize
+        renderWidgetBank();
+
+        // Wait for grid to be ready before adding default widgets
+        // The grid needs to be connected and have its firstUpdated run
+        function initializeDefaultWidgets() {
+            // Check if grid is ready (has _grid instance)
+            if (grid._grid) {
+                addWidgetFromTemplate(widgetTemplates[0]); // Stats
+                addWidgetFromTemplate(widgetTemplates[1]); // Performance
+                addWidgetFromTemplate(widgetTemplates[2]); // Chart
+            } else {
+                // Grid not ready yet, wait a frame and try again
+                requestAnimationFrame(initializeDefaultWidgets);
+            }
+        }
+
+        // Start initialization after a short delay to let grid connect
+        setTimeout(initializeDefaultWidgets, 100);
+
+        // Grid events
+        grid.addEventListener('grid-change', (e) => logEvent('change', { items: e.detail.items?.length || 0 }));
+        grid.addEventListener('grid-drag-start', () => logEvent('drag-start', {}));
+        grid.addEventListener('grid-drag-stop', () => logEvent('drag-stop', {}));
+        grid.addEventListener('grid-resize-start', () => logEvent('resize-start', {}));
+        grid.addEventListener('grid-resize-stop', () => logEvent('resize-stop', {}));
+
+        // Control buttons
+        document.getElementById('save-layout').addEventListener('button-click', saveLayout);
+        document.getElementById('load-layout').addEventListener('button-click', loadLayout);
+        document.getElementById('compact-grid').addEventListener('button-click', () => {
+            grid.compactGrid();
+            logEvent('compact', {});
+        });
+        document.getElementById('reset-grid').addEventListener('button-click', () => {
+            localStorage.removeItem('demo-grid-full-layout');
+            localStorage.removeItem('demo-grid-layout');
+            location.reload();
+        });
+        document.getElementById('toggle-overlay').addEventListener('toggle-change', (e) => {
+            grid.showOverlay = e.detail.checked;
+        });
+        document.getElementById('toggle-float').addEventListener('toggle-change', (e) => {
+            grid.float = e.detail.checked;
+            logEvent('float-mode', { enabled: e.detail.checked });
+        });
+        document.getElementById('toggle-lock').addEventListener('toggle-change', (e) => {
+            const locked = e.detail.checked;
+            grid.setStatic(locked);
+            logEvent('dashboard-lock', { locked });
+        });
+        // Set clear log button icon
+        document.getElementById('clear-log').innerHTML = xIcon;
+        document.getElementById('clear-log').addEventListener('click', () => {
+            eventLog.innerHTML = '<div class="event-entry">Log cleared</div>';
+        });
+    </script>
+</body>
+</html>

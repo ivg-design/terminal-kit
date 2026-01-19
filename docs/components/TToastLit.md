@@ -2,6 +2,10 @@
 
 A **LitElement-based** toast notification component for terminal-style user interfaces. Provides user feedback through temporary, non-intrusive messages with auto-dismiss functionality, smooth animations, and configurable positioning. Built with full Shadow DOM encapsulation following Terminal Kit component schema.
 
+## Tag Names
+
+- `t-tst`
+
 ## Architecture
 
 **Tag Name:** `<t-tst>`
@@ -593,6 +597,11 @@ const newToast = document.createElement('t-tst');
 8. Better memory management and performance
 9. Reactive properties with automatic re-rendering
 10. CSS variable theming system
+
+## Slots
+
+None.
+
 
 ## Related Components
 

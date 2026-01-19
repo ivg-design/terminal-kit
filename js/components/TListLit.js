@@ -14,14 +14,17 @@ import { scrollbarStyles, scrollbarProperties, scrollbarDefaults } from '../util
 import { trayArrowDownIcon } from '../utils/phosphor-icons.js';
 
 // ============================================================
-// Block 1: Static Metadata
+// BLOCK 1: Static Metadata
 // ============================================================
 
 /**
- * TListLit - Virtualized scrollable list component
+ * @component TListLit
+ * @tagname t-list
+ * @description Virtualized scrollable list component with selection and grouping.
+ * @category Container
+ * @since 3.0.0
  *
  * @element t-list
- * @tagname t-list
  *
  * @fires item-click - Fired when an item is clicked
  * @fires selection-change - Fired when selection changes
@@ -51,24 +54,29 @@ class TListLit extends LitElement {
 	static category = 'Container';
 
 	// ============================================================
-	// Block 2: Static Styles
+	// BLOCK 2: Static Styles
 	// ============================================================
 
 	static styles = [
 		scrollbarStyles,
 		css`
 		:host {
-			display: block;
+			display: flex;
+			flex-direction: column;
 			position: relative;
 			overflow: hidden;
 			font-family: var(--t-font-mono, 'JetBrains Mono', monospace);
 			background: var(--t-list-bg, var(--terminal-gray-darkest, #1a1a1a));
 			border: 1px solid var(--t-list-border, var(--terminal-gray-dark, #333));
 			color: var(--t-list-color, var(--terminal-green, #00ff41));
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
 		}
 
 		.list-viewport {
-			height: 100%;
+			flex: 1;
+			min-height: 0;
 			overflow-y: auto;
 			overflow-x: hidden;
 		}
@@ -305,7 +313,7 @@ class TListLit extends LitElement {
 	`];
 
 	// ============================================================
-	// Block 3: Reactive Properties
+	// BLOCK 3: Reactive Properties
 	// ============================================================
 
 	static properties = {
@@ -418,7 +426,7 @@ class TListLit extends LitElement {
 	};
 
 	// ============================================================
-	// Block 4: Internal State
+	// BLOCK 4: Internal State
 	// ============================================================
 
 	/** @private */
@@ -440,14 +448,14 @@ class TListLit extends LitElement {
 	_resizeObserver = null;
 
 	// ============================================================
-	// Block 5: Logger Instance
+	// BLOCK 5: Logger Instance
 	// ============================================================
 
 	/** @private */
 	_logger = null;
 
 	// ============================================================
-	// Block 6: Constructor
+	// BLOCK 6: Constructor
 	// ============================================================
 
 	constructor() {
@@ -485,7 +493,7 @@ class TListLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 7: Lifecycle Methods
+	// BLOCK 7: Lifecycle Methods
 	// ============================================================
 
 	connectedCallback() {
@@ -526,7 +534,7 @@ class TListLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 8: Public API Methods
+	// BLOCK 8: Public API Methods
 	// ============================================================
 
 	/**
@@ -668,7 +676,7 @@ class TListLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 9: Event Emitters
+	// BLOCK 9: Event Emitters
 	// ============================================================
 
 	/**
@@ -734,11 +742,11 @@ class TListLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 10: Nesting Support (N/A for list)
+	// BLOCK 10: Nesting Support (N/A for list)
 	// ============================================================
 
 	// ============================================================
-	// Block 11: Validation
+	// BLOCK 11: Validation
 	// ============================================================
 
 	/**
@@ -762,7 +770,7 @@ class TListLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 12: Render Method
+	// BLOCK 12: Render Method
 	// ============================================================
 
 	/**
@@ -805,7 +813,7 @@ class TListLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 13: Private Helpers
+	// BLOCK 13: Private Helpers
 	// ============================================================
 
 	/**

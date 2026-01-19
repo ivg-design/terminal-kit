@@ -160,17 +160,15 @@ export class TDropdownLit extends LitElement {
 
     /* Panel */
     .nested-dropdown-panel {
-      position: absolute;
-      top: calc(100% + 4px);
-      left: 0;
-      min-width: 100%;
+      position: fixed;
+      min-width: 200px;
       width: max-content;
-      max-width: max(400px, 100%);
+      max-width: 400px;
       max-height: 400px;
       background-color: var(--dropdown-panel-bg);
       border: 1px solid var(--dropdown-text);
       box-shadow: 0 4px 12px var(--dropdown-shadow);
-      z-index: 1000;
+      z-index: 10000;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -767,14 +765,48 @@ export class TDropdownLit extends LitElement {
       this.isOpen = true;
       this._emitEvent('dropdown-open', {});
 
-      // Focus search input when opened
+      // Position panel and focus search input when opened
       this.updateComplete.then(() => {
+        this._positionPanel();
         const searchInput = this.shadowRoot?.querySelector('.dropdown-search');
         if (searchInput) {
           searchInput.focus();
         }
       });
     }
+  }
+
+  /**
+   * Position the dropdown panel relative to the button
+   * @private
+   */
+  _positionPanel() {
+    const button = this.shadowRoot?.querySelector('.nested-dropdown-button');
+    const panel = this.shadowRoot?.querySelector('.nested-dropdown-panel');
+    if (!button || !panel) return;
+
+    const rect = button.getBoundingClientRect();
+    const panelHeight = Math.min(400, window.innerHeight - rect.bottom - 20);
+
+    // Position below button
+    let top = rect.bottom + 4;
+    let left = rect.left;
+
+    // Check if panel would go off-screen to the right
+    const panelWidth = Math.min(400, rect.width);
+    if (left + panelWidth > window.innerWidth) {
+      left = window.innerWidth - panelWidth - 10;
+    }
+
+    // Check if panel would go off-screen at bottom, flip to top if needed
+    if (top + panelHeight > window.innerHeight) {
+      top = rect.top - panelHeight - 4;
+      if (top < 0) top = 10;
+    }
+
+    panel.style.top = `${top}px`;
+    panel.style.left = `${left}px`;
+    panel.style.minWidth = `${rect.width}px`;
   }
 
   /**
