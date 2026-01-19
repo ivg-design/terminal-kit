@@ -354,6 +354,101 @@ export class TChatPanelLit extends LitElement {
   // ----------------------------------------------------------
   // BLOCK 3: REACTIVE PROPERTIES (REQUIRED)
   // ----------------------------------------------------------
+  /**
+   * @property {string} title - Panel title displayed in header
+   * @default 'Chat'
+   * @attribute title
+   * @reflects true
+   */
+  /**
+   * @property {string} icon - SVG icon string for the header
+   * @default noteBlankIcon
+   */
+  /**
+   * @property {Array} messages - Array of message objects with role, content, attachments
+   * @default []
+   */
+  /**
+   * @property {Array} queue - Array of queued message objects waiting to be sent
+   * @default []
+   */
+  /**
+   * @property {Array} agentModes - Dropdown options for agent selection
+   * @default [{value:'haiku',label:'Haiku'},{value:'sonnet',label:'Sonnet'},{value:'opus',label:'Opus'}]
+   * @attribute agent-modes
+   */
+  /**
+   * @property {string} selectedMode - Currently selected agent mode
+   * @default 'sonnet'
+   * @attribute selected-mode
+   */
+  /**
+   * @property {boolean} thinking - Shows streaming bubble with spinner when true
+   * @default false
+   * @attribute thinking
+   * @reflects true
+   */
+  /**
+   * @property {string} spinnerType - Spinner type from t-ldr component
+   * @default 'ellipsis-spinner'
+   * @attribute spinner-type
+   */
+  /**
+   * @property {number} spinnerSize - Spinner size in pixels
+   * @default 24
+   * @attribute spinner-size
+   */
+  /**
+   * @property {string} exportFormat - Export format ('markdown' or 'json')
+   * @default 'markdown'
+   * @attribute export-format
+   */
+  /**
+   * @property {string} exportFilename - Base filename for exports
+   * @default 'chat-export'
+   * @attribute export-filename
+   */
+  /**
+   * @property {string} maxHeight - Max height for the message stream
+   * @default '100%'
+   * @attribute max-height
+   */
+  /**
+   * @property {string} persistKey - Local storage key prefix for draft/queue persistence
+   * @default ''
+   * @attribute persist-key
+   */
+  /**
+   * @property {boolean} showQueue - Whether the queue panel is visible
+   * @default false
+   * @attribute show-queue
+   */
+  /**
+   * @property {boolean} queueEnabled - Allow queueing messages while busy
+   * @default true
+   * @attribute queue-enabled
+   */
+  /**
+   * @property {boolean} autoScroll - Auto-scroll to newest message
+   * @default true
+   * @attribute auto-scroll
+   */
+  /**
+   * @property {boolean} disabled - Disables input and actions
+   * @default false
+   * @attribute disabled
+   * @reflects true
+   */
+  /**
+   * @property {string} streamingContent - Streaming assistant text content
+   * @default ''
+   * @attribute streaming-content
+   */
+  /**
+   * @property {number} maxRows - Max auto-grow rows for the composer textarea
+   * @default 4
+   * @attribute max-rows
+   */
   static properties = {
     title: { type: String, reflect: true },
     icon: { type: String },
@@ -380,16 +475,48 @@ export class TChatPanelLit extends LitElement {
   // ----------------------------------------------------------
   // BLOCK 4: INTERNAL STATE (PRIVATE)
   // ----------------------------------------------------------
-  _logger = componentLogger.for('TChatPanelLit');
+  /**
+   * Current draft message text
+   * @private
+   * @type {string}
+   */
   _draft = '';
+
+  /**
+   * Files pending attachment to the next message
+   * @private
+   * @type {File[]}
+   */
   _pendingFiles = [];
 
+  /**
+   * Context received from parent container
+   * @private
+   * @type {Object|null}
+   */
+  _context = null;
+
   // ----------------------------------------------------------
-  // BLOCK 5: CONSTRUCTOR (REQUIRED)
+  // BLOCK 5: LOGGER INSTANCE (REQUIRED)
+  // ----------------------------------------------------------
+  /**
+   * Component logger instance
+   * @private
+   * @type {Object}
+   */
+  _logger = null;
+
+  // ----------------------------------------------------------
+  // BLOCK 6: CONSTRUCTOR (REQUIRED)
   // ----------------------------------------------------------
   constructor() {
     super();
 
+    // Initialize logger first
+    this._logger = componentLogger.for('TChatPanelLit');
+    this._logger.debug('Component constructed');
+
+    // Initialize properties with defaults
     this.title = 'Chat';
     this.icon = noteBlankIcon;
     this.messages = [];
@@ -414,20 +541,49 @@ export class TChatPanelLit extends LitElement {
     this.streamingContent = '';
     this.maxRows = 4;
     this._rows = 1;
-
-    this._setupMarkdown();
   }
 
   // ----------------------------------------------------------
-  // BLOCK 6: LIFECYCLE METHODS (REQUIRED)
+  // BLOCK 7: LIFECYCLE METHODS (REQUIRED)
   // ----------------------------------------------------------
+  /**
+   * Called when component is added to DOM
+   * @lifecycle
+   */
   connectedCallback() {
     super.connectedCallback();
+    this._logger.info('Connected to DOM');
     this._restoreState();
   }
 
+  /**
+   * Called when component is removed from DOM
+   * @lifecycle
+   */
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._logger.info('Disconnected from DOM');
+  }
+
+  /**
+   * Called after first render
+   * @lifecycle
+   * @param {Map} changedProperties - Map of changed properties
+   */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+    this._logger.debug('First update complete', { changedProperties: [...changedProperties.keys()] });
+    this._setupMarkdown();
+  }
+
+  /**
+   * Called after each render
+   * @lifecycle
+   * @param {Map} changedProperties - Map of changed properties
+   */
   updated(changedProperties) {
     super.updated(changedProperties);
+    this._logger.trace('Updated', { changedProperties: [...changedProperties.keys()] });
 
     if (changedProperties.has('messages') || changedProperties.has('streamingContent')) {
       this._highlightCodeBlocks();
@@ -442,21 +598,42 @@ export class TChatPanelLit extends LitElement {
   }
 
   // ----------------------------------------------------------
-  // BLOCK 7: PUBLIC API METHODS
+  // BLOCK 8: PUBLIC API METHODS (REQUIRED)
   // ----------------------------------------------------------
+  /**
+   * Clears all messages and streaming content
+   * @public
+   * @fires chat-cleared
+   */
   clearChat() {
+    this._logger.debug('clearChat called');
     this.messages = [];
     this.streamingContent = '';
     this._emitEvent('chat-cleared', {});
   }
 
+  /**
+   * Exports the chat history to a file
+   * @public
+   * @param {string} [format] - Export format ('markdown' or 'json')
+   * @fires chat-export
+   */
   exportChat(format = this.exportFormat) {
+    this._logger.debug('exportChat called', { format });
     const payload = this._buildExportPayload(format);
     this._emitEvent('chat-export', { format, payload });
     this._downloadExport(format, payload);
   }
 
+  /**
+   * Adds a message to the queue
+   * @public
+   * @param {string} content - Message content
+   * @param {File[]} [attachments=[]] - Optional file attachments
+   * @fires chat-queued
+   */
   enqueueMessage(content, attachments = []) {
+    this._logger.debug('enqueueMessage called', { content: content.substring(0, 50), attachmentCount: attachments.length });
     const item = {
       id: this._uuid(),
       content,
@@ -468,7 +645,14 @@ export class TChatPanelLit extends LitElement {
     this._emitEvent('chat-queued', { item, queue: this.queue });
   }
 
+  /**
+   * Removes and returns the first message from the queue
+   * @public
+   * @returns {Object|null} The dequeued item or null if queue is empty
+   * @fires chat-dequeued
+   */
   dequeueMessage() {
+    this._logger.debug('dequeueMessage called', { queueLength: this.queue.length });
     const [item, ...rest] = this.queue;
     this.queue = rest;
     if (item) {
@@ -477,10 +661,189 @@ export class TChatPanelLit extends LitElement {
     return item || null;
   }
 
+  /**
+   * Adds a message to the chat
+   * @public
+   * @param {Object} message - Message object with role, content, etc.
+   */
+  addMessage(message) {
+    this._logger.debug('addMessage called', { role: message.role });
+    this.messages = [...this.messages, {
+      id: message.id || this._uuid(),
+      ...message
+    }];
+  }
+
+  /**
+   * Sets the streaming content for the thinking bubble
+   * @public
+   * @param {string} content - Streaming text content
+   */
+  setStreamingContent(content) {
+    this._logger.debug('setStreamingContent called', { length: content?.length || 0 });
+    this.streamingContent = content;
+  }
+
   // ----------------------------------------------------------
-  // BLOCK 8: RENDER METHOD
+  // BLOCK 9: EVENT EMITTERS (REQUIRED)
   // ----------------------------------------------------------
+  /**
+   * Emits a custom event
+   * @private
+   * @param {string} eventName - Name of the event
+   * @param {Object} detail - Event detail payload
+   */
+  _emitEvent(eventName, detail) {
+    this._logger.debug('Emitting event', { eventName, detail });
+    this.dispatchEvent(new CustomEvent(eventName, {
+      detail,
+      bubbles: true,
+      composed: true
+    }));
+  }
+
+  /**
+   * @event chat-send
+   * @type {CustomEvent}
+   * @description Fired when Send is pressed
+   * @property {Object} detail
+   * @property {string} detail.message - Message content
+   * @property {File[]} detail.attachments - File attachments
+   * @property {string} detail.mode - Selected agent mode
+   * @bubbles true
+   * @composed true
+   */
+
+  /**
+   * @event chat-queued
+   * @type {CustomEvent}
+   * @description Fired when a message is added to the queue
+   * @property {Object} detail
+   * @property {Object} detail.item - Queued item
+   * @property {Array} detail.queue - Current queue
+   * @bubbles true
+   * @composed true
+   */
+
+  /**
+   * @event chat-dequeued
+   * @type {CustomEvent}
+   * @description Fired when a message is removed from the queue
+   * @property {Object} detail
+   * @property {Object} detail.item - Dequeued item
+   * @property {Array} detail.queue - Current queue
+   * @bubbles true
+   * @composed true
+   */
+
+  /**
+   * @event chat-queue-remove
+   * @type {CustomEvent}
+   * @description Fired when a queue item is manually removed
+   * @property {Object} detail
+   * @property {Object} detail.item - Removed item
+   * @property {Array} detail.queue - Current queue
+   * @bubbles true
+   * @composed true
+   */
+
+  /**
+   * @event chat-mode-change
+   * @type {CustomEvent}
+   * @description Fired when agent mode changes
+   * @property {Object} detail
+   * @property {string} detail.value - New mode value
+   * @bubbles true
+   * @composed true
+   */
+
+  /**
+   * @event chat-attachments
+   * @type {CustomEvent}
+   * @description Fired when attachments are selected
+   * @property {Object} detail
+   * @property {File[]} detail.files - Selected files
+   * @bubbles true
+   * @composed true
+   */
+
+  /**
+   * @event chat-export
+   * @type {CustomEvent}
+   * @description Fired before export download
+   * @property {Object} detail
+   * @property {string} detail.format - Export format
+   * @property {string} detail.payload - Export content
+   * @bubbles true
+   * @composed true
+   */
+
+  /**
+   * @event chat-cleared
+   * @type {CustomEvent}
+   * @description Fired when the chat is cleared
+   * @bubbles true
+   * @composed true
+   */
+
+  // ----------------------------------------------------------
+  // BLOCK 10: NESTING SUPPORT (REQUIRED FOR CONTAINER)
+  // ----------------------------------------------------------
+  /**
+   * Receives context from a parent container component
+   * @public
+   * @param {Object} context - Context object from parent
+   */
+  receiveContext(context) {
+    this._logger.debug('Received context from parent', { context });
+    this._context = context;
+  }
+
+  // ----------------------------------------------------------
+  // BLOCK 11: VALIDATION (REQUIRED)
+  // ----------------------------------------------------------
+  /**
+   * Returns validation rules for a property
+   * @static
+   * @param {string} propName - Property name to validate
+   * @returns {Object|null} Validation configuration
+   */
+  static getPropertyValidation(propName) {
+    const validations = {
+      exportFormat: {
+        validate: (value) => {
+          const valid = ['markdown', 'json'].includes(value);
+          return {
+            valid,
+            errors: valid ? [] : [`exportFormat must be 'markdown' or 'json', got '${value}'`]
+          };
+        }
+      },
+      selectedMode: {
+        validate: (value) => {
+          const valid = typeof value === 'string' && value.length > 0;
+          return {
+            valid,
+            errors: valid ? [] : ['selectedMode must be a non-empty string']
+          };
+        }
+      }
+    };
+    return validations[propName] || null;
+  }
+
+  // ----------------------------------------------------------
+  // BLOCK 12: RENDER METHOD (REQUIRED)
+  // ----------------------------------------------------------
+  /**
+   * Renders the component
+   * @returns {TemplateResult} Lit template
+   * @slot default - Main content area (inside t-pnl)
+   * @slot actions - Header action buttons
+   */
   render() {
+    this._logger.trace('Rendering');
+
     const modeOptions = Array.isArray(this.agentModes) && this.agentModes.length
       ? this.agentModes
       : [{ value: 'default', label: 'Default' }];
@@ -567,8 +930,15 @@ export class TChatPanelLit extends LitElement {
   }
 
   // ----------------------------------------------------------
-  // BLOCK 9: INTERNAL RENDER HELPERS
+  // BLOCK 13: PRIVATE HELPERS (REQUIRED)
   // ----------------------------------------------------------
+
+  /**
+   * Renders a single message bubble
+   * @private
+   * @param {Object} message - Message object
+   * @returns {TemplateResult}
+   */
   _renderMessage(message) {
     const role = message.role || 'assistant';
     const content = message.content || '';
@@ -592,6 +962,11 @@ export class TChatPanelLit extends LitElement {
     `;
   }
 
+  /**
+   * Renders the streaming/thinking bubble
+   * @private
+   * @returns {TemplateResult|string}
+   */
   _renderStreaming() {
     if (!this.thinking && !this.streamingContent) return '';
 
@@ -611,6 +986,12 @@ export class TChatPanelLit extends LitElement {
     `;
   }
 
+  /**
+   * Renders attachment chips
+   * @private
+   * @param {Array} attachments - Array of attachment objects
+   * @returns {TemplateResult}
+   */
   _renderAttachments(attachments) {
     return html`
       <div class="attachments">
@@ -625,7 +1006,11 @@ export class TChatPanelLit extends LitElement {
     `;
   }
 
-
+  /**
+   * Renders pending file attachments
+   * @private
+   * @returns {TemplateResult|string}
+   */
   _renderPendingAttachments() {
     if (!this._pendingFiles.length) return '';
 
@@ -637,6 +1022,13 @@ export class TChatPanelLit extends LitElement {
     return this._renderAttachments(attachments);
   }
 
+  /**
+   * Renders a queue item
+   * @private
+   * @param {Object} item - Queue item
+   * @param {number} index - Item index
+   * @returns {TemplateResult}
+   */
   _renderQueueItem(item, index) {
     return html`
       <div class="queue-item">
@@ -651,9 +1043,11 @@ export class TChatPanelLit extends LitElement {
     `;
   }
 
-  // ----------------------------------------------------------
-  // BLOCK 10: EVENT HANDLERS
-  // ----------------------------------------------------------
+  /**
+   * Handles draft input changes
+   * @private
+   * @param {CustomEvent} e - Input event
+   */
   _handleDraftInput(e) {
     this._draft = e.detail?.value || '';
     this._updateRows();
@@ -661,6 +1055,11 @@ export class TChatPanelLit extends LitElement {
     this.requestUpdate();
   }
 
+  /**
+   * Handles keydown in the textarea
+   * @private
+   * @param {KeyboardEvent} e - Keyboard event
+   */
   _handleKeyDown(e) {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
@@ -677,9 +1076,15 @@ export class TChatPanelLit extends LitElement {
     }
   }
 
+  /**
+   * Handles send button click
+   * @private
+   */
   _handleSend() {
     const trimmed = (this._draft || '').trim();
     if (!trimmed) return;
+
+    this._logger.debug('_handleSend called', { messageLength: trimmed.length });
 
     if (this.thinking && this.queueEnabled) {
       this.enqueueMessage(trimmed, this._pendingFiles);
@@ -697,47 +1102,66 @@ export class TChatPanelLit extends LitElement {
     this._clearDraft();
   }
 
+  /**
+   * Handles mode dropdown change
+   * @private
+   * @param {CustomEvent} e - Change event
+   */
   _handleModeChange(e) {
     const value = e.detail?.value;
     if (!value) return;
+    this._logger.debug('Mode changed', { value });
     this.selectedMode = value;
     this._emitEvent('chat-mode-change', { value });
   }
 
+  /**
+   * Handles export button click
+   * @private
+   */
   _handleExport() {
     this.exportChat(this.exportFormat);
   }
 
+  /**
+   * Triggers the hidden file input
+   * @private
+   */
   _triggerFileSelect() {
     const input = this.renderRoot?.querySelector('input[type="file"]');
     if (input) input.click();
   }
 
+  /**
+   * Handles file selection
+   * @private
+   * @param {Event} e - Change event
+   */
   _handleFilesSelected(e) {
     const files = Array.from(e.target.files || []);
+    this._logger.debug('Files selected', { count: files.length });
     this._pendingFiles = files;
     this._emitEvent('chat-attachments', { files });
     this.requestUpdate();
   }
 
+  /**
+   * Removes an item from the queue by index
+   * @private
+   * @param {number} index - Queue index
+   */
   _removeQueueItem(index) {
     const item = this.queue[index];
+    this._logger.debug('Removing queue item', { index, itemId: item?.id });
     const next = this.queue.filter((_, i) => i !== index);
     this.queue = next;
     this._emitEvent('chat-queue-remove', { item, queue: this.queue });
   }
 
-  // ----------------------------------------------------------
-  // BLOCK 11: UTILITIES
-  // ----------------------------------------------------------
-  _emitEvent(eventName, detail) {
-    this.dispatchEvent(new CustomEvent(eventName, {
-      detail,
-      bubbles: true,
-      composed: true
-    }));
-  }
-
+  /**
+   * Clears the draft and pending files
+   * @private
+   */
   _clearDraft() {
     this._draft = '';
     this._pendingFiles = [];
@@ -748,10 +1172,21 @@ export class TChatPanelLit extends LitElement {
     this.requestUpdate();
   }
 
+  /**
+   * Generates a unique ID
+   * @private
+   * @returns {string}
+   */
   _uuid() {
     return `chat-${Math.random().toString(36).slice(2, 10)}`;
   }
 
+  /**
+   * Formats bytes to human-readable string
+   * @private
+   * @param {number} bytes - Byte count
+   * @returns {string}
+   */
   _formatBytes(bytes) {
     if (!bytes && bytes !== 0) return '';
     if (bytes < 1024) return `${bytes} B`;
@@ -761,6 +1196,12 @@ export class TChatPanelLit extends LitElement {
     return `${mb.toFixed(1)} MB`;
   }
 
+  /**
+   * Formats message metadata
+   * @private
+   * @param {Object} message - Message object
+   * @returns {string}
+   */
   _formatMeta(message) {
     const parts = [];
     if (message.timestamp) parts.push(message.timestamp);
@@ -769,6 +1210,12 @@ export class TChatPanelLit extends LitElement {
     return parts.join(' - ');
   }
 
+  /**
+   * Builds export payload
+   * @private
+   * @param {string} format - Export format
+   * @returns {string}
+   */
   _buildExportPayload(format) {
     if (format === 'json') {
       return JSON.stringify(this.messages, null, 2);
@@ -780,6 +1227,12 @@ export class TChatPanelLit extends LitElement {
     }).join('\n\n');
   }
 
+  /**
+   * Downloads the export file
+   * @private
+   * @param {string} format - Export format
+   * @param {string} payload - Export content
+   */
   _downloadExport(format, payload) {
     const ext = format === 'json' ? 'json' : 'md';
     const blob = new Blob([payload], { type: 'text/plain' });
@@ -791,6 +1244,10 @@ export class TChatPanelLit extends LitElement {
     URL.revokeObjectURL(url);
   }
 
+  /**
+   * Scrolls message stream to bottom
+   * @private
+   */
   _scrollToBottom() {
     const stream = this.renderRoot?.querySelector('.stream');
     if (!stream) return;
@@ -799,6 +1256,10 @@ export class TChatPanelLit extends LitElement {
     });
   }
 
+  /**
+   * Highlights code blocks with Prism
+   * @private
+   */
   _highlightCodeBlocks() {
     const nodes = this.renderRoot?.querySelectorAll('pre code');
     if (!nodes) return;
@@ -807,12 +1268,20 @@ export class TChatPanelLit extends LitElement {
     });
   }
 
+  /**
+   * Updates textarea row count
+   * @private
+   */
   _updateRows() {
     const lines = (this._draft || '').split('\n').length;
     const next = Math.min(this.maxRows || 4, Math.max(1, lines));
     this._rows = next;
   }
 
+  /**
+   * Sets up marked markdown renderer
+   * @private
+   */
   _setupMarkdown() {
     const renderer = new marked.Renderer();
     renderer.html = () => '';
@@ -823,21 +1292,35 @@ export class TChatPanelLit extends LitElement {
     });
   }
 
+  /**
+   * Renders markdown content to HTML
+   * @private
+   * @param {string} content - Markdown content
+   * @returns {string} HTML string
+   */
   _renderMarkdown(content) {
     if (!content) return '';
     return marked.parse(content);
   }
 
+  /**
+   * Persists draft and queue to localStorage
+   * @private
+   */
   _persistState() {
     if (!this.persistKey) return;
     try {
       localStorage.setItem(`${this.persistKey}:draft`, this._draft || '');
       localStorage.setItem(`${this.persistKey}:queue`, JSON.stringify(this.queue || []));
     } catch (error) {
-      this._logger.debug('Failed to persist chat state', { error });
+      this._logger.warn('Failed to persist chat state', { error });
     }
   }
 
+  /**
+   * Restores draft and queue from localStorage
+   * @private
+   */
   _restoreState() {
     if (!this.persistKey) return;
     try {
@@ -845,18 +1328,50 @@ export class TChatPanelLit extends LitElement {
       const queue = localStorage.getItem(`${this.persistKey}:queue`);
       if (draft) this._draft = draft;
       if (queue) this.queue = JSON.parse(queue);
+      this._logger.debug('State restored from localStorage');
     } catch (error) {
-      this._logger.debug('Failed to restore chat state', { error });
+      this._logger.warn('Failed to restore chat state', { error });
     }
   }
 }
 
+// ============================================================
+// SECTION 3: CUSTOM ELEMENT REGISTRATION (REQUIRED)
+// ============================================================
 customElements.define('t-chat', TChatPanelLit);
 
+// ============================================================
+// SECTION 4: MANIFEST EXPORT (REQUIRED)
+// ============================================================
 export const TChatPanelManifest = generateManifest(TChatPanelLit, {
   tagName: 't-chat',
   displayName: 'Chat Panel',
   description: 'Compact terminal-styled chat panel with markdown rendering, attachments, queueing, and streaming support.',
   version: '1.0.0',
-  category: 'Composite'
+  category: 'Composite',
+  methods: {
+    clearChat: { description: 'Clears all messages and streaming content' },
+    exportChat: { description: 'Exports the chat history to a file', params: [{ name: 'format', type: 'string', default: 'markdown' }] },
+    enqueueMessage: { description: 'Adds a message to the queue', params: [{ name: 'content', type: 'string' }, { name: 'attachments', type: 'File[]', default: '[]' }] },
+    dequeueMessage: { description: 'Removes and returns the first message from the queue', returns: 'Object|null' },
+    addMessage: { description: 'Adds a message to the chat', params: [{ name: 'message', type: 'Object' }] },
+    setStreamingContent: { description: 'Sets the streaming content for the thinking bubble', params: [{ name: 'content', type: 'string' }] },
+    receiveContext: { description: 'Receives context from a parent container', params: [{ name: 'context', type: 'Object' }] }
+  },
+  events: {
+    'chat-send': { description: 'Fired when Send is pressed', detail: '{ message, attachments, mode }' },
+    'chat-queued': { description: 'Fired when a message is queued', detail: '{ item, queue }' },
+    'chat-dequeued': { description: 'Fired when a message is dequeued', detail: '{ item, queue }' },
+    'chat-queue-remove': { description: 'Fired when a queue item is removed', detail: '{ item, queue }' },
+    'chat-mode-change': { description: 'Fired when agent mode changes', detail: '{ value }' },
+    'chat-attachments': { description: 'Fired when attachments are selected', detail: '{ files }' },
+    'chat-export': { description: 'Fired before export download', detail: '{ format, payload }' },
+    'chat-cleared': { description: 'Fired when the chat is cleared', detail: '{}' }
+  },
+  slots: {
+    default: { description: 'Main content area (inside t-pnl)' },
+    actions: { description: 'Header action buttons' }
+  }
 });
+
+export default TChatPanelLit;

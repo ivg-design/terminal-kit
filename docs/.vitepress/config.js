@@ -13,8 +13,8 @@ export default defineConfig({
     logo: false,
 
     nav: [
-      { text: 'Demos', link: 'http://localhost:12358/' },
-      { text: 'Icons', link: 'http://localhost:12358/demos/icons.html' },
+      { text: 'Demos', link: 'http://localhost:12359/' },
+      { text: 'Icons', link: 'http://localhost:12359/demos/icons.html' },
       { text: 'GitHub', link: 'https://github.com/ivg-design/terminal-kit' }
     ],
 
@@ -23,34 +23,49 @@ export default defineConfig({
         text: 'Getting Started',
         items: [
           { text: 'Introduction', link: '/' },
-          { text: 'API Reference', link: '/API' }
+          { text: 'API Reference', link: '/API' },
+          { text: 'Component Schema', link: '/COMPONENT_SCHEMA' }
         ]
       },
       {
-        text: 'Components',
+        text: 'Form Components',
         items: [
-          { text: 'TButton', link: '/components/TButton' },
-          { text: 'TerminalColorPicker', link: '/components/TerminalColorPicker' },
-          { text: 'TerminalDropdown', link: '/components/TerminalDropdown' },
-          { text: 'TerminalDynamicControls', link: '/components/TerminalDynamicControls' },
-          { text: 'TerminalInput', link: '/components/TerminalInput' },
-          { text: 'TerminalLoader', link: '/components/TerminalLoader' },
-          { text: 'TerminalModal', link: '/components/TerminalModal' },
-          { text: 'TerminalPanel', link: '/components/TerminalPanel' },
-          { text: 'TerminalSlider', link: '/components/TerminalSlider' },
-          { text: 'TerminalStatusBar', link: '/components/TerminalStatusBar' },
-          { text: 'TerminalTextarea', link: '/components/TerminalTextarea' },
-          { text: 'TerminalToast', link: '/components/TerminalToast' },
-          { text: 'TerminalToggle', link: '/components/TerminalToggle' },
-          { text: 'TerminalTreeView', link: '/components/TerminalTreeView' },
-          { text: 'TerminalUserMenu', link: '/components/TerminalUserMenu' }
+          { text: 'TButtonLit', link: '/components/TButtonLit' },
+          { text: 'TInputLit', link: '/components/TInputLit' },
+          { text: 'TTextareaLit', link: '/components/TTextareaLit' },
+          { text: 'TToggleLit', link: '/components/TToggleLit' },
+          { text: 'TSliderLit', link: '/components/TSliderLit' },
+          { text: 'TDropdownLit', link: '/components/TDropdownLit' },
+          { text: 'TColorPickerLit', link: '/components/TColorPickerLit' }
         ]
       },
       {
-        text: 'Guides',
+        text: 'Layout Components',
         items: [
-          { text: 'Component Creation', link: '/COMPONENT_CREATION_GUIDE' },
-          { text: 'Data Manager API', link: '/components/DataManager_API' }
+          { text: 'TPanelLit', link: '/components/TPanelLit' },
+          { text: 'TModalLit', link: '/components/TModalLit' },
+          { text: 'TChatPanelLit', link: '/components/TChatPanelLit' }
+        ]
+      },
+      {
+        text: 'Display Components',
+        items: [
+          { text: 'TLoaderLit', link: '/components/TLoaderLit' },
+          { text: 'TToastLit', link: '/components/TToastLit' },
+          { text: 'TStatusBarLit', link: '/components/TStatusBarLit' },
+          { text: 'TStatusFieldLit', link: '/components/TStatusFieldLit' }
+        ]
+      },
+      {
+        text: 'Navigation Components',
+        items: [
+          { text: 'TUserMenuLit', link: '/components/TUserMenuLit' }
+        ]
+      },
+      {
+        text: 'References',
+        items: [
+          { text: 'Spinner Types', link: '/components/spinner-list' }
         ]
       }
     ],
