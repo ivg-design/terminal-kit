@@ -233,6 +233,26 @@ class TLogListLit extends LitElement {
 			overflow-x: hidden;
 		}
 
+		/* Scrollbar styling for entries */
+		.entries::-webkit-scrollbar {
+			width: var(--scrollbar-width);
+		}
+
+		.entries::-webkit-scrollbar-track {
+			background: var(--scrollbar-track);
+			border-radius: var(--scrollbar-radius);
+		}
+
+		.entries::-webkit-scrollbar-thumb {
+			background: var(--scrollbar-thumb);
+			border-radius: var(--scrollbar-radius);
+			border: 1px solid var(--scrollbar-track);
+		}
+
+		.entries::-webkit-scrollbar-thumb:hover {
+			background: var(--scrollbar-thumb-hover);
+		}
+
 		.entries-wrapper {
 			min-height: 100%;
 		}

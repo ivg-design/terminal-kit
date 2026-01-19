@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Controls - Terminal Components</title>
+    <link rel="stylesheet" href="../css/theme/terminal.css">
+    <style>
+        :root {
+            --terminal-black: #0a0a0a;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-gray-dark: #333;
+            --terminal-green: #00ff41;
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--terminal-black);
+            color: var(--terminal-green);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 24px;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+        }
+
+        .demo-section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: var(--terminal-green);
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: var(--terminal-gray-darkest);
+            border-left: 3px solid var(--terminal-green);
+        }
+
+        .demo-container {
+            border: 1px solid var(--terminal-gray-dark);
+            background: var(--terminal-gray-darkest);
+            padding: 16px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .value-monitor {
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
+            font-size: 11px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            color: #888;
+        }
+
+        .value-monitor-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            color: var(--terminal-green);
+        }
+
+        .event-log {
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
+            font-size: 11px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .event-entry {
+            color: #888;
+            padding: 2px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .event-entry.trigger {
+            color: var(--terminal-amber, #ffb000);
+        }
+    </style>
+</head>
+<body>
+    <h1>Dynamic Controls Component</h1>
+    <p class="subtitle">Schema-driven control generation for Rive state machines and view models</p>
+
+    <div class="demo-grid">
+        <!-- Simple Schema -->
+        <div class="demo-section">
+            <h2 class="section-title">Simple Schema</h2>
+            <div class="controls">
+                <t-button id="toggle-disabled" variant="secondary" size="sm">Toggle Disabled</t-button>
+                <t-button id="toggle-types" variant="secondary" size="sm">Toggle Type Badges</t-button>
+            </div>
+            <div class="demo-container">
+                <t-dynamic-controls id="simple-controls"></t-dynamic-controls>
+            </div>
+            <div class="value-monitor">
+                <div class="value-monitor-title">Current Values</div>
+                <pre id="simple-values">{}</pre>
+            </div>
+        </div>
+
+        <!-- Complex Nested Schema -->
+        <div class="demo-section">
+            <h2 class="section-title">Nested ViewModels (5 Levels)</h2>
+            <div class="controls">
+                <t-button id="random-update" variant="secondary" size="sm">Randomize Values</t-button>
+            </div>
+            <div class="demo-container">
+                <t-dynamic-controls id="nested-controls" show-types></t-dynamic-controls>
+            </div>
+            <div class="value-monitor">
+                <div class="value-monitor-title">Current Values</div>
+                <pre id="nested-values">{}</pre>
+            </div>
+        </div>
+
+        <!-- State Machine Only -->
+        <div class="demo-section">
+            <h2 class="section-title">State Machine Controls</h2>
+            <div class="demo-container">
+                <t-dynamic-controls id="sm-controls"></t-dynamic-controls>
+            </div>
+            <div class="event-log">
+                <div class="value-monitor-title">Events</div>
+                <div id="sm-events"></div>
+            </div>
+        </div>
+
+        <!-- All Control Types -->
+        <div class="demo-section">
+            <h2 class="section-title">All Control Types</h2>
+            <div class="demo-container">
+                <t-dynamic-controls id="all-types-controls" show-types></t-dynamic-controls>
+            </div>
+            <div class="value-monitor">
+                <div class="value-monitor-title">Current Values</div>
+                <pre id="all-types-values">{}</pre>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import components
+        import '../js/components/TButtonLit.js';
+        import '../js/components/TInputLit.js';
+        import '../js/components/TToggleLit.js';
+        import '../js/components/TDropdownLit.js';
+        import '../js/components/TColorPickerLit.js';
+        import '../js/components/TDynamicControlsLit.js';
+
+        // Wait for components
+        await Promise.all([
+            customElements.whenDefined('t-dynamic-controls'),
+            customElements.whenDefined('t-button')
+        ]);
+
+        // Schema definitions
+        const simpleSchema = {
+            stateMachines: [{
+                name: "MainController",
+                inputs: [
+                    { name: "isPlaying", type: "boolean", value: false },
+                    { name: "progress", type: "number", min: 0, max: 100, value: 50 }
+                ]
+            }],
+            viewModel: {
+                name: "AppSettings",
+                blueprintName: "Application Settings",
+                properties: [
+                    { name: "enabled", type: "boolean", value: true },
+                    { name: "speed", type: "number", value: 1.0 },
+                    { name: "themeColor", type: "color", value: 0xff00ff41 },
+                    { name: "mode", type: "enumType", value: "auto", metadata: { enumValues: ["auto", "manual", "hybrid"] } },
+                    { name: "title", type: "string", value: "Demo App" },
+                    { name: "reset", type: "trigger" }
+                ]
+            }
+        };
+
+        const nestedSchema = {
+            viewModel: {
+                name: "RootVM",
+                blueprintName: "Root Level",
+                properties: [{ name: "rootProp", type: "boolean", value: true }],
+                nestedViewModels: [{
+                    name: "Level1VM",
+                    blueprintName: "Level 1",
+                    properties: [{ name: "level1Prop", type: "number", value: 1 }],
+                    nestedViewModels: [{
+                        name: "Level2VM",
+                        blueprintName: "Level 2",
+                        properties: [
+                            { name: "level2Prop", type: "string", value: "Level 2" },
+                            { name: "level2Color", type: "color", value: 0xffff0000 }
+                        ],
+                        nestedViewModels: [{
+                            name: "Level3VM",
+                            blueprintName: "Level 3",
+                            properties: [{ name: "level3Prop", type: "enumType", value: "option1", metadata: { enumValues: ["option1", "option2", "option3"] } }],
+                            nestedViewModels: [{
+                                name: "Level4VM",
+                                blueprintName: "Level 4",
+                                properties: [{ name: "level4Prop", type: "boolean", value: false }],
+                                nestedViewModels: [{
+                                    name: "Level5VM",
+                                    blueprintName: "Level 5 (Deepest)",
+                                    properties: [
+                                        { name: "deepestProp", type: "string", value: "Deep value" },
+                                        { name: "deepTrigger", type: "trigger" }
+                                    ]
+                                }]
+                            }]
+                        }]
+                    }]
+                }, {
+                    name: "SiblingVM",
+                    blueprintName: "Sibling ViewModel",
+                    properties: [{ name: "siblingProp", type: "number", value: 42 }]
+                }]
+            }
+        };
+
+        const smOnlySchema = {
+            stateMachines: [
+                {
+                    name: "PlayerController",
+                    inputs: [
+                        { name: "jump", type: "trigger" },
+                        { name: "moveSpeed", type: "number", min: 0, max: 10, step: 0.5, value: 5 },
+                        { name: "isGrounded", type: "boolean", value: true }
+                    ]
+                },
+                {
+                    name: "AnimationController",
+                    inputs: [
+                        { name: "play", type: "trigger" },
+                        { name: "pause", type: "trigger" },
+                        { name: "animSpeed", type: "number", min: 0.1, max: 2.0, step: 0.1, value: 1.0 }
+                    ]
+                }
+            ]
+        };
+
+        const allTypesSchema = {
+            viewModel: {
+                name: "AllTypesVM",
+                blueprintName: "All Control Types",
+                properties: [
+                    { name: "booleanCtrl", type: "boolean", value: false },
+                    { name: "numberCtrl", type: "number", value: 3.14159 },
+                    { name: "stringCtrl", type: "string", value: "Hello Terminal" },
+                    { name: "colorCtrl", type: "color", value: 0xff00ff41 },
+                    { name: "enumCtrl", type: "enumType", value: "medium", metadata: { enumValues: ["small", "medium", "large", "xl"] } },
+                    { name: "triggerCtrl", type: "trigger" }
+                ]
+            }
+        };
+
+        // Initialize controls
+        const simpleControls = document.getElementById('simple-controls');
+        const nestedControls = document.getElementById('nested-controls');
+        const smControls = document.getElementById('sm-controls');
+        const allTypesControls = document.getElementById('all-types-controls');
+
+        simpleControls.setSchema(simpleSchema);
+        nestedControls.setSchema(nestedSchema);
+        smControls.setSchema(smOnlySchema);
+        allTypesControls.setSchema(allTypesSchema);
+
+        // Value displays
+        const simpleValues = document.getElementById('simple-values');
+        const nestedValues = document.getElementById('nested-values');
+        const allTypesValues = document.getElementById('all-types-values');
+        const smEvents = document.getElementById('sm-events');
+
+        function updateDisplay(el, pre) {
+            pre.textContent = JSON.stringify(el.getValues(), null, 2);
+        }
+
+        // Initial display
+        updateDisplay(simpleControls, simpleValues);
+        updateDisplay(nestedControls, nestedValues);
+        updateDisplay(allTypesControls, allTypesValues);
+
+        // Event listeners
+        simpleControls.addEventListener('control-change', () => updateDisplay(simpleControls, simpleValues));
+        nestedControls.addEventListener('control-change', () => updateDisplay(nestedControls, nestedValues));
+        allTypesControls.addEventListener('control-change', () => updateDisplay(allTypesControls, allTypesValues));
+
+        // SM events
+        function logEvent(name, detail, isTrigger = false) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry' + (isTrigger ? ' trigger' : '');
+            entry.textContent = `${new Date().toLocaleTimeString()} - ${name}: ${JSON.stringify(detail).substring(0, 60)}`;
+            smEvents.insertBefore(entry, smEvents.firstChild);
+            if (smEvents.children.length > 15) {
+                smEvents.removeChild(smEvents.lastChild);
+            }
+        }
+
+        smControls.addEventListener('control-change', (e) => logEvent('change', e.detail));
+        smControls.addEventListener('control-trigger', (e) => logEvent('TRIGGER', e.detail, true));
+
+        // Button handlers
+        document.getElementById('toggle-disabled').addEventListener('button-click', () => {
+            if (simpleControls.disabled) {
+                simpleControls.enable();
+            } else {
+                simpleControls.disable();
+            }
+        });
+
+        document.getElementById('toggle-types').addEventListener('button-click', () => {
+            simpleControls.showTypes = !simpleControls.showTypes;
+        });
+
+        document.getElementById('random-update').addEventListener('button-click', () => {
+            nestedControls.updateValue('vm.RootVM.rootProp', Math.random() > 0.5);
+            nestedControls.updateValue('vm.Level1VM.level1Prop', Math.round(Math.random() * 100));
+            nestedControls.updateValue('vm.Level2VM.level2Prop', `Random-${Date.now()}`);
+            nestedControls.updateValue('vm.Level2VM.level2Color', 0xff000000 | Math.floor(Math.random() * 0xffffff));
+            updateDisplay(nestedControls, nestedValues);
+        });
+    </script>
+</body>
+</html>
