@@ -251,21 +251,21 @@ const styles = css`
 		transition: max-height 0.3s ease, padding 0.3s ease;
 	}
 
-	/* Padding sizes */
+	/* Padding sizes - use !important to override base padding */
 	.card-content.padding-none {
-		padding: 0;
+		padding: 0 !important;
 	}
 
 	.card-content.padding-sm {
-		padding: 8px;
+		padding: 8px !important;
 	}
 
 	.card-content.padding-md {
-		padding: 16px;
+		padding: 16px !important;
 	}
 
 	.card-content.padding-lg {
-		padding: 24px;
+		padding: 24px !important;
 	}
 
 	.card-content.collapsed {

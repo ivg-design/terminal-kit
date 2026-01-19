@@ -120,29 +120,34 @@ export class TAccordionItemLit extends LitElement {
 		}
 
 		.content {
-			display: none;
 			background: var(--item-bg);
-			padding: 12px;
 			font-family: var(--font-mono, 'SF Mono', monospace);
 			font-size: 12px;
 			color: var(--item-text);
 			line-height: 1.5;
+			overflow: hidden;
 		}
 
-		:host([expanded]) .content {
+		/* Non-animated: use display */
+		:host(:not([animated])) .content {
+			display: none;
+			padding: 12px;
+		}
+
+		:host(:not([animated])[expanded]) .content {
 			display: block;
 		}
 
-		/* Animation variant */
+		/* Animated: use height transition */
 		:host([animated]) .content {
-			overflow: hidden;
+			display: block;
 			max-height: 0;
 			padding: 0 12px;
-			transition: max-height 0.3s ease, padding 0.3s ease;
+			transition: max-height 0.3s ease-out, padding 0.3s ease-out;
 		}
 
 		:host([animated][expanded]) .content {
-			max-height: 1000px;
+			max-height: 500px;
 			padding: 12px;
 		}
 

@@ -49,6 +49,9 @@ export class TKanbanCardLit extends LitElement {
 			--card-border: var(--terminal-gray-dark, #333);
 			--card-color: var(--terminal-green, #00ff41);
 			--card-text: var(--terminal-gray-light, #888);
+			--kanban-font-size: var(--font-size, 12px);
+			--kanban-font-size-sm: calc(var(--kanban-font-size) - 2px);
+			--kanban-font-size-xs: calc(var(--kanban-font-size) - 3px);
 		}
 
 		:host([dragging]) {
@@ -102,20 +105,22 @@ export class TKanbanCardLit extends LitElement {
 
 		.card-title {
 			flex: 1;
-			font-size: 12px;
+			font-size: var(--kanban-font-size);
 			color: var(--terminal-white, #fff);
 			line-height: 1.4;
 			word-break: break-word;
 		}
 
 		.card-actions {
-			display: none;
+			display: flex;
 			gap: 4px;
 			flex-shrink: 0;
+			opacity: 0;
+			transition: opacity 0.15s ease;
 		}
 
 		.card:hover .card-actions {
-			display: flex;
+			opacity: 1;
 		}
 
 		.action-btn {
@@ -146,7 +151,7 @@ export class TKanbanCardLit extends LitElement {
 			margin-top: 8px;
 			padding-top: 8px;
 			border-top: 1px solid var(--card-border);
-			font-size: 11px;
+			font-size: var(--kanban-font-size-sm);
 			color: var(--card-text);
 			line-height: 1.5;
 		}
@@ -163,7 +168,7 @@ export class TKanbanCardLit extends LitElement {
 		}
 
 		.tag {
-			font-size: 9px;
+			font-size: var(--kanban-font-size-xs);
 			padding: 2px 6px;
 			background: color-mix(in srgb, var(--card-color) 20%, transparent);
 			color: var(--card-color);
@@ -175,7 +180,7 @@ export class TKanbanCardLit extends LitElement {
 			align-items: center;
 			gap: 8px;
 			margin-top: 6px;
-			font-size: 10px;
+			font-size: var(--kanban-font-size-sm);
 			color: var(--terminal-gray, #666);
 		}
 
@@ -362,6 +367,8 @@ export class TKanbanColumnLit extends LitElement {
 				--column-color: var(--terminal-green, #00ff41);
 				--column-bg: var(--terminal-gray-darkest, #1a1a1a);
 				--column-border: var(--terminal-gray-dark, #333);
+				--kanban-font-size: var(--font-size, 12px);
+				--kanban-font-size-sm: calc(var(--kanban-font-size) - 2px);
 			}
 
 			:host([color="green"]) { --column-color: var(--terminal-green, #00ff41); }
@@ -395,7 +402,7 @@ export class TKanbanColumnLit extends LitElement {
 			.column-title {
 				flex: 1;
 				font-family: var(--font-mono, 'SF Mono', monospace);
-				font-size: 12px;
+				font-size: var(--kanban-font-size);
 				font-weight: 600;
 				color: var(--column-color);
 				text-transform: uppercase;
@@ -404,7 +411,7 @@ export class TKanbanColumnLit extends LitElement {
 
 			.column-count {
 				font-family: var(--font-mono, 'SF Mono', monospace);
-				font-size: 10px;
+				font-size: var(--kanban-font-size-sm);
 				padding: 2px 6px;
 				background: var(--column-color);
 				color: var(--terminal-black, #0a0a0a);
@@ -490,6 +497,7 @@ export class TKanbanColumnLit extends LitElement {
 	_logger = null;
 	_cardCount = 0;
 	_dragOver = false;
+	_dragLeaveTimeout = null;
 
 	constructor() {
 		super();
@@ -510,6 +518,13 @@ export class TKanbanColumnLit extends LitElement {
 		this._logger.info('Column connected');
 	}
 
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		if (this._dragLeaveTimeout) {
+			clearTimeout(this._dragLeaveTimeout);
+		}
+	}
+
 	firstUpdated() {
 		const slot = this.shadowRoot.querySelector('slot:not([name])');
 		if (slot) {
@@ -526,6 +541,11 @@ export class TKanbanColumnLit extends LitElement {
 	_handleDragOver = (e) => {
 		e.preventDefault();
 		e.dataTransfer.dropEffect = 'move';
+		// Clear any pending drag leave - we're still over the column
+		if (this._dragLeaveTimeout) {
+			clearTimeout(this._dragLeaveTimeout);
+			this._dragLeaveTimeout = null;
+		}
 		if (!this._dragOver) {
 			this._dragOver = true;
 			this.requestUpdate();
@@ -533,10 +553,22 @@ export class TKanbanColumnLit extends LitElement {
 	};
 
 	_handleDragLeave = (e) => {
-		if (!this.contains(e.relatedTarget)) {
-			this._dragOver = false;
-			this.requestUpdate();
+		// Debounce drag leave to prevent flickering
+		// Only trigger if we actually left the column bounds
+		if (this._dragLeaveTimeout) {
+			clearTimeout(this._dragLeaveTimeout);
 		}
+		this._dragLeaveTimeout = setTimeout(() => {
+			const rect = this.getBoundingClientRect();
+			const x = e.clientX;
+			const y = e.clientY;
+			// Check if truly outside the column
+			if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+				this._dragOver = false;
+				this.requestUpdate();
+			}
+			this._dragLeaveTimeout = null;
+		}, 50);
 	};
 
 	_handleDrop = (e) => {

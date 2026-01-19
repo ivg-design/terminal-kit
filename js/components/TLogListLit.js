@@ -354,7 +354,8 @@ class TLogListLit extends LitElement {
 		 * @type {Array<Object>}
 		 */
 		entries: {
-			type: Array
+			type: Array,
+			state: true
 		},
 
 		/**
