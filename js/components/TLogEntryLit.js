@@ -81,6 +81,19 @@ class TLogEntryLit extends LitElement {
 			--entry-bg: var(--terminal-gray-darkest, #1a1a1a);
 			--entry-border: var(--terminal-gray-dark, #333);
 			--entry-hover: rgba(255, 255, 255, 0.03);
+
+			/* Configurable level colors */
+			--log-debug-color: var(--t-log-debug, var(--terminal-gray, #666));
+			--log-info-color: var(--t-log-info, var(--terminal-cyan, #00ffff));
+			--log-warn-color: var(--t-log-warn, var(--terminal-amber, #ffb000));
+			--log-error-color: var(--t-log-error, var(--terminal-red, #ff003c));
+			--log-success-color: var(--t-log-success, var(--terminal-green, #00ff41));
+			--log-trace-color: var(--t-log-trace, var(--terminal-purple, #9d00ff));
+		}
+
+		/* Hide icons mode */
+		:host([hide-icons]) .level-icon {
+			display: none;
 		}
 
 		.entry {
@@ -146,12 +159,12 @@ class TLogEntryLit extends LitElement {
 			height: 14px;
 		}
 
-		.level-icon.debug { color: var(--terminal-gray, #666); }
-		.level-icon.info { color: var(--terminal-cyan, #00ffff); }
-		.level-icon.warn { color: var(--terminal-amber, #ffb000); }
-		.level-icon.error { color: var(--terminal-red, #ff003c); }
-		.level-icon.success { color: var(--terminal-green, #00ff41); }
-		.level-icon.trace { color: var(--terminal-purple, #9d00ff); }
+		.level-icon.debug { color: var(--log-debug-color); }
+		.level-icon.info { color: var(--log-info-color); }
+		.level-icon.warn { color: var(--log-warn-color); }
+		.level-icon.error { color: var(--log-error-color); }
+		.level-icon.success { color: var(--log-success-color); }
+		.level-icon.trace { color: var(--log-trace-color); }
 
 		/* Timestamp */
 		.timestamp {
@@ -591,6 +604,20 @@ class TLogEntryLit extends LitElement {
 		 */
 		icon: {
 			type: String
+		},
+
+		/**
+		 * Hide level icons
+		 * @property hideIcons
+		 * @type {Boolean}
+		 * @default false
+		 * @attribute hide-icons
+		 * @reflects true
+		 */
+		hideIcons: {
+			type: Boolean,
+			attribute: 'hide-icons',
+			reflect: true
 		}
 	};
 

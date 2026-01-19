@@ -5,8 +5,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "dev:all": "concurrently --kill-others-on-fail \"npm:dev\" \"npm:docs:dev\"",
+    "dev": "concurrently --kill-others-on-fail \"npm:dev:vite\" \"npm:docs:dev\"",
+    "dev:vite": "vite",
+    "dev:demos": "vite",
     "build": "vite build",
     "build:all": "npm run build && npm run docs:build",
     "preview": "vite preview",

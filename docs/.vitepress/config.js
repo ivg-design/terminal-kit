@@ -44,7 +44,10 @@ export default defineConfig({
         items: [
           { text: 'TPanelLit', link: '/components/TPanelLit' },
           { text: 'TModalLit', link: '/components/TModalLit' },
-          { text: 'TChatPanelLit', link: '/components/TChatPanelLit' }
+          { text: 'TSplitterLit', link: '/components/TSplitterLit' },
+          { text: 'TTabsLit', link: '/components/TTabsLit' },
+          { text: 'TAccordionLit', link: '/components/TAccordionLit' },
+          { text: 'TCardLit', link: '/components/TCardLit' }
         ]
       },
       {
@@ -53,13 +56,39 @@ export default defineConfig({
           { text: 'TLoaderLit', link: '/components/TLoaderLit' },
           { text: 'TToastLit', link: '/components/TToastLit' },
           { text: 'TStatusBarLit', link: '/components/TStatusBarLit' },
-          { text: 'TStatusFieldLit', link: '/components/TStatusFieldLit' }
+          { text: 'TStatusFieldLit', link: '/components/TStatusFieldLit' },
+          { text: 'TBadgeLit', link: '/components/TBadgeLit' },
+          { text: 'TChipLit', link: '/components/TChipLit' },
+          { text: 'TAvatarLit', link: '/components/TAvatarLit' },
+          { text: 'TProgressLit', link: '/components/TProgressLit' },
+          { text: 'TSkeletonLit', link: '/components/TSkeletonLit' },
+          { text: 'TTooltipLit', link: '/components/TTooltipLit' }
         ]
       },
       {
         text: 'Navigation Components',
         items: [
-          { text: 'TUserMenuLit', link: '/components/TUserMenuLit' }
+          { text: 'TUserMenuLit', link: '/components/TUserMenuLit' },
+          { text: 'TMenuLit', link: '/components/TMenuLit' },
+          { text: 'TTreeLit', link: '/components/TTreeLit' }
+        ]
+      },
+      {
+        text: 'Data Components',
+        items: [
+          { text: 'TListLit', link: '/components/TListLit' },
+          { text: 'TTimelineLit', link: '/components/TTimelineLit' },
+          { text: 'TKanbanLit', link: '/components/TKanbanLit' },
+          { text: 'TCalendarLit', link: '/components/TCalendarLit' },
+          { text: 'TChartLit', link: '/components/TChartLit' },
+          { text: 'TLogListLit', link: '/components/TLogListLit' }
+        ]
+      },
+      {
+        text: 'Composite Components',
+        items: [
+          { text: 'TChatPanelLit', link: '/components/TChatPanelLit' },
+          { text: 'TDynamicControlsLit', link: '/components/TDynamicControlsLit' }
         ]
       },
       {

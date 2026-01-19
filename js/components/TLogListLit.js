@@ -505,6 +505,20 @@ class TLogListLit extends LitElement {
 		 */
 		paused: {
 			type: Boolean
+		},
+
+		/**
+		 * Hide level icons on entries
+		 * @property hideIcons
+		 * @type {Boolean}
+		 * @default false
+		 * @attribute hide-icons
+		 * @reflects true
+		 */
+		hideIcons: {
+			type: Boolean,
+			attribute: 'hide-icons',
+			reflect: true
 		}
 	};
 
@@ -903,6 +917,7 @@ class TLogListLit extends LitElement {
 				stack-trace=${entry.stackTrace || ''}
 				?compact=${this.compact}
 				?dense=${this.dense}
+				?hide-icons=${this.hideIcons}
 				?expandable=${entry.expandable || entry.details || entry.metadata || entry.data || entry.stackTrace}
 			></t-log-entry>
 		`;

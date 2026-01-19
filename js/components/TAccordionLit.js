@@ -227,6 +227,64 @@ export class TAccordionItemLit extends LitElement {
 		::slotted([slot="header-action"]) {
 			font-size: 11px;
 		}
+
+		/* Horizontal orientation styles */
+		:host([orientation="horizontal"]) .item {
+			display: flex;
+			flex-direction: row;
+			height: 100%;
+			margin-top: 0;
+			margin-left: -1px;
+		}
+
+		:host([orientation="horizontal"]:first-child) .item {
+			margin-left: 0;
+		}
+
+		:host([orientation="horizontal"]) .header {
+			writing-mode: vertical-rl;
+			text-orientation: mixed;
+			flex-direction: column;
+			padding: 12px 10px;
+			min-width: 40px;
+			height: 100%;
+		}
+
+		:host([orientation="horizontal"][expanded]) .header {
+			border-bottom: none;
+			border-right: 1px solid var(--item-border);
+		}
+
+		:host([orientation="horizontal"]) .icon {
+			transform: rotate(90deg);
+		}
+
+		:host([orientation="horizontal"]) .content {
+			flex: 1;
+			height: 100%;
+		}
+
+		:host([orientation="horizontal"]:not([animated])) .content {
+			display: none;
+			width: 0;
+		}
+
+		:host([orientation="horizontal"]:not([animated])[expanded]) .content {
+			display: block;
+			width: auto;
+		}
+
+		:host([orientation="horizontal"][animated]) .content {
+			max-width: 0;
+			max-height: none;
+			padding: 12px 0;
+			transition: max-width 0.3s ease-out, padding 0.3s ease-out;
+		}
+
+		:host([orientation="horizontal"][animated][expanded]) .content {
+			max-width: 500px;
+			padding: 12px;
+		}
 	`;
 
 	static properties = {
@@ -239,7 +297,8 @@ export class TAccordionItemLit extends LitElement {
 		animated: { type: Boolean, reflect: true },
 		variant: { type: String, reflect: true },
 		size: { type: String, reflect: true },
-		iconPosition: { type: String, attribute: 'icon-position', reflect: true }
+		iconPosition: { type: String, attribute: 'icon-position', reflect: true },
+		orientation: { type: String, reflect: true }
 	};
 
 	_logger = null;
@@ -257,6 +316,7 @@ export class TAccordionItemLit extends LitElement {
 		this.variant = 'default';
 		this.size = 'md';
 		this.iconPosition = 'left';
+		this.orientation = 'vertical';
 		this._logger.debug('Item constructed');
 	}
 
@@ -391,6 +451,16 @@ export class TAccordionLit extends LitElement {
 			flex-direction: column;
 		}
 
+		/* Horizontal orientation */
+		:host([orientation="horizontal"]) .accordion {
+			flex-direction: row;
+		}
+
+		:host([orientation="horizontal"]) ::slotted(t-accordion-item) {
+			flex: 1;
+			min-width: 0;
+		}
+
 		/* Bordered variant */
 		:host([bordered]) .accordion {
 			border: 1px solid var(--accordion-border);
@@ -400,7 +470,8 @@ export class TAccordionLit extends LitElement {
 	static properties = {
 		multiple: { type: Boolean, reflect: true },
 		bordered: { type: Boolean, reflect: true },
-		expandedItems: { type: Array, attribute: 'expanded-items' }
+		expandedItems: { type: Array, attribute: 'expanded-items' },
+		orientation: { type: String, reflect: true }
 	};
 
 	_logger = null;
@@ -411,6 +482,7 @@ export class TAccordionLit extends LitElement {
 		this.multiple = false;
 		this.bordered = false;
 		this.expandedItems = [];
+		this.orientation = 'vertical';
 		this._logger.debug('Accordion constructed');
 	}
 
@@ -431,7 +503,22 @@ export class TAccordionLit extends LitElement {
 		if (this.expandedItems.length > 0) {
 			this._syncExpandedItems();
 		}
+		// Propagate orientation to child items
+		this._propagateOrientation();
 		this._logger.debug('First update complete');
+	}
+
+	updated(changedProps) {
+		if (changedProps.has('orientation')) {
+			this._propagateOrientation();
+		}
+	}
+
+	_propagateOrientation() {
+		const items = this.querySelectorAll('t-accordion-item');
+		items.forEach(item => {
+			item.orientation = this.orientation;
+		});
 	}
 
 	_handleItemToggle = (e) => {

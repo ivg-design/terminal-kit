@@ -193,7 +193,10 @@ export class TDynamicControlsLit extends LitElement {
 		 * @type {Object}
 		 * @default null
 		 */
-		schema: { type: Object, state: true },
+		schema: {
+			type: Object,
+			hasChanged: () => true // Always re-render when schema is set
+		},
 
 		/**
 		 * Disabled state
