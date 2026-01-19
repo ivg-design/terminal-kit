@@ -368,7 +368,7 @@ describe('TDynamicControlsLit', () => {
 			const nestedSections = controls.shadowRoot.querySelectorAll('.nested-section');
 			expect(nestedSections.length).toBeGreaterThan(0);
 
-			const nestedHeaders = controls.shadowRoot.querySelectorAll('.nested-header');
+			const nestedHeaders = controls.shadowRoot.querySelectorAll('.nested-header span');
 			const headers = Array.from(nestedHeaders).map(h => h.textContent);
 			expect(headers).toContain('Nested ViewModel');
 		});

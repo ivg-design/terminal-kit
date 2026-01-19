@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Controls - Terminal Components</title>
     <link rel="stylesheet" href="../css/theme/terminal.css">
+    <link rel="stylesheet" href="../css/components/t-clr-iro.css">
     <style>
         :root {
             --terminal-black: #0a0a0a;
@@ -117,7 +118,7 @@
 </head>
 <body>
     <h1>Dynamic Controls Component</h1>
-    <p class="subtitle">Schema-driven control generation for Rive state machines and view models</p>
+    <p class="subtitle">General-purpose schema-driven control generation. Click section headers to collapse/expand. Supports nested structures with individual collapsibility.</p>
 
     <div class="demo-grid">
         <!-- Simple Schema -->
@@ -174,6 +175,21 @@
                 <pre id="all-types-values">{}</pre>
             </div>
         </div>
+
+        <!-- Extended Control Types (slider, progress, textarea) -->
+        <div class="demo-section">
+            <h2 class="section-title">Extended Control Types</h2>
+            <div class="controls">
+                <t-btn id="animate-progress" variant="secondary" size="sm">Animate Progress</t-btn>
+            </div>
+            <div class="demo-container">
+                <t-dynamic-controls id="extended-controls" show-types show-filter></t-dynamic-controls>
+            </div>
+            <div class="value-monitor">
+                <div class="value-monitor-title">Current Values</div>
+                <pre id="extended-values">{}</pre>
+            </div>
+        </div>
     </div>
 
     <script type="module">
@@ -183,6 +199,9 @@
         import '../js/components/TToggleLit.js';
         import '../js/components/TDropdownLit.js';
         import '../js/components/TColorPickerLit.js';
+        import '../js/components/TSliderLit.js';
+        import '../js/components/TProgressLit.js';
+        import '../js/components/TTextareaLit.js';
         import '../js/components/TDynamicControlsLit.js';
 
         // Wait for all components
@@ -192,7 +211,10 @@
             customElements.whenDefined('t-inp'),
             customElements.whenDefined('t-tog'),
             customElements.whenDefined('t-drp'),
-            customElements.whenDefined('t-clr')
+            customElements.whenDefined('t-clr'),
+            customElements.whenDefined('t-sld'),
+            customElements.whenDefined('t-prg'),
+            customElements.whenDefined('t-textarea')
         ]);
 
         // Schema definitions
@@ -297,21 +319,58 @@
             }
         };
 
+        const extendedSchema = {
+            viewModel: {
+                name: "ExtendedTypesVM",
+                blueprintName: "Extended Control Types",
+                properties: [
+                    { name: "volume", type: "slider", value: 75, min: 0, max: 100, step: 1 },
+                    { name: "brightness", type: "slider", value: 50, min: 0, max: 100, step: 5 },
+                    { name: "downloadProgress", type: "progress", value: 65, max: 100 },
+                    { name: "uploadProgress", type: "progress", value: 30, max: 100 },
+                    { name: "description", type: "textarea", value: "Enter your description here...\nSupports multiple lines.", rows: 4 },
+                    { name: "notes", type: "textarea", value: "Additional notes", rows: 2, resize: "both" }
+                ],
+                nestedViewModels: [{
+                    name: "AudioSettings",
+                    blueprintName: "Audio Settings",
+                    properties: [
+                        { name: "masterVolume", type: "slider", value: 80, min: 0, max: 100 },
+                        { name: "bassBoost", type: "slider", value: 25, min: 0, max: 100 },
+                        { name: "treble", type: "slider", value: 50, min: 0, max: 100 },
+                        { name: "muted", type: "boolean", value: false }
+                    ]
+                }, {
+                    name: "TaskProgress",
+                    blueprintName: "Task Progress",
+                    properties: [
+                        { name: "task1", type: "progress", value: 100, max: 100 },
+                        { name: "task2", type: "progress", value: 75, max: 100 },
+                        { name: "task3", type: "progress", value: 25, max: 100 },
+                        { name: "task4", type: "progress", value: 0, max: 100 }
+                    ]
+                }]
+            }
+        };
+
         // Initialize controls
         const simpleControls = document.getElementById('simple-controls');
         const nestedControls = document.getElementById('nested-controls');
         const smControls = document.getElementById('sm-controls');
         const allTypesControls = document.getElementById('all-types-controls');
+        const extendedControls = document.getElementById('extended-controls');
 
         simpleControls.setSchema(simpleSchema);
         nestedControls.setSchema(nestedSchema);
         smControls.setSchema(smOnlySchema);
         allTypesControls.setSchema(allTypesSchema);
+        extendedControls.setSchema(extendedSchema);
 
         // Value displays
         const simpleValues = document.getElementById('simple-values');
         const nestedValues = document.getElementById('nested-values');
         const allTypesValues = document.getElementById('all-types-values');
+        const extendedValues = document.getElementById('extended-values');
         const smEvents = document.getElementById('sm-events');
 
         function updateDisplay(el, pre) {
@@ -322,11 +381,13 @@
         updateDisplay(simpleControls, simpleValues);
         updateDisplay(nestedControls, nestedValues);
         updateDisplay(allTypesControls, allTypesValues);
+        updateDisplay(extendedControls, extendedValues);
 
         // Event listeners
         simpleControls.addEventListener('control-change', () => updateDisplay(simpleControls, simpleValues));
         nestedControls.addEventListener('control-change', () => updateDisplay(nestedControls, nestedValues));
         allTypesControls.addEventListener('control-change', () => updateDisplay(allTypesControls, allTypesValues));
+        extendedControls.addEventListener('control-change', () => updateDisplay(extendedControls, extendedValues));
 
         // SM events
         function logEvent(name, detail, isTrigger = false) {
@@ -361,6 +422,34 @@
             nestedControls.updateValue('vm.Level2VM.level2Prop', `Random-${Date.now()}`);
             nestedControls.updateValue('vm.Level2VM.level2Color', 0xff000000 | Math.floor(Math.random() * 0xffffff));
             updateDisplay(nestedControls, nestedValues);
+        });
+
+        // Animate progress bars
+        let animationId = null;
+        document.getElementById('animate-progress').addEventListener('button-click', () => {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+                return;
+            }
+
+            let start = performance.now();
+            const animate = (now) => {
+                const elapsed = (now - start) / 50; // Speed factor
+                const progress1 = Math.round(elapsed % 100);
+                const progress2 = Math.round((elapsed * 0.7) % 100);
+
+                extendedControls.updateValue('vm.ExtendedTypesVM.downloadProgress', progress1);
+                extendedControls.updateValue('vm.ExtendedTypesVM.uploadProgress', progress2);
+
+                // Also animate task progress
+                extendedControls.updateValue('vm.TaskProgress.task3', Math.round((elapsed * 0.5) % 100));
+                extendedControls.updateValue('vm.TaskProgress.task4', Math.round((elapsed * 0.3) % 100));
+
+                updateDisplay(extendedControls, extendedValues);
+                animationId = requestAnimationFrame(animate);
+            };
+            animationId = requestAnimationFrame(animate);
         });
     </script>
 </body>

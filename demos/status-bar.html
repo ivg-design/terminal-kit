@@ -232,6 +232,10 @@
                                     <input type="checkbox" id="field1Hover" checked>
                                     Enable Hover
                                 </label>
+                                <label>
+                                    <input type="checkbox" id="field1Disabled">
+                                    Disabled
+                                </label>
                             </div>
                             <div class="control-group">
                                 <label>Field 2 Display:</label>
@@ -270,6 +274,10 @@
                                 <label>
                                     <input type="checkbox" id="field2Hover" checked>
                                     Enable Hover
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="field2Disabled">
+                                    Disabled
                                 </label>
                             </div>
                             <div class="control-group">
@@ -310,6 +318,10 @@
                                     <input type="checkbox" id="field3Hover" checked>
                                     Enable Hover
                                 </label>
+                                <label>
+                                    <input type="checkbox" id="field3Disabled">
+                                    Disabled
+                                </label>
                             </div>
                             <div class="control-group">
                                 <label>Field 4 Display:</label>
@@ -348,6 +360,10 @@
                                 <label>
                                     <input type="checkbox" id="field4Hover" checked>
                                     Enable Hover
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="field4Disabled">
+                                    Disabled
                                 </label>
                             </div>
                         </div>
@@ -665,6 +681,11 @@ Events:
             const field3Hover = document.getElementById('field3Hover');
             const field4Hover = document.getElementById('field4Hover');
 
+            const field1Disabled = document.getElementById('field1Disabled');
+            const field2Disabled = document.getElementById('field2Disabled');
+            const field3Disabled = document.getElementById('field3Disabled');
+            const field4Disabled = document.getElementById('field4Disabled');
+
             // Display mode handlers for statusBar2
             if (field1Display && statusBar2) {
                 field1Display.addEventListener('change', (e) => {
@@ -752,6 +773,28 @@ Events:
             if (field4Hover && statusBar2) {
                 field4Hover.addEventListener('change', (e) => {
                     statusBar2.updateField(3, { hover: e.target.checked });
+                });
+            }
+
+            // Disabled handlers for statusBar2
+            if (field1Disabled && statusBar2) {
+                field1Disabled.addEventListener('change', (e) => {
+                    statusBar2.setFieldDisabled(0, e.target.checked);
+                });
+            }
+            if (field2Disabled && statusBar2) {
+                field2Disabled.addEventListener('change', (e) => {
+                    statusBar2.setFieldDisabled(1, e.target.checked);
+                });
+            }
+            if (field3Disabled && statusBar2) {
+                field3Disabled.addEventListener('change', (e) => {
+                    statusBar2.setFieldDisabled(2, e.target.checked);
+                });
+            }
+            if (field4Disabled && statusBar2) {
+                field4Disabled.addEventListener('change', (e) => {
+                    statusBar2.setFieldDisabled(3, e.target.checked);
                 });
             }
         </script>

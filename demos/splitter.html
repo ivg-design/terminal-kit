@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TSplitterLit Component Demo</title>
+    <!-- Prism.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
 
@@ -175,32 +178,72 @@
             color: var(--terminal-green);
             white-space: pre;
         }
+
+        /* IDE Layout Panes - consistent padding/margins */
+        .ide-pane {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .ide-pane-header {
+            padding: 8px 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--terminal-green);
+            background: var(--terminal-gray-darkest);
+            border-bottom: 1px solid var(--terminal-gray-dark);
+            flex-shrink: 0;
+        }
+
+        .ide-pane t-tree {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+        }
+
+        .ide-pane t-textarea {
+            flex: 1;
+            min-height: 0;
+            --textarea-min-height: 100%;
+        }
+
+        /* Ensure consistent scrollbar alignment in IDE panes */
+        .file-explorer-pane,
+        .editor-pane,
+        .terminal-pane {
+            padding: 0;
+        }
     </style>
 </head>
 <body>
     <h1>TSplitterLit Component Demo</h1>
     <p class="description">
-        Resizable panel splitter with drag-to-resize, collapsible panes, and persistent state.
+        Resizable panel splitter with drag-to-resize, collapsible panes, and persistent state.<br>
+        <strong>All panes are collapsible by default:</strong> Double-click gutter to collapse, double-click again to restore to default.
+        Drag to edge to collapse, drag away from edge to uncollapse. Set <code>min-sizes</code> to prevent collapse.
     </p>
 
     <!-- Basic Horizontal Splitter -->
     <div class="demo-section">
-        <h2>Horizontal Splitter (Default)</h2>
+        <h2>Horizontal Splitter (Default - Collapsible)</h2>
         <div class="splitter-container" style="height: 250px;">
             <t-split id="basic-splitter">
                 <div slot="pane-0" class="pane-content">
                     <h3>Left Panel</h3>
-                    <p>Drag the gutter to resize panels.</p>
-                    <p>This is the left pane content.</p>
+                    <p>Double-click gutter to collapse this pane.</p>
+                    <p>Drag to edge to collapse. Drag back to uncollapse.</p>
                 </div>
                 <div slot="pane-1" class="pane-content">
                     <h3>Right Panel</h3>
-                    <p>The splitter maintains proportions on window resize.</p>
-                    <p>This is the right pane content.</p>
+                    <p>Double-click on collapsed splitter to restore defaults.</p>
+                    <p>All panes collapsible by default!</p>
                 </div>
             </t-split>
         </div>
-        <p class="demo-label">Default 50/50 split</p>
+        <p class="demo-label">Default 50/50 split - try double-click and drag-to-collapse</p>
     </div>
 
     <!-- Vertical Splitter -->
@@ -265,57 +308,38 @@
     <!-- IDE Layout Example -->
     <div class="demo-section">
         <h2>IDE Layout Example</h2>
-        <div class="splitter-container" style="height: 400px;">
+        <div class="splitter-container" style="height: 450px;">
             <t-split id="ide-main" sizes="[20, 80]" collapsible="[true, false]">
-                <div slot="pane-0" class="pane-content">
-                    <h3>File Explorer</h3>
-                    <div class="file-tree">
-                        <div class="folder">📁 src/</div>
-                        <div class="file">├─ index.js</div>
-                        <div class="file">├─ app.js</div>
-                        <div class="file">└─ utils.js</div>
-                        <div class="folder">📁 tests/</div>
-                        <div class="file">├─ index.test.js</div>
-                        <div class="file">└─ app.test.js</div>
-                        <div class="folder">📁 docs/</div>
-                        <div class="file">└─ README.md</div>
-                    </div>
+                <div slot="pane-0" class="ide-pane file-explorer-pane">
+                    <div class="ide-pane-header">File Explorer</div>
+                    <t-tree id="file-tree" selectable="single" expand-on-click></t-tree>
                 </div>
                 <div slot="pane-1" style="height: 100%;">
                     <t-split id="ide-editor" orientation="vertical" sizes="[70, 30]" collapsible="[false, true]">
-                        <div slot="pane-0" class="pane-content">
-                            <h3>Editor</h3>
-                            <div class="editor-content">// app.js
-import { Component } from 'lit';
-
-class MyApp extends Component {
-  static tagName = 'my-app';
-
-  render() {
-    return html`
-      &lt;div class="container"&gt;
-        &lt;h1&gt;Hello World&lt;/h1&gt;
-      &lt;/div&gt;
-    `;
-  }
-}
-
-export default MyApp;</div>
+                        <div slot="pane-0" class="ide-pane editor-pane">
+                            <div class="ide-pane-header">Editor - app.js</div>
+                            <t-textarea
+                                id="code-editor"
+                                code-mode
+                                show-line-numbers
+                                language="javascript"
+                                rows="15"
+                            ></t-textarea>
                         </div>
-                        <div slot="pane-1" class="pane-content">
-                            <h3>Terminal</h3>
-                            <div class="terminal-output">$ npm run dev
-Starting development server...
-Server running at http://localhost:3000
-✓ Ready in 245ms
-
-$ _</div>
+                        <div slot="pane-1" class="ide-pane terminal-pane">
+                            <div class="ide-pane-header">Terminal</div>
+                            <t-textarea
+                                id="terminal-output"
+                                code-mode
+                                rows="6"
+                                readonly
+                            ></t-textarea>
                         </div>
                     </t-split>
                 </div>
             </t-split>
         </div>
-        <p class="demo-label">Nested splitters for IDE-style layout</p>
+        <p class="demo-label">Nested splitters with TTreeLit and syntax-highlighted editor</p>
     </div>
 
     <!-- Min/Max Sizes -->
@@ -403,6 +427,87 @@ $ _</div>
 
     <script type="module">
         import '../js/components/TSplitterLit.js';
+        import '../js/components/TTreeLit.js';
+        import '../js/components/TTextareaLit.js';
+
+        // IDE file tree data
+        const fileTreeNodes = [
+            {
+                id: 'src',
+                label: 'src',
+                children: [
+                    { id: 'src/index.js', label: 'index.js' },
+                    { id: 'src/app.js', label: 'app.js' },
+                    { id: 'src/utils.js', label: 'utils.js' }
+                ]
+            },
+            {
+                id: 'tests',
+                label: 'tests',
+                children: [
+                    { id: 'tests/index.test.js', label: 'index.test.js' },
+                    { id: 'tests/app.test.js', label: 'app.test.js' }
+                ]
+            },
+            {
+                id: 'docs',
+                label: 'docs',
+                children: [
+                    { id: 'docs/README.md', label: 'README.md' }
+                ]
+            }
+        ];
+
+        // Sample code content
+        const sampleCode = `// app.js
+import { LitElement, html, css } from 'lit';
+
+class MyApp extends LitElement {
+  static tagName = 'my-app';
+
+  static styles = css\`
+    :host {
+      display: block;
+      padding: 20px;
+    }
+  \`;
+
+  render() {
+    return html\`
+      <div class="container">
+        <h1>Hello World</h1>
+      </div>
+    \`;
+  }
+}
+
+export default MyApp;`;
+
+        // Terminal output
+        const terminalOutput = `$ npm run dev
+Starting development server...
+Server running at http://localhost:3000
+✓ Ready in 245ms
+
+$ _`;
+
+        // Initialize IDE components
+        const fileTree = document.getElementById('file-tree');
+        const codeEditor = document.getElementById('code-editor');
+        const terminal = document.getElementById('terminal-output');
+
+        if (fileTree) {
+            fileTree.nodes = fileTreeNodes;
+            fileTree.expanded = ['src', 'tests', 'docs'];
+        }
+
+        if (codeEditor) {
+            codeEditor.value = sampleCode;
+        }
+
+        if (terminal) {
+            terminal.value = terminalOutput;
+        }
 
         const eventLog = document.getElementById('event-log');
 

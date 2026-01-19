@@ -189,6 +189,25 @@ export class TStatusBarLit extends LitElement {
       color: var(--terminal-green-bright, #00ff66);
     }
 
+    /* Disabled field styles */
+    .status-field.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+      user-select: none;
+      cursor: not-allowed;
+    }
+
+    .status-field.disabled .field-label,
+    .status-field.disabled .field-icon,
+    .status-field.disabled .field-value {
+      color: var(--terminal-gray, #666);
+    }
+
+    /* Hidden field - completely removes from layout */
+    .status-field.hidden {
+      display: none !important;
+    }
+
     /* Slotted field styles */
     ::slotted(t-sta-field) {
       display: inline-flex;
@@ -387,6 +406,36 @@ export class TStatusBarLit extends LitElement {
     this.updateField(index, { value });
   }
 
+  /**
+   * Enable or disable a field
+   * @public
+   * @param {number} index - Field index
+   * @param {boolean} disabled - Whether the field should be disabled
+   * @returns {void}
+   * @example
+   * statusBar.setFieldDisabled(0, true);  // Disable first field
+   * statusBar.setFieldDisabled(0, false); // Enable first field
+   */
+  setFieldDisabled(index, disabled) {
+    this._logger.debug('setFieldDisabled called', { index, disabled });
+    this.updateField(index, { disabled });
+  }
+
+  /**
+   * Show or hide a field
+   * @public
+   * @param {number} index - Field index
+   * @param {boolean} hidden - Whether the field should be hidden
+   * @returns {void}
+   * @example
+   * statusBar.setFieldHidden(0, true);  // Hide first field
+   * statusBar.setFieldHidden(0, false); // Show first field
+   */
+  setFieldHidden(index, hidden) {
+    this._logger.debug('setFieldHidden called', { index, hidden });
+    this.updateField(index, { hidden });
+  }
+
   // ----------------------------------------------------------
   // BLOCK 9: EVENT EMITTERS (REQUIRED SECTION)
   // ----------------------------------------------------------
@@ -516,6 +565,8 @@ export class TStatusBarLit extends LitElement {
       align: field.align || 'left',
       marquee: field.marquee || false,
       marqueeSpeed: field.marqueeSpeed || 30,
+      disabled: field.disabled || false,
+      hidden: field.hidden || false,
       ...field
     }));
 
@@ -627,6 +678,16 @@ export class TStatusBarLit extends LitElement {
     return this.fields.map((field, index) => {
       const classes = ['status-field'];
 
+      // Add disabled class
+      if (field.disabled) {
+        classes.push('disabled');
+      }
+
+      // Add hidden class
+      if (field.hidden) {
+        classes.push('hidden');
+      }
+
       // Add width class
       if (field.width && field.width !== 'auto') {
         classes.push('has-width');
@@ -637,8 +698,8 @@ export class TStatusBarLit extends LitElement {
         classes.push('marquee-enabled');
       }
 
-      // Add hover class if enabled (default is true)
-      if (field.hover !== false) {
+      // Add hover class if enabled (default is true) and not disabled
+      if (field.hover !== false && !field.disabled) {
         classes.push('hover-enabled');
       }
 

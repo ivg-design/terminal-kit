@@ -151,30 +151,35 @@ const styles = css`
 		border-radius: 4px;
 	}
 
-	/* Resize handles */
-	.grid-stack > .grid-stack-item > .ui-resizable-se {
-		width: 20px;
-		height: 20px;
-		right: 2px;
-		bottom: 2px;
-		background: transparent;
+	/* Resize handles - override gridstack defaults completely */
+	.grid-stack > .grid-stack-item > .ui-resizable-se,
+	.grid-stack > .grid-stack-item > .ui-resizable-handle {
+		width: 16px !important;
+		height: 16px !important;
+		right: 4px !important;
+		bottom: 4px !important;
 		cursor: se-resize;
-	}
-
-	.grid-stack > .grid-stack-item > .ui-resizable-se::before {
-		content: '';
-		position: absolute;
-		right: 4px;
-		bottom: 4px;
-		width: 8px;
-		height: 8px;
-		border-right: 2px solid var(--grid-green);
-		border-bottom: 2px solid var(--grid-green);
-		opacity: 0.5;
+		opacity: 0.4;
 		transition: opacity 0.15s ease;
+		/* SE resize corner icon using SVG data URI */
+		background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='%2300ff41'%3E%3Cpath d='M216 48v48 0c0 4.418-3.582 8-8 8 -4.419 0-8-3.582-8-8V67.31l-50.34 50.35v0c-3.126 3.125-8.195 3.125-11.32 0 -3.126-3.126-3.126-8.195 0-11.32L188.69 56H160v0c-4.419 0-8-3.582-8-8 0-4.419 3.581-8 8-8h48v0c4.418 0 8 3.581 8 8Zm-109.66 90.34L56 188.69V160v0c0-4.419-3.582-8-8-8 -4.419 0-8 3.581-8 8v48 0c0 4.418 3.581 8 8 8h48v0c4.418 0 8-3.582 8-8 0-4.419-3.582-8-8-8H67.31l50.35-50.34h-.001c3.125-3.126 3.125-8.195 0-11.32 -3.126-3.126-8.195-3.126-11.32 0Z'/%3E%3C/svg%3E") no-repeat center center !important;
+		background-size: 12px 12px !important;
+		/* Reset any pseudo-elements from gridstack or previous styles */
+		border: none !important;
 	}
 
-	.grid-stack > .grid-stack-item:hover > .ui-resizable-se::before {
+	/* Hide any pseudo-elements that gridstack might inject */
+	.grid-stack > .grid-stack-item > .ui-resizable-se::before,
+	.grid-stack > .grid-stack-item > .ui-resizable-se::after,
+	.grid-stack > .grid-stack-item > .ui-resizable-handle::before,
+	.grid-stack > .grid-stack-item > .ui-resizable-handle::after {
+		display: none !important;
+		content: none !important;
+	}
+
+	.grid-stack > .grid-stack-item:hover > .ui-resizable-se,
+	.grid-stack > .grid-stack-item:hover > .ui-resizable-handle,
+	.grid-stack > .grid-stack-item.ui-resizable-resizing > .ui-resizable-se {
 		opacity: 1;
 	}
 

@@ -61,6 +61,11 @@ const styles = [
 		overflow: auto;
 		position: relative;
 		background: var(--splitter-bg);
+		transition: none;
+	}
+
+	.pane.snapping {
+		transition: flex 150ms ease-out;
 	}
 
 	.pane.collapsed {
@@ -322,10 +327,10 @@ class TSplitterLit extends LitElement {
 		},
 
 		/**
-		 * Whether panes can be collapsed
+		 * Whether panes can be collapsed (all panes collapsible by default unless minSizes > 0)
 		 * @property collapsible
 		 * @type {Array<boolean>}
-		 * @default [false, false]
+		 * @default [true, true]
 		 */
 		collapsible: {
 			type: Array
@@ -417,6 +422,13 @@ class TSplitterLit extends LitElement {
 	 */
 	_handlers = {};
 
+	/**
+	 * Whether currently in snap animation
+	 * @type {boolean}
+	 * @private
+	 */
+	_isSnapping = false;
+
 	// ============================================================
 	// BLOCK 5: Logger Instance
 	// ============================================================
@@ -438,12 +450,15 @@ class TSplitterLit extends LitElement {
 		// Default values
 		this.orientation = 'horizontal';
 		this.sizes = [50, 50];
-		this.minSizes = [50, 50];
-		this.collapsible = [false, false];
+		this.minSizes = [0, 0]; // 0 means fully collapsible
+		this.collapsible = [true, true]; // All panes collapsible by default
 		this.collapsed = [false, false];
 		this.gutterSize = 8;
 		this.snapOffset = 30;
 		this.storageKey = '';
+
+		// Default sizes to restore on uncollapse
+		this._defaultSizes = [50, 50];
 
 		// Scrollbar defaults
 		this.scrollbar = scrollbarDefaults.scrollbar;
@@ -516,7 +531,7 @@ class TSplitterLit extends LitElement {
 	 */
 	collapse(index) {
 		this._logger.debug('collapse called', { index });
-		if (!this.collapsible[index]) return;
+		if (!this._canCollapse(index)) return;
 
 		// Save current sizes before collapsing for restore
 		this._sizesBeforeCollapse = [...this.sizes];
@@ -631,11 +646,13 @@ class TSplitterLit extends LitElement {
 		const pane0Classes = {
 			pane: true,
 			collapsed: this.collapsed[0],
+			snapping: this._isSnapping,
 		};
 
 		const pane1Classes = {
 			pane: true,
 			collapsed: this.collapsed[1],
+			snapping: this._isSnapping,
 		};
 
 		const gutterClasses = {
@@ -653,8 +670,8 @@ class TSplitterLit extends LitElement {
 					style="flex: ${this.collapsed[0] ? '0' : this.sizes[0]} 1 0%"
 				>
 					<slot name="pane-0"></slot>
-					${this.collapsible[0] && this.collapsed[0]
-						? this._renderCollapseButton(0, true)
+					${this.collapsed[0] && this._canCollapse(0)
+						? this._renderExpandButton(0)
 						: ''}
 				</div>
 
@@ -663,19 +680,13 @@ class TSplitterLit extends LitElement {
 					@mousedown=${this._handleMouseDown}
 					@touchstart=${this._handleTouchStart}
 					@dblclick=${this._handleDoubleClick}
-					title="Double-click to collapse, drag to resize"
+					title="Double-click to collapse/restore, drag to resize or uncollapse"
 				>
-					${this.collapsible[0] && !this.collapsed[0]
-						? this._renderCollapseButton(0, false)
-						: ''}
 					<div class="gutter-handle">
 						<span class="gutter-handle-dot"></span>
 						<span class="gutter-handle-dot"></span>
 						<span class="gutter-handle-dot"></span>
 					</div>
-					${this.collapsible[1] && !this.collapsed[1]
-						? this._renderCollapseButton(1, false)
-						: ''}
 				</div>
 
 				<div
@@ -683,8 +694,8 @@ class TSplitterLit extends LitElement {
 					style="flex: ${this.collapsed[1] ? '0' : this.sizes[1]} 1 0%"
 				>
 					<slot name="pane-1"></slot>
-					${this.collapsible[1] && this.collapsed[1]
-						? this._renderCollapseButton(1, true)
+					${this.collapsed[1] && this._canCollapse(1)
+						? this._renderExpandButton(1)
 						: ''}
 				</div>
 			</div>
@@ -696,30 +707,27 @@ class TSplitterLit extends LitElement {
 	// ============================================================
 
 	/**
-	 * Render a collapse button
+	 * Render an expand button for collapsed panes
 	 * @private
 	 * @param {number} index - Pane index
-	 * @param {boolean} isCollapsed - Whether pane is collapsed
 	 * @returns {import('lit').TemplateResult}
 	 */
-	_renderCollapseButton(index, isCollapsed) {
+	_renderExpandButton(index) {
 		const isHorizontal = this.orientation === 'horizontal';
-		// Use collapse-pane-0 / collapse-pane-1 for gutter buttons, expand-btn for collapsed pane buttons
-		const positionClass = isCollapsed ? 'expand-btn' : `collapse-pane-${index}`;
 
-		// Arrow direction
+		// Arrow direction pointing toward expansion
 		let arrowRotation = 0;
 		if (isHorizontal) {
-			arrowRotation = index === 0 ? (isCollapsed ? 0 : 180) : (isCollapsed ? 180 : 0);
+			arrowRotation = index === 0 ? 0 : 180; // Right for pane 0, left for pane 1
 		} else {
-			arrowRotation = index === 0 ? (isCollapsed ? 90 : 270) : (isCollapsed ? 270 : 90);
+			arrowRotation = index === 0 ? 90 : 270; // Down for pane 0, up for pane 1
 		}
 
 		return html`
 			<button
-				class="${isCollapsed ? 'expand-btn' : 'collapse-btn'} ${positionClass}"
-				@click=${(e) => { e.stopPropagation(); this.toggleCollapse(index); }}
-				title=${isCollapsed ? 'Expand' : 'Collapse'}
+				class="expand-btn"
+				@click=${(e) => { e.stopPropagation(); this._restoreToDefault(); }}
+				title="Click or drag to expand"
 			>
 				<svg viewBox="0 0 24 24" style="transform: rotate(${arrowRotation}deg)">
 					<path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
@@ -730,6 +738,8 @@ class TSplitterLit extends LitElement {
 
 	/**
 	 * Handle double-click on gutter to collapse/expand
+	 * Double-click on expanded splitter: collapse the pane nearest to click
+	 * Double-click on collapsed splitter: restore to default position
 	 * @private
 	 * @param {MouseEvent} e
 	 */
@@ -737,22 +747,55 @@ class TSplitterLit extends LitElement {
 		e.preventDefault();
 		this._logger.debug('Double-click on gutter');
 
-		// If pane 0 is collapsible and not already collapsed, collapse it
-		if (this.collapsible[0] && !this.collapsed[0]) {
-			this.toggleCollapse(0);
+		// If either pane is collapsed, restore to default
+		if (this.collapsed[0] || this.collapsed[1]) {
+			this._restoreToDefault();
+			return;
 		}
-		// Else if pane 1 is collapsible and not already collapsed, collapse it
-		else if (this.collapsible[1] && !this.collapsed[1]) {
-			this.toggleCollapse(1);
+
+		// Determine which pane to collapse based on click position
+		const gutter = e.currentTarget;
+		const rect = gutter.getBoundingClientRect();
+		const isHorizontal = this.orientation === 'horizontal';
+
+		// Calculate click position relative to gutter center
+		const clickPos = isHorizontal ? e.clientX : e.clientY;
+		const gutterStart = isHorizontal ? rect.left : rect.top;
+		const gutterSize = isHorizontal ? rect.width : rect.height;
+		const gutterCenter = gutterStart + gutterSize / 2;
+
+		// Collapse the pane on the side of the click
+		// Click before center = collapse pane 0, click after = collapse pane 1
+		const paneToCollapse = clickPos < gutterCenter ? 0 : 1;
+
+		// Check if pane is collapsible (minSize must be 0)
+		if (this._canCollapse(paneToCollapse)) {
+			this._sizesBeforeCollapse = [...this.sizes];
+			this.collapse(paneToCollapse);
 		}
-		// Else if pane 0 is collapsed, expand it
-		else if (this.collapsed[0]) {
-			this.toggleCollapse(0);
-		}
-		// Else if pane 1 is collapsed, expand it
-		else if (this.collapsed[1]) {
-			this.toggleCollapse(1);
-		}
+	}
+
+	/**
+	 * Restore splitter to default position
+	 * @private
+	 */
+	_restoreToDefault() {
+		this._logger.debug('Restoring to default position');
+		this.collapsed = [false, false];
+		this.sizes = [...this._defaultSizes];
+		this._emitEvent('resize', { sizes: this.sizes });
+		this._emitEvent('collapse', { index: -1, collapsed: false, restored: true });
+	}
+
+	/**
+	 * Check if a pane can be collapsed (minSize must be 0)
+	 * @private
+	 * @param {number} index - Pane index
+	 * @returns {boolean}
+	 */
+	_canCollapse(index) {
+		// Can collapse if minSize is 0 or collapsible is explicitly true
+		return this.minSizes[index] === 0 || this.collapsible[index];
 	}
 
 	/**
@@ -829,6 +872,7 @@ class TSplitterLit extends LitElement {
 		this._isDragging = true;
 		this._startPos = pos;
 		this._startSizes = [...this.sizes];
+		this._startCollapsed = [...this.collapsed];
 
 		const container = this.shadowRoot.querySelector('.splitter');
 		this._containerSize = this.orientation === 'horizontal'
@@ -848,8 +892,56 @@ class TSplitterLit extends LitElement {
 		if (!this._isDragging) return;
 
 		const delta = pos - this._startPos;
-		const deltaPercent = (delta / this._containerSize) * 100;
+		const dragThreshold = 20; // pixels needed to trigger uncollapse
 
+		// Handle drag-to-uncollapse - calculate size from mouse position, not from saved values
+		if (this._startCollapsed[0] && delta > dragThreshold) {
+			// Dragging right/down from collapsed pane 0 - uncollapse and follow mouse
+			this._logger.debug('Drag-to-uncollapse: pane 0');
+			this.collapsed = [false, false];
+			this._startCollapsed = [false, false];
+
+			// Calculate position from container start (gutter was at edge when collapsed)
+			const container = this.shadowRoot.querySelector('.splitter');
+			const containerRect = container.getBoundingClientRect();
+			const containerStart = this.orientation === 'horizontal' ? containerRect.left : containerRect.top;
+			const posFromStart = pos - containerStart - (this.gutterSize / 2);
+			const newSize0 = Math.max(5, (posFromStart / this._containerSize) * 100);
+			const newSize1 = 100 - newSize0;
+
+			this.sizes = [newSize0, newSize1];
+			this._startSizes = [...this.sizes];
+			this._startPos = pos;
+			this._emitEvent('collapse', { index: 0, collapsed: false });
+			this._emitEvent('resize', { sizes: this.sizes });
+			return;
+		}
+		if (this._startCollapsed[1] && delta < -dragThreshold) {
+			// Dragging left/up from collapsed pane 1 - uncollapse and follow mouse
+			this._logger.debug('Drag-to-uncollapse: pane 1');
+			this.collapsed = [false, false];
+			this._startCollapsed = [false, false];
+
+			// Calculate position from container start (gutter was at far edge when collapsed)
+			const container = this.shadowRoot.querySelector('.splitter');
+			const containerRect = container.getBoundingClientRect();
+			const containerStart = this.orientation === 'horizontal' ? containerRect.left : containerRect.top;
+			const posFromStart = pos - containerStart - (this.gutterSize / 2);
+			const newSize0 = Math.max(5, (posFromStart / this._containerSize) * 100);
+			const newSize1 = 100 - newSize0;
+
+			this.sizes = [newSize0, newSize1];
+			this._startSizes = [...this.sizes];
+			this._startPos = pos;
+			this._emitEvent('collapse', { index: 1, collapsed: false });
+			this._emitEvent('resize', { sizes: this.sizes });
+			return;
+		}
+
+		// Don't allow resize if collapsed
+		if (this.collapsed[0] || this.collapsed[1]) return;
+
+		const deltaPercent = (delta / this._containerSize) * 100;
 		let newSize0 = this._startSizes[0] + deltaPercent;
 		let newSize1 = this._startSizes[1] - deltaPercent;
 
@@ -876,24 +968,55 @@ class TSplitterLit extends LitElement {
 	_endDrag() {
 		this._isDragging = false;
 
-		// Check for drag-to-edge collapse
-		const snapPercent = (this.snapOffset / this._containerSize) * 100;
-
-		// If dragged pane 0 to edge and it's collapsible
-		if (this.sizes[0] <= snapPercent && this.collapsible[0] && !this.collapsed[0]) {
-			this._logger.debug('Drag-to-edge collapse: pane 0');
-			this._sizesBeforeCollapse = [...this._startSizes];
-			this.collapse(0);
+		// Skip collapse check if already collapsed
+		if (this.collapsed[0] || this.collapsed[1]) {
+			this._emitEvent('resize-end', { sizes: this.sizes });
+			this.requestUpdate();
+			return;
 		}
-		// If dragged pane 1 to edge and it's collapsible
-		else if (this.sizes[1] <= snapPercent && this.collapsible[1] && !this.collapsed[1]) {
-			this._logger.debug('Drag-to-edge collapse: pane 1');
+
+		// Check for drag-to-edge collapse with snap animation
+		// Using 50px as the snap threshold as requested
+		const snapThreshold = 50;
+		const snapPercent = (snapThreshold / this._containerSize) * 100;
+
+		// If dragged pane 0 to edge and it can be collapsed
+		if (this.sizes[0] <= snapPercent && this._canCollapse(0)) {
+			this._logger.debug('Snap-to-edge collapse: pane 0');
 			this._sizesBeforeCollapse = [...this._startSizes];
-			this.collapse(1);
+			this._snapCollapse(0);
+		}
+		// If dragged pane 1 to edge and it can be collapsed
+		else if (this.sizes[1] <= snapPercent && this._canCollapse(1)) {
+			this._logger.debug('Snap-to-edge collapse: pane 1');
+			this._sizesBeforeCollapse = [...this._startSizes];
+			this._snapCollapse(1);
 		}
 
 		this._emitEvent('resize-end', { sizes: this.sizes });
 		this.requestUpdate();
+	}
+
+	/**
+	 * Collapse a pane with snap animation
+	 * @private
+	 * @param {number} index - Pane index
+	 */
+	_snapCollapse(index) {
+		// Add snapping class for animation
+		this._isSnapping = true;
+		this.requestUpdate();
+
+		// Let the class be applied, then collapse
+		requestAnimationFrame(() => {
+			this.collapse(index);
+
+			// Remove snapping class after animation
+			setTimeout(() => {
+				this._isSnapping = false;
+				this.requestUpdate();
+			}, 160);
+		});
 	}
 
 	/**

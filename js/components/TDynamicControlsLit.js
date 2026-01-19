@@ -1,10 +1,11 @@
 /**
  * @fileoverview TDynamicControlsLit - Dynamic Control Generator Component
  * @module components/TDynamicControlsLit
- * @version 3.0.0
+ * @version 3.1.0
  *
- * Generates form controls dynamically from a schema. Designed to work with
- * Rive parser blueprint format (State Machines and ViewModels).
+ * Generates form controls dynamically from a schema. General-purpose control
+ * panel that can integrate most terminal-kit components. Originally designed
+ * for Rive ViewModels, now supports any structured data.
  *
  * @example
  * <t-dynamic-controls></t-dynamic-controls>
@@ -12,7 +13,6 @@
  */
 
 import { LitElement, html, css } from 'lit';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import componentLogger from '../utils/ComponentLogger.js';
 
 // ============================================================
@@ -54,6 +54,8 @@ export class TDynamicControlsLit extends LitElement {
 			--dyn-border: var(--terminal-gray-dark, #333);
 			--dyn-color: var(--terminal-green, #00ff41);
 			--dyn-text: var(--terminal-gray-light, #888);
+			--dyn-indent: 8px;
+			--dyn-label-width: 100px;
 		}
 
 		:host([disabled]) {
@@ -61,26 +63,30 @@ export class TDynamicControlsLit extends LitElement {
 			pointer-events: none;
 		}
 
+		:host([compact]) {
+			--dyn-indent: 6px;
+			--dyn-label-width: 80px;
+		}
+
 		.controls-container {
 			display: flex;
 			flex-direction: column;
-			gap: 8px;
+			gap: 4px;
 		}
 
 		.empty-state {
-			padding: 20px;
+			padding: 16px;
 			text-align: center;
 			color: var(--dyn-text);
-			font-size: 12px;
+			font-size: 11px;
 		}
 
 		/* Control sections */
-
 		.section-header {
 			display: flex;
 			align-items: center;
-			gap: 8px;
-			padding: 8px 12px;
+			gap: 6px;
+			padding: 6px 10px;
 			background: rgba(0, 0, 0, 0.3);
 			border-bottom: 1px solid var(--dyn-border);
 			cursor: pointer;
@@ -91,9 +97,21 @@ export class TDynamicControlsLit extends LitElement {
 			background: rgba(0, 255, 65, 0.05);
 		}
 
+		.section-chevron {
+			width: 12px;
+			height: 12px;
+			color: var(--dyn-color);
+			transition: transform 0.15s ease;
+			flex-shrink: 0;
+		}
+
+		.section-chevron.collapsed {
+			transform: rotate(-90deg);
+		}
+
 		.section-title {
 			flex: 1;
-			font-size: 11px;
+			font-size: 10px;
 			font-weight: 600;
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
@@ -101,16 +119,15 @@ export class TDynamicControlsLit extends LitElement {
 		}
 
 		.section-badge {
-			font-size: 10px;
-			padding: 2px 6px;
+			font-size: 9px;
+			padding: 1px 5px;
 			background: var(--dyn-color);
 			color: var(--terminal-black, #0a0a0a);
 			font-weight: 700;
 		}
 
 		.section-content {
-			padding: 12px;
-			overflow: visible;
+			padding: 8px;
 		}
 
 		.section-content.collapsed {
@@ -120,33 +137,61 @@ export class TDynamicControlsLit extends LitElement {
 		.section {
 			border: 1px solid var(--dyn-border);
 			background: var(--dyn-bg);
-			overflow: visible;
 		}
 
-		/* Nested sections */
+		/* Nested sections - collapsible */
 		.nested-section {
-			margin-top: 8px;
-			margin-left: 16px;
+			margin-top: 4px;
+			margin-left: var(--dyn-indent);
 			border-left: 2px solid color-mix(in srgb, var(--dyn-color) 30%, transparent);
-			padding-left: 12px;
+			padding-left: var(--dyn-indent);
 		}
 
 		.nested-header {
-			font-size: 10px;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			font-size: 9px;
 			font-weight: 600;
 			color: var(--dyn-color);
-			margin-bottom: 8px;
+			margin-bottom: 4px;
 			text-transform: uppercase;
 			letter-spacing: 0.3px;
+			cursor: pointer;
+			user-select: none;
+			padding: 2px 0;
 		}
 
-		/* Control rows */
+		.nested-header:hover {
+			color: var(--terminal-green-bright, #00ff41);
+		}
+
+		.nested-chevron {
+			width: 10px;
+			height: 10px;
+			transition: transform 0.15s ease;
+			flex-shrink: 0;
+		}
+
+		.nested-chevron.collapsed {
+			transform: rotate(-90deg);
+		}
+
+		.nested-content {
+			display: block;
+		}
+
+		.nested-content.collapsed {
+			display: none;
+		}
+
+		/* Control rows - responsive */
 		.control-row {
 			display: flex;
 			align-items: center;
-			gap: 12px;
-			padding: 6px 0;
-			border-bottom: 1px solid rgba(51, 51, 51, 0.5);
+			gap: 8px;
+			padding: 4px 0;
+			border-bottom: 1px solid rgba(51, 51, 51, 0.3);
 			position: relative;
 		}
 
@@ -155,8 +200,9 @@ export class TDynamicControlsLit extends LitElement {
 		}
 
 		.control-label {
-			flex: 0 0 120px;
-			font-size: 11px;
+			flex: 0 0 var(--dyn-label-width);
+			min-width: 60px;
+			font-size: 10px;
 			color: var(--terminal-white, #fff);
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -165,34 +211,72 @@ export class TDynamicControlsLit extends LitElement {
 
 		.control-input {
 			flex: 1;
-			min-width: 0;
-			max-width: 200px;
+			min-width: 80px;
 		}
 
-		/* Ensure color picker and dropdown fit within container */
+		/* Dropdown overflow fix */
+		.control-input t-drp {
+			width: 100%;
+			--dropdown-menu-max-height: 150px;
+			--dropdown-menu-position: fixed;
+		}
+
+		/* Color picker minimal variant */
 		.control-input t-clr {
 			width: auto;
 		}
 
-		.control-input t-drp {
-			width: 100%;
-		}
-
-		/* Type indicator */
+		/* Type indicator - right aligned */
 		.type-badge {
-			font-size: 9px;
-			padding: 1px 4px;
+			font-size: 8px;
+			padding: 1px 3px;
 			background: var(--dyn-border);
 			color: var(--dyn-text);
 			text-transform: uppercase;
 			flex-shrink: 0;
+			margin-left: auto;
+		}
+
+		/* Type filter dropdown */
+		.type-filter {
+			padding: 4px 8px;
+			border-bottom: 1px solid var(--dyn-border);
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			font-size: 10px;
+			color: var(--dyn-text);
+		}
+
+		.type-filter t-drp {
+			flex: 1;
+			max-width: 150px;
 		}
 
 		/* Unsupported type */
 		.unsupported {
-			font-size: 11px;
+			font-size: 10px;
 			color: var(--terminal-red, #ff003c);
 			font-style: italic;
+		}
+
+		/* Responsive adjustments */
+		@container (max-width: 300px) {
+			.control-row {
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 4px;
+			}
+
+			.control-label {
+				flex: none;
+				width: 100%;
+			}
+
+			.control-input {
+				width: 100%;
+				max-width: none;
+			}
 		}
 	`;
 
@@ -239,7 +323,24 @@ export class TDynamicControlsLit extends LitElement {
 		 * @attribute compact
 		 * @reflects true
 		 */
-		compact: { type: Boolean, reflect: true }
+		compact: { type: Boolean, reflect: true },
+
+		/**
+		 * Show type filter dropdown
+		 * @property showFilter
+		 * @type {Boolean}
+		 * @default false
+		 * @attribute show-filter
+		 */
+		showFilter: { type: Boolean, attribute: 'show-filter' },
+
+		/**
+		 * Active type filter
+		 * @property typeFilter
+		 * @type {String}
+		 * @default ''
+		 */
+		typeFilter: { type: String, attribute: 'type-filter' }
 	};
 
 	// ============================================================
@@ -253,10 +354,16 @@ export class TDynamicControlsLit extends LitElement {
 	_values = {};
 
 	/**
-	 * @private
+	 * @private - Tracks collapsed top-level sections
 	 * @type {Set<string>}
 	 */
 	_collapsedSections = new Set();
+
+	/**
+	 * @private - Tracks collapsed nested sections
+	 * @type {Set<string>}
+	 */
+	_collapsedNested = new Set();
 
 	// ============================================================
 	// BLOCK 5: Logger Instance
@@ -278,6 +385,8 @@ export class TDynamicControlsLit extends LitElement {
 		this.disabled = false;
 		this.showTypes = false;
 		this.compact = false;
+		this.showFilter = false;
+		this.typeFilter = '';
 		this._logger.debug('Component constructed');
 	}
 
@@ -399,10 +508,60 @@ export class TDynamicControlsLit extends LitElement {
 
 		return html`
 			<div class="controls-container">
+				${this._renderTypeFilter()}
 				${this._renderStateMachines()}
 				${this._renderViewModel()}
 			</div>
 		`;
+	}
+
+	/**
+	 * @private
+	 */
+	_renderTypeFilter() {
+		if (!this.showFilter) return '';
+
+		const types = this._collectAllTypes();
+		const options = [
+			{ value: '', label: 'All types' },
+			...types.map(t => ({ value: t, label: t }))
+		];
+
+		return html`
+			<div class="type-filter">
+				<span>Filter:</span>
+				<t-drp
+					size="sm"
+					.value=${this.typeFilter}
+					.options=${options}
+					@dropdown-change=${(e) => { this.typeFilter = e.detail.value; }}
+				></t-drp>
+			</div>
+		`;
+	}
+
+	/**
+	 * @private - Collect all unique types from schema
+	 */
+	_collectAllTypes() {
+		const types = new Set();
+
+		const collectFromInputs = (inputs) => {
+			inputs?.forEach(input => {
+				if (input.type) types.add(input.type);
+			});
+		};
+
+		const collectFromVM = (vm) => {
+			if (!vm) return;
+			collectFromInputs(vm.properties);
+			vm.nestedViewModels?.forEach(nested => collectFromVM(nested));
+		};
+
+		this.schema?.stateMachines?.forEach(sm => collectFromInputs(sm.inputs));
+		collectFromVM(this.schema?.viewModel);
+
+		return Array.from(types).sort();
 	}
 
 	// ============================================================
@@ -470,6 +629,8 @@ export class TDynamicControlsLit extends LitElement {
 		if (!vm || depth > 10) return '';
 
 		const displayName = vm.blueprintName || vm.name;
+		const nestedId = `nested-${vm.name}-${depth}`;
+		const isCollapsed = this._collapsedNested.has(nestedId);
 
 		const controls = vm.properties?.map(prop => this._renderControl(
 			`vm.${vm.name}.${prop.name}`,
@@ -484,11 +645,31 @@ export class TDynamicControlsLit extends LitElement {
 
 		return html`
 			<div class="nested-section">
-				<div class="nested-header">${displayName}</div>
-				${controls}
-				${nestedSections}
+				<div class="nested-header" @click=${() => this._toggleNested(nestedId)}>
+					<svg class="nested-chevron ${isCollapsed ? 'collapsed' : ''}" viewBox="0 0 24 24" fill="currentColor">
+						<path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+					</svg>
+					<span>${displayName}</span>
+				</div>
+				<div class="nested-content ${isCollapsed ? 'collapsed' : ''}">
+					${controls}
+					${nestedSections}
+				</div>
 			</div>
 		`;
+	}
+
+	/**
+	 * Toggle nested section collapse
+	 * @private
+	 */
+	_toggleNested(id) {
+		if (this._collapsedNested.has(id)) {
+			this._collapsedNested.delete(id);
+		} else {
+			this._collapsedNested.add(id);
+		}
+		this.requestUpdate();
 	}
 
 	/**
@@ -500,6 +681,9 @@ export class TDynamicControlsLit extends LitElement {
 		return html`
 			<div class="section">
 				<div class="section-header" @click=${() => this._toggleSection(id)}>
+					<svg class="section-chevron ${isCollapsed ? 'collapsed' : ''}" viewBox="0 0 24 24" fill="currentColor">
+						<path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+					</svg>
 					<span class="section-title">${title}</span>
 					${count > 0 ? html`<span class="section-badge">${count}</span>` : ''}
 				</div>
@@ -514,6 +698,11 @@ export class TDynamicControlsLit extends LitElement {
 	 * @private
 	 */
 	_renderControl(path, name, type, config) {
+		// Apply type filter
+		if (this.typeFilter && type !== this.typeFilter) {
+			return '';
+		}
+
 		const value = this._getValueByPath(path);
 
 		let controlHtml;
@@ -561,7 +750,7 @@ export class TDynamicControlsLit extends LitElement {
 					<t-clr
 						value=${this._argbToHex(value)}
 						elements="swatch,input"
-						size="compact"
+						variant="compact"
 						?disabled=${this.disabled}
 						@color-change=${(e) => this._handleValueChange(path, this._hexToArgb(e.detail.value))}
 					></t-clr>
@@ -589,6 +778,45 @@ export class TDynamicControlsLit extends LitElement {
 						?disabled=${this.disabled}
 						@button-click=${() => this._handleTrigger(path)}
 					>Fire</t-btn>
+				`;
+				break;
+
+			case 'slider':
+			case 'range':
+				controlHtml = html`
+					<t-sld
+						size="sm"
+						.value=${value ?? 0}
+						min=${config.min ?? 0}
+						max=${config.max ?? 100}
+						step=${config.step ?? 1}
+						?disabled=${this.disabled}
+						@slider-change=${(e) => this._handleValueChange(path, e.detail.value)}
+					></t-sld>
+				`;
+				break;
+
+			case 'progress':
+				controlHtml = html`
+					<t-prg
+						.value=${value ?? 0}
+						max=${config.max ?? 100}
+						size="sm"
+						show-label
+					></t-prg>
+				`;
+				break;
+
+			case 'textarea':
+				controlHtml = html`
+					<t-textarea
+						size="sm"
+						.value=${value ?? ''}
+						rows=${config.rows ?? 3}
+						resize=${config.resize ?? 'vertical'}
+						?disabled=${this.disabled}
+						@textarea-change=${(e) => this._handleValueChange(path, e.detail.value)}
+					></t-textarea>
 				`;
 				break;
 
@@ -687,6 +915,11 @@ export class TDynamicControlsLit extends LitElement {
 			case 'string': return '';
 			case 'color': return 0xff00ff41;
 			case 'enumType': return '';
+			case 'slider':
+			case 'range': return 50;
+			case 'progress': return 0;
+			case 'textarea':
+			case 'text': return '';
 			default: return null;
 		}
 	}

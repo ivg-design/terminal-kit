@@ -56,24 +56,24 @@ class TCalendarLit extends LitElement {
 
 	static styles = css`
 		:host {
-			display: flex;
+			display: inline-flex;
 			flex-direction: column;
 			font-family: var(--t-font-mono, 'JetBrains Mono', monospace);
 			background: var(--t-cal-bg, var(--terminal-gray-darkest, #1a1a1a));
 			border: 1px solid var(--t-cal-border, var(--terminal-gray-dark, #333));
 			color: var(--t-cal-color, var(--terminal-green, #00ff41));
-			padding: 4px;
-			min-width: 160px;
-			width: 100%;
-			height: 100%;
+			padding: 8px;
+			width: auto;
+			max-width: 280px;
 			box-sizing: border-box;
 			overflow: hidden;
+			user-select: none;
+			-webkit-user-select: none;
 		}
 
 		:host([inline]) {
 			width: auto;
-			height: auto;
-			min-width: 250px;
+			max-width: 320px;
 		}
 
 		:host([compact]) .calendar-footer {
@@ -204,24 +204,30 @@ class TCalendarLit extends LitElement {
 		}
 
 		.day.today {
-			border-color: var(--terminal-amber, #ffb000);
+			font-weight: bold;
+			background: rgba(255, 255, 255, 0.05);
 		}
 
 		.day.today::after {
 			content: '';
 			position: absolute;
-			bottom: 1px;
+			bottom: 2px;
 			left: 50%;
 			transform: translateX(-50%);
-			width: 3px;
-			height: 3px;
-			background: var(--terminal-amber, #ffb000);
-			border-radius: 50%;
+			width: 4px;
+			height: 2px;
+			background: var(--terminal-green-dim, #00cc33);
 		}
 
 		.day.selected {
 			background: var(--terminal-green, #00ff41);
 			color: var(--terminal-black, #0a0a0a);
+			font-weight: bold;
+		}
+
+		/* Ensure selected overrides today styling */
+		.day.selected.today::after {
+			background: var(--terminal-black, #0a0a0a);
 		}
 
 		.day.in-range {
@@ -576,7 +582,8 @@ class TCalendarLit extends LitElement {
 			} else {
 				dates.push(iso);
 			}
-			this.value = dates;
+			// Create new array reference to trigger Lit reactivity
+			this.value = [...dates];
 		} else if (this.mode === 'range') {
 			this._handleRangeSelect(parsed);
 		}
@@ -1018,8 +1025,13 @@ class TCalendarLit extends LitElement {
 		const iso = this._formatDateISO(date);
 		const isSelected = selectedDates.includes(iso);
 		const isInRange = this._isInRange(date);
-		const rangeStart = this._rangeStart && this._isSameDay(date, this._rangeStart);
-		const rangeEnd = this.mode === 'range' && this.value?.end && this._isSameDay(date, this._parseDate(this.value.end));
+
+		// Range start: either from active selection or completed range
+		const rangeStartDate = this._rangeStart || (this.value?.start ? this._parseDate(this.value.start) : null);
+		const rangeEndDate = this.value?.end ? this._parseDate(this.value.end) : null;
+
+		const rangeStart = this.mode === 'range' && rangeStartDate && this._isSameDay(date, rangeStartDate);
+		const rangeEnd = this.mode === 'range' && rangeEndDate && this._isSameDay(date, rangeEndDate);
 
 		return {
 			date,
@@ -1041,7 +1053,8 @@ class TCalendarLit extends LitElement {
 	_isInRange(date) {
 		if (this.mode !== 'range') return false;
 
-		let start = this._rangeStart;
+		// For completed range selection, use value.start and value.end
+		let start = this._rangeStart || (this.value?.start ? this._parseDate(this.value.start) : null);
 		let end = this._hoverDate || (this.value?.end ? this._parseDate(this.value.end) : null);
 
 		if (!start || !end) return false;

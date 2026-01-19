@@ -49,8 +49,8 @@ describe('TSplitterLit', () => {
 			const emptySplitter = document.createElement('t-split');
 			expect(emptySplitter.orientation).toBe('horizontal');
 			expect(emptySplitter.sizes).toEqual([50, 50]);
-			expect(emptySplitter.minSizes).toEqual([50, 50]);
-			expect(emptySplitter.collapsible).toEqual([false, false]);
+			expect(emptySplitter.minSizes).toEqual([0, 0]); // All panes collapsible by default
+			expect(emptySplitter.collapsible).toEqual([true, true]); // Collapsible by default
 			expect(emptySplitter.collapsed).toEqual([false, false]);
 			expect(emptySplitter.gutterSize).toBe(8);
 			expect(emptySplitter.snapOffset).toBe(30);
@@ -137,7 +137,9 @@ describe('TSplitterLit', () => {
 			expect(handler.mock.calls[0][0].detail.collapsed).toBe(true);
 		});
 
-		it('collapse() should not collapse non-collapsible pane', async () => {
+		it('collapse() should not collapse pane with minSize > 0', async () => {
+			// Set minSizes to prevent collapse
+			splitter.minSizes = [100, 100];
 			splitter.collapsible = [false, false];
 			await splitter.updateComplete;
 
@@ -295,11 +297,11 @@ describe('TSplitterLit', () => {
 			expect(handle).toBeTruthy();
 		});
 
-		it('should render collapse buttons when collapsible', async () => {
-			splitter.collapsible = [true, true];
+		it('should render expand button when collapsed', async () => {
+			splitter.collapsed = [true, false];
 			await splitter.updateComplete;
 
-			const buttons = splitter.shadowRoot.querySelectorAll('.collapse-btn');
+			const buttons = splitter.shadowRoot.querySelectorAll('.expand-btn');
 			expect(buttons.length).toBeGreaterThan(0);
 		});
 	});
