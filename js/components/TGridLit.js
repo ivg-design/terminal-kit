@@ -909,13 +909,13 @@ class TGridLit extends LitElement {
 		overlay.innerHTML = '';
 
 		// Set overlay height explicitly
-		overlay.style.height = `${rows * this.cellHeight}px`;
+		overlay.style.height = `calc(${rows} * var(--gs-cell-height))`;
 
 		for (let y = 0; y < rows; y++) {
 			for (let x = 0; x < this.columns; x++) {
 				const cell = document.createElement('div');
 				cell.className = 'grid-overlay-cell';
-				cell.style.cssText = `left: ${(x / this.columns) * 100}%; top: ${y * this.cellHeight}px; width: ${(1 / this.columns) * 100}%; height: ${this.cellHeight}px;`;
+				cell.style.cssText = `left: calc(${x} * var(--gs-column-width)); top: calc(${y} * var(--gs-cell-height)); width: var(--gs-column-width); height: var(--gs-cell-height);`;
 				overlay.appendChild(cell);
 			}
 		}
@@ -1000,7 +1000,13 @@ class TGridLit extends LitElement {
 	_applyGridVars() {
 		const rect = this.getBoundingClientRect();
 		if (!rect.width) return false;
-		const columnWidth = (rect.width - (this.columns - 1) * this.margin) / this.columns;
+		let columnWidth = rect.width / this.columns;
+		if (this._grid && typeof this._grid.cellWidth === 'function') {
+			const gridWidth = this._grid.cellWidth();
+			if (Number.isFinite(gridWidth) && gridWidth > 0) {
+				columnWidth = gridWidth;
+			}
+		}
 		this.style.setProperty('--gs-column-width', `${columnWidth}px`);
 		this.style.setProperty('--gs-cell-height', `${this.cellHeight}px`);
 		const margin = `${this.margin}px`;
