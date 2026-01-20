@@ -35,7 +35,7 @@ describe('TTimelineLit', () => {
 		});
 
 		it('should have correct version', () => {
-			expect(timeline.constructor.version).toBe('3.0.0');
+			expect(timeline.constructor.version).toBe('3.1.0');
 		});
 
 		it('should have correct category', () => {
@@ -50,10 +50,15 @@ describe('TTimelineLit', () => {
 		it('should have correct default values', () => {
 			const emptyTimeline = document.createElement('t-tmln');
 			expect(emptyTimeline.items).toEqual([]);
-			expect(emptyTimeline.align).toBe('left');
+			expect(emptyTimeline.orientation).toBe('vertical');
+			expect(emptyTimeline.linePosition).toBe(null); // Auto-detect based on orientation
+			expect(emptyTimeline.contentAlign).toBe('center');
 			expect(emptyTimeline.dense).toBe(false);
 			expect(emptyTimeline.loading).toBe(false);
 			expect(emptyTimeline.loadingMore).toBe(false);
+			expect(emptyTimeline.dotSize).toBe('md');
+			expect(emptyTimeline.dotShape).toBe('circle');
+			expect(emptyTimeline.dotColorMode).toBe('variant');
 		});
 
 		it('should update items property', async () => {
@@ -63,11 +68,11 @@ describe('TTimelineLit', () => {
 			expect(timeline.items).toEqual(newItems);
 		});
 
-		it('should update align property', async () => {
-			timeline.align = 'right';
+		it('should update linePosition property', async () => {
+			timeline.linePosition = 'right';
 			await timeline.updateComplete;
-			expect(timeline.align).toBe('right');
-			expect(timeline.getAttribute('align')).toBe('right');
+			expect(timeline.linePosition).toBe('right');
+			expect(timeline.getAttribute('line-position')).toBe('right');
 		});
 
 		it('should update dense property', async () => {
@@ -93,10 +98,11 @@ describe('TTimelineLit', () => {
 
 		it('should set properties from attributes', async () => {
 			const withAttrs = await fixture(html`
-				<t-tmln align="alternate" dense loading></t-tmln>
+				<t-tmln orientation="horizontal" line-position="bottom" dense loading></t-tmln>
 			`);
 
-			expect(withAttrs.align).toBe('alternate');
+			expect(withAttrs.orientation).toBe('horizontal');
+			expect(withAttrs.linePosition).toBe('bottom');
 			expect(withAttrs.dense).toBe(true);
 			expect(withAttrs.loading).toBe(true);
 
@@ -192,8 +198,8 @@ describe('TTimelineLit', () => {
 			const handler = vi.fn();
 			timeline.addEventListener('item-click', handler);
 
-			const item = timeline.shadowRoot.querySelectorAll('.timeline-item')[2];
-			item.click();
+			const items = timeline.shadowRoot.querySelectorAll('.tl-item');
+			items[2].click();
 
 			expect(handler).toHaveBeenCalled();
 			expect(handler.mock.calls[0][0].detail.id).toBe('item3');
@@ -234,19 +240,19 @@ describe('TTimelineLit', () => {
 
 		it('should render timeline container', async () => {
 			await timeline.updateComplete;
-			const container = timeline.shadowRoot.querySelector('.timeline');
+			const container = timeline.shadowRoot.querySelector('.timeline-vertical');
 			expect(container).toBeTruthy();
 		});
 
 		it('should render timeline items', async () => {
 			await timeline.updateComplete;
-			const items = timeline.shadowRoot.querySelectorAll('.timeline-item');
+			const items = timeline.shadowRoot.querySelectorAll('.tl-item');
 			expect(items.length).toBe(3);
 		});
 
 		it('should render item titles', async () => {
 			await timeline.updateComplete;
-			const titles = timeline.shadowRoot.querySelectorAll('.timeline-item-title');
+			const titles = timeline.shadowRoot.querySelectorAll('.tl-title');
 			expect(titles[0].textContent).toBe('Event 1');
 			expect(titles[1].textContent).toBe('Event 2');
 			expect(titles[2].textContent).toBe('Event 3');
@@ -254,45 +260,37 @@ describe('TTimelineLit', () => {
 
 		it('should render item dates', async () => {
 			await timeline.updateComplete;
-			const dates = timeline.shadowRoot.querySelectorAll('.timeline-item-date');
+			const dates = timeline.shadowRoot.querySelectorAll('.tl-date');
 			expect(dates.length).toBe(3);
 		});
 
 		it('should render item descriptions', async () => {
 			await timeline.updateComplete;
-			const descriptions = timeline.shadowRoot.querySelectorAll('.timeline-item-description');
+			const descriptions = timeline.shadowRoot.querySelectorAll('.tl-description');
 			expect(descriptions.length).toBeGreaterThan(0);
 		});
 
-		it('should apply align class', async () => {
-			timeline.align = 'right';
+		it('should apply line-right class', async () => {
+			timeline.linePosition = 'right';
 			await timeline.updateComplete;
 
-			const container = timeline.shadowRoot.querySelector('.timeline');
-			expect(container.classList.contains('align-right')).toBe(true);
+			const container = timeline.shadowRoot.querySelector('.timeline-vertical');
+			expect(container.classList.contains('line-right')).toBe(true);
 		});
 
-		it('should apply dense class', async () => {
-			timeline.dense = true;
-			await timeline.updateComplete;
-
-			const container = timeline.shadowRoot.querySelector('.timeline');
-			expect(container.classList.contains('dense')).toBe(true);
-		});
-
-		it('should apply loading class', async () => {
+		it('should apply timeline-loading class', async () => {
 			timeline.loading = true;
 			await timeline.updateComplete;
 
-			const container = timeline.shadowRoot.querySelector('.timeline');
-			expect(container.classList.contains('loading')).toBe(true);
+			const container = timeline.shadowRoot.querySelector('.timeline-vertical');
+			expect(container.classList.contains('timeline-loading')).toBe(true);
 		});
 
 		it('should render loading more indicator', async () => {
 			timeline.loadingMore = true;
 			await timeline.updateComplete;
 
-			const loadingMore = timeline.shadowRoot.querySelector('.timeline-loading-more');
+			const loadingMore = timeline.shadowRoot.querySelector('.tl-loading-more');
 			expect(loadingMore).toBeTruthy();
 		});
 
@@ -300,14 +298,14 @@ describe('TTimelineLit', () => {
 			timeline.items = [];
 			await timeline.updateComplete;
 
-			const empty = timeline.shadowRoot.querySelector('.timeline-empty');
+			const empty = timeline.shadowRoot.querySelector('.tl-empty');
 			expect(empty).toBeTruthy();
 		});
 
 		it('should apply variant class to dot', async () => {
 			await timeline.updateComplete;
 
-			const dots = timeline.shadowRoot.querySelectorAll('.timeline-item-dot');
+			const dots = timeline.shadowRoot.querySelectorAll('.tl-dot');
 			expect(dots[2].classList.contains('success')).toBe(true);
 		});
 
@@ -315,14 +313,14 @@ describe('TTimelineLit', () => {
 			timeline.expandItem('item2');
 			await timeline.updateComplete;
 
-			const items = timeline.shadowRoot.querySelectorAll('.timeline-item');
+			const items = timeline.shadowRoot.querySelectorAll('.tl-item');
 			expect(items[1].classList.contains('expanded')).toBe(true);
 		});
 
 		it('should apply clickable class to clickable items', async () => {
 			await timeline.updateComplete;
 
-			const items = timeline.shadowRoot.querySelectorAll('.timeline-item');
+			const items = timeline.shadowRoot.querySelectorAll('.tl-item');
 			expect(items[2].classList.contains('clickable')).toBe(true);
 		});
 	});
@@ -334,7 +332,7 @@ describe('TTimelineLit', () => {
 		it('should render expand container for expandable items', async () => {
 			await timeline.updateComplete;
 
-			const expandContainers = timeline.shadowRoot.querySelectorAll('.timeline-item-expand');
+			const expandContainers = timeline.shadowRoot.querySelectorAll('.tl-expand');
 			expect(expandContainers.length).toBe(1);
 		});
 
@@ -347,7 +345,38 @@ describe('TTimelineLit', () => {
 	});
 
 	// ======================================================
-	// SUITE 7: Logging
+	// SUITE 7: Horizontal Orientation
+	// ======================================================
+	describe('Horizontal Orientation', () => {
+		it('should render horizontal timeline', async () => {
+			timeline.orientation = 'horizontal';
+			await timeline.updateComplete;
+
+			const container = timeline.shadowRoot.querySelector('.timeline-horizontal');
+			expect(container).toBeTruthy();
+		});
+
+		it('should place dots above content with line-position=top', async () => {
+			timeline.orientation = 'horizontal';
+			timeline.linePosition = 'top';
+			await timeline.updateComplete;
+
+			const container = timeline.shadowRoot.querySelector('.timeline-horizontal');
+			expect(container.classList.contains('line-top')).toBe(true);
+		});
+
+		it('should place dots below content with line-position=bottom', async () => {
+			timeline.orientation = 'horizontal';
+			timeline.linePosition = 'bottom';
+			await timeline.updateComplete;
+
+			const container = timeline.shadowRoot.querySelector('.timeline-horizontal');
+			expect(container.classList.contains('line-bottom')).toBe(true);
+		});
+	});
+
+	// ======================================================
+	// SUITE 8: Logging
 	// ======================================================
 	describe('Logging', () => {
 		it('should have logger instance', () => {
