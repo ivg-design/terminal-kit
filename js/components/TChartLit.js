@@ -514,15 +514,18 @@ class TChartLit extends LitElement {
 	connectedCallback() {
 		super.connectedCallback();
 		this._logger.info('Connected to DOM');
+		this._setupResizeObserver();
 	}
 
 	disconnectedCallback() {
+		this._clearResizeObserver();
 		super.disconnectedCallback();
 		this._logger.info('Disconnected from DOM');
 	}
 
 	firstUpdated() {
 		this._logger.debug('First update complete');
+		this._measureSize();
 		requestAnimationFrame(() => this.requestUpdate());
 	}
 
@@ -671,25 +674,27 @@ class TChartLit extends LitElement {
 	}
 
 	_getChartWidth() {
+		if (this._lastMeasuredWidth) return this._lastMeasuredWidth;
 		const rect = this.getBoundingClientRect();
 		if (rect.width) {
-			const width = Math.max(240, rect.width - 16);
+			const width = Math.max(120, rect.width - 16);
 			this._lastMeasuredWidth = width;
 			return width;
 		}
-		return this._lastMeasuredWidth || 400;
+		return this._lastMeasuredWidth || 300;
 	}
 
 	_getChartHeight() {
 		const raw = this.height;
 		if (typeof raw === 'string' && (raw.includes('%') || raw === 'auto')) {
+			if (this._lastMeasuredHeight) return this._lastMeasuredHeight;
 			const rect = this.getBoundingClientRect();
 			if (rect.height) {
-				const height = Math.max(180, rect.height - 16);
+				const height = Math.max(120, rect.height - 16);
 				this._lastMeasuredHeight = height;
 				return height;
 			}
-			return this._lastMeasuredHeight || 200;
+			return this._lastMeasuredHeight || 160;
 		}
 
 		const parsed = parseInt(raw, 10);
@@ -699,6 +704,55 @@ class TChartLit extends LitElement {
 		}
 
 		return this._lastMeasuredHeight || 200;
+	}
+
+	_setupResizeObserver() {
+		if (this._resizeObserver || typeof ResizeObserver === 'undefined') return;
+		this._resizeObserver = new ResizeObserver(entries => {
+			const entry = entries[0];
+			if (!entry) return;
+			const { width, height } = entry.contentRect || {};
+			if (!width && !height) return;
+			if (this._resizeRaf) cancelAnimationFrame(this._resizeRaf);
+			this._resizeRaf = requestAnimationFrame(() => {
+				this._resizeRaf = null;
+				const changed = this._measureSize(width, height);
+				if (changed) this.requestUpdate();
+			});
+		});
+		this._resizeObserver.observe(this);
+	}
+
+	_clearResizeObserver() {
+		if (this._resizeObserver) {
+			this._resizeObserver.disconnect();
+			this._resizeObserver = null;
+		}
+		if (this._resizeRaf) {
+			cancelAnimationFrame(this._resizeRaf);
+			this._resizeRaf = null;
+		}
+	}
+
+	_measureSize(width, height) {
+		const rectWidth = width || this.getBoundingClientRect().width;
+		const rectHeight = height || this.getBoundingClientRect().height;
+		let changed = false;
+		if (rectWidth) {
+			const nextWidth = Math.max(120, rectWidth - 16);
+			if (nextWidth !== this._lastMeasuredWidth) {
+				this._lastMeasuredWidth = nextWidth;
+				changed = true;
+			}
+		}
+		if (rectHeight && (typeof this.height === 'string' && (this.height.includes('%') || this.height === 'auto'))) {
+			const nextHeight = Math.max(120, rectHeight - 16);
+			if (nextHeight !== this._lastMeasuredHeight) {
+				this._lastMeasuredHeight = nextHeight;
+				changed = true;
+			}
+		}
+		return changed;
 	}
 
 	_getHeightStyle() {

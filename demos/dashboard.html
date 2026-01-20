@@ -740,6 +740,9 @@
 
         const grid = document.getElementById('widget-grid');
         const toast = document.getElementById('toast');
+        const dashboardState = {
+            interacting: false
+        };
 
         function syncSquareCells() {
             const rect = grid.getBoundingClientRect();
@@ -1169,6 +1172,7 @@
 
                     // Simulate live logs
                     setInterval(() => {
+                        if (dashboardState.interacting) return;
                         const level = logLevels[Math.floor(Math.random() * logLevels.length)];
                         const message = logMessages[Math.floor(Math.random() * logMessages.length)];
                         logList.addEntry({ level, message, timestamp: new Date().toISOString() });
@@ -1387,6 +1391,7 @@ CREATE INDEX idx_user_prefs_user_id
 
             // Simulate system stats updates
             setInterval(() => {
+                if (dashboardState.interacting) return;
                 const cpu = document.getElementById('cpu-progress');
                 const mem = document.getElementById('mem-progress');
                 if (cpu) cpu.value = 50 + Math.random() * 40;
@@ -1396,6 +1401,19 @@ CREATE INDEX idx_user_prefs_user_id
 
         // Initialize event handlers
         function initEventHandlers() {
+            grid.addEventListener('grid-drag-start', () => {
+                dashboardState.interacting = true;
+            });
+            grid.addEventListener('grid-resize-start', () => {
+                dashboardState.interacting = true;
+            });
+            grid.addEventListener('grid-drag-stop', () => {
+                dashboardState.interacting = false;
+            });
+            grid.addEventListener('grid-resize-stop', () => {
+                dashboardState.interacting = false;
+            });
+
             // Float toggle
             document.getElementById('toggle-float').addEventListener('toggle-change', (e) => {
                 grid.float = e.detail.checked;

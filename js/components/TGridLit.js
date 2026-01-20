@@ -159,9 +159,11 @@ function injectGridStyles() {
 			/* GridStack margin is ~10px, plus border ~1px, plus padding inside content ~8px */
 			right: 18px !important;
 			bottom: 18px !important;
-			cursor: default !important;
+			cursor: se-resize !important;
 			opacity: 0.4;
 			transition: opacity 0.15s ease;
+			z-index: 2;
+			pointer-events: auto;
 			/* arrowsOut icon - 4 corner arrows (18px = 14px * 1.3) */
 			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='%2300ff41'%3E%3Cpath d='M216 48v48c0 4.418-3.582 8-8 8-4.419 0-8-3.582-8-8V67.31l-42.34 42.35c-3.126 3.125-8.195 3.125-11.32 0-3.126-3.126-3.126-8.195 0-11.32L188.69 56H160c-4.419 0-8-3.582-8-8 0-4.419 3.581-8 8-8h48c4.418 0 8 3.581 8 8ZM98.34 146.34L56 188.69V160c0-4.419-3.582-8-8-8-4.419 0-8 3.581-8 8v48c0 4.418 3.581 8 8 8h48c4.418 0 8-3.582 8-8 0-4.419-3.582-8-8-8H67.31l42.35-42.34c3.125-3.126 3.125-8.195 0-11.32-3.126-3.126-8.195-3.126-11.32 0ZM208 152c-4.419 0-8 3.581-8 8v28.69l-42.34-42.35c-3.126-3.126-8.195-3.126-11.32-.001-3.126 3.125-3.126 8.194-.001 11.32l42.35 42.34h-28.69c-4.419 0-8 3.581-8 8 0 4.418 3.581 8 8 8h48c4.418 0 8-3.582 8-8v-48c0-4.419-3.582-8-8-8ZM67.31 56H96c4.418 0 8-3.582 8-8 0-4.419-3.582-8-8-8H48c-4.419 0-8 3.581-8 8v48c0 4.418 3.581 8 8 8 4.418 0 8-3.582 8-8V67.31l42.34 42.35c3.125 3.125 8.194 3.125 11.32 0 3.125-3.126 3.125-8.195 0-11.32Z'/%3E%3C/svg%3E") !important;
 			background-repeat: no-repeat !important;
@@ -514,6 +516,27 @@ class TGridLit extends LitElement {
 	 * @private
 	 */
 	_overlayVisible = false;
+
+	/**
+	 * Grid interaction state
+	 * @type {boolean}
+	 * @private
+	 */
+	_isInteracting = false;
+
+	/**
+	 * Pending layout changes flag
+	 * @type {boolean}
+	 * @private
+	 */
+	_layoutDirty = false;
+
+	/**
+	 * Layout save animation frame id
+	 * @type {number|null}
+	 * @private
+	 */
+	_saveLayoutRaf = null;
 
 	/**
 	 * Initialization complete
@@ -1138,13 +1161,13 @@ class TGridLit extends LitElement {
 
 		this._grid.on('change', (event, items) => {
 			this._logger.debug('Grid changed', { itemCount: items?.length });
-			this._saveLayout();
-			this._refreshOverlayCells();
+			this._queueLayoutSave();
 			this._emitEvent('grid-change', { items: items || [] });
 		});
 
 		this._grid.on('dragstart', (event, el) => {
 			this._logger.debug('Drag started');
+			this._isInteracting = true;
 			this._overlayVisible = true;
 			this._updateOverlay();
 			this._emitEvent('grid-drag-start', { element: el });
@@ -1152,13 +1175,16 @@ class TGridLit extends LitElement {
 
 		this._grid.on('dragstop', (event, el) => {
 			this._logger.debug('Drag stopped');
+			this._isInteracting = false;
 			this._overlayVisible = false;
 			this._updateOverlay();
+			this._flushLayoutSave();
 			this._emitEvent('grid-drag-stop', { element: el });
 		});
 
 		this._grid.on('resizestart', (event, el) => {
 			this._logger.debug('Resize started');
+			this._isInteracting = true;
 			this._overlayVisible = true;
 			this._updateOverlay();
 			this._emitEvent('grid-resize-start', { element: el });
@@ -1166,8 +1192,10 @@ class TGridLit extends LitElement {
 
 		this._grid.on('resizestop', (event, el) => {
 			this._logger.debug('Resize stopped');
+			this._isInteracting = false;
 			this._overlayVisible = false;
 			this._updateOverlay();
+			this._flushLayoutSave();
 			this._emitEvent('grid-resize-stop', { element: el });
 		});
 
@@ -1235,6 +1263,23 @@ class TGridLit extends LitElement {
 		} catch (e) {
 			this._logger.warn('Failed to save layout', e);
 		}
+	}
+
+	_queueLayoutSave() {
+		this._layoutDirty = true;
+		if (this._isInteracting) return;
+		if (this._saveLayoutRaf) cancelAnimationFrame(this._saveLayoutRaf);
+		this._saveLayoutRaf = requestAnimationFrame(() => {
+			this._saveLayoutRaf = null;
+			this._flushLayoutSave();
+		});
+	}
+
+	_flushLayoutSave() {
+		if (!this._layoutDirty) return;
+		this._layoutDirty = false;
+		this._saveLayout();
+		this._refreshOverlayCells();
 	}
 
 	/**
