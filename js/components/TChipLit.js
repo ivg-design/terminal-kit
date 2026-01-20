@@ -87,11 +87,17 @@ export class TChipLit extends LitElement {
 		:host([disabled]) .chip {
 			opacity: 0.5;
 			cursor: not-allowed;
+			pointer-events: none;
 		}
 
 		:host([disabled][selectable]) .chip:hover {
 			border-color: var(--chip-border);
 			box-shadow: none;
+		}
+
+		/* Ensure remove button is disabled too */
+		:host([disabled]) .chip-remove {
+			pointer-events: none;
 		}
 
 		/* Size variants */
@@ -359,7 +365,7 @@ export class TChipLit extends LitElement {
 		 * Auto-remove from DOM when remove button clicked
 		 * @property autoRemove
 		 * @type {Boolean}
-		 * @default false
+		 * @default true
 		 * @attribute auto-remove
 		 * @reflects true
 		 */
@@ -380,6 +386,42 @@ export class TChipLit extends LitElement {
 		shape: {
 			type: String,
 			reflect: true
+		},
+
+		/**
+		 * Custom background color
+		 * @property bgColor
+		 * @type {String}
+		 * @default ''
+		 * @attribute bg-color
+		 */
+		bgColor: {
+			type: String,
+			attribute: 'bg-color'
+		},
+
+		/**
+		 * Custom text color
+		 * @property textColor
+		 * @type {String}
+		 * @default ''
+		 * @attribute text-color
+		 */
+		textColor: {
+			type: String,
+			attribute: 'text-color'
+		},
+
+		/**
+		 * Custom border color
+		 * @property borderColor
+		 * @type {String}
+		 * @default ''
+		 * @attribute border-color
+		 */
+		borderColor: {
+			type: String,
+			attribute: 'border-color'
 		}
 	};
 
@@ -410,8 +452,11 @@ export class TChipLit extends LitElement {
 		this.disabled = false;
 		this.icon = '';
 		this.avatar = '';
-		this.autoRemove = false;
+		this.autoRemove = true;
 		this.shape = 'pill';
+		this.bgColor = '';
+		this.textColor = '';
+		this.borderColor = '';
 
 		this._logger.debug('Component constructed with defaults');
 	}
@@ -476,18 +521,17 @@ export class TChipLit extends LitElement {
 	}
 
 	/**
-	 * Remove the chip (emits event, optionally removes from DOM)
+	 * Request chip removal (emits event, optionally removes from DOM)
 	 * @public
 	 */
-	remove() {
+	requestRemove() {
 		if (this.disabled || !this.removable) return;
-		this._logger.debug('Removing chip');
+		this._logger.debug('Requesting chip removal');
 		this._emitEvent('chip-remove', { label: this.label });
 
 		// Auto-remove from DOM if property is set
 		if (this.autoRemove) {
-			this._logger.debug('Auto-removing from DOM');
-			this.parentElement?.removeChild(this);
+			HTMLElement.prototype.remove.call(this);
 		}
 	}
 
@@ -534,7 +578,7 @@ export class TChipLit extends LitElement {
 	 */
 	_handleRemoveClick(e) {
 		e.stopPropagation();
-		this.remove();
+		this.requestRemove();
 	}
 
 	/**
@@ -565,9 +609,17 @@ export class TChipLit extends LitElement {
 			variant: this.variant
 		});
 
+		// Build custom style string for color overrides
+		const customStyles = [];
+		if (this.bgColor) customStyles.push(`--chip-bg: ${this.bgColor}`);
+		if (this.textColor) customStyles.push(`--chip-color: ${this.textColor}`);
+		if (this.borderColor) customStyles.push(`--chip-border: ${this.borderColor}`);
+		const styleAttr = customStyles.length ? customStyles.join('; ') : '';
+
 		return html`
 			<div
 				class="chip"
+				style="${styleAttr}"
 				role="${this.selectable ? 'checkbox' : 'status'}"
 				aria-checked="${this.selectable ? this.selected : undefined}"
 				aria-label="${this.label}"

@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal Chat Panel - Demo</title>
+    <title>TChatPanelLit - Component Demo</title>
+
+    <!-- Demo Template Styles -->
+    <link rel="stylesheet" href="../css/demo-template.css">
 
     <style>
         t-chat:not(:defined),
@@ -14,63 +17,6 @@
         t-textarea:not(:defined) {
             opacity: 0;
             display: inline-block;
-        }
-
-        :root {
-            --terminal-black: #0a0a0a;
-            --terminal-black-light: #1a1a1a;
-            --terminal-green: #00ff41;
-            --terminal-green-dim: #00cc33;
-            --terminal-green-dark: #008820;
-            --terminal-gray: #808080;
-            --terminal-gray-dark: #242424;
-            --terminal-gray-light: #333333;
-            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-            --spacing-sm: 8px;
-            --spacing-md: 12px;
-            --spacing-lg: 16px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font-mono);
-            background: var(--terminal-black);
-            color: var(--terminal-green);
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .breadcrumb {
-            padding: 10px 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #242424;
-            font-size: 11px;
-            color: #00cc33;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .breadcrumb a {
-            color: #00cc33;
-            text-decoration: none;
-        }
-
-        .breadcrumb a:hover {
-            color: var(--terminal-green);
-        }
-
-        h1 {
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            border-bottom: 2px solid var(--terminal-green);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
         }
 
         .demo-controls {
@@ -93,31 +39,111 @@
     </style>
 </head>
 <body>
-    <div class="breadcrumb">
-        <a href="index.html">Demo Gallery</a>
-        <span> / </span>
-        <span>Chat Panel</span>
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TChatPanelLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Chat Panel
+                </div>
+            </div>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="demo-container">
+        <div class="component-section">
+            <h2 class="component-title">Chat Panel Component</h2>
+            <p class="component-description">
+                Full-featured chat interface with message history, streaming support, markdown rendering, and file attachments.
+            </p>
+
+            <h3>Interactive Demo</h3>
+            <div class="demo-controls">
+                <t-drp id="spinnerSelect" placeholder="Spinner" width="220px"></t-drp>
+                <t-btn id="toggleThinking" size="sm">Toggle Thinking</t-btn>
+                <t-btn id="simulateStream" size="sm" variant="secondary">Simulate Stream</t-btn>
+                <t-btn id="addQueued" size="sm" variant="secondary">Add Queue Item</t-btn>
+            </div>
+
+            <div class="demo-grid">
+                <t-chat
+                    id="chatDemo"
+                    title="Agent Console"
+                    export-format="markdown"
+                    export-filename="terminal-kit-chat"
+                    max-height="100%"
+                    persist-key="tkit-chat-demo"
+                    show-queue
+                ></t-chat>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;!-- Basic chat panel --&gt;
+&lt;t-chat title="Chat"&gt;&lt;/t-chat&gt;
+
+&lt;!-- With features --&gt;
+&lt;t-chat
+  title="Agent Console"
+  export-format="markdown"
+  export-filename="chat-export"
+  persist-key="my-chat"
+  show-queue&gt;
+&lt;/t-chat&gt;
+
+&lt;!-- JavaScript API --&gt;
+&lt;script&gt;
+  const chat = document.querySelector('t-chat');
+
+  // Set agent modes
+  chat.agentModes = [
+    { value: 'haiku', label: 'Haiku' },
+    { value: 'sonnet', label: 'Sonnet' }
+  ];
+
+  // Set messages
+  chat.messages = [
+    {
+      id: 'msg-1',
+      role: 'assistant',
+      content: 'Hello! **How can I help?**',
+      timestamp: new Date().toISOString(),
+      model: 'sonnet'
+    }
+  ];
+
+  // Control thinking state
+  chat.thinking = true;
+  chat.streamingContent = 'Processing...';
+
+  // Queue messages
+  chat.enqueueMessage('Reminder', []);
+
+  // Event listeners
+  chat.addEventListener('chat-send', (e) =&gt; {
+    console.log('Message:', e.detail.message);
+    console.log('Attachments:', e.detail.attachments);
+    console.log('Mode:', e.detail.mode);
+  });
+&lt;/script&gt;</code>
+            </div>
+        </div>
     </div>
 
-    <h1>Chat Panel (t-chat)</h1>
-
-    <div class="demo-controls">
-        <t-drp id="spinnerSelect" placeholder="Spinner" width="220px"></t-drp>
-        <t-btn id="toggleThinking" size="sm">Toggle Thinking</t-btn>
-        <t-btn id="simulateStream" size="sm" variant="secondary">Simulate Stream</t-btn>
-        <t-btn id="addQueued" size="sm" variant="secondary">Add Queue Item</t-btn>
-    </div>
-
-    <div class="demo-grid">
-        <t-chat
-            id="chatDemo"
-            title="Agent Console"
-            export-format="markdown"
-            export-filename="terminal-kit-chat"
-            max-height="100%"
-            persist-key="tkit-chat-demo"
-            show-queue
-        ></t-chat>
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
+            </div>
+        </div>
+        <div class="event-log" id="eventLog"></div>
     </div>
 
     <script type="module">
@@ -127,6 +153,44 @@
         import '../js/components/TLoaderLit.js';
         import '../js/components/TTextareaLit.js';
         import { dotsThreeCircleIcon } from '../js/utils/phosphor-icons.js';
+
+        // Event log functionality
+        let eventCount = 0;
+        const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
+
+        function logEvent(component, event, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
+        }
+
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
 
         const chat = document.getElementById('chatDemo');
         const spinnerSelect = document.getElementById('spinnerSelect');
@@ -179,14 +243,17 @@
 
         spinnerSelect.addEventListener('dropdown-change', (e) => {
             chat.spinnerType = e.detail.value;
+            logEvent('chat', 'spinner-change', { spinner: e.detail.value });
         });
 
         toggleThinking.addEventListener('button-click', () => {
             chat.thinking = !chat.thinking;
+            logEvent('chat', 'thinking-toggle', { thinking: chat.thinking });
         });
 
         addQueued.addEventListener('button-click', () => {
             chat.enqueueMessage('Queued note - follow up on system metrics.', []);
+            logEvent('chat', 'enqueue-message');
         });
 
         simulateStream.addEventListener('button-click', () => {
@@ -194,6 +261,8 @@
             chat.streamingContent = '';
             const chunks = ['Streaming response...', ' step 1 done.', ' step 2 done.', ' complete.'];
             let index = 0;
+            logEvent('chat', 'stream-start');
+
             const interval = setInterval(() => {
                 chat.streamingContent += chunks[index] || '';
                 index += 1;
@@ -211,12 +280,15 @@
                     ];
                     chat.streamingContent = '';
                     chat.thinking = false;
+                    logEvent('chat', 'stream-complete');
                 }
             }, 600);
         });
 
         chat.addEventListener('chat-send', (e) => {
             const detail = e.detail || {};
+            logEvent('chat', 'chat-send', { message: detail.message?.substring(0, 50), mode: detail.mode });
+
             const entry = {
                 id: `msg-${Date.now()}`,
                 role: 'user',
@@ -227,6 +299,9 @@
             };
             chat.messages = [...chat.messages, entry];
         });
+
+        logEvent('System', 'Demo initialized');
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

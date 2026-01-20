@@ -4,18 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TToggleLit - Component Demo</title>
-
-    <!-- Demo Template Styles -->
     <link rel="stylesheet" href="../css/demo-template.css">
 </head>
 <body>
-    <div class="demo-container">
-        <div class="breadcrumb">
-            <a href="index.html">&larr; Back to Gallery</a> / Toggles
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TToggleLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Toggles
+                </div>
+            </div>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
+            </div>
         </div>
+    </header>
 
-        <h1>TToggleLit</h1>
-
+    <!-- Main Content -->
+    <div class="demo-container">
         <div class="component-section">
             <h2 class="component-title">Toggle Switches</h2>
             <p class="component-description">
@@ -217,10 +225,18 @@
 &lt;t-tog variant="checkbox" label="Right" alignment="right"&gt;&lt;/t-tog&gt;</code>
             </div>
         </div>
+    </div>
 
-        <div class="event-log" id="eventLog">
-            <h3>Event Log</h3>
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
+            </div>
         </div>
+        <div class="event-log" id="eventLog"></div>
     </div>
 
     <script type="module">
@@ -244,16 +260,43 @@
             slidersHorizontalIcon
         } from '../js/utils/phosphor-icons.js';
 
+        // Event log functionality
+        let eventCount = 0;
         const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
 
         function logEvent(component, event, detail) {
             const entry = document.createElement('div');
             entry.className = 'event-entry';
             const timestamp = new Date().toLocaleTimeString();
-            entry.textContent = `[${timestamp}] ${component}: ${event} ${detail ? '- ' + JSON.stringify(detail) : ''}`;
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
             eventLog.appendChild(entry);
             eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
         }
+
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             // Set toggle icons
@@ -308,14 +351,7 @@
                 logEvent(id, 'toggle-change', { checked: e.detail.checked });
             });
         });
-
-        // Also listen via event delegation for dynamically set up listeners
-        document.addEventListener('toggle-change', (e) => {
-            if (e.target.tagName === 'T-TOG') {
-                const id = e.target.id || e.target.getAttribute('label') || 'toggle';
-                // Prevent duplicate logs
-            }
-        });
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

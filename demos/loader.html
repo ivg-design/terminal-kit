@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TLoaderLit Component Demo - 55+ Spinners</title>
+    <title>TLoaderLit - Component Demo</title>
+
+    <!-- Demo Template Styles -->
+    <link rel="stylesheet" href="../css/demo-template.css">
+
     <!-- Terminal Kit Component Styles -->
     <link rel="stylesheet" href="../css/components/t-sld.css">
     <link rel="stylesheet" href="../css/components/t-drp.css">
@@ -12,68 +16,11 @@
     <link rel="stylesheet" href="../css/components/t-inp.css">
     <link rel="stylesheet" href="../css/components/t-btn.css">
     <link rel="stylesheet" href="../css/components/t-ta.css">
+
     <!-- Iro.js for color picker -->
     <script src="/public/js/libs/iro.min.js"></script>
-    <!-- Prism.js for syntax highlighting -->
-    <link rel="stylesheet" href="../public/js/libs/prismjs/prism-tomorrow.min.css">
-    <script src="../public/js/libs/prismjs/prism.js"></script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
-
-        :root {
-            --terminal-green: #00ff41;
-            --terminal-amber: #ffb000;
-            --terminal-red: #ff003c;
-            --terminal-cyan: #00ffff;
-            --terminal-purple: #9d00ff;
-            --terminal-gray: #666;
-            --terminal-bg: #0a0a0a;
-            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-            --spacing-sm: 12px;
-            --spacing-md: 16px;
-            --spacing-lg: 24px;
-            --font-size-sm: 14px;
-        }
-
-        body {
-            background: var(--terminal-bg);
-            color: var(--terminal-green);
-            font-family: var(--font-mono);
-            padding: 40px;
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        h1, h2 {
-            color: var(--terminal-green);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        h1 {
-            border-bottom: 2px solid var(--terminal-green);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        h2 {
-            margin-top: 50px;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-
-        .description {
-            color: var(--terminal-gray);
-            margin-bottom: 40px;
-        }
-
-        .controls {
-            background: rgba(0, 255, 65, 0.05);
-            border: 1px solid var(--terminal-green);
-            padding: 25px;
-            margin-bottom: 40px;
-        }
-
         .main-controls {
             display: flex;
             flex-direction: column;
@@ -81,13 +28,13 @@
             padding: 20px;
             background: rgba(0, 255, 65, 0.02);
             border: 1px solid rgba(0, 255, 65, 0.1);
+            margin-bottom: 20px;
         }
 
         .control-row {
             display: flex;
             gap: 15px;
-            align-items: flex-start; /* Components handle their own alignment */
-            /* min-height: 60px; Space for labels + controls */
+            align-items: flex-start;
             padding: 10px 0;
         }
 
@@ -98,37 +45,23 @@
             gap: 4px;
         }
 
-        /* Specific widths for each control type */
-        .control-group.dropdown {
-            width: 250px;
-        }
-
-        .control-group.slider {
-            width: 300px; /* Both sliders same width */
-        }
-
-        .control-group.color {
-            width: 150px;
-        }
-
-        .control-group.button {
-            width: 160px;
-        }
+        .control-group.dropdown { width: 250px; }
+        .control-group.slider { width: 300px; }
+        .control-group.color { width: 150px; }
+        .control-group.button { width: 160px; }
 
         .control-group.input-with-label {
-            width: 250px; /* Same as dropdown */
+            width: 250px;
             display: flex;
             flex-direction: row;
             align-items: flex-start;
             gap: 8px;
         }
 
-        /* Double-line inline label */
         .inline-label {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            /* min-width: 45px; */
             color: rgba(0, 255, 65, 0.7);
             font-size: 10px;
             font-weight: 600;
@@ -137,34 +70,24 @@
             letter-spacing: 0.5px;
         }
 
-        .inline-label span {
-            display: block;
-        }
+        .inline-label span { display: block; }
 
-        /* Input field when used with inline label */
         .control-group.input-with-label t-inp {
             flex: 1;
-            width: calc(100% - 53px); /* Account for label width + gap */
+            width: calc(100% - 53px);
         }
 
-
-        /* All form controls base styling */
         .main-controls t-drp,
         .main-controls t-inp {
             width: 100%;
             height: 32px;
         }
 
-        /* Sliders - no custom styling to prevent conflicts */
-
-
-        /* Color picker */
         .main-controls t-clr[variant="standard"] {
             width: 100%;
             height: 32px;
         }
 
-        /* Buttons */
         .main-controls t-btn {
             width: 100%;
             height: 32px;
@@ -172,12 +95,10 @@
             font-weight: 600;
         }
 
-        /* Ensure buttons align properly without labels */
         .control-group.button {
             justify-content: flex-end;
             min-height: 32px;
         }
-
 
         .grid-controls {
             display: flex;
@@ -195,28 +116,19 @@
             gap: 4px;
         }
 
-        .grid-controls .control-group.slider {
-            width: 300px; /* Match main controls slider width */
-        }
-
-        .grid-controls .control-group.color {
-            width: 150px;
-        }
-
+        .grid-controls .control-group.slider { width: 300px; }
+        .grid-controls .control-group.color { width: 150px; }
 
         .grid-controls t-clr[variant="standard"] {
             width: 100%;
             height: 32px;
         }
 
-
-        /* Global Terminal Kit component resets */
         t-drp, t-clr, t-inp, t-sld, t-btn {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-
 
         t-drp {
             --t-drp-bg: #1a1a1a;
@@ -230,58 +142,19 @@
             --t-inp-text: var(--terminal-green);
         }
 
-
-        label {
-            color: var(--terminal-amber);
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        select, input, button {
-            background: var(--terminal-bg);
-            color: var(--terminal-green);
-            border: 1px solid var(--terminal-green);
-            padding: 8px 12px;
-            font-family: var(--font-mono);
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        select:hover, input:hover, button:hover {
-            background: rgba(0, 255, 65, 0.1);
-        }
-
-        input[type="color"] {
-            width: 50px;
-            height: 36px;
-            padding: 2px;
-        }
-
-        button {
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .demo-container {
+        .loader-preview {
             background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--terminal-gray);
+            border: 1px solid var(--terminal-gray-light);
             padding: 40px;
             margin: 20px 0;
             min-height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
         }
 
-        /* Code Output Section */
         .code-output-section {
-            margin: 40px 0;
+            margin: 20px 0;
             padding: 20px;
             background: rgba(0, 255, 65, 0.02);
             border: 1px solid rgba(0, 255, 65, 0.1);
@@ -295,7 +168,6 @@
             letter-spacing: 1px;
         }
 
-        /* TTextareaLit component styles */
         #codeOutput {
             --t-ta-bg: #0a0a0a;
             --t-ta-border: rgba(0, 255, 65, 0.3);
@@ -311,7 +183,7 @@
             background: transparent;
             border: 1px solid var(--terminal-green);
             color: var(--terminal-green);
-            font-family: 'JetBrains Mono', monospace;
+            font-family: var(--font-mono);
             font-size: 11px;
             text-transform: uppercase;
             cursor: pointer;
@@ -323,16 +195,12 @@
             color: #000;
         }
 
-        .copy-btn:active {
-            transform: scale(0.95);
-        }
-
         .spinner-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, var(--grid-cell-size, 120px));
             column-gap: 30px;
             row-gap: 15px;
-            margin: 40px 20px;
+            margin: 20px 0;
             justify-content: center;
             grid-auto-rows: minmax(calc(var(--grid-cell-size, 120px) + 50px), auto);
             align-items: end;
@@ -349,7 +217,7 @@
 
         .spinner-box {
             background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--terminal-gray);
+            border: 1px solid var(--terminal-gray-light);
             width: var(--grid-cell-size, 120px);
             height: var(--grid-cell-size, 120px);
             display: flex;
@@ -383,7 +251,7 @@
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
-            border-bottom: 1px solid var(--terminal-gray);
+            border-bottom: 1px solid var(--terminal-gray-light);
         }
 
         .tab {
@@ -398,26 +266,19 @@
             font-size: 0.9em;
         }
 
-        .tab:hover {
-            color: var(--terminal-green);
-        }
+        .tab:hover { color: var(--terminal-green); }
 
         .tab.active {
             color: var(--terminal-green);
             border-color: var(--terminal-green);
-            border-bottom-color: var(--terminal-bg);
-            background: var(--terminal-bg);
+            border-bottom-color: var(--terminal-black);
+            background: var(--terminal-black);
             position: relative;
             bottom: -1px;
         }
 
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         .stats {
             display: flex;
@@ -428,170 +289,148 @@
             border: 1px solid var(--terminal-green);
         }
 
-        .stat-item {
-            display: flex;
-            gap: 10px;
-        }
-
-        .stat-label {
-            color: var(--terminal-amber);
-        }
-
-        .stat-value {
-            color: var(--terminal-green);
-            font-weight: bold;
-        }
-
-        code {
-            background: rgba(0, 255, 65, 0.1);
-            padding: 2px 6px;
-            border: 1px solid var(--terminal-green);
-            color: var(--terminal-green);
-        }
-
-        .breadcrumb {
-            padding: 10px 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #242424;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: #00cc33;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .breadcrumb a {
-            color: #00cc33;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .breadcrumb a:hover {
-            color: var(--terminal-green);
-        }
+        .stat-item { display: flex; gap: 10px; }
+        .stat-label { color: var(--terminal-amber); }
+        .stat-value { color: var(--terminal-green); font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="breadcrumb">
-        <a href="index.html">← Back to Gallery</a> / Loader
-    </div>
-
-    <h1>🌀 TLoaderLit Component Demo</h1>
-
-    <div class="description">
-        Advanced loader component with 55+ animation types powered by wc-spinners library.
-        Wrapped in terminal/cyberpunk styling with full customization support.
-    </div>
-
-    <div class="stats">
-        <div class="stat-item">
-            <span class="stat-label">Total Spinners:</span>
-            <span class="stat-value" id="totalCount">55</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-label">Epic Spinners:</span>
-            <span class="stat-value">20</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-label">React Spinners:</span>
-            <span class="stat-value">20</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-label">CSS Spinners:</span>
-            <span class="stat-value">15+</span>
-        </div>
-    </div>
-
-    <div class="controls main-controls">
-        <!-- Row 1 -->
-        <div class="control-row">
-            <div class="control-group dropdown">
-                <t-drp id="typeSelect" label="Spinner Type" placeholder="Select spinner" searchable></t-drp>
-            </div>
-            <div class="control-group slider">
-                <t-sld id="sizeSlider" label="Size" min="10" max="120" value="60" step="1" show-output></t-sld>
-            </div>
-            <div class="control-group color">
-                <t-clr id="colorPicker" label="Color" value="#00ff41ff" variant="standard" elements="swatch,input"></t-clr>
-            </div>
-            <div class="control-group button">
-                <t-btn id="toggleBtn" variant="primary">Toggle Visibility</t-btn>
-            </div>
-        </div>
-
-        <!-- Row 2 -->
-        <div class="control-row">
-            <div class="control-group input-with-label">
-                <div class="inline-label">
-                    <span>Loading</span>
-                    <span>Text</span>
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TLoaderLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Loader
                 </div>
-                <t-inp id="textInput" placeholder="Enter text..." type="text"></t-inp>
             </div>
-            <div class="control-group slider">
-                <t-sld id="durationSlider" label="Duration" min="0.5" max="3" step="0.1" value="1" show-output></t-sld>
-            </div>
-            <div class="control-group color">
-                <!-- Empty space for alignment -->
-            </div>
-            <div class="control-group button">
-                <t-btn id="randomBtn" variant="success">Random Spinner</t-btn>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
             </div>
         </div>
-    </div>
+    </header>
 
+    <!-- Main Content -->
     <div class="demo-container">
-        <t-ldr id="mainLoader" type="atom-spinner" size="60" color="#00ff41"></t-ldr>
-    </div>
+        <div class="component-section">
+            <h2 class="component-title">Loader Component</h2>
+            <p class="component-description">
+                Advanced loader component with 55+ animation types powered by wc-spinners library.
+                Wrapped in terminal/cyberpunk styling with full customization support.
+            </p>
 
-    <!-- Code Output Section -->
-    <div class="code-output-section">
-        <h3>Code Snippet</h3>
-        <t-textarea id="codeOutput"
-                    code-mode
-                    show-line-numbers
-                    language="javascript"
-                    readonly
-                    rows="15">
-        </t-textarea>
-        <button id="copyCodeBtn" class="copy-btn">Copy Code</button>
-    </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-label">Total Spinners:</span>
+                    <span class="stat-value" id="totalCount">55</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Epic Spinners:</span>
+                    <span class="stat-value">20</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">React Spinners:</span>
+                    <span class="stat-value">20</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">CSS Spinners:</span>
+                    <span class="stat-value">15+</span>
+                </div>
+            </div>
 
-    <h2>All Available Spinners</h2>
+            <h3>Interactive Preview</h3>
+            <div class="main-controls">
+                <div class="control-row">
+                    <div class="control-group dropdown">
+                        <t-drp id="typeSelect" label="Spinner Type" placeholder="Select spinner" searchable></t-drp>
+                    </div>
+                    <div class="control-group slider">
+                        <t-sld id="sizeSlider" label="Size" min="10" max="120" value="60" step="1" show-output></t-sld>
+                    </div>
+                    <div class="control-group color">
+                        <t-clr id="colorPicker" label="Color" value="#00ff41ff" variant="standard" elements="swatch,input"></t-clr>
+                    </div>
+                    <div class="control-group button">
+                        <t-btn id="toggleBtn" variant="primary">Toggle Visibility</t-btn>
+                    </div>
+                </div>
 
-    <div class="controls grid-controls">
-        <div class="control-group slider">
-            <t-sld id="gridSpeedSlider" label="Grid Speed" min="1" max="5" step="0.5" value="2" show-output></t-sld>
+                <div class="control-row">
+                    <div class="control-group input-with-label">
+                        <div class="inline-label">
+                            <span>Loading</span>
+                            <span>Text</span>
+                        </div>
+                        <t-inp id="textInput" placeholder="Enter text..." type="text"></t-inp>
+                    </div>
+                    <div class="control-group slider">
+                        <t-sld id="durationSlider" label="Duration" min="0.5" max="3" step="0.1" value="1" show-output></t-sld>
+                    </div>
+                    <div class="control-group color"></div>
+                    <div class="control-group button">
+                        <t-btn id="randomBtn" variant="success">Random Spinner</t-btn>
+                    </div>
+                </div>
+            </div>
+
+            <div class="loader-preview">
+                <t-ldr id="mainLoader" type="atom-spinner" size="60" color="#00ff41"></t-ldr>
+            </div>
+
+            <div class="code-output-section">
+                <h3>Code Snippet</h3>
+                <t-textarea id="codeOutput" code-mode show-line-numbers language="javascript" readonly rows="15"></t-textarea>
+                <button id="copyCodeBtn" class="copy-btn">Copy Code</button>
+            </div>
+
+            <h3>All Available Spinners</h3>
+            <div class="grid-controls">
+                <div class="control-group slider">
+                    <t-sld id="gridSpeedSlider" label="Grid Speed" min="1" max="5" step="0.5" value="2" show-output></t-sld>
+                </div>
+                <div class="control-group slider">
+                    <t-sld id="gridSizeSlider" label="Grid Cell Size" min="80" max="160" step="10" value="120" show-output></t-sld>
+                </div>
+                <div class="control-group color">
+                    <t-clr id="gridColorPicker" label="Grid Color" value="#00ff41ff" variant="standard" elements="swatch,input"></t-clr>
+                </div>
+            </div>
+
+            <div class="tab-container">
+                <button class="tab active" data-tab="epic">Epic Spinners (20)</button>
+                <button class="tab" data-tab="react">React Spinners (20)</button>
+                <button class="tab" data-tab="css">CSS Spinners (15+)</button>
+                <button class="tab" data-tab="all">All Spinners</button>
+            </div>
+
+            <div id="epic" class="tab-content active">
+                <div class="spinner-grid" id="epicGrid"></div>
+            </div>
+
+            <div id="react" class="tab-content">
+                <div class="spinner-grid" id="reactGrid"></div>
+            </div>
+
+            <div id="css" class="tab-content">
+                <div class="spinner-grid" id="cssGrid"></div>
+            </div>
+
+            <div id="all" class="tab-content">
+                <div class="spinner-grid" id="allGrid"></div>
+            </div>
         </div>
-        <div class="control-group slider">
-            <t-sld id="gridSizeSlider" label="Grid Cell Size" min="80" max="160" step="10" value="120" show-output></t-sld>
+    </div>
+
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
+            </div>
         </div>
-        <div class="control-group color">
-            <t-clr id="gridColorPicker" label="Grid Color" value="#00ff41ff" variant="standard" elements="swatch,input"></t-clr>
-        </div>
-    </div>
-
-    <div class="tab-container">
-        <button class="tab active" data-tab="epic">Epic Spinners (20)</button>
-        <button class="tab" data-tab="react">React Spinners (20)</button>
-        <button class="tab" data-tab="css">CSS Spinners (15+)</button>
-        <button class="tab" data-tab="all">All Spinners</button>
-    </div>
-
-    <div id="epic" class="tab-content active">
-        <div class="spinner-grid" id="epicGrid"></div>
-    </div>
-
-    <div id="react" class="tab-content">
-        <div class="spinner-grid" id="reactGrid"></div>
-    </div>
-
-    <div id="css" class="tab-content">
-        <div class="spinner-grid" id="cssGrid"></div>
-    </div>
-
-    <div id="all" class="tab-content">
-        <div class="spinner-grid" id="allGrid"></div>
+        <div class="event-log" id="eventLog"></div>
     </div>
 
     <!-- Import Terminal Kit components -->
@@ -608,77 +447,74 @@
     <script type="module">
         import '../js/components/TLoaderLit.js';
 
+        // Event log functionality
+        let eventCount = 0;
+        const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
+
+        function logEvent(component, event, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
+        }
+
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
+
         // Spinner categories
         const epicSpinners = [
-            'atom-spinner',
-            'breeding-rhombus-spinner',
-            'circles-to-rhombuses-spinner',
-            'fingerprint-spinner',
-            'flower-spinner',
-            'fulfilling-bouncing-circle-spinner',
-            'fulfilling-square-spinner',
-            'half-circle-spinner',
-            'hollow-dots-spinner',
-            'intersecting-circles-spinner',
-            'looping-rhombuses-spinner',
-            'orbit-spinner',
-            'pixel-spinner',
-            'radar-spinner',
-            'scaling-squares-spinner',
-            'self-building-square-spinner',
-            'semipolar-spinner',
-            'spring-spinner',
-            'swapping-squares-spinner',
-            'trinity-rings-spinner'
+            'atom-spinner', 'breeding-rhombus-spinner', 'circles-to-rhombuses-spinner',
+            'fingerprint-spinner', 'flower-spinner', 'fulfilling-bouncing-circle-spinner',
+            'fulfilling-square-spinner', 'half-circle-spinner', 'hollow-dots-spinner',
+            'intersecting-circles-spinner', 'looping-rhombuses-spinner', 'orbit-spinner',
+            'pixel-spinner', 'radar-spinner', 'scaling-squares-spinner',
+            'self-building-square-spinner', 'semipolar-spinner', 'spring-spinner',
+            'swapping-squares-spinner', 'trinity-rings-spinner'
         ];
 
         const reactSpinners = [
-            'bar-spinner',
-            'beat-spinner',
-            'bounce-spinner',
-            'circle-spinner',
-            'climbing-box-spinner',
-            'clip-spinner',
-            'dot-spinner',
-            'fade-spinner',
-            'grid-spinner',
-            'hash-spinner',
-            'moon-spinner',
-            'pacman-spinner',
-            'propagate-spinner',
-            'pulse-spinner',
-            'ring-spinner',
-            'rise-spinner',
-            'rotate-spinner',
-            'scale-spinner',
-            'skew-spinner',
-            'square-spinner'
+            'bar-spinner', 'beat-spinner', 'bounce-spinner', 'circle-spinner',
+            'climbing-box-spinner', 'clip-spinner', 'dot-spinner', 'fade-spinner',
+            'grid-spinner', 'hash-spinner', 'moon-spinner', 'pacman-spinner',
+            'propagate-spinner', 'pulse-spinner', 'ring-spinner', 'rise-spinner',
+            'rotate-spinner', 'scale-spinner', 'skew-spinner', 'square-spinner'
         ];
 
         const cssSpinners = [
-            'rsc-circle-spinner',
-            'default-spinner',
-            'dual-ring-spinner',
-            'ellipsis-spinner',
-            'facebook-spinner',
-            'rsc-grid-spinner',
-            'heart-spinner',
-            'hourglass-spinner',
-            'orbitals-spinner',
-            'ouroboro-spinner',
-            'rsc-ring-spinner',
-            'ripple-spinner',
-            'roller-spinner',
-            'spinner-spinner',
-            'sync-spinner'
+            'rsc-circle-spinner', 'default-spinner', 'dual-ring-spinner', 'ellipsis-spinner',
+            'facebook-spinner', 'rsc-grid-spinner', 'heart-spinner', 'hourglass-spinner',
+            'orbitals-spinner', 'ouroboro-spinner', 'rsc-ring-spinner', 'ripple-spinner',
+            'roller-spinner', 'spinner-spinner', 'sync-spinner'
         ];
 
         const allSpinners = [...epicSpinners, ...reactSpinners, ...cssSpinners];
 
-        // Update total count
         document.getElementById('totalCount').textContent = allSpinners.length;
 
-        // Get references to Terminal Kit components
         const mainLoader = document.getElementById('mainLoader');
         const typeSelect = document.getElementById('typeSelect');
         const sizeSlider = document.getElementById('sizeSlider');
@@ -688,46 +524,28 @@
         const toggleBtn = document.getElementById('toggleBtn');
         const randomBtn = document.getElementById('randomBtn');
 
-        // Wait for components to be ready, then populate dropdown
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
-                // Populate type dropdown with options
-                const options = allSpinners.map(type => ({
-                    value: type,
-                    label: type
-                }));
-
+                const options = allSpinners.map(type => ({ value: type, label: type }));
                 if (typeSelect && typeSelect.loadData) {
-                    // Use loadData API for dropdown component - flat list
-                    const spinnerData = {
-                        files: allSpinners,
-                        folders: {}
-                    };
+                    const spinnerData = { files: allSpinners, folders: {} };
                     typeSelect.loadData(spinnerData);
-                    // Set initial value after data is loaded
-                    setTimeout(() => {
-                        typeSelect.value = 'atom-spinner';
-                    }, 100);
+                    setTimeout(() => { typeSelect.value = 'atom-spinner'; }, 100);
                 }
             }, 500);
         });
 
-        // Grid controls
         const gridSpeedSlider = document.getElementById('gridSpeedSlider');
         const gridSizeSlider = document.getElementById('gridSizeSlider');
         const gridColorPicker = document.getElementById('gridColorPicker');
 
-        // Create spinner grids
         function createSpinnerGrid(spinners, containerId) {
             const container = document.getElementById(containerId);
             const speed = gridSpeedSlider.value || 2;
             const cellSize = parseInt(gridSizeSlider.value || 120);
             const size = gridSizeSlider.dataset.baseSize || Math.floor(cellSize * 0.4);
             let color = gridColorPicker.value || '#00ff41';
-            // Convert 8-char hex to 6-char hex if needed
-            if (color.length === 9) {
-                color = color.substring(0, 7);
-            }
+            if (color.length === 9) color = color.substring(0, 7);
 
             container.innerHTML = spinners.map(type => `
                 <div class="spinner-item">
@@ -738,7 +556,6 @@
                 </div>
             `).join('');
 
-            // Add click handlers
             container.querySelectorAll('.spinner-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const spinnerType = item.querySelector('t-ldr').getAttribute('type');
@@ -748,11 +565,11 @@
                         typeSelect.value = spinnerType;
                     }
                     mainLoader.type = spinnerType;
+                    logEvent('grid', 'spinner-select', { type: spinnerType });
                 });
             });
         }
 
-        // Function to update all grid spinners
         function updateAllGrids() {
             createSpinnerGrid(epicSpinners, 'epicGrid');
             createSpinnerGrid(reactSpinners, 'reactGrid');
@@ -760,40 +577,34 @@
             createSpinnerGrid(allSpinners, 'allGrid');
         }
 
-        // Initialize grid size CSS variable and baseSize
         document.documentElement.style.setProperty('--grid-cell-size', '120px');
         gridSizeSlider.dataset.baseSize = Math.floor(120 * 0.4);
-
-        // Create all grids initially
         updateAllGrids();
 
-        // Grid control event listeners
         setTimeout(() => {
             gridSpeedSlider.addEventListener('slider-input', (e) => {
                 if (e.detail && e.detail.value !== undefined) {
                     updateAllGrids();
+                    logEvent('grid', 'speed-change', { speed: e.detail.value });
                 }
             });
 
             gridSizeSlider.addEventListener('slider-input', (e) => {
                 if (e.detail && e.detail.value !== undefined) {
                     const cellSize = parseInt(e.detail.value);
-
-                    // Update CSS variable for grid cell size
                     document.documentElement.style.setProperty('--grid-cell-size', cellSize + 'px');
-
-                    // Update spinners with proportional sizing
-                    const baseSize = Math.floor(cellSize * 0.4); // 40% of cell size for base spinner size
+                    const baseSize = Math.floor(cellSize * 0.4);
                     gridSizeSlider.dataset.baseSize = baseSize;
-
                     updateAllGrids();
+                    logEvent('grid', 'size-change', { cellSize });
                 }
             });
 
             gridColorPicker.addEventListener('change', (e) => {
                 if (e.detail && e.detail.value) {
-                    gridColorPicker.value = e.detail.value; // Update the picker's value
+                    gridColorPicker.value = e.detail.value;
                     updateAllGrids();
+                    logEvent('grid', 'color-change', { color: e.detail.value });
                 }
             });
         }, 200);
@@ -805,37 +616,19 @@
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const targetTab = tab.getAttribute('data-tab');
-
                 tabs.forEach(t => t.classList.remove('active'));
                 tabContents.forEach(tc => tc.classList.remove('active'));
-
                 tab.classList.add('active');
                 document.getElementById(targetTab).classList.add('active');
+                logEvent('tabs', 'tab-change', { tab: targetTab });
             });
         });
 
-        // Update loader function
-        function updateLoader() {
-            // Get values from components using their properties
-            if (typeSelect.value) mainLoader.type = typeSelect.value;
-            if (sizeSlider.value !== undefined) mainLoader.size = parseInt(sizeSlider.value);
-            if (colorPicker.value) mainLoader.color = colorPicker.value;
-            if (durationSlider.value !== undefined) mainLoader.duration = parseFloat(durationSlider.value);
-            if (textInput.value !== undefined) mainLoader.text = textInput.value;
-
-            // Update the code snippet
-            updateCodeSnippet();
-        }
-
-        // Generate and update the code snippet
         function updateCodeSnippet() {
             const type = typeSelect.value || 'atom-spinner';
             const size = sizeSlider.value || 60;
             let color = colorPicker.value || '#00ff41';
-            // Convert 8-char hex to 6-char hex for display
-            if (color.length === 9) {
-                color = color.substring(0, 7);
-            }
+            if (color.length === 9) color = color.substring(0, 7);
             const duration = durationSlider.value || 1;
             const text = textInput.value || '';
 
@@ -864,69 +657,61 @@ document.body.appendChild(loader);
 
             const codeOutput = document.getElementById('codeOutput');
             if (codeOutput) {
-                // Use setValue method if available, otherwise set value property directly
                 if (codeOutput.setValue) {
                     codeOutput.setValue(codeSnippet);
                 } else {
                     codeOutput.value = codeSnippet;
-                    // Force component update
-                    if (codeOutput.requestUpdate) {
-                        codeOutput.requestUpdate();
-                    }
+                    if (codeOutput.requestUpdate) codeOutput.requestUpdate();
                 }
             }
         }
 
-        // Event listeners for Terminal Kit components
-        // Wait for components to load
         setTimeout(() => {
-            // Dropdown events
             typeSelect.addEventListener('dropdown-change', (e) => {
                 if (e.detail && e.detail.value) {
                     mainLoader.type = e.detail.value;
                     updateCodeSnippet();
+                    logEvent('loader', 'type-change', { type: e.detail.value });
                 }
             });
 
-            // Slider events - use slider-input for real-time updates
             sizeSlider.addEventListener('slider-input', (e) => {
                 if (e.detail && e.detail.value !== undefined) {
                     mainLoader.size = parseInt(e.detail.value);
                     updateCodeSnippet();
+                    logEvent('loader', 'size-change', { size: e.detail.value });
                 }
             });
 
-            // Color picker events - real-time updates
             colorPicker.addEventListener('change', (e) => {
                 if (e.detail && e.detail.value) {
-                    // Convert 8-char hex to 6-char hex if needed
                     let color = e.detail.value;
-                    if (color.length === 9) { // #RRGGBBAA format
-                        color = color.substring(0, 7); // Take only #RRGGBB
-                    }
+                    if (color.length === 9) color = color.substring(0, 7);
                     mainLoader.color = color;
-                    colorPicker.value = e.detail.value; // Keep full value in picker
+                    colorPicker.value = e.detail.value;
                     updateCodeSnippet();
+                    logEvent('loader', 'color-change', { color });
                 }
             });
 
-            // Duration slider events - use slider-input for real-time updates
             durationSlider.addEventListener('slider-input', (e) => {
                 if (e.detail && e.detail.value !== undefined) {
                     mainLoader.duration = parseFloat(e.detail.value);
                     updateCodeSnippet();
+                    logEvent('loader', 'duration-change', { duration: e.detail.value });
                 }
             });
 
-            // Input events - real-time updates
             textInput.addEventListener('input', (e) => {
                 mainLoader.text = e.target.value;
                 updateCodeSnippet();
+                logEvent('loader', 'text-change', { text: e.target.value });
             });
         }, 200);
 
         toggleBtn.addEventListener('click', () => {
             mainLoader.toggle();
+            logEvent('loader', 'toggle');
         });
 
         randomBtn.addEventListener('click', () => {
@@ -938,7 +723,6 @@ document.body.appendChild(loader);
             }
             mainLoader.type = randomType;
 
-            // Random color
             const colors = ['#00ff41', '#ffb000', '#ff003c', '#00ffff', '#9d00ff'];
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
             if (colorPicker.setValue) {
@@ -948,7 +732,6 @@ document.body.appendChild(loader);
             }
             mainLoader.color = randomColor;
 
-            // Random size
             const randomSize = Math.floor(Math.random() * 60) + 40;
             if (sizeSlider.setValue) {
                 sizeSlider.setValue(randomSize);
@@ -957,16 +740,16 @@ document.body.appendChild(loader);
             }
             mainLoader.size = randomSize;
 
-            updateLoader();
+            updateCodeSnippet();
+            logEvent('loader', 'random', { type: randomType, color: randomColor, size: randomSize });
         });
 
-        // Listen for custom events
         mainLoader.addEventListener('loader-show', (e) => {
-            console.log('Loader shown:', e.detail);
+            logEvent('loader', 'loader-show', e.detail);
         });
 
         mainLoader.addEventListener('loader-hide', (e) => {
-            console.log('Loader hidden:', e.detail);
+            logEvent('loader', 'loader-hide', e.detail);
         });
 
         // Copy button functionality
@@ -974,66 +757,35 @@ document.body.appendChild(loader);
         const codeOutput = document.getElementById('codeOutput');
 
         copyCodeBtn.addEventListener('click', () => {
-            // Get the value from the TTextareaLit component
             const textToCopy = codeOutput.value || '';
-
-            // Modern clipboard API
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(textToCopy).then(() => {
-                    // Visual feedback for success
                     copyCodeBtn.textContent = 'Copied!';
                     copyCodeBtn.style.background = 'var(--terminal-green)';
                     copyCodeBtn.style.color = '#000';
-
                     setTimeout(() => {
                         copyCodeBtn.textContent = 'Copy Code';
                         copyCodeBtn.style.background = 'transparent';
                         copyCodeBtn.style.color = 'var(--terminal-green)';
                     }, 2000);
+                    logEvent('code', 'copy');
                 });
-            } else {
-                // Fallback for older browsers
-                const tempTextarea = document.createElement('textarea');
-                tempTextarea.value = textToCopy;
-                document.body.appendChild(tempTextarea);
-                tempTextarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempTextarea);
-
-                // Visual feedback
-                copyCodeBtn.textContent = 'Copied!';
-                copyCodeBtn.style.background = 'var(--terminal-green)';
-                copyCodeBtn.style.color = '#000';
-
-                setTimeout(() => {
-                    copyCodeBtn.textContent = 'Copy Code';
-                    copyCodeBtn.style.background = 'transparent';
-                    copyCodeBtn.style.color = 'var(--terminal-green)';
-                }, 2000);
             }
         });
 
-        // Initial setup - wait for components
-        setTimeout(() => {
-            // Initialize default values
-            if (mainLoader) {
-                mainLoader.type = 'atom-spinner';
-                mainLoader.size = 60;
-                mainLoader.color = '#00ff41';
-                mainLoader.duration = 1;
-            }
+        if (mainLoader) {
+            mainLoader.type = 'atom-spinner';
+            mainLoader.size = 60;
+            mainLoader.color = '#00ff41';
+            mainLoader.duration = 1;
+        }
 
-            // Initialize code output component value
-            const codeOutput = document.getElementById('codeOutput');
-            if (codeOutput) {
-                // Wait a bit for the component to be fully initialized
-                setTimeout(() => {
-                    updateCodeSnippet(); // Initialize code snippet
-                }, 100);
-            }
+        customElements.whenDefined('t-textarea').then(() => {
+            updateCodeSnippet();
+        });
 
-            updateLoader();
-        }, 800);
+        logEvent('System', 'Demo initialized');
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

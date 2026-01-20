@@ -39,10 +39,10 @@ export class TBreadcrumbsLit extends LitElement {
 		:host {
 			display: block;
 			--bread-bg: transparent;
-			--bread-color: var(--terminal-gray-light, #888);
+			--bread-color: var(--terminal-green-dim, #00cc33);
 			--bread-active: var(--terminal-green, #00ff41);
 			--bread-hover: var(--terminal-cyan, #00ffff);
-			--bread-separator: var(--terminal-gray, #666);
+			--bread-separator: var(--terminal-gray-light, #888);
 			--bread-glow: rgba(0, 255, 65, 0.2);
 		}
 
@@ -363,7 +363,17 @@ export class TBreadcrumbsLit extends LitElement {
 		 * @attribute disabled
 		 * @reflects true
 		 */
-		disabled: { type: Boolean, reflect: true }
+		disabled: { type: Boolean, reflect: true },
+
+		/**
+		 * Prevent default navigation when clicking breadcrumb links
+		 * @property preventNavigation
+		 * @type {Boolean}
+		 * @default false
+		 * @attribute prevent-navigation
+		 * @reflects true
+		 */
+		preventNavigation: { type: Boolean, attribute: 'prevent-navigation', reflect: true }
 	};
 
 	// ----------------------------------------------------------
@@ -389,6 +399,7 @@ export class TBreadcrumbsLit extends LitElement {
 		this.separator = '';
 		this.maxItems = 0;
 		this.disabled = false;
+		this.preventNavigation = false;
 
 		this._logger = componentLogger.for('TBreadcrumbsLit');
 		this._logger.debug('Component constructed');
@@ -623,6 +634,11 @@ export class TBreadcrumbsLit extends LitElement {
 
 		// Always emit event
 		this._emitEvent('breadcrumb-click', { index, item });
+
+		if (this.preventNavigation) {
+			e.preventDefault();
+			return;
+		}
 
 		// If no href or last item, prevent default
 		if (!item.href || index === this.items.length - 1) {

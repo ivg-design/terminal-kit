@@ -60,6 +60,7 @@ A retro-futuristic web components library with terminal aesthetics. Built with *
 - **TStatusField** (`<t-sta-field>`) - Individual status fields
 
 ### Navigation
+- **TBreadcrumbs** (`<t-bread>`) - Breadcrumb navigation trail
 - **TMenu** (`<t-menu>`) - Dropdown/context menus
 - **TTabs** (`<t-tabs>`) - Tab navigation with panels
 - **TUserMenu** (`<t-usr>`) - User menu dropdown

@@ -125,7 +125,7 @@ export class TLoaderLit extends LitElement {
     'beat-spinner': { defaultSize: 15, innerMax: 76.3 },
     'bounce-spinner': { defaultSize: 60, innerMax: 60 },
     'circle-spinner': { defaultSize: 60, innerMax: 60 },
-    'climbing-box-spinner': { defaultSize: 15, innerMax: 113.6 },
+    'climbing-box-spinner': { defaultSize: 113.6, innerMax: 113.6 },
     'clip-spinner': { defaultSize: 35, innerMax: 34.4 },
     'dot-spinner': { defaultSize: 60, innerMax: 83.8 },
     'grid-spinner': { defaultSize: 15, innerMax: 57 },

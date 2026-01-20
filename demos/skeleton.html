@@ -3,260 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TSkeletonLit Component Demo</title>
+    <title>TSkeletonLit - Component Demo</title>
+    <link rel="stylesheet" href="../css/demo-template.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
-
-        :root {
-            --terminal-green: #00ff41;
-            --terminal-amber: #ffb000;
-            --terminal-red: #ff003c;
-            --terminal-cyan: #00ffff;
-            --terminal-gray: #666;
-            --terminal-gray-dark: #1a1a1a;
-            --terminal-bg: #0a0a0a;
-            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-        }
-
-        body {
-            background: var(--terminal-bg);
-            color: var(--terminal-green);
-            font-family: var(--font-mono);
-            padding: 40px;
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        h1, h2 {
-            color: var(--terminal-green);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        h1 {
-            border-bottom: 2px solid var(--terminal-green);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        h2 {
-            margin-top: 50px;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-
-        .description {
-            color: var(--terminal-gray);
-            margin-bottom: 40px;
-        }
-
-        .demo-section {
-            margin-bottom: 40px;
-        }
-
-        .demo-row {
-            display: flex;
-            gap: 30px;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .demo-item {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            min-width: 200px;
-        }
-
-        .demo-label {
-            font-size: 11px;
-            color: var(--terminal-gray);
-            text-transform: uppercase;
-        }
-
         .demo-box {
             background: #111;
             border: 1px solid #333;
             padding: 20px;
             min-width: 250px;
         }
-
         .card-demo {
             width: 300px;
         }
     </style>
 </head>
 <body>
-    <h1>TSkeletonLit Component Demo</h1>
-    <p class="description">
-        Loading placeholder skeleton component with various shapes and shimmer animation.
-    </p>
-
-    <!-- Text Skeletons -->
-    <div class="demo-section">
-        <h2>Text Skeletons</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <div class="demo-box">
-                    <t-skel type="text" lines="1"></t-skel>
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TSkeletonLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Skeleton
                 </div>
-                <span class="demo-label">1 Line</span>
             </div>
-            <div class="demo-item">
-                <div class="demo-box">
-                    <t-skel type="text" lines="3"></t-skel>
-                </div>
-                <span class="demo-label">3 Lines</span>
-            </div>
-            <div class="demo-item">
-                <div class="demo-box">
-                    <t-skel type="text" lines="5"></t-skel>
-                </div>
-                <span class="demo-label">5 Lines</span>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Heading Skeleton -->
-    <div class="demo-section">
-        <h2>Heading Skeleton</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <div class="demo-box">
-                    <t-skel type="heading"></t-skel>
-                    <t-skel type="text" lines="2"></t-skel>
-                </div>
-                <span class="demo-label">Heading + Text</span>
-            </div>
-        </div>
-    </div>
+    <!-- Main Content -->
+    <div class="demo-container">
+        <div class="component-section">
+            <h2 class="component-title">Skeleton Component</h2>
+            <p class="component-description">
+                Loading placeholder skeleton with various shapes and shimmer animation.
+            </p>
 
-    <!-- Avatar Skeletons -->
-    <div class="demo-section">
-        <h2>Avatar Skeletons</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-skel type="avatar" size="sm"></t-skel>
-                <span class="demo-label">Small</span>
-            </div>
-            <div class="demo-item">
-                <t-skel type="avatar" size="md"></t-skel>
-                <span class="demo-label">Medium</span>
-            </div>
-            <div class="demo-item">
-                <t-skel type="avatar" size="lg"></t-skel>
-                <span class="demo-label">Large</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Button Skeleton -->
-    <div class="demo-section">
-        <h2>Button Skeleton</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-skel type="button"></t-skel>
-                <span class="demo-label">Button</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Card Skeleton -->
-    <div class="demo-section">
-        <h2>Card Skeleton</h2>
-        <div class="demo-row">
-            <div class="demo-item card-demo">
-                <t-skel type="card"></t-skel>
-                <span class="demo-label">Card Layout</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Shape Skeletons -->
-    <div class="demo-section">
-        <h2>Shape Skeletons</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-skel type="rect" width="150px" height="100px"></t-skel>
-                <span class="demo-label">Rectangle</span>
-            </div>
-            <div class="demo-item">
-                <t-skel type="circle" size="md"></t-skel>
-                <span class="demo-label">Circle</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Animation States -->
-    <div class="demo-section">
-        <h2>Animation States</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <div class="demo-box">
-                    <t-skel type="text" lines="2" animated></t-skel>
-                </div>
-                <span class="demo-label">Animated (Default)</span>
-            </div>
-            <div class="demo-item">
-                <div class="demo-box">
-                    <t-skel type="text" lines="2"></t-skel>
-                </div>
-                <span class="demo-label">Static</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Glow Effect -->
-    <div class="demo-section">
-        <h2>Terminal Glow Effect</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-skel type="avatar" size="lg" glow></t-skel>
-                <span class="demo-label">With Glow</span>
-            </div>
-            <div class="demo-item">
-                <t-skel type="button" glow></t-skel>
-                <span class="demo-label">Button Glow</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Real World Example -->
-    <div class="demo-section">
-        <h2>Real World Example: User List Loading</h2>
-        <div class="demo-row">
-            <div class="demo-item" style="width: 300px;">
-                <div class="demo-box">
-                    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px;">
-                        <t-skel type="avatar" size="md"></t-skel>
-                        <div style="flex: 1;">
-                            <t-skel type="text" lines="1" width="80%"></t-skel>
-                            <t-skel type="text" lines="1" width="50%"></t-skel>
-                        </div>
+            <h3>Text Skeletons</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">1 Line</span>
+                    <div class="demo-box">
+                        <t-skel type="text" lines="1"></t-skel>
                     </div>
-                    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px;">
-                        <t-skel type="avatar" size="md"></t-skel>
-                        <div style="flex: 1;">
-                            <t-skel type="text" lines="1" width="70%"></t-skel>
-                            <t-skel type="text" lines="1" width="40%"></t-skel>
-                        </div>
+                </div>
+                <div class="demo-item">
+                    <span class="demo-label">3 Lines</span>
+                    <div class="demo-box">
+                        <t-skel type="text" lines="3"></t-skel>
                     </div>
-                    <div style="display: flex; gap: 12px; align-items: center;">
-                        <t-skel type="avatar" size="md"></t-skel>
-                        <div style="flex: 1;">
-                            <t-skel type="text" lines="1" width="90%"></t-skel>
-                            <t-skel type="text" lines="1" width="60%"></t-skel>
+                </div>
+                <div class="demo-item">
+                    <span class="demo-label">5 Lines</span>
+                    <div class="demo-box">
+                        <t-skel type="text" lines="5"></t-skel>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Heading Skeleton</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Heading + Text</span>
+                    <div class="demo-box">
+                        <t-skel type="heading"></t-skel>
+                        <t-skel type="text" lines="2"></t-skel>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Avatar Skeletons</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-skel type="avatar" size="sm"></t-skel>
+                    <span class="demo-label">Small</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-skel type="avatar" size="md"></t-skel>
+                    <span class="demo-label">Medium</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-skel type="avatar" size="lg"></t-skel>
+                    <span class="demo-label">Large</span>
+                </div>
+            </div>
+
+            <h3>Button Skeleton</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-skel type="button"></t-skel>
+                    <span class="demo-label">Button</span>
+                </div>
+            </div>
+
+            <h3>Card Skeleton</h3>
+            <div class="demo-grid">
+                <div class="demo-item card-demo">
+                    <span class="demo-label">Card Layout</span>
+                    <t-skel type="card"></t-skel>
+                </div>
+            </div>
+
+            <h3>Shape Skeletons</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-skel type="rect" width="150px" height="100px"></t-skel>
+                    <span class="demo-label">Rectangle</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-skel type="circle" size="md"></t-skel>
+                    <span class="demo-label">Circle</span>
+                </div>
+            </div>
+
+            <h3>Animation States</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Animated (Default)</span>
+                    <div class="demo-box">
+                        <t-skel type="text" lines="2" animated></t-skel>
+                    </div>
+                </div>
+                <div class="demo-item">
+                    <span class="demo-label">Static</span>
+                    <div class="demo-box">
+                        <t-skel type="text" lines="2"></t-skel>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Terminal Glow Effect</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-skel type="avatar" size="lg" glow></t-skel>
+                    <span class="demo-label">With Glow</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-skel type="button" glow></t-skel>
+                    <span class="demo-label">Button Glow</span>
+                </div>
+            </div>
+
+            <h3>Real World Example: User List Loading</h3>
+            <div class="demo-grid">
+                <div class="demo-item" style="width: 300px;">
+                    <span class="demo-label">User List</span>
+                    <div class="demo-box">
+                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px;">
+                            <t-skel type="avatar" size="md"></t-skel>
+                            <div style="flex: 1;">
+                                <t-skel type="text" lines="1" width="80%"></t-skel>
+                                <t-skel type="text" lines="1" width="50%"></t-skel>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px;">
+                            <t-skel type="avatar" size="md"></t-skel>
+                            <div style="flex: 1;">
+                                <t-skel type="text" lines="1" width="70%"></t-skel>
+                                <t-skel type="text" lines="1" width="40%"></t-skel>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <t-skel type="avatar" size="md"></t-skel>
+                            <div style="flex: 1;">
+                                <t-skel type="text" lines="1" width="90%"></t-skel>
+                                <t-skel type="text" lines="1" width="60%"></t-skel>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <span class="demo-label">User List</span>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;!-- Text skeleton --&gt;
+&lt;t-skel type="text" lines="3"&gt;&lt;/t-skel&gt;
+
+&lt;!-- Heading skeleton --&gt;
+&lt;t-skel type="heading"&gt;&lt;/t-skel&gt;
+
+&lt;!-- Avatar skeleton --&gt;
+&lt;t-skel type="avatar" size="md"&gt;&lt;/t-skel&gt;
+
+&lt;!-- Card skeleton --&gt;
+&lt;t-skel type="card"&gt;&lt;/t-skel&gt;
+
+&lt;!-- Custom shapes --&gt;
+&lt;t-skel type="rect" width="150px" height="100px"&gt;&lt;/t-skel&gt;
+&lt;t-skel type="circle" size="lg"&gt;&lt;/t-skel&gt;
+
+&lt;!-- With glow effect --&gt;
+&lt;t-skel type="button" glow&gt;&lt;/t-skel&gt;</code>
             </div>
         </div>
+    </div>
+
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
+            </div>
+        </div>
+        <div class="event-log" id="eventLog"></div>
     </div>
 
     <script type="module">
         import '../js/components/TSkeletonLit.js';
+
+        // Event log functionality
+        let eventCount = 0;
+        const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
+
+        function logEvent(component, event, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
+        }
+
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
+
+        logEvent('System', 'Demo initialized');
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

@@ -189,22 +189,8 @@ export class TStatusBarLit extends LitElement {
       color: var(--terminal-green-bright, #00ff66);
     }
 
-    /* Disabled field styles */
+    /* Disabled field styles - hide completely instead of graying out */
     .status-field.disabled {
-      opacity: 0.4;
-      pointer-events: none;
-      user-select: none;
-      cursor: not-allowed;
-    }
-
-    .status-field.disabled .field-label,
-    .status-field.disabled .field-icon,
-    .status-field.disabled .field-value {
-      color: var(--terminal-gray, #666);
-    }
-
-    /* Hidden field - completely removes from layout */
-    .status-field.hidden {
       display: none !important;
     }
 

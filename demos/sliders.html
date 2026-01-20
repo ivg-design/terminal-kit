@@ -3,183 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal Sliders - Component Demo</title>
-
-    <!-- Core styles -->
-    <link rel="stylesheet" href="../css/theme/terminal.css">
-    <link rel="stylesheet" href="../css/components/t-sld.css">
-    
-
-    <style>
-        :root {
-            --terminal-black: #0a0a0a;
-            --terminal-gray-darkest: #1a1a1a;
-            --terminal-gray-dark: #242424;
-            --terminal-gray-medium: #2a2a2a;
-            --terminal-gray-light: #333333;
-            --terminal-green: #00ff41;
-            --terminal-green-dim: #00cc33;
-            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-            --spacing-sm: 8px;
-            --spacing-md: 12px;
-            --spacing-lg: 16px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            width: 100%;
-            height: auto !important;
-            overflow: visible !important;
-        }
-
-        body {
-            font-family: var(--font-mono);
-            background: var(--terminal-black);
-            color: var(--terminal-green);
-            padding: 40px 20px;
-            line-height: 1.6;
-        }
-
-        .demo-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            border-bottom: 2px solid var(--terminal-green);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .breadcrumb {
-            margin-bottom: 30px;
-            font-size: 12px;
-            color: var(--terminal-green-dim);
-        }
-
-        .breadcrumb a {
-            color: var(--terminal-green-dim);
-            text-decoration: none;
-        }
-
-        .breadcrumb a:hover {
-            color: var(--terminal-green);
-        }
-
-        .component-section {
-            margin-bottom: 60px;
-            padding: 30px;
-            background: var(--terminal-gray-darkest);
-            border: 1px solid var(--terminal-gray-light);
-        }
-
-        h2.component-title {
-            color: var(--terminal-green);
-            font-size: 18px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .component-description {
-            color: var(--terminal-green-dim);
-            font-size: 13px;
-            margin-bottom: 30px;
-        }
-
-        h3 {
-            color: var(--terminal-green);
-            font-size: 14px;
-            margin: 30px 0 20px 0;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .demo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .demo-item {
-            background: var(--terminal-gray-dark);
-            border: 1px solid var(--terminal-gray-light);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .demo-label {
-            display: block;
-            color: var(--terminal-green-dim);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .code-block {
-            background: var(--terminal-black);
-            border: 1px solid var(--terminal-gray-light);
-            padding: 20px;
-            margin-top: 30px;
-            overflow-x: auto;
-        }
-
-        .code-block code {
-            color: var(--terminal-green-dim);
-            font-size: 12px;
-            line-height: 1.5;
-            white-space: pre;
-        }
-
-        .event-log {
-            background: var(--terminal-black);
-            border: 1px solid var(--terminal-gray-light);
-            padding: 20px;
-            margin-top: 30px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .event-log h3 {
-            color: var(--terminal-green);
-            font-size: 14px;
-            margin: 0 0 15px 0;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .event-entry {
-            font-size: 11px;
-            color: var(--terminal-green-dim);
-            margin: 5px 0;
-            padding: 5px;
-            background: var(--terminal-gray-darkest);
-            border-left: 2px solid var(--terminal-green);
-            font-family: var(--font-mono);
-        }
-    </style>
+    <title>TSliderLit - Component Demo</title>
+    <link rel="stylesheet" href="../css/demo-template.css">
 </head>
 <body>
-    <div class="demo-container">
-        <div class="breadcrumb">
-            <a href="index.html">← Back to Gallery</a> / Sliders
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TSliderLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Sliders
+                </div>
+            </div>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
+            </div>
         </div>
+    </header>
 
-        <h1>Terminal Sliders</h1>
-
+    <!-- Main Content -->
+    <div class="demo-container">
         <div class="component-section">
-            <h2 class="component-title">TerminalSlider</h2>
+            <h2 class="component-title">Terminal Sliders</h2>
             <p class="component-description">
                 Range slider with multiple variants: stepped, smooth, with input field, value inside track, icons, and tick marks.
             </p>
@@ -188,50 +34,78 @@
             <div class="demo-grid">
                 <div class="demo-item">
                     <span class="demo-label">Default Stepped (5s)</span>
-                    <t-sld id="slider1" min="0" max="100" value="50" step="5" label="Volume">
-                    </t-sld>
+                    <t-sld id="slider1" min="0" max="100" value="50" step="5" label="Volume"></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Smooth Continuous</span>
-                    <t-sld min="0" max="1" value="0.75" step="0.01" label="Opacity" smooth>
-                    </t-sld>
+                    <t-sld min="0" max="1" value="0.75" step="0.01" label="Opacity" smooth></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">With Input Field</span>
-                    <t-sld min="0" max="200" value="100" step="10" label="Zoom" show-input>
-                    </t-sld>
+                    <t-sld min="0" max="200" value="100" step="10" label="Zoom" show-input stepper-style="chevron"></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">With Output Display</span>
-                    <t-sld min="-100" max="100" value="0" step="10" label="Balance" show-output>
-                    </t-sld>
+                    <t-sld min="-100" max="100" value="0" step="10" label="Balance" show-output></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Value in Thumb (0-100)</span>
-                    <t-sld min="0" max="100" value="65" step="5" label="Progress" show-value-in-thumb>
-                    </t-sld>
+                    <t-sld min="0" max="100" value="65" step="5" label="Progress" show-value-in-thumb></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Value in Thumb (Large Range)</span>
-                    <t-sld min="0" max="10000" value="5000" step="100" label="Credits" show-value-in-thumb>
-                    </t-sld>
+                    <t-sld min="0" max="10000" value="5000" step="100" label="Credits" show-value-in-thumb></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Minimal Style</span>
-                    <t-sld min="-50" max="50" value="0" step="5" label="Adjust" minimal show-value-in-thumb>
-                    </t-sld>
+                    <t-sld min="-50" max="50" value="0" step="5" label="Adjust" minimal show-value-in-thumb></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Dark Green Fill</span>
-                    <t-sld min="0" max="100" value="75" step="5" label="Power" fill-color="dark">
-                    </t-sld>
+                    <t-sld min="0" max="100" value="75" step="5" label="Power" fill-color="dark"></t-sld>
+                </div>
+            </div>
+
+            <h3>Input Stepper Styles</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Plus/Minus</span>
+                    <t-sld min="0" max="100" value="40" step="5" label="Level" show-input stepper-style="plusminus"></t-sld>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Chevron</span>
+                    <t-sld min="-50" max="50" value="0" step="5" label="Balance" show-input stepper-style="chevron"></t-sld>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Arrows</span>
+                    <t-sld min="0" max="20" value="7" step="1" label="Depth" show-input stepper-style="arrows"></t-sld>
+                </div>
+            </div>
+
+            <h3>Input Stepper Sizes</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Size Small</span>
+                    <t-sld min="0" max="100" value="25" step="5" label="Gain" show-input stepper-size="sm"></t-sld>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Size Regular</span>
+                    <t-sld min="0" max="100" value="50" step="5" label="Gain" show-input></t-sld>
+                </div>
+
+                <div class="demo-item">
+                    <span class="demo-label">Size Large</span>
+                    <t-sld min="0" max="100" value="75" step="5" label="Gain" show-input stepper-size="lg"></t-sld>
                 </div>
             </div>
 
@@ -239,26 +113,22 @@
             <div class="demo-grid">
                 <div class="demo-item">
                     <span class="demo-label">Default Ticks (Major every 5)</span>
-                    <t-sld min="0" max="20" value="10" step="1" label="Steps" show-ticks>
-                    </t-sld>
+                    <t-sld min="0" max="20" value="10" step="1" label="Steps" show-ticks></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Major Ticks every 10</span>
-                    <t-sld min="0" max="100" value="50" step="5" label="Percentage" show-ticks>
-                    </t-sld>
+                    <t-sld min="0" max="100" value="50" step="5" label="Percentage" show-ticks></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Dense Ticks (Major every 2)</span>
-                    <t-sld min="0" max="10" value="5" step="0.5" label="Rating" show-ticks>
-                    </t-sld>
+                    <t-sld min="0" max="10" value="5" step="0.5" label="Rating" show-ticks></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">With Ticks and Input</span>
-                    <t-sld min="0" max="50" value="25" step="5" label="Size" show-ticks show-input>
-                    </t-sld>
+                    <t-sld min="0" max="50" value="25" step="5" label="Size" show-ticks show-input></t-sld>
                 </div>
             </div>
 
@@ -266,26 +136,22 @@
             <div class="demo-grid">
                 <div class="demo-item">
                     <span class="demo-label">Small Icon</span>
-                    <t-sld id="slider-small-icon" min="0" max="100" value="30" step="5" size="compact" icon="speakerHighIcon" label="Volume">
-                    </t-sld>
+                    <t-sld id="slider-small-icon" min="0" max="100" value="30" step="5" size="compact" icon="speakerHighIcon" label="Volume"></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Medium Icon (Default)</span>
-                    <t-sld id="slider-medium-icon" min="0" max="100" value="50" step="5" icon="fadersIcon">
-                    </t-sld>
+                    <t-sld id="slider-medium-icon" min="0" max="100" value="50" step="5" icon="fadersIcon"></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Large Icon</span>
-                    <t-sld id="slider-large-icon" min="0" max="100" value="75" step="5" size="large" icon="gaugeIcon">
-                    </t-sld>
+                    <t-sld id="slider-large-icon" min="0" max="100" value="75" step="5" size="large" icon="gaugeIcon"></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Icon + Label + Input</span>
-                    <t-sld id="slider-brightness" label="Brightness" min="0" max="100" value="80" step="10" icon="fadersIcon" show-input>
-                    </t-sld>
+                    <t-sld id="slider-brightness" label="Brightness" min="0" max="100" value="80" step="10" icon="fadersIcon" show-input></t-sld>
                 </div>
             </div>
 
@@ -293,26 +159,22 @@
             <div class="demo-grid">
                 <div class="demo-item">
                     <span class="demo-label">Default Green</span>
-                    <t-sld min="0" max="100" value="60" step="5" label="Default">
-                    </t-sld>
+                    <t-sld min="0" max="100" value="60" step="5" label="Default"></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Bright Green</span>
-                    <t-sld min="0" max="100" value="60" step="5" label="Bright" fill-color="bright">
-                    </t-sld>
+                    <t-sld min="0" max="100" value="60" step="5" label="Bright" fill-color="bright"></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Dim Green</span>
-                    <t-sld min="0" max="100" value="60" step="5" label="Dim" fill-color="dim">
-                    </t-sld>
+                    <t-sld min="0" max="100" value="60" step="5" label="Dim" fill-color="dim"></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Dark Green</span>
-                    <t-sld min="0" max="100" value="60" step="5" label="Dark" fill-color="dark">
-                    </t-sld>
+                    <t-sld min="0" max="100" value="60" step="5" label="Dark" fill-color="dark"></t-sld>
                 </div>
             </div>
 
@@ -320,88 +182,127 @@
             <div class="demo-grid">
                 <div class="demo-item">
                     <span class="demo-label">Compact Default</span>
-                    <t-sld min="0" max="10" value="5" step="0.5" label="Rate" size="compact">
-                    </t-sld>
+                    <t-sld min="0" max="10" value="5" step="0.5" label="Rate" size="compact"></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Compact with Input</span>
-                    <t-sld min="1" max="99" value="10" step="1" label="Qty" size="compact" show-input>
-                    </t-sld>
+                    <t-sld min="1" max="99" value="10" step="1" label="Qty" size="compact" show-input></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Compact with Ticks</span>
-                    <t-sld min="0" max="5" value="3" step="1" label="Stars" show-ticks size="compact">
-                    </t-sld>
+                    <t-sld min="0" max="5" value="3" step="1" label="Stars" show-ticks size="compact"></t-sld>
                 </div>
 
                 <div class="demo-item">
                     <span class="demo-label">Disabled Slider</span>
-                    <t-sld value="75" label="Disabled" disabled>
-                    </t-sld>
+                    <t-sld value="75" label="Disabled" disabled></t-sld>
                 </div>
             </div>
 
             <h3>Vertical Sliders</h3>
             <div class="demo-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
-                <div class="demo-item" style=" display: flex; flex-direction: column; align-items: center;">
+                <div class="demo-item" style="display: flex; flex-direction: column; align-items: center;">
                     <span class="demo-label">Vertical Default</span>
-                    <t-sld min="0" max="100" value="60" step="10" label="Height" vertical>
-                    </t-sld>
+                    <t-sld min="0" max="100" value="60" step="10" label="Height" vertical></t-sld>
                 </div>
 
                 <div class="demo-item" style="display: flex; flex-direction: column; align-items: center;">
                     <span class="demo-label">Vertical with Icon</span>
-                    <t-sld id="slider-vertical-icon" min="0" max="100" value="75" step="5" vertical icon="chartBarIcon">
-                    </t-sld>
+                    <t-sld id="slider-vertical-icon" min="0" max="100" value="75" step="5" vertical icon="chartBarIcon"></t-sld>
                 </div>
 
                 <div class="demo-item" style="display: flex; flex-direction: column; align-items: center;">
                     <span class="demo-label">Vertical Smooth</span>
-                    <t-sld min="0" max="1" value="0.5" step="0.01" label="Level" vertical smooth>
-                    </t-sld>
+                    <t-sld min="0" max="1" value="0.5" step="0.01" label="Level" vertical smooth></t-sld>
                 </div>
 
                 <div class="demo-item" style="display: flex; flex-direction: column; align-items: center;">
                     <span class="demo-label">Vertical Value in Thumb</span>
-                    <t-sld min="0" max="10" value="7" step="1" vertical show-value-in-thumb>
-                    </t-sld>
+                    <t-sld min="0" max="10" value="7" step="1" vertical show-value-in-thumb></t-sld>
                 </div>
             </div>
-            
+
             <div class="code-block">
-                <code>&lt;t-sld min="0" max="100" value="50" step="5" label="Volume"&gt;&lt;/t-sld&gt;
+                <code>&lt;!-- Basic slider --&gt;
+&lt;t-sld min="0" max="100" value="50" step="5" label="Volume"&gt;&lt;/t-sld&gt;
+
+&lt;!-- Smooth with ticks --&gt;
 &lt;t-sld smooth show-ticks&gt;&lt;/t-sld&gt;
-&lt;t-sld label="Custom"&gt;&lt;/t-sld&gt;</code>
+
+&lt;!-- With input field --&gt;
+&lt;t-sld show-input label="Zoom"&gt;&lt;/t-sld&gt;
+
+&lt;!-- Vertical orientation --&gt;
+&lt;t-sld vertical&gt;&lt;/t-sld&gt;
+
+&lt;!-- JavaScript API --&gt;
+&lt;script&gt;
+  const slider = document.querySelector('t-sld');
+  slider.addEventListener('slider-change', (e) =&gt; {
+    console.log('Value:', e.detail.value);
+  });
+&lt;/script&gt;</code>
             </div>
         </div>
+    </div>
 
-        <div class="event-log" id="eventLog">
-            <h3>Event Log</h3>
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
+            </div>
         </div>
+        <div class="event-log" id="eventLog"></div>
     </div>
 
     <script type="module">
         import '../js/components/TSliderLit.js';
 
-        // Event logging
+        // Event log functionality
+        let eventCount = 0;
+        const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
+
         function logEvent(component, event, detail) {
-            const log = document.getElementById('eventLog');
             const entry = document.createElement('div');
             entry.className = 'event-entry';
             const timestamp = new Date().toLocaleTimeString();
-            entry.textContent = `[${timestamp}] ${component}: ${event} ${detail ? '- ' + JSON.stringify(detail) : ''}`;
-            log.appendChild(entry);
-            log.scrollTop = log.scrollHeight;
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
         }
 
-        // Set icons on components after DOM loads
-        window.addEventListener('DOMContentLoaded', () => {
-            // Note: The new TSliderLit component doesn't have icon support yet
-            // Icons can be added as part of labels or through CSS customization
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
 
-            // Add event listeners to all sliders
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
+
+        // Add event listeners to all sliders
+        window.addEventListener('DOMContentLoaded', () => {
             const sliders = document.querySelectorAll('t-sld');
             sliders.forEach((slider, index) => {
                 slider.addEventListener('slider-change', (e) => {
@@ -409,10 +310,10 @@
                     logEvent(label, 'slider-change', e.detail);
                 });
             });
-            
-            // Log initial state
+
             logEvent('System', 'Demo initialized');
         });
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

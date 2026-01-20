@@ -278,7 +278,7 @@ export class TTextareaLit extends LitElement {
       padding: 10px 12px;
     }
 
-    :host([language]) textarea {
+    textarea[data-highlight="true"] {
       position: relative;
       z-index: 2;
       background: transparent !important;
@@ -890,6 +890,7 @@ export class TTextareaLit extends LitElement {
     this._logger.trace('Rendering');
 
     const containerClass = this.showLineNumbers ? 'textarea-container with-line-numbers' : 'textarea-container';
+    const highlightEnabled = Boolean(this.language && window.Prism);
 
     return html`
       <div class="${containerClass}">
@@ -897,6 +898,7 @@ export class TTextareaLit extends LitElement {
         <div class="textarea-wrapper">
           ${this.language ? this._renderSyntaxHighlight() : ''}
           <textarea
+            data-highlight="${highlightEnabled ? 'true' : 'false'}"
             .value=${this.value}
             .placeholder=${this.placeholder}
             .rows=${this.rows}

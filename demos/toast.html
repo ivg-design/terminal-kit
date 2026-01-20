@@ -1,566 +1,459 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TToastLit - Component Demo</title>
+    <link rel="stylesheet" href="../css/demo-template.css">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Terminal Toast - Component Demo</title>
-
-        <!-- Load CSS -->
-        <link rel="stylesheet" href="../css/theme/terminal.css">
-        <link rel="stylesheet" href="../css/components/buttons.css">
-
-        <!-- Load the new TToastLit component -->
-        <script type="module" src="../js/components/TToastLit.js"></script>
-
-        <style>
-            html, body {
-                overflow: visible !important;
-            }
-
-            body {
-                font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-                background: #0a0a0a;
-                color: #00ff41;
-                padding: 40px 20px;
-                line-height: 1.6;
-            }
-
-            .demo-container {
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-
-            h1 {
-                text-transform: uppercase;
-                letter-spacing: 0.1em;
-                border-bottom: 2px solid #00ff41;
-                padding-bottom: 10px;
-                margin-bottom: 20px;
-            }
-
-            .breadcrumb {
-                margin-bottom: 30px;
-                font-size: 12px;
-                color: #00cc33;
-            }
-
-            .breadcrumb a {
-                color: #00cc33;
-                text-decoration: none;
-            }
-
-            .breadcrumb a:hover {
-                text-decoration: underline;
-            }
-
-            .demo-section {
-                margin-bottom: 50px;
-                padding: 20px;
-                border: 1px solid #00ff4133;
-                background: #00ff4108;
-            }
-
-            .demo-section h2 {
-                color: #00ff41;
-                margin-bottom: 15px;
-                font-size: 18px;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-            }
-
-            .demo-section p {
-                margin-bottom: 20px;
-                color: #00cc33;
-                font-size: 14px;
-            }
-
-            .demo-controls {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                margin-bottom: 20px;
-            }
-
-            .demo-button {
-                padding: 8px 16px;
-                background: transparent;
-                color: #00ff41;
-                border: 1px solid #00ff41;
-                cursor: pointer;
-                font-family: inherit;
-                font-size: 14px;
-                transition: all 0.3s ease;
-            }
-
-            .demo-button:hover {
-                background: #00ff41;
-                color: #0a0a0a;
-                box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
-            }
-
-            .demo-button.error {
-                color: #ff4136;
-                border-color: #ff4136;
-            }
-
-            .demo-button.error:hover {
-                background: #ff4136;
-            }
-
-            .demo-button.warning {
-                color: #ffdc00;
-                border-color: #ffdc00;
-            }
-
-            .demo-button.warning:hover {
-                background: #ffdc00;
-                color: #0a0a0a;
-            }
-
-            .demo-button.info {
-                color: #0074d9;
-                border-color: #0074d9;
-            }
-
-            .demo-button.info:hover {
-                background: #0074d9;
-            }
-
-            .form-group {
-                margin-bottom: 15px;
-            }
-
-            .form-group label {
-                display: block;
-                margin-bottom: 5px;
-                color: #00ff41;
-                font-size: 12px;
-                text-transform: uppercase;
-            }
-
-            .form-control {
-                width: 100%;
-                max-width: 400px;
-                padding: 8px 12px;
-                background: #0a0a0a;
-                border: 1px solid #00ff41;
-                color: #00ff41;
-                font-family: inherit;
-                font-size: 14px;
-            }
-
-            .form-control:focus {
-                outline: none;
-                box-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
-            }
-
-            select.form-control {
-                cursor: pointer;
-            }
-
-            .code-block {
-                background: #000;
-                border: 1px solid #00ff4133;
-                padding: 15px;
-                margin: 20px 0;
-                font-size: 13px;
-                overflow-x: auto;
-            }
-
-            .code-block pre {
-                margin: 0;
-                color: #00cc33;
-            }
-
-            .event-log {
-                background: #000;
-                border: 1px solid #00ff4133;
-                padding: 10px;
-                max-height: 200px;
-                overflow-y: auto;
-                font-size: 12px;
-                margin-top: 20px;
-                font-family: monospace;
-            }
-
-            .event-log .log-entry {
-                margin: 2px 0;
-                color: #00cc33;
-                opacity: 0.8;
-            }
-
-            .event-log .log-entry.new {
-                animation: logFlash 0.5s;
-                opacity: 1;
-            }
-
-            @keyframes logFlash {
-                from {
-                    background: rgba(0, 255, 65, 0.2);
-                }
-                to {
-                    background: transparent;
-                }
-            }
-
-            /* Global counter display */
-            #toastCounter {
-                position: fixed;
-                top: 20px;
-                left: 20px;
-                background: #000;
-                border: 1px solid #00ff41;
-                padding: 10px;
-                font-size: 12px;
-                z-index: 9999;
-            }
-        </style>
-    </head>
-
-    <body>
-        <div class="demo-container">
-            <div class="breadcrumb">
-                <a href="../index.html">Home</a> / <a href="../demo.html">Components</a> / Toast
+    <style>
+        html, body {
+            overflow: visible !important;
+        }
+        #toastCounter {
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            background: #000;
+            border: 1px solid var(--terminal-green);
+            padding: 10px;
+            font-size: 12px;
+            z-index: 9999;
+        }
+        /* Base button styling for .controls */
+        button.controls {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 8px 16px;
+            font-family: var(--font-mono, 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        button.controls:hover {
+            background: var(--terminal-green);
+            color: var(--terminal-bg);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+        button.controls:active {
+            transform: scale(0.98);
+        }
+        /* Demo button variants */
+        .demo-button.error {
+            color: var(--terminal-red);
+            border-color: var(--terminal-red);
+        }
+        .demo-button.error:hover {
+            background: var(--terminal-red);
+            color: var(--terminal-bg);
+            box-shadow: 0 0 10px rgba(255, 0, 60, 0.3);
+        }
+        .demo-button.warning {
+            color: var(--terminal-amber);
+            border-color: var(--terminal-amber);
+        }
+        .demo-button.warning:hover {
+            background: var(--terminal-amber);
+            color: var(--terminal-bg);
+            box-shadow: 0 0 10px rgba(255, 176, 0, 0.3);
+        }
+        .demo-button.info {
+            color: var(--terminal-cyan);
+            border-color: var(--terminal-cyan);
+        }
+        .demo-button.info:hover {
+            background: var(--terminal-cyan);
+            color: var(--terminal-bg);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--terminal-green);
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .form-control {
+            width: 100%;
+            max-width: 400px;
+            padding: 8px 12px;
+            background: var(--terminal-bg);
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            font-family: inherit;
+            font-size: 14px;
+        }
+        .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TToastLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Toast
+                </div>
             </div>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
+            </div>
+        </div>
+    </header>
 
-            <h1>Terminal Toast Component (Lit)</h1>
+    <div id="toastCounter">Active Toasts: <span id="activeCount">0</span></div>
 
-            <div id="toastCounter">Active Toasts: <span id="activeCount">0</span></div>
+    <!-- Main Content -->
+    <div class="demo-container">
+        <div class="component-section">
+            <h2 class="component-title">Toast Component</h2>
+            <p class="component-description">
+                Notification toast with types, positions, durations, and auto-dismiss.
+            </p>
 
-            <!-- Basic Usage -->
-            <div class="demo-section">
-                <h2>Basic Usage</h2>
-                <p>Click buttons to show different types of toast notifications.</p>
-
-                <div class="demo-controls">
-                    <button class="demo-button" onclick="showToast('Operation completed successfully!', 'success')">
+            <h3>Basic Usage</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <button class="controls demo-button" onclick="showToast('Operation completed successfully!', 'success')">
                         Success Toast
                     </button>
-                    <button class="demo-button error" onclick="showToast('An error occurred!', 'error')">
+                    <span class="demo-label">Success</span>
+                </div>
+                <div class="demo-item centered">
+                    <button class="controls demo-button error" onclick="showToast('An error occurred!', 'error')">
                         Error Toast
                     </button>
-                    <button class="demo-button warning" onclick="showToast('Please review your input', 'warning')">
+                    <span class="demo-label">Error</span>
+                </div>
+                <div class="demo-item centered">
+                    <button class="controls demo-button warning" onclick="showToast('Please review your input', 'warning')">
                         Warning Toast
                     </button>
-                    <button class="demo-button info" onclick="showToast('New update available', 'info')">
+                    <span class="demo-label">Warning</span>
+                </div>
+                <div class="demo-item centered">
+                    <button class="controls demo-button info" onclick="showToast('New update available', 'info')">
                         Info Toast
                     </button>
-                </div>
-
-                <div class="code-block">
-                    <pre>// JavaScript
-const toast = document.createElement('t-tst');
-toast.message = 'Hello World!';
-toast.type = 'success';
-toast.show();
-document.body.appendChild(toast);</pre>
+                    <span class="demo-label">Info</span>
                 </div>
             </div>
 
-            <!-- Custom Configuration -->
-            <div class="demo-section">
-                <h2>Custom Configuration</h2>
-                <p>Configure toast properties and see how they affect the notification.</p>
-
-                <div class="form-group">
-                    <label for="customMessage">Message:</label>
-                    <input type="text" id="customMessage" class="form-control" value="Custom toast message" />
-                </div>
-
-                <div class="form-group">
-                    <label for="customType">Type:</label>
-                    <select id="customType" class="form-control">
-                        <option value="success">Success</option>
-                        <option value="error">Error</option>
-                        <option value="warning">Warning</option>
-                        <option value="info" selected>Info</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="customDuration">Duration (ms) - 0 for manual dismiss:</label>
-                    <input type="number" id="customDuration" class="form-control" value="3000" min="0" step="500" />
-                </div>
-
-                <div class="form-group">
-                    <label for="customPosition">Position:</label>
-                    <select id="customPosition" class="form-control">
-                        <option value="top-right" selected>Top Right</option>
-                        <option value="top-left">Top Left</option>
-                        <option value="bottom-right">Bottom Right</option>
-                        <option value="bottom-left">Bottom Left</option>
-                    </select>
-                </div>
-
-                <button class="demo-button" onclick="showCustomToast()">Show Custom Toast</button>
-            </div>
-
-            <!-- Advanced Examples -->
-            <div class="demo-section">
-                <h2>Advanced Examples</h2>
-                <p>More complex toast notification patterns and behaviors.</p>
-
-                <div class="demo-controls">
-                    <button class="demo-button" onclick="showPersistentToast()">
-                        Persistent Toast (Manual Dismiss)
-                    </button>
-                    <button class="demo-button" onclick="showClickableToast()">
-                        Clickable Toast (With Action)
-                    </button>
-                    <button class="demo-button" onclick="showSequentialToasts()">
-                        Sequential Toast Chain
-                    </button>
-                    <button class="demo-button" onclick="showMultipleToasts()">
-                        Multiple Simultaneous
-                    </button>
+            <h3>Custom Configuration</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <div class="form-group">
+                        <label for="customMessage">Message:</label>
+                        <input type="text" id="customMessage" class="form-control" value="Custom toast message" />
+                    </div>
+                    <div class="form-group">
+                        <label for="customType">Type:</label>
+                        <select id="customType" class="form-control">
+                            <option value="success">Success</option>
+                            <option value="error">Error</option>
+                            <option value="warning">Warning</option>
+                            <option value="info" selected>Info</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="customDuration">Duration (ms) - 0 for manual dismiss:</label>
+                        <input type="number" id="customDuration" class="form-control" value="3000" min="0" step="500" />
+                    </div>
+                    <div class="form-group">
+                        <label for="customPosition">Position:</label>
+                        <select id="customPosition" class="form-control">
+                            <option value="top-right" selected>Top Right</option>
+                            <option value="top-left">Top Left</option>
+                            <option value="bottom-right">Bottom Right</option>
+                            <option value="bottom-left">Bottom Left</option>
+                        </select>
+                    </div>
+                    <button class="controls" onclick="showCustomToast()">Show Custom Toast</button>
                 </div>
             </div>
 
-            <!-- Position Demo -->
-            <div class="demo-section">
-                <h2>Position Demo</h2>
-                <p>Test toast positioning in different screen locations.</p>
+            <h3>Advanced Examples</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <button class="controls" onclick="showPersistentToast()">
+                        Persistent Toast
+                    </button>
+                    <span class="demo-label">Manual Dismiss</span>
+                </div>
+                <div class="demo-item centered">
+                    <button class="controls" onclick="showClickableToast()">
+                        Clickable Toast
+                    </button>
+                    <span class="demo-label">With Action</span>
+                </div>
+                <div class="demo-item centered">
+                    <button class="controls" onclick="showSequentialToasts()">
+                        Sequential Chain
+                    </button>
+                    <span class="demo-label">Multiple Steps</span>
+                </div>
+                <div class="demo-item centered">
+                    <button class="controls" onclick="showMultipleToasts()">
+                        Multiple Toasts
+                    </button>
+                    <span class="demo-label">Simultaneous</span>
+                </div>
+            </div>
 
-                <div class="demo-controls">
-                    <button class="demo-button" onclick="showToast('Top Right', 'info', 2000, 'top-right')">
+            <h3>Position Demo</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <button class="controls" onclick="showToast('Top Right', 'info', 2000, 'top-right')">
                         Top Right
                     </button>
-                    <button class="demo-button" onclick="showToast('Top Left', 'info', 2000, 'top-left')">
+                </div>
+                <div class="demo-item centered">
+                    <button class="controls" onclick="showToast('Top Left', 'info', 2000, 'top-left')">
                         Top Left
                     </button>
-                    <button class="demo-button" onclick="showToast('Bottom Right', 'info', 2000, 'bottom-right')">
+                </div>
+                <div class="demo-item centered">
+                    <button class="controls" onclick="showToast('Bottom Right', 'info', 2000, 'bottom-right')">
                         Bottom Right
                     </button>
-                    <button class="demo-button" onclick="showToast('Bottom Left', 'info', 2000, 'bottom-left')">
+                </div>
+                <div class="demo-item centered">
+                    <button class="controls" onclick="showToast('Bottom Left', 'info', 2000, 'bottom-left')">
                         Bottom Left
                     </button>
                 </div>
             </div>
 
-            <!-- Event Monitoring -->
-            <div class="demo-section">
-                <h2>Event Monitoring</h2>
-                <p>Monitor toast events in real-time. All toast events are logged below.</p>
+            <div class="code-block">
+                <code>&lt;!-- Create and show toast --&gt;
+&lt;script&gt;
+const toast = document.createElement('t-tst');
+toast.message = 'Hello World!';
+toast.type = 'success';
+toast.show();
+document.body.appendChild(toast);
+&lt;/script&gt;
 
-                <div class="event-log" id="eventLog">
-                    <div class="log-entry">Waiting for toast events...</div>
-                </div>
+&lt;!-- Toast types: success, error, warning, info --&gt;
+&lt;!-- Positions: top-right, top-left, bottom-right, bottom-left --&gt;
 
-                <button class="demo-button" onclick="clearEventLog()">Clear Log</button>
-            </div>
+&lt;!-- API --&gt;
+&lt;script&gt;
+toast.message = 'Text';      // Message content
+toast.type = 'success';      // Type/color
+toast.duration = 3000;       // Auto-dismiss (0 = manual)
+toast.position = 'top-right';// Screen position
+toast.show();                // Show toast
+toast.dismiss();             // Hide toast
+&lt;/script&gt;
 
-            <!-- API Reference -->
-            <div class="demo-section">
-                <h2>Component API</h2>
-
-                <h3>Properties</h3>
-                <div class="code-block">
-                    <pre>message: string     // Toast message text
-type: string        // 'success' | 'error' | 'warning' | 'info'
-duration: number    // Auto-dismiss time in ms (0 = manual)
-visible: boolean    // Whether toast is visible
-position: string    // 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'</pre>
-                </div>
-
-                <h3>Methods</h3>
-                <div class="code-block">
-                    <pre>show()     // Show the toast
-dismiss()  // Hide the toast</pre>
-                </div>
-
-                <h3>Events</h3>
-                <div class="code-block">
-                    <pre>toast-show     // Fired when toast is shown
-toast-hide     // Fired when toast is hidden
-toast-click    // Fired when toast is clicked
-toast-dismiss  // Fired when toast is dismissed</pre>
-                </div>
+&lt;!-- Events --&gt;
+&lt;script&gt;
+toast.addEventListener('toast-show', (e) =&gt; {});
+toast.addEventListener('toast-hide', (e) =&gt; {});
+toast.addEventListener('toast-click', (e) =&gt; {});
+toast.addEventListener('toast-dismiss', (e) =&gt; {});
+&lt;/script&gt;</code>
             </div>
         </div>
+    </div>
 
-        <script>
-            let toastIdCounter = 0;
-            let activeToasts = new Set();
-            const eventLog = document.getElementById('eventLog');
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
+            </div>
+        </div>
+        <div class="event-log" id="eventLog"></div>
+    </div>
 
-            function updateToastCount() {
-                document.getElementById('activeCount').textContent = activeToasts.size;
-            }
+    <script type="module">
+        import '../js/components/TToastLit.js';
 
-            function logEvent(message) {
-                const time = new Date().toLocaleTimeString();
-                const entry = document.createElement('div');
-                entry.className = 'log-entry new';
-                entry.textContent = `[${time}] ${message}`;
+        // Event log functionality
+        let eventCount = 0;
+        const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
 
-                // Clear initial message if it's the first real event
-                if (eventLog.children.length === 1 && eventLog.children[0].textContent === 'Waiting for toast events...') {
-                    eventLog.innerHTML = '';
-                }
+        function logEvent(component, event, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
+        }
 
-                eventLog.appendChild(entry);
-                eventLog.scrollTop = eventLog.scrollHeight;
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
 
-                // Remove animation class after animation completes
-                setTimeout(() => {
-                    entry.classList.remove('new');
-                }, 500);
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
 
-                // Limit log entries to 50
-                while (eventLog.children.length > 50) {
-                    eventLog.removeChild(eventLog.firstChild);
-                }
-            }
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
 
-            function clearEventLog() {
-                eventLog.innerHTML = '<div class="log-entry">Waiting for toast events...</div>';
-            }
+        // Toast counter
+        let toastIdCounter = 0;
+        let activeToasts = new Set();
 
-            function createToast(id) {
-                const toast = document.createElement('t-tst');
-                const toastId = id || `toast-${++toastIdCounter}`;
-                toast.id = toastId;
+        function updateToastCount() {
+            document.getElementById('activeCount').textContent = activeToasts.size;
+        }
 
-                // Track toast lifecycle
-                activeToasts.add(toastId);
-                updateToastCount();
+        function createToast(id) {
+            const toast = document.createElement('t-tst');
+            const toastId = id || `toast-${++toastIdCounter}`;
+            toast.id = toastId;
 
-                // Add event listeners
-                toast.addEventListener('toast-show', () => {
-                    logEvent(`Toast "${toastId}" shown`);
-                });
+            activeToasts.add(toastId);
+            updateToastCount();
 
-                toast.addEventListener('toast-hide', () => {
-                    logEvent(`Toast "${toastId}" hidden`);
-                    activeToasts.delete(toastId);
-                    updateToastCount();
-                    // Clean up element after animation
-                    setTimeout(() => {
-                        if (toast.parentNode) {
-                            toast.remove();
-                        }
-                    }, 100);
-                });
-
-                toast.addEventListener('toast-dismiss', () => {
-                    logEvent(`Toast "${toastId}" dismissed by user`);
-                });
-
-                toast.addEventListener('toast-click', () => {
-                    logEvent(`Toast "${toastId}" clicked`);
-                });
-
-                document.body.appendChild(toast);
-                return toast;
-            }
-
-            function showToast(message, type = 'info', duration = 3000, position = 'top-right') {
-                const toast = createToast();
-                toast.message = message;
-                toast.type = type;
-                toast.duration = duration;
-                toast.position = position;
-                toast.show();
-                return toast;
-            }
-
-            function showCustomToast() {
-                const message = document.getElementById('customMessage').value;
-                const type = document.getElementById('customType').value;
-                const duration = parseInt(document.getElementById('customDuration').value);
-                const position = document.getElementById('customPosition').value;
-
-                if (!message) {
-                    alert('Please enter a message');
-                    return;
-                }
-
-                showToast(message, type, duration, position);
-            }
-
-            function showPersistentToast() {
-                const toast = createToast('persistent-toast');
-                toast.message = 'This toast will not auto-dismiss. Click the X to close it.';
-                toast.type = 'warning';
-                toast.duration = 0; // No auto-dismiss
-                toast.position = 'top-right';
-                toast.show();
-            }
-
-            function showClickableToast() {
-                const toast = createToast('clickable-toast');
-                toast.message = 'Click me to perform an action!';
-                toast.type = 'info';
-                toast.duration = 5000;
-                toast.position = 'top-right';
-
-                toast.addEventListener('toast-click', () => {
-                    console.log('Toast clicked - performing action!');
-                    alert('Toast was clicked! In a real app, this could navigate or trigger an action.');
-                    toast.dismiss();
-                });
-
-                toast.show();
-            }
-
-            async function showSequentialToasts() {
-                const steps = [
-                    { message: 'Initializing...', type: 'info', duration: 1000 },
-                    { message: 'Loading resources...', type: 'info', duration: 1000 },
-                    { message: 'Processing data...', type: 'warning', duration: 1000 },
-                    { message: 'Finalizing...', type: 'info', duration: 1000 },
-                    { message: 'Process complete!', type: 'success', duration: 2000 }
-                ];
-
-                for (let i = 0; i < steps.length; i++) {
-                    const step = steps[i];
-                    const toast = createToast(`sequential-${i + 1}`);
-                    toast.message = step.message;
-                    toast.type = step.type;
-                    toast.duration = step.duration;
-                    toast.position = 'top-right';
-                    toast.show();
-
-                    // Wait for this toast to hide before showing next
-                    await new Promise(resolve => {
-                        toast.addEventListener('toast-hide', resolve, { once: true });
-                    });
-
-                    // Small delay between toasts
-                    if (i < steps.length - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 200));
-                    }
-                }
-            }
-
-            function showMultipleToasts() {
-                const positions = ['top-right', 'top-left', 'bottom-right', 'bottom-left'];
-                const types = ['success', 'error', 'warning', 'info'];
-
-                positions.forEach((position, index) => {
-                    setTimeout(() => {
-                        showToast(
-                            `Toast at ${position.replace('-', ' ')}`,
-                            types[index],
-                            3000,
-                            position
-                        );
-                    }, index * 200);
-                });
-            }
-
-            // Show initial demo toast after page load
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    const welcomeToast = showToast(
-                        'Welcome to the TToastLit component demo!',
-                        'success',
-                        4000,
-                        'top-right'
-                    );
-                }, 1000);
+            toast.addEventListener('toast-show', () => {
+                logEvent(toastId, 'toast-show');
             });
-        </script>
-    </body>
+
+            toast.addEventListener('toast-hide', () => {
+                logEvent(toastId, 'toast-hide');
+                activeToasts.delete(toastId);
+                updateToastCount();
+                setTimeout(() => {
+                    if (toast.parentNode) toast.remove();
+                }, 100);
+            });
+
+            toast.addEventListener('toast-dismiss', () => {
+                logEvent(toastId, 'toast-dismiss');
+            });
+
+            toast.addEventListener('toast-click', () => {
+                logEvent(toastId, 'toast-click');
+            });
+
+            document.body.appendChild(toast);
+            return toast;
+        }
+
+        window.showToast = (message, type = 'info', duration = 3000, position = 'top-right') => {
+            const toast = createToast();
+            toast.message = message;
+            toast.type = type;
+            toast.duration = duration;
+            toast.position = position;
+            toast.show();
+            return toast;
+        };
+
+        window.showCustomToast = () => {
+            const message = document.getElementById('customMessage').value;
+            const type = document.getElementById('customType').value;
+            const duration = parseInt(document.getElementById('customDuration').value);
+            const position = document.getElementById('customPosition').value;
+
+            if (!message) {
+                alert('Please enter a message');
+                return;
+            }
+
+            window.showToast(message, type, duration, position);
+        };
+
+        window.showPersistentToast = () => {
+            const toast = createToast('persistent-toast');
+            toast.message = 'This toast will not auto-dismiss. Click the X to close it.';
+            toast.type = 'warning';
+            toast.duration = 0;
+            toast.position = 'top-right';
+            toast.show();
+        };
+
+        window.showClickableToast = () => {
+            const toast = createToast('clickable-toast');
+            toast.message = 'Click me to perform an action!';
+            toast.type = 'info';
+            toast.duration = 5000;
+            toast.position = 'top-right';
+
+            toast.addEventListener('toast-click', () => {
+                alert('Toast was clicked!');
+                toast.dismiss();
+            });
+
+            toast.show();
+        };
+
+        window.showSequentialToasts = async () => {
+            const steps = [
+                { message: 'Initializing...', type: 'info', duration: 1000 },
+                { message: 'Loading resources...', type: 'info', duration: 1000 },
+                { message: 'Processing data...', type: 'warning', duration: 1000 },
+                { message: 'Finalizing...', type: 'info', duration: 1000 },
+                { message: 'Process complete!', type: 'success', duration: 2000 }
+            ];
+
+            for (let i = 0; i < steps.length; i++) {
+                const step = steps[i];
+                const toast = createToast(`sequential-${i + 1}`);
+                toast.message = step.message;
+                toast.type = step.type;
+                toast.duration = step.duration;
+                toast.position = 'top-right';
+                toast.show();
+
+                await new Promise(resolve => {
+                    toast.addEventListener('toast-hide', resolve, { once: true });
+                });
+
+                if (i < steps.length - 1) {
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                }
+            }
+        };
+
+        window.showMultipleToasts = () => {
+            const positions = ['top-right', 'top-left', 'bottom-right', 'bottom-left'];
+            const types = ['success', 'error', 'warning', 'info'];
+
+            positions.forEach((position, index) => {
+                setTimeout(() => {
+                    window.showToast(
+                        `Toast at ${position.replace('-', ' ')}`,
+                        types[index],
+                        3000,
+                        position
+                    );
+                }, index * 200);
+            });
+        };
+
+        logEvent('System', 'Demo initialized');
+    </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
+</body>
 </html>

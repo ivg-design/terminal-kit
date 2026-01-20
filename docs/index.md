@@ -31,6 +31,10 @@ Terminal Kit is a retro-futuristic web components library built with Lit 3.x and
 
 This project uses external libraries and assets (Lit, GridStack, iro.js, marked, PrismJS, Phosphor Icons, and loader libraries). See the third-party notices for license details.
 
+## Demo Tint Picker
+
+All demos include a global tint picker that updates `--terminal-green` for quick palette inspection.
+
 ## License
 
 MIT

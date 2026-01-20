@@ -25,16 +25,45 @@
             margin-top: 0;
             margin-bottom: 10px;
         }
+
+        .controls {
+            margin-top: 10px;
+        }
+
+        .controls button {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 6px 12px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .controls button:hover {
+            background: rgba(0, 255, 65, 0.1);
+        }
     </style>
 </head>
 <body>
-    <div class="demo-container">
-        <div class="breadcrumb">
-            <a href="index.html">&larr; Back to Gallery</a> / Tabs
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TTabsLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Tabs
+                </div>
+            </div>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
+            </div>
         </div>
+    </header>
 
-        <h1>TTabsLit</h1>
-
+    <!-- Main Content -->
+    <div class="demo-container">
         <div class="component-section">
             <h2 class="component-title">Tab Navigation</h2>
             <p class="component-description">
@@ -152,7 +181,7 @@
                             <div slot="tab-doc3" class="tab-content">Document 3 content</div>
                         </t-tabs>
                     </div>
-                    <div class="controls" style="margin-top: 10px;">
+                    <div class="controls">
                         <button onclick="resetClosableTabs()">Reset Tabs</button>
                     </div>
                 </div>
@@ -169,7 +198,7 @@
                             <div slot="tab-third" class="tab-content">Third tab content</div>
                         </t-tabs>
                     </div>
-                    <div class="controls" style="margin-top: 10px;">
+                    <div class="controls">
                         <button onclick="selectFirst()">First</button>
                         <button onclick="selectSecond()">Second</button>
                         <button onclick="selectThird()">Third</button>
@@ -226,25 +255,60 @@
 &lt;/script&gt;</code>
             </div>
         </div>
+    </div>
 
-        <div class="event-log" id="eventLog">
-            <h3>Event Log</h3>
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
+            </div>
         </div>
+        <div class="event-log" id="eventLog"></div>
     </div>
 
     <script type="module">
         import '../js/components/TTabsLit.js';
 
+        // Event log functionality
+        let eventCount = 0;
         const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
 
         function logEvent(component, event, detail) {
             const entry = document.createElement('div');
             entry.className = 'event-entry';
             const timestamp = new Date().toLocaleTimeString();
-            entry.textContent = `[${timestamp}] ${component}: ${event} ${detail ? '- ' + JSON.stringify(detail) : ''}`;
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
             eventLog.appendChild(entry);
             eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
         }
+
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
 
         // Initialize tabs
         document.getElementById('basic-tabs').tabs = [
@@ -328,5 +392,6 @@
 
         logEvent('System', 'Demo initialized');
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

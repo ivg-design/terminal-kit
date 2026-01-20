@@ -394,6 +394,13 @@ class TMenuLit extends LitElement {
 	 */
 	_documentKeydownHandler = null;
 
+	/**
+	 * Context menu position (for right-click menus)
+	 * @type {{x: number, y: number}|null}
+	 * @private
+	 */
+	_contextPosition = null;
+
 	// ============================================================
 	// BLOCK 5: Logger Instance
 	// ============================================================
@@ -743,7 +750,54 @@ class TMenuLit extends LitElement {
 	_handleTriggerContext(e) {
 		e.preventDefault();
 		e.stopPropagation();
+		// Store cursor position for context menu
+		this._contextPosition = { x: e.clientX, y: e.clientY };
 		this.show();
+		// Position menu at cursor after render
+		this.updateComplete.then(() => {
+			this._positionContextMenu();
+		});
+	}
+
+	/**
+	 * Position context menu at cursor location
+	 * @private
+	 */
+	_positionContextMenu() {
+		if (!this._contextPosition || this.trigger !== 'context') return;
+
+		const menuEl = this.shadowRoot.querySelector('.menu-container');
+		if (!menuEl) return;
+
+		const { x, y } = this._contextPosition;
+		const rect = menuEl.getBoundingClientRect();
+		const viewportWidth = window.innerWidth;
+		const viewportHeight = window.innerHeight;
+
+		// Calculate position, keeping menu in viewport
+		let left = x;
+		let top = y;
+
+		// Adjust if menu would go off right edge
+		if (left + rect.width > viewportWidth) {
+			left = viewportWidth - rect.width - 10;
+		}
+
+		// Adjust if menu would go off bottom edge
+		if (top + rect.height > viewportHeight) {
+			top = viewportHeight - rect.height - 10;
+		}
+
+		// Ensure not negative
+		left = Math.max(10, left);
+		top = Math.max(10, top);
+
+		// Apply fixed positioning for context menu
+		menuEl.style.position = 'fixed';
+		menuEl.style.top = `${top}px`;
+		menuEl.style.left = `${left}px`;
+		menuEl.style.right = 'auto';
+		menuEl.style.bottom = 'auto';
 	}
 
 	/**

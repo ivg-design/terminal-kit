@@ -37,14 +37,15 @@ export class TProgressLit extends LitElement {
 
 		/* Host styles */
 		:host {
-			display: inline-flex;
-			align-items: center;
-			--progress-bg: var(--terminal-gray-dark, #1a1a1a);
+			display: block;
+			width: 100%;
+			min-width: 80px;
+			--progress-bg: var(--terminal-gray-dark, #1e1e1e);
 			--progress-fill: var(--terminal-green, #00ff41);
 			--progress-glow: rgba(0, 255, 65, 0.4);
 			--progress-height: 8px;
-			--progress-radius: 0px;
-			--progress-border: 1px solid var(--terminal-gray, #444);
+			--progress-radius: 4px;
+			--progress-border: 1px solid var(--terminal-gray, #3a3a3a);
 		}
 
 		:host([hidden]) {
@@ -87,15 +88,15 @@ export class TProgressLit extends LitElement {
 		.progress-fill.striped {
 			background-image: linear-gradient(
 				45deg,
-				rgba(255, 255, 255, 0.15) 25%,
+				rgba(0, 0, 0, 0.35) 25%,
 				transparent 25%,
 				transparent 50%,
-				rgba(255, 255, 255, 0.15) 50%,
-				rgba(255, 255, 255, 0.15) 75%,
+				rgba(0, 0, 0, 0.35) 50%,
+				rgba(0, 0, 0, 0.35) 75%,
 				transparent 75%,
 				transparent
 			);
-			background-size: 20px 20px;
+			background-size: 12px 12px;
 		}
 
 		/* Animated stripes */
@@ -169,6 +170,12 @@ export class TProgressLit extends LitElement {
 		:host([vertical]) {
 			display: inline-flex;
 			flex-direction: column;
+			align-items: center;
+		}
+
+		:host([type="ring"]) {
+			display: flex;
+			justify-content: center;
 			align-items: center;
 		}
 

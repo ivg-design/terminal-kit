@@ -842,6 +842,22 @@ export class TColorPicker extends LitElement {
 		showClearButton: { type: Boolean, attribute: 'show-clear-button' },
 
 		/**
+		 * @property {boolean} showCloseButton - Controls visibility of close button in picker popover. Default is false; click outside to close.
+		 * @type {boolean}
+		 * @default false
+		 * @attribute show-close-button
+		 */
+		showCloseButton: { type: Boolean, attribute: 'show-close-button' },
+
+		/**
+		 * @property {boolean} hidePresets - Hides the default preset swatches, showing only the color wheel and input.
+		 * @type {boolean}
+		 * @default false
+		 * @attribute hide-presets
+		 */
+		hidePresets: { type: Boolean, attribute: 'hide-presets' },
+
+		/**
 		 * @property {array} swatches - Predefined color swatches array. Note: Currently not implemented - component uses default swatches (10 predefined) + custom swatches (user-added via localStorage) system instead. This property is included for spec compliance but has no effect.
 		 * @type {array}
 		 * @default []
@@ -928,6 +944,8 @@ export class TColorPicker extends LitElement {
 		this.variant = 'large';
 		this.elements = 'icon,label,swatch,input';
 		this.showClearButton = false;
+		this.showCloseButton = false;
+		this.hidePresets = false;
 		this.swatches = [];
 
 		// Bind event handlers
@@ -1707,7 +1725,7 @@ export class TColorPicker extends LitElement {
 					<div class="iro-swatches" id="swatches-${this._pickerId}"></div>
 					<div class="iro-actions">
 						<div class="iro-save-icon" title="Save to swatches">${floppyDiskIcon}</div>
-						<div class="iro-close-icon" title="Close">${xIcon}</div>
+						${this.showCloseButton ? `<div class="iro-close-icon" title="Close">${xIcon}</div>` : ''}
 						${this.showClearButton ? `<div class="iro-clear-icon" title="Clear all swatches">${trashIcon}</div>` : ''}
 					</div>
 				</div>
@@ -1995,6 +2013,14 @@ export class TColorPicker extends LitElement {
 
 		const container = this._popoverElement.querySelector(`#swatches-${this._pickerId}`);
 		if (!container) return;
+
+		// Hide entire swatches container if hidePresets is true
+		const swatchesContainer = this._popoverElement.querySelector('.iro-swatches-container');
+		if (swatchesContainer) {
+			swatchesContainer.style.display = this.hidePresets ? 'none' : '';
+		}
+
+		if (this.hidePresets) return;
 
 		// Default swatches
 		const defaultSwatches = [

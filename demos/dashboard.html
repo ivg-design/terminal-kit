@@ -108,6 +108,8 @@
             flex: 1;
             padding: 16px;
             overflow: auto;
+            width: 100%;
+            height: 100%;
         }
 
         /* Footer */
@@ -316,64 +318,29 @@
             scrollbar-color: var(--terminal-gray-dark) var(--terminal-black);
         }
 
-        /* Widget header controls container */
-        .widget-header-controls {
-            display: flex;
-            flex-direction: row;
-            gap: 4px;
-            align-items: center;
-        }
-
-        /* Widget control buttons */
-        .widget-control-btn {
-            width: 20px;
-            height: 20px;
-            padding: 0;
-            background: transparent;
-            border: none;
-            color: var(--terminal-gray);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            transition: color 0.15s ease;
-            pointer-events: auto;
-            position: relative;
-            z-index: 10;
-        }
-
-        .widget-control-btn:hover {
-            color: var(--terminal-green);
-        }
-
-        .widget-control-btn.active {
-            color: var(--terminal-amber);
-        }
-
-        .widget-control-btn.remove:hover {
-            color: var(--terminal-red);
-        }
-
-        .widget-control-btn svg {
-            width: 14px;
-            height: 14px;
-        }
-
-        /* Sidebar scrollbar */
+        .grid-container::-webkit-scrollbar,
         .sidebar::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
+            height: 8px;
         }
 
+        .grid-container::-webkit-scrollbar-track,
         .sidebar::-webkit-scrollbar-track {
             background: var(--terminal-black);
         }
 
+        .grid-container::-webkit-scrollbar-thumb,
         .sidebar::-webkit-scrollbar-thumb {
             background: var(--terminal-gray-dark);
-            border-radius: 3px;
+            border-radius: 6px;
         }
 
+        .grid-container::-webkit-scrollbar-thumb:hover,
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--terminal-gray);
+        }
+
+        .grid-container,
         .sidebar {
             scrollbar-width: thin;
             scrollbar-color: var(--terminal-gray-dark) var(--terminal-black);
@@ -700,7 +667,7 @@
 
         <!-- Grid -->
         <main class="grid-container">
-            <t-grid id="widget-grid" columns="12" cell-height="80" margin="10" show-overlay float>
+            <t-grid id="widget-grid" columns="24" cell-height="80" margin="8" show-overlay float lock-size>
                 <!-- Widgets will be added dynamically -->
             </t-grid>
         </main>
@@ -766,7 +733,6 @@
         import '../js/components/TChartLit.js';
         import '../js/components/TLogListLit.js';
         import {
-            pushPinIcon, lockSimpleIcon, lockSimpleOpenIcon, xIcon,
             chartBarIcon, listIcon, slidersHorizontalIcon,
             tableIcon, treeViewIcon, stackIcon,
             toggleLeftIcon, userCircleIcon, spinnerIcon, listChecksIcon, gaugeIcon, codeIcon
@@ -774,6 +740,15 @@
 
         const grid = document.getElementById('widget-grid');
         const toast = document.getElementById('toast');
+
+        function syncSquareCells() {
+            const rect = grid.getBoundingClientRect();
+            if (!rect.width) return;
+            const columns = Number(grid.columns || 12);
+            const margin = Number(grid.margin || 0);
+            const cellWidth = (rect.width - (columns - 1) * margin) / columns;
+            grid.cellHeight = Math.max(40, Math.round(cellWidth));
+        }
 
         // Widget definitions with grid positions
         // multi: true = can be added multiple times, otherwise single instance only
@@ -811,21 +786,21 @@
             {
                 id: 'chart',
                 name: 'Performance Metrics',
-                x: 4, y: 0, w: 8, h: 3,
+                x: 4, y: 0, w: 8, h: 4,
                 multi: true,  // Can add multiple charts
-                content: `<t-chart id="perf-chart" type="line" height="180px" show-legend show-grid></t-chart>`
+                content: `<t-chart id="perf-chart" type="line" height="100%" show-grid style="height: 100%;"></t-chart>`
             },
             {
                 id: 'logs',
                 name: 'System Logs',
-                x: 0, y: 3, w: 4, h: 5,
+                x: 0, y: 4, w: 4, h: 5,
                 multi: true,  // Can add multiple log lists
                 content: `<t-log-list id="log-list" max-entries="100" auto-scroll style="height: 100%;"></t-log-list>`
             },
             {
                 id: 'forms',
                 name: 'Form Controls',
-                x: 4, y: 3, w: 4, h: 5,
+                x: 4, y: 4, w: 4, h: 5,
                 content: `
                     <div class="demo-section">
                         <div class="demo-label">Input</div>
@@ -855,25 +830,25 @@
             {
                 id: 'kanban',
                 name: 'Task Board',
-                x: 8, y: 3, w: 4, h: 5,
+                x: 8, y: 4, w: 4, h: 5,
                 content: `<t-kanban id="task-kanban" style="height: 100%;"></t-kanban>`
             },
             {
                 id: 'calendar',
                 name: 'Calendar',
-                x: 0, y: 8, w: 4, h: 3,
-                content: `<t-cal id="demo-calendar" compact></t-cal>`
+                x: 0, y: 9, w: 4, h: 5,
+                content: `<t-cal id="demo-calendar" style="width: 100%; height: 100%;"></t-cal>`
             },
             {
                 id: 'tree',
                 name: 'File Browser',
-                x: 4, y: 8, w: 4, h: 4,
+                x: 4, y: 9, w: 4, h: 4,
                 content: `<t-tree id="file-tree" selectable="single" style="height: 100%;"></t-tree>`
             },
             {
                 id: 'accordion',
                 name: 'Documentation',
-                x: 8, y: 8, w: 4, h: 4,
+                x: 8, y: 9, w: 4, h: 4,
                 content: `
                     <t-accordion id="docs-accordion">
                         <t-accordion-item item-id="getting-started" title="Getting Started" expanded>
@@ -896,7 +871,7 @@
             {
                 id: 'buttons',
                 name: 'Button Variants',
-                x: 0, y: 12, w: 4, h: 3,
+                x: 0, y: 14, w: 4, h: 3,
                 content: `
                     <div class="demo-section">
                         <div class="demo-label">Primary Actions</div>
@@ -919,7 +894,7 @@
             {
                 id: 'avatars',
                 name: 'Team & Tags',
-                x: 4, y: 12, w: 4, h: 3,
+                x: 4, y: 14, w: 4, h: 3,
                 content: `
                     <div class="demo-section">
                         <div class="demo-label">Avatars</div>
@@ -943,7 +918,7 @@
             {
                 id: 'loaders',
                 name: 'Loading States',
-                x: 8, y: 12, w: 4, h: 3,
+                x: 8, y: 14, w: 4, h: 3,
                 content: `
                     <div class="demo-section">
                         <div class="demo-label">Spinners</div>
@@ -963,19 +938,19 @@
             {
                 id: 'tabs',
                 name: 'Data Views',
-                x: 0, y: 15, w: 6, h: 3,
+                x: 0, y: 17, w: 6, h: 3,
                 content: `<t-tabs id="data-tabs"></t-tabs>`
             },
             {
                 id: 'list',
                 name: 'Recent Items',
-                x: 6, y: 15, w: 6, h: 3,
+                x: 6, y: 17, w: 6, h: 3,
                 content: `<t-list id="recent-list" selectable="single" dense style="height: 100%;"></t-list>`
             },
             {
                 id: 'dev-console',
                 name: 'Dev Console',
-                x: 0, y: 18, w: 12, h: 5,
+                x: 0, y: 20, w: 12, h: 5,
                 content: `<t-log-list id="dev-console-logs" max-entries="50" style="height: 100%;"></t-log-list>`
             }
         ];
@@ -1004,19 +979,10 @@
             item.setAttribute('gs-y', def.y);
             item.setAttribute('gs-w', def.w);
             item.setAttribute('gs-h', def.h);
+            item.setAttribute('gs-min-w', '2');
+            item.setAttribute('gs-min-h', '2');
             item.setAttribute('item-id', def.id);
             item.setAttribute('widget-title', def.name);
-
-            // Create header controls
-            const headerControls = document.createElement('div');
-            headerControls.className = 'widget-header-controls';
-            headerControls.setAttribute('slot', 'controls');
-            headerControls.innerHTML = `
-                <button class="widget-control-btn lock-move" title="Lock Position">${pushPinIcon}</button>
-                <button class="widget-control-btn lock-resize" title="Lock Size">${lockSimpleOpenIcon}</button>
-                <button class="widget-control-btn remove" title="Remove">${xIcon}</button>
-            `;
-            item.appendChild(headerControls);
 
             // Add content
             const contentDiv = document.createElement('div');
@@ -1030,64 +996,7 @@
             // Track widget
             activeWidgets.set(def.id, {
                 id: def.id,
-                element: item,
-                lockedMove: false,
-                lockedResize: false
-            });
-
-            // Setup control handlers
-            setTimeout(() => setupWidgetControls(item, def.id), 200);
-        }
-
-        // Setup widget control buttons
-        function setupWidgetControls(item, widgetId, retryCount = 0) {
-            const lockMoveBtn = item.querySelector('.lock-move');
-            const lockResizeBtn = item.querySelector('.lock-resize');
-            const removeBtn = item.querySelector('.remove');
-
-            const widgetData = activeWidgets.get(widgetId);
-            if (!widgetData) return;
-
-            if (!lockMoveBtn || !lockResizeBtn || !removeBtn) {
-                if (retryCount < 5) {
-                    setTimeout(() => setupWidgetControls(item, widgetId, retryCount + 1), 100);
-                }
-                return;
-            }
-
-            lockMoveBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                widgetData.lockedMove = !widgetData.lockedMove;
-                lockMoveBtn.classList.toggle('active', widgetData.lockedMove);
-                if (widgetData.lockedMove) {
-                    item.setAttribute('gs-no-move', '');
-                } else {
-                    item.removeAttribute('gs-no-move');
-                }
-                grid.updateWidget(item, { noMove: widgetData.lockedMove });
-            });
-
-            lockResizeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                widgetData.lockedResize = !widgetData.lockedResize;
-                lockResizeBtn.classList.toggle('active', widgetData.lockedResize);
-                // Toggle icon between locked and unlocked
-                lockResizeBtn.innerHTML = widgetData.lockedResize ? lockSimpleIcon : lockSimpleOpenIcon;
-                if (widgetData.lockedResize) {
-                    item.setAttribute('gs-no-resize', '');
-                } else {
-                    item.removeAttribute('gs-no-resize');
-                }
-                grid.updateWidget(item, { noResize: widgetData.lockedResize });
-            });
-
-            removeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                grid.removeWidget(widgetData.element, true);
-                activeWidgets.delete(widgetId);
-                updateWidgetCount();
-                updateWidgetBankStates();
-                toast.show({ message: `Removed ${widgetId} widget`, variant: 'info' });
+                element: item
             });
         }
 
@@ -1123,15 +1032,25 @@
             }
 
             // Performance Chart
-            setTimeout(() => {
+            customElements.whenDefined('t-chart').then(() => {
                 const perfChart = document.getElementById('perf-chart');
                 if (perfChart && perfChart.setData) {
                     perfChart.setData([
-                        { label: 'Response Time', values: [45, 52, 38, 41, 55, 42, 48, 51, 44, 39, 47, 43] },
-                        { label: 'Throughput', values: [2.1, 2.4, 2.2, 2.8, 2.5, 2.9, 3.1, 2.7, 2.6, 3.0, 2.8, 3.2] }
+                        { label: '00:00', value: 45 },
+                        { label: '02:00', value: 52 },
+                        { label: '04:00', value: 38 },
+                        { label: '06:00', value: 41 },
+                        { label: '08:00', value: 55 },
+                        { label: '10:00', value: 42 },
+                        { label: '12:00', value: 48 },
+                        { label: '14:00', value: 51 },
+                        { label: '16:00', value: 44 },
+                        { label: '18:00', value: 39 },
+                        { label: '20:00', value: 47 },
+                        { label: '22:00', value: 43 }
                     ]);
                 }
-            }, 500);
+            });
 
             // Demo Dropdown
             setTimeout(() => {
@@ -1614,6 +1533,7 @@ CREATE INDEX idx_user_prefs_user_id
             console.log('Waiting for grid...');
             await waitForGrid();
             console.log('Grid ready, creating widgets...');
+            syncSquareCells();
 
             // Populate widget bank
             populateWidgetBank();
@@ -1635,5 +1555,6 @@ CREATE INDEX idx_user_prefs_user_id
         // Start
         init();
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

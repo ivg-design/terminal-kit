@@ -42,11 +42,11 @@ export class TAccordionItemLit extends LitElement {
 	static styles = css`
 		:host {
 			display: block;
-			--item-bg: var(--terminal-gray-darkest, #1a1a1a);
+			--item-bg: var(--terminal-gray-dark, #242424);
 			--item-border: var(--terminal-gray-dark, #333);
 			--item-color: var(--terminal-green, #00ff41);
-			--item-text: var(--terminal-gray-light, #888);
-			--item-header-bg: var(--terminal-black, #0a0a0a);
+			--item-text: var(--terminal-green-dim, #00cc33);
+			--item-header-bg: var(--terminal-gray-darkest, #1a1a1a);
 		}
 
 		:host([disabled]) {
@@ -108,7 +108,7 @@ export class TAccordionItemLit extends LitElement {
 		.title {
 			flex: 1;
 			font-size: 12px;
-			color: var(--terminal-white, #fff);
+			color: var(--item-color);
 			font-weight: 500;
 		}
 

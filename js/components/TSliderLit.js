@@ -35,10 +35,12 @@ export class TSliderLit extends LitElement {
     :host {
       display: block;
       width: 100%;
+      min-width: 120px;
+      min-height: calc(var(--t-sld-track-height) + 16px);
       --t-sld-track-height: 14px;
       --t-sld-thumb-size: 14px;
-      --t-sld-track-bg: #1a1a1a;
-      --t-sld-track-border: #333;
+      --t-sld-track-bg: #1e1e1e;
+      --t-sld-track-border: #3a3a3a;
       --t-sld-fill-bg: var(--terminal-green, #00ff41);
       --t-sld-fill-glow: rgba(0, 255, 65, 0.3);
       --t-sld-thumb-bg: #005520;
@@ -50,7 +52,50 @@ export class TSliderLit extends LitElement {
       --t-sld-tick-color: #333;
       --t-sld-tick-major-color: #555; /* Darker gray for visibility */
       --t-sld-icon-size: 14px;
+      --t-stepper-bg: var(--t-sld-track-bg);
+      --t-stepper-border: var(--t-sld-value-border);
+      --t-stepper-color: var(--terminal-green, #00ff41);
+      --t-stepper-hover-bg: var(--terminal-green-dim, rgba(0, 255, 65, 0.2));
+      --t-stepper-active-bg: var(--terminal-green, #00ff41);
+      --t-stepper-active-color: var(--terminal-black, #0a0a0a);
+      --t-stepper-size: 18px;
+      --t-stepper-height: 18px;
+      --t-stepper-icon-size: 12px;
       font-family: 'Courier New', monospace;
+    }
+
+    :host([size="xs"]) {
+      --t-sld-track-height: 6px;
+      --t-sld-thumb-size: 8px;
+      --t-sld-icon-size: 10px;
+    }
+
+    :host([size="xs"]) .slider-label,
+    :host([size="xs"]) .slider-value,
+    :host([size="xs"]) .slider-input,
+    :host([size="xs"]) .slider-min,
+    :host([size="xs"]) .slider-max {
+      font-size: 8px;
+    }
+
+    :host([size="small"]),
+    :host([size="sm"]) {
+      --t-sld-track-height: 8px;
+      --t-sld-thumb-size: 10px;
+      --t-sld-icon-size: 11px;
+    }
+
+    :host([size="small"]) .slider-label,
+    :host([size="small"]) .slider-value,
+    :host([size="small"]) .slider-input,
+    :host([size="small"]) .slider-min,
+    :host([size="small"]) .slider-max,
+    :host([size="sm"]) .slider-label,
+    :host([size="sm"]) .slider-value,
+    :host([size="sm"]) .slider-input,
+    :host([size="sm"]) .slider-min,
+    :host([size="sm"]) .slider-max {
+      font-size: 9px;
     }
 
     :host([size="compact"]) {
@@ -67,7 +112,8 @@ export class TSliderLit extends LitElement {
       font-size: 9px;
     }
 
-    :host([size="large"]) {
+    :host([size="large"]),
+    :host([size="lg"]) {
       --t-sld-track-height: 18px;
       --t-sld-thumb-size: 18px;
       --t-sld-icon-size: 18px;
@@ -77,7 +123,12 @@ export class TSliderLit extends LitElement {
     :host([size="large"]) .slider-value,
     :host([size="large"]) .slider-input,
     :host([size="large"]) .slider-min,
-    :host([size="large"]) .slider-max {
+    :host([size="large"]) .slider-max,
+    :host([size="lg"]) .slider-label,
+    :host([size="lg"]) .slider-value,
+    :host([size="lg"]) .slider-input,
+    :host([size="lg"]) .slider-min,
+    :host([size="lg"]) .slider-max {
       font-size: 12px;
     }
 
@@ -201,7 +252,8 @@ export class TSliderLit extends LitElement {
 
     /* Input field */
     .slider-input {
-      width: 50px;
+      width: auto;
+      min-width: 0;
       padding: 2px 4px;
       background: var(--t-sld-value-bg);
       border: 1px solid var(--t-sld-value-border);
@@ -211,6 +263,81 @@ export class TSliderLit extends LitElement {
       text-align: center;
       outline: none;
       height: 20px;
+      /* Hide native spinners */
+      -moz-appearance: textfield;
+    }
+
+    /* Hide native spinner buttons (Webkit/Chrome/Safari) */
+    .slider-input::-webkit-outer-spin-button,
+    .slider-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Input wrapper with custom stepper buttons */
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .slider-input.has-steppers {
+      padding-right: calc((var(--t-stepper-size) * 2) + 12px);
+    }
+
+    .slider-stepper-controls {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 4px;
+      z-index: 2;
+    }
+
+    /* Custom stepper buttons */
+    .stepper-btn {
+      width: var(--t-stepper-size);
+      height: var(--t-stepper-height);
+      padding: 0;
+      border: 1px solid var(--t-stepper-border);
+      background: var(--t-stepper-bg);
+      color: var(--t-stepper-color);
+      font-family: var(--font-mono, monospace);
+      font-size: 12px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease;
+      border-radius: 2px;
+    }
+
+    .stepper-btn:hover {
+      background: var(--t-stepper-hover-bg);
+    }
+
+    .stepper-btn:active {
+      background: var(--t-stepper-active-bg);
+      color: var(--t-stepper-active-color);
+    }
+
+    .stepper-btn svg {
+      width: var(--t-stepper-icon-size);
+      height: var(--t-stepper-icon-size);
+      fill: currentColor;
+    }
+
+    :host([disabled]) .stepper-btn {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .input-wrapper .slider-input {
+      border-radius: 0;
     }
 
     /* Output field (read-only value display) */
@@ -502,7 +629,9 @@ export class TSliderLit extends LitElement {
     icon: { type: String, reflect: true },
     size: { type: String, reflect: true },
     fillColor: { type: String, reflect: true, attribute: 'fill-color' },
-    minimal: { type: Boolean, reflect: true }
+    minimal: { type: Boolean, reflect: true },
+    stepperStyle: { type: String, reflect: true, attribute: 'stepper-style' },
+    stepperSize: { type: String, reflect: true, attribute: 'stepper-size' }
   };
 
   // ----------------------------------------------------------
@@ -549,6 +678,8 @@ export class TSliderLit extends LitElement {
     this.size = 'default';
     this.fillColor = 'default';
     this.minimal = false;
+    this.stepperStyle = 'plusminus';
+    this.stepperSize = 'md';
 
     // Initialize ElementInternals for form participation
     if (this.attachInternals) {
@@ -583,6 +714,8 @@ export class TSliderLit extends LitElement {
     super.firstUpdated(changedProperties);
     this._logger.debug('First update complete', { changedProperties });
 
+    this._applyStepperSize();
+
     // Update ARIA attributes
     this._updateAriaAttributes();
   }
@@ -606,6 +739,10 @@ export class TSliderLit extends LitElement {
       }
       // Update ARIA
       this._updateAriaAttributes();
+    }
+
+    if (changedProperties.has('stepperSize')) {
+      this._applyStepperSize();
     }
   }
 
@@ -741,6 +878,57 @@ export class TSliderLit extends LitElement {
     }
   }
 
+  /**
+   * Apply stepper size presets
+   * @private
+   */
+  _applyStepperSize() {
+    const sizes = {
+      sm: { size: 14, height: 14, icon: 10 },
+      md: { size: 18, height: 18, icon: 12 },
+      lg: { size: 22, height: 22, icon: 14 }
+    };
+
+    const preset = sizes[this.stepperSize] || sizes.md;
+    this.style.setProperty('--t-stepper-size', `${preset.size}px`);
+    this.style.setProperty('--t-stepper-height', `${preset.height}px`);
+    this.style.setProperty('--t-stepper-icon-size', `${preset.icon}px`);
+  }
+
+  /**
+   * Resolve stepper icons based on style
+   * @private
+   */
+  _getStepperIcons() {
+    switch (this.stepperStyle) {
+      case 'chevron':
+        return { inc: phosphorIcons.caretUpIcon, dec: phosphorIcons.caretDownIcon };
+      case 'arrows':
+        return { inc: phosphorIcons.arrowUpIcon, dec: phosphorIcons.arrowDownIcon };
+      default:
+        return { inc: phosphorIcons.plusIcon, dec: phosphorIcons.minusIcon };
+    }
+  }
+
+  /**
+   * Calculate input width based on range digits
+   * @private
+   */
+  _getInputWidth() {
+    const minDigits = Math.abs(this.min).toString().length;
+    const maxDigits = Math.abs(this.max).toString().length;
+    const hasNegative = this.min < 0;
+    const hasDecimals = this.step < 1;
+    const decimalPlaces = hasDecimals ? (String(this.step).split('.')[1]?.length || 0) : 0;
+
+    let digits = Math.max(minDigits, maxDigits);
+    if (hasDecimals) digits += decimalPlaces + 1;
+    if (hasNegative) digits += 1;
+
+    const safeDigits = Math.max(3, digits);
+    return `calc(${safeDigits}ch + 16px)`;
+  }
+
   // ----------------------------------------------------------
   // BLOCK 12: RENDER METHOD (REQUIRED)
   // ----------------------------------------------------------
@@ -776,6 +964,7 @@ export class TSliderLit extends LitElement {
     const thumbStyle = this.vertical
       ? `bottom: ${percentage}%; ${thumbWidthVar}`
       : `left: ${percentage}%; ${thumbWidthVar}`;
+    const inputWidth = this._getInputWidth();
 
     return html`
       <div class="slider-container">
@@ -821,17 +1010,36 @@ export class TSliderLit extends LitElement {
         ` : ''}
 
         ${this.showInput ? html`
-          <input
-            type="number"
-            class="slider-input"
-            .min=${this.min}
-            .max=${this.max}
-            .step=${this.step}
-            .value=${this.value}
-            ?disabled=${this.disabled}
-            @input=${this._handleDirectInput}
-            @change=${this._handleDirectInputChange}
-          />
+          <div class="input-wrapper" style="width: ${inputWidth}; max-width: ${inputWidth};">
+            <input
+              type="number"
+              class="slider-input has-steppers"
+              .min=${this.min}
+              .max=${this.max}
+              .step=${this.step}
+              .value=${this.value}
+              style="width: ${inputWidth}; max-width: ${inputWidth};"
+              ?disabled=${this.disabled}
+              @input=${this._handleDirectInput}
+              @change=${this._handleDirectInputChange}
+            />
+            <div class="slider-stepper-controls">
+              <button
+                type="button"
+                class="stepper-btn decrement"
+                ?disabled=${this.disabled}
+                @click=${this._handleDecrement}
+                aria-label="Decrease value"
+              >${unsafeHTML(this._getStepperIcons().dec)}</button>
+              <button
+                type="button"
+                class="stepper-btn increment"
+                ?disabled=${this.disabled}
+                @click=${this._handleIncrement}
+                aria-label="Increase value"
+              >${unsafeHTML(this._getStepperIcons().inc)}</button>
+            </div>
+          </div>
         ` : ''}
 
         ${this.showOutput ? html`
@@ -1193,6 +1401,34 @@ export class TSliderLit extends LitElement {
       this._emitEvent('slider-change', { value: this.value });
       // Update input to show clamped value
       e.target.value = this.value;
+    }
+  }
+
+  /**
+   * Handle decrement button click
+   * @private
+   */
+  _handleDecrement() {
+    if (this.disabled) return;
+    const newValue = this._clampValue(this.value - this.step);
+    if (newValue !== this.value) {
+      this.value = newValue;
+      this._emitEvent('slider-input', { value: this.value });
+      this._emitEvent('slider-change', { value: this.value });
+    }
+  }
+
+  /**
+   * Handle increment button click
+   * @private
+   */
+  _handleIncrement() {
+    if (this.disabled) return;
+    const newValue = this._clampValue(this.value + this.step);
+    if (newValue !== this.value) {
+      this.value = newValue;
+      this._emitEvent('slider-input', { value: this.value });
+      this._emitEvent('slider-change', { value: this.value });
     }
   }
 

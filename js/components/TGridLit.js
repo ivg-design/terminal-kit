@@ -1,7 +1,7 @@
 /**
  * @fileoverview TGridLit - Dashboard grid layout component
  * @module components/TGridLit
- * @version 3.0.0
+ * @version 1.0.2
  *
  * A CONTAINER profile grid component wrapping gridstack.js for
  * drag-and-drop, resizable dashboard layouts.
@@ -15,215 +15,342 @@
 
 import { LitElement, html, css } from 'lit';
 import componentLogger from '../utils/ComponentLogger.js';
-
-// GridStack is loaded via CDN script tag and accessed from window.GridStack
-// Include in HTML: <script src="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack-all.min.js"></script>
+import { pushPinIcon, lockSimpleIcon, lockSimpleOpenIcon, xIcon } from '../utils/phosphor-icons.js';
 
 // ============================================================
 // Block 1: Static Metadata
 // ============================================================
 const tagName = 't-grid';
-const version = '3.0.0';
+const version = '1.0.2';
 const category = 'Container';
 
 // ============================================================
-// Block 2: Static Styles
+// Light DOM Style Injection
 // ============================================================
+// Since TGridLit uses light DOM for GridStack compatibility,
+// we must inject styles into the document head
+const STYLE_ID = 't-grid-styles';
 
-// Gridstack base styles (required for functionality)
-const gridstackBaseStyles = css`
-	.grid-stack {
-		position: relative;
-	}
+function injectGridStyles() {
+	if (document.getElementById(STYLE_ID)) return;
 
-	.grid-stack-placeholder > .placeholder-content {
-		background-color: rgba(0, 0, 0, 0.1);
-		margin: 0;
-		position: absolute;
-		width: auto;
-		z-index: 0 !important;
-	}
+	const styleSheet = document.createElement('style');
+	styleSheet.id = STYLE_ID;
+	styleSheet.textContent = `
+		/* GridStack base styles (required for functionality) */
+		.grid-stack {
+			position: relative;
+		}
 
-	.grid-stack > .grid-stack-item {
-		position: absolute;
-		padding: 0;
-		top: 0;
-		left: 0;
-		width: var(--gs-column-width);
-		height: var(--gs-cell-height);
-	}
+		.grid-stack-placeholder > .placeholder-content {
+			background-color: rgba(0, 0, 0, 0.1);
+			margin: 0;
+			position: absolute;
+			width: auto;
+			z-index: 0 !important;
+		}
 
-	.grid-stack > .grid-stack-item > .grid-stack-item-content {
-		margin: 0;
-		position: absolute;
-		width: auto;
-		overflow-x: hidden;
-		overflow-y: auto;
-	}
+		.grid-stack > .grid-stack-item {
+			position: absolute;
+			padding: 0;
+			top: 0;
+			left: 0;
+			width: var(--gs-column-width);
+			height: var(--gs-cell-height);
+		}
 
-	.grid-stack > .grid-stack-item > .grid-stack-item-content,
-	.grid-stack > .grid-stack-placeholder > .placeholder-content {
-		top: var(--gs-item-margin-top);
-		right: var(--gs-item-margin-right);
-		bottom: var(--gs-item-margin-bottom);
-		left: var(--gs-item-margin-left);
-	}
+		.grid-stack > .grid-stack-item > .grid-stack-item-content {
+			margin: 0;
+			position: absolute;
+			width: auto;
+			overflow-x: hidden;
+			overflow-y: auto;
+			scrollbar-width: thin;
+			scrollbar-color: rgba(0, 255, 65, 0.45) transparent;
+		}
 
-	.grid-stack-item > .ui-resizable-handle {
-		position: absolute;
-		font-size: 0.1px;
-		display: block;
-		-ms-touch-action: none;
-		touch-action: none;
-	}
+		.grid-stack > .grid-stack-item > .grid-stack-item-content,
+		.grid-stack > .grid-stack-placeholder > .placeholder-content {
+			top: var(--gs-item-margin-top);
+			right: var(--gs-item-margin-right);
+			bottom: var(--gs-item-margin-bottom);
+			left: var(--gs-item-margin-left);
+		}
 
-	.grid-stack-item.ui-resizable-disabled > .ui-resizable-handle {
-		display: none;
-	}
+		.grid-stack-item > .ui-resizable-handle {
+			position: absolute;
+			font-size: 0.1px;
+			display: block;
+			-ms-touch-action: none;
+			touch-action: none;
+		}
 
-	.grid-stack-item > .ui-resizable-se {
-		cursor: se-resize;
-		width: 20px;
-		height: 20px;
-		bottom: var(--gs-item-margin-bottom);
-		right: var(--gs-item-margin-right);
-	}
+		.grid-stack-item.ui-resizable-disabled > .ui-resizable-handle {
+			display: none;
+		}
 
-	.grid-stack-item.ui-draggable-dragging {
-		will-change: left, top;
-	}
+		.grid-stack-item.ui-draggable-dragging {
+			will-change: left, top;
+		}
 
-	.grid-stack-item.ui-resizable-resizing {
-		will-change: width, height;
-	}
+		.grid-stack-item.ui-resizable-resizing {
+			will-change: width, height;
+		}
 
-	.ui-draggable-dragging,
-	.ui-resizable-resizing {
-		z-index: 10000;
-	}
+		.ui-draggable-dragging,
+		.ui-resizable-resizing {
+			z-index: 10000;
+		}
 
-	.grid-stack-animate,
-	.grid-stack-animate .grid-stack-item {
-		transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
-	}
+		.grid-stack-animate,
+		.grid-stack-animate .grid-stack-item {
+			transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
+		}
 
-	.grid-stack-animate .grid-stack-item.ui-draggable-dragging,
-	.grid-stack-animate .grid-stack-item.ui-resizable-resizing {
-		transition: left 0s, top 0s, height 0s, width 0s;
-	}
-`;
+		.grid-stack-animate .grid-stack-item.ui-draggable-dragging,
+		.grid-stack-animate .grid-stack-item.ui-resizable-resizing {
+			transition: left 0s, top 0s, height 0s, width 0s;
+		}
 
-const styles = css`
-	:host {
-		--grid-bg: var(--terminal-black, #0a0a0a);
-		--grid-border: var(--terminal-gray-dark, #333);
-		--grid-green: var(--terminal-green, #00ff41);
-		--grid-placeholder-bg: rgba(0, 255, 65, 0.1);
-		--grid-placeholder-border: var(--terminal-green, #00ff41);
-		--grid-cell-height: 80px;
+		/* TGridLit - Light DOM Styles */
+		t-grid {
+			--grid-bg: var(--terminal-black, #0a0a0a);
+			--grid-border: var(--terminal-gray-dark, #333);
+			--grid-green: var(--terminal-green, #00ff41);
+			--grid-placeholder-bg: rgba(0, 255, 65, 0.1);
+			--grid-placeholder-border: var(--terminal-green, #00ff41);
+			--grid-cell-height: 80px;
 
-		display: block;
-		position: relative;
-		width: 100%;
-		height: 100%;
-		background: var(--grid-bg);
-	}
+			display: block;
+			position: relative;
+			width: 100%;
+			height: 100%;
+			background: var(--grid-bg);
+		}
 
-	.grid-stack {
-		background: var(--grid-bg);
-		min-height: 100%;
-	}
+		t-grid.grid-stack {
+			background: var(--grid-bg);
+			min-height: 100%;
+		}
 
-	/* Gridstack item styling */
-	.grid-stack > .grid-stack-item > .grid-stack-item-content {
-		background: var(--terminal-gray-darkest, #1a1a1a);
-		border: 1px solid var(--grid-border);
-		border-radius: 4px;
-		overflow: hidden;
-		display: flex;
-		flex-direction: column;
-	}
+		/* Gridstack item styling */
+		t-grid > .grid-stack-item > .grid-stack-item-content {
+			background: var(--terminal-gray-darkest, #1a1a1a);
+			border: 1px solid var(--grid-border);
+			border-radius: 4px;
+			overflow: hidden;
+			display: flex;
+			flex-direction: column;
+		}
 
-	/* Placeholder during drag */
-	.grid-stack > .grid-stack-placeholder > .placeholder-content {
-		background: var(--grid-placeholder-bg);
-		border: 2px dashed var(--grid-placeholder-border);
-		border-radius: 4px;
-	}
+		/* Placeholder during drag */
+		t-grid > .grid-stack-placeholder > .placeholder-content {
+			background: var(--grid-placeholder-bg);
+			border: 2px dashed var(--grid-placeholder-border);
+			border-radius: 4px;
+		}
 
-	/* Resize handles - override gridstack defaults completely */
-	.grid-stack > .grid-stack-item > .ui-resizable-se,
-	.grid-stack > .grid-stack-item > .ui-resizable-handle {
-		width: 16px !important;
-		height: 16px !important;
-		right: 4px !important;
-		bottom: 4px !important;
-		cursor: se-resize;
-		opacity: 0.4;
-		transition: opacity 0.15s ease;
-		/* SE resize corner icon using arrowsOut SVG data URI */
-		background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='%2300ff41'%3E%3Cpath d='M216 48v48 0c0 4.418-3.582 8-8 8 -4.419 0-8-3.582-8-8V67.31l-42.34 42.35v0c-3.126 3.125-8.195 3.125-11.32 0 -3.126-3.126-3.126-8.195 0-11.32L188.69 56H160v0c-4.419 0-8-3.582-8-8 0-4.419 3.581-8 8-8h48v0c4.418 0 8 3.581 8 8ZM98.34 146.34L56 188.69V160v0c0-4.419-3.582-8-8-8 -4.419 0-8 3.581-8 8v48 0c0 4.418 3.581 8 8 8h48v0c4.418 0 8-3.582 8-8 0-4.419-3.582-8-8-8H67.31l42.35-42.34h-.001c3.125-3.126 3.125-8.195 0-11.32 -3.126-3.126-8.195-3.126-11.32 0ZM208 152v0c-4.419 0-8 3.581-8 8v28.69l-42.34-42.35v0c-3.126-3.126-8.195-3.126-11.32-.001 -3.126 3.125-3.126 8.194-.001 11.32l42.35 42.34h-28.69v0c-4.419 0-8 3.581-8 8 0 4.418 3.581 8 8 8h48v0c4.418 0 8-3.582 8-8v-48 0c0-4.419-3.582-8-8-8ZM67.31 56H96v0c4.418 0 8-3.582 8-8 0-4.419-3.582-8-8-8H48v0c-4.419 0-8 3.581-8 8v48 0c0 4.418 3.581 8 8 8 4.418 0 8-3.582 8-8V67.31l42.34 42.35v0c3.125 3.125 8.194 3.125 11.32 0 3.125-3.126 3.125-8.195 0-11.32Z'/%3E%3C/svg%3E") no-repeat center center !important;
-		background-size: 12px 12px !important;
-		/* Reset any pseudo-elements from gridstack or previous styles */
-		border: none !important;
-	}
+		/* Resize handles - completely override GridStack defaults */
+		/* Position inside the widget content area visually */
+		t-grid > .grid-stack-item > .ui-resizable-se,
+		t-grid > .grid-stack-item > .ui-resizable-handle {
+			width: 24px !important;
+			height: 24px !important;
+			/* GridStack margin is ~10px, plus border ~1px, plus padding inside content ~8px */
+			right: 18px !important;
+			bottom: 18px !important;
+			cursor: default !important;
+			opacity: 0.4;
+			transition: opacity 0.15s ease;
+			/* arrowsOut icon - 4 corner arrows (18px = 14px * 1.3) */
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='%2300ff41'%3E%3Cpath d='M216 48v48c0 4.418-3.582 8-8 8-4.419 0-8-3.582-8-8V67.31l-42.34 42.35c-3.126 3.125-8.195 3.125-11.32 0-3.126-3.126-3.126-8.195 0-11.32L188.69 56H160c-4.419 0-8-3.582-8-8 0-4.419 3.581-8 8-8h48c4.418 0 8 3.581 8 8ZM98.34 146.34L56 188.69V160c0-4.419-3.582-8-8-8-4.419 0-8 3.581-8 8v48c0 4.418 3.581 8 8 8h48c4.418 0 8-3.582 8-8 0-4.419-3.582-8-8-8H67.31l42.35-42.34c3.125-3.126 3.125-8.195 0-11.32-3.126-3.126-8.195-3.126-11.32 0ZM208 152c-4.419 0-8 3.581-8 8v28.69l-42.34-42.35c-3.126-3.126-8.195-3.126-11.32-.001-3.126 3.125-3.126 8.194-.001 11.32l42.35 42.34h-28.69c-4.419 0-8 3.581-8 8 0 4.418 3.581 8 8 8h48c4.418 0 8-3.582 8-8v-48c0-4.419-3.582-8-8-8ZM67.31 56H96c4.418 0 8-3.582 8-8 0-4.419-3.582-8-8-8H48c-4.419 0-8 3.581-8 8v48c0 4.418 3.581 8 8 8 4.418 0 8-3.582 8-8V67.31l42.34 42.35c3.125 3.125 8.194 3.125 11.32 0 3.125-3.126 3.125-8.195 0-11.32Z'/%3E%3C/svg%3E") !important;
+			background-repeat: no-repeat !important;
+			background-position: center center !important;
+			background-size: 18px 18px !important;
+			background-color: transparent !important;
+			border: none !important;
+		}
 
-	/* Hide any pseudo-elements that gridstack might inject */
-	.grid-stack > .grid-stack-item > .ui-resizable-se::before,
-	.grid-stack > .grid-stack-item > .ui-resizable-se::after,
-	.grid-stack > .grid-stack-item > .ui-resizable-handle::before,
-	.grid-stack > .grid-stack-item > .ui-resizable-handle::after {
-		display: none !important;
-		content: none !important;
-	}
+		/* Hide ALL pseudo-elements that GridStack or jQuery UI might inject */
+		t-grid > .grid-stack-item > .ui-resizable-se::before,
+		t-grid > .grid-stack-item > .ui-resizable-se::after,
+		t-grid > .grid-stack-item > .ui-resizable-handle::before,
+		t-grid > .grid-stack-item > .ui-resizable-handle::after,
+		t-grid > .grid-stack-item > .ui-resizable-se > *,
+		t-grid > .grid-stack-item > .ui-resizable-handle > * {
+			display: none !important;
+			content: none !important;
+			visibility: hidden !important;
+		}
 
-	.grid-stack > .grid-stack-item:hover > .ui-resizable-se,
-	.grid-stack > .grid-stack-item:hover > .ui-resizable-handle,
-	.grid-stack > .grid-stack-item.ui-resizable-resizing > .ui-resizable-se {
-		opacity: 1;
-	}
+		/* Reset any text content in resize handles */
+		t-grid > .grid-stack-item > .ui-resizable-se,
+		t-grid > .grid-stack-item > .ui-resizable-handle {
+			font-size: 0 !important;
+			text-indent: -9999px !important;
+			color: transparent !important;
+		}
 
-	/* Grid overlay during drag/resize */
-	.grid-overlay {
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-		opacity: 0;
-		transition: opacity 0.15s ease;
-		z-index: 1000;
-	}
+		t-grid > .grid-stack-item:hover > .ui-resizable-se,
+		t-grid > .grid-stack-item:hover > .ui-resizable-handle,
+		t-grid > .grid-stack-item.ui-resizable-resizing > .ui-resizable-se {
+			opacity: 1;
+		}
 
-	.grid-overlay.visible {
-		opacity: 1;
-	}
+		/* Grid overlay during drag/resize */
+		t-grid .grid-overlay {
+			position: absolute;
+			inset: 0;
+			pointer-events: none;
+			opacity: 0;
+			transition: opacity 0.15s ease;
+			z-index: 1000;
+		}
 
-	.grid-overlay-cell {
-		position: absolute;
-		border: 1px dashed rgba(0, 255, 65, 0.2);
-		box-sizing: border-box;
-	}
+		t-grid .grid-overlay.visible {
+			opacity: 1;
+		}
 
-	/* Drag state */
-	.grid-stack.grid-stack-dragging .grid-stack-item-content {
-		box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
-	}
+		t-grid .grid-overlay-cell {
+			position: absolute;
+			border: 1px dashed rgba(0, 255, 65, 0.2);
+			box-sizing: border-box;
+		}
 
-	/* Item hover effect */
-	.grid-stack > .grid-stack-item > .grid-stack-item-content:hover {
-		box-shadow: 0 0 0 1px var(--grid-green);
-	}
+		/* Drag state */
+		t-grid.grid-stack-dragging .grid-stack-item-content {
+			box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+		}
 
-	/* Locked items */
-	.grid-stack > .grid-stack-item.locked > .grid-stack-item-content {
-		opacity: 0.7;
-	}
+		/* Item hover effect */
+		t-grid > .grid-stack-item > .grid-stack-item-content:hover {
+			box-shadow: 0 0 0 1px var(--grid-green);
+		}
 
-	/* Compact mode */
-	:host([compact]) .grid-stack {
-		--bs-gutter-x: 8px;
-		--bs-gutter-y: 8px;
-	}
-`;
+		/* Locked items */
+		t-grid > .grid-stack-item.locked > .grid-stack-item-content {
+			opacity: 0.7;
+		}
+
+		/* Compact mode */
+		t-grid[compact] {
+			--bs-gutter-x: 8px;
+			--bs-gutter-y: 8px;
+		}
+
+		/* t-grid-item Light DOM styles */
+		t-grid-item {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+		}
+
+		t-grid-item .grid-item-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 8px 12px;
+			background: var(--terminal-black, #0a0a0a);
+			border-bottom: 1px solid var(--terminal-gray-dark, #333);
+			cursor: move;
+			user-select: none;
+			min-height: 36px;
+		}
+
+		t-grid-item .grid-item-title {
+			font-size: 11px;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			color: var(--terminal-green, #00ff41);
+		}
+
+		t-grid-item .grid-item-controls {
+			display: flex;
+			gap: 8px;
+			align-items: center;
+		}
+
+		t-grid-item .grid-item-content {
+			flex: 1;
+			overflow: auto;
+			padding: 12px;
+			min-height: 0;
+			scrollbar-width: thin;
+			scrollbar-color: rgba(0, 255, 65, 0.45) transparent;
+		}
+
+		/* Scrollbar styling (WebKit) */
+		t-grid > .grid-stack-item > .grid-stack-item-content::-webkit-scrollbar,
+		t-grid-item .grid-item-content::-webkit-scrollbar {
+			width: 6px;
+			height: 6px;
+		}
+
+		t-grid > .grid-stack-item > .grid-stack-item-content::-webkit-scrollbar-track,
+		t-grid-item .grid-item-content::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		t-grid > .grid-stack-item > .grid-stack-item-content::-webkit-scrollbar-thumb,
+		t-grid-item .grid-item-content::-webkit-scrollbar-thumb {
+			background: rgba(0, 255, 65, 0.35);
+			border-radius: 6px;
+			border: 1px solid rgba(0, 255, 65, 0.15);
+		}
+
+		t-grid > .grid-stack-item > .grid-stack-item-content::-webkit-scrollbar-thumb:hover,
+		t-grid-item .grid-item-content::-webkit-scrollbar-thumb:hover {
+			background: rgba(0, 255, 65, 0.6);
+		}
+
+		/* Widget header control buttons */
+		.widget-header-controls {
+			display: flex;
+			gap: 4px;
+			align-items: center;
+		}
+
+		.widget-control-btn {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 24px;
+			height: 24px;
+			padding: 0;
+			background: transparent;
+			border: none;
+			color: var(--terminal-gray, #666);
+			cursor: pointer;
+			opacity: 0.6;
+			transition: opacity 0.15s ease, color 0.15s ease;
+		}
+
+		.widget-control-btn:hover {
+			opacity: 1;
+			color: var(--terminal-green, #00ff41);
+		}
+
+		.widget-control-btn.active {
+			color: var(--terminal-green, #00ff41);
+			opacity: 1;
+		}
+
+		.widget-control-btn svg {
+			width: 16px;
+			height: 16px;
+			fill: currentColor;
+		}
+
+		.widget-control-btn.remove:hover {
+			color: var(--terminal-red, #ff4141);
+		}
+	`;
+	document.head.appendChild(styleSheet);
+}
+
+// NOTE: Static styles are NOT used because this component uses light DOM
+// (createRenderRoot returns this). All styles are injected via injectGridStyles().
 
 /**
  * TGridLit - Dashboard grid layout component
@@ -263,10 +390,9 @@ class TGridLit extends LitElement {
 	}
 
 	// ============================================================
-	// Block 2: Static Styles
+	// Block 2: Static Styles (N/A - light DOM)
 	// ============================================================
-
-	static styles = [gridstackBaseStyles, styles];
+	// Styles injected via injectGridStyles() since this component uses light DOM
 
 	// ============================================================
 	// Block 3: Reactive Properties
@@ -360,7 +486,15 @@ class TGridLit extends LitElement {
 		 * @default 1
 		 * @attribute min-height
 		 */
-		minHeight: { type: Number, attribute: 'min-height' }
+		minHeight: { type: Number, attribute: 'min-height' },
+
+		/**
+		 * Lock grid dimensions to initial size
+		 * @type {boolean}
+		 * @default true
+		 * @attribute lock-size
+		 */
+		lockSize: { type: Boolean, attribute: 'lock-size', reflect: true }
 	};
 
 	// ============================================================
@@ -395,6 +529,27 @@ class TGridLit extends LitElement {
 	 */
 	_mutationObserver = null;
 
+	/**
+	 * Resize observer for responsive layout
+	 * @type {ResizeObserver|null}
+	 * @private
+	 */
+	_resizeObserver = null;
+
+	/**
+	 * Resize observer for lock-size initialization
+	 * @type {ResizeObserver|null}
+	 * @private
+	 */
+	_lockObserver = null;
+
+	/**
+	 * Cached fixed cell width for locked sizing
+	 * @type {number|null}
+	 * @private
+	 */
+	_lockedCellWidth = null;
+
 	// ============================================================
 	// Block 5: Logger Instance
 	// ============================================================
@@ -413,6 +568,9 @@ class TGridLit extends LitElement {
 	constructor() {
 		super();
 
+		// Inject light DOM styles into document head (once)
+		injectGridStyles();
+
 		// Default values
 		this.columns = 12;
 		this.cellHeight = 80;
@@ -424,8 +582,9 @@ class TGridLit extends LitElement {
 		this.compact = false;
 		this.float = false;
 		this.storageKey = '';
-		this.minWidth = 1;
+		this.minWidth = 2;
 		this.minHeight = 1;
+		this.lockSize = true;
 
 		this._logger = componentLogger.for('TGridLit');
 		this._logger.debug('Component constructed');
@@ -446,11 +605,17 @@ class TGridLit extends LitElement {
 	connectedCallback() {
 		super.connectedCallback();
 		this._logger.info('Connected to DOM');
+
+		if (!this.lockSize) {
+			this._setupResponsiveObserver();
+		}
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		this._logger.info('Disconnected from DOM');
+		this._clearResponsiveObserver();
+		this._clearLockObserver();
 		this._destroyGrid();
 	}
 
@@ -458,6 +623,7 @@ class TGridLit extends LitElement {
 		this._logger.debug('First update complete');
 		this._initGrid();
 		this._loadLayout();
+		requestAnimationFrame(() => this._applyFixedWidth());
 	}
 
 	updated(changedProperties) {
@@ -466,9 +632,11 @@ class TGridLit extends LitElement {
 		if (this._grid) {
 			if (changedProperties.has('columns')) {
 				this._grid.column(this.columns);
+				this._lockedCellWidth = null;
 			}
 			if (changedProperties.has('cellHeight')) {
 				this._grid.cellHeight(this.cellHeight);
+				this._refreshOverlayCells();
 			}
 			if (changedProperties.has('margin')) {
 				this._grid.margin(this.margin);
@@ -487,6 +655,22 @@ class TGridLit extends LitElement {
 		// Update overlay when showOverlay changes
 		if (changedProperties.has('showOverlay')) {
 			this._updateOverlay();
+		}
+
+		if (this.lockSize && (changedProperties.has('columns') || changedProperties.has('margin'))) {
+			this._applyFixedWidth();
+		}
+
+		if (changedProperties.has('lockSize')) {
+			if (this.lockSize) {
+				this._clearResponsiveObserver();
+				this._clearLockObserver();
+				this._applyFixedWidth();
+			} else {
+				this._clearLockObserver();
+				this._clearFixedWidth();
+				this._setupResponsiveObserver();
+			}
 		}
 	}
 
@@ -743,6 +927,70 @@ class TGridLit extends LitElement {
 		if (overlay) {
 			this._populateOverlayCells(overlay);
 		}
+	}
+
+	_setupResponsiveObserver() {
+		if (typeof ResizeObserver === 'undefined' || this._resizeObserver) return;
+		this._resizeObserver = new ResizeObserver(() => {
+			if (!this._grid) return;
+			this._grid.onResize();
+			if (this._overlayVisible) {
+				this._refreshOverlayCells();
+			}
+		});
+		this._resizeObserver.observe(this);
+	}
+
+	_clearResponsiveObserver() {
+		if (this._resizeObserver) {
+			this._resizeObserver.disconnect();
+			this._resizeObserver = null;
+		}
+	}
+
+	_setupLockObserver() {
+		if (typeof ResizeObserver === 'undefined' || this._lockObserver) return;
+		this._lockObserver = new ResizeObserver(() => {
+			if (!this.lockSize) return;
+			const rect = this.getBoundingClientRect();
+			if (!rect.width) return;
+			this._applyFixedWidth();
+			this._clearLockObserver();
+		});
+		this._lockObserver.observe(this);
+	}
+
+	_clearLockObserver() {
+		if (this._lockObserver) {
+			this._lockObserver.disconnect();
+			this._lockObserver = null;
+		}
+	}
+
+	_applyFixedWidth() {
+		if (!this.lockSize) return;
+		const rect = this.getBoundingClientRect();
+		if (!rect.width) {
+			this._setupLockObserver();
+			return;
+		}
+
+		if (!this._lockedCellWidth) {
+			const innerWidth = rect.width - (this.columns - 1) * this.margin;
+			this._lockedCellWidth = innerWidth / this.columns;
+		}
+
+		const width = (this.columns * this._lockedCellWidth) + (this.columns - 1) * this.margin;
+		this.style.width = `${width}px`;
+		this.style.minWidth = `${width}px`;
+		this.style.maxWidth = `${width}px`;
+	}
+
+	_clearFixedWidth() {
+		this.style.width = '';
+		this.style.minWidth = '';
+		this.style.maxWidth = '';
+		this._lockedCellWidth = null;
 	}
 
 	// ============================================================
@@ -1170,7 +1418,7 @@ class TGridItemLit extends LitElement {
 		this.y = 0;
 		this.w = 2;
 		this.h = 2;
-		this.minW = 1;
+		this.minW = 2;
 		this.minH = 1;
 		this.locked = false;
 		this.noMove = false;
@@ -1320,7 +1568,7 @@ class TGridItemLit extends LitElement {
 	}
 
 	/**
-	 * Create header element
+	 * Create header element with icon buttons
 	 * @private
 	 */
 	_createHeader(title, controlElements) {
@@ -1333,16 +1581,117 @@ class TGridItemLit extends LitElement {
 		titleSpan.textContent = title;
 
 		const controls = document.createElement('div');
-		controls.className = 'grid-item-controls';
+		controls.className = 'grid-item-controls widget-header-controls';
 
-		// Move control elements
+		// Move any user-provided control elements first
 		controlElements.forEach(child => {
 			controls.appendChild(child);
 		});
 
+		// Create lock-move button (pushpin icon)
+		const lockMoveBtn = this._createControlButton('lock-move', pushPinIcon, 'Toggle move lock');
+		if (this.noMove) lockMoveBtn.classList.add('active');
+		lockMoveBtn.addEventListener('click', (e) => {
+			e.stopPropagation();
+			this._toggleMoveLock(lockMoveBtn);
+		});
+		controls.appendChild(lockMoveBtn);
+
+		// Create lock-resize button (lock icon) - show locked icon if noResize is set
+		const resizeIcon = this.noResize ? lockSimpleIcon : lockSimpleOpenIcon;
+		const lockResizeBtn = this._createControlButton('lock-resize', resizeIcon, 'Toggle resize lock');
+		if (this.noResize) lockResizeBtn.classList.add('active');
+		lockResizeBtn.addEventListener('click', (e) => {
+			e.stopPropagation();
+			this._toggleResizeLock(lockResizeBtn);
+		});
+		controls.appendChild(lockResizeBtn);
+
+		// Create remove button (x icon)
+		const removeBtn = this._createControlButton('remove', xIcon, 'Remove widget');
+		removeBtn.addEventListener('click', (e) => {
+			e.stopPropagation();
+			this._removeWidget();
+		});
+		controls.appendChild(removeBtn);
+
 		header.appendChild(titleSpan);
 		header.appendChild(controls);
 		return header;
+	}
+
+	/**
+	 * Create a control button with icon
+	 * @private
+	 */
+	_createControlButton(action, iconSvg, title) {
+		const btn = document.createElement('button');
+		btn.className = `widget-control-btn ${action}`;
+		btn.setAttribute('data-action', action);
+		btn.setAttribute('title', title);
+		btn.innerHTML = iconSvg;
+		return btn;
+	}
+
+	/**
+	 * Toggle move lock state
+	 * @private
+	 */
+	_toggleMoveLock(btn) {
+		this.noMove = !this.noMove;
+		btn.classList.toggle('active', this.noMove);
+
+		// Find parent grid and update GridStack
+		const grid = this.closest('t-grid');
+		if (grid && grid._grid) {
+			grid._grid.movable(this, !this.noMove);
+		}
+
+		this.dispatchEvent(new CustomEvent('widget-lock-move', {
+			detail: { locked: this.noMove },
+			bubbles: true,
+			composed: true
+		}));
+	}
+
+	/**
+	 * Toggle resize lock state
+	 * @private
+	 */
+	_toggleResizeLock(btn) {
+		this.noResize = !this.noResize;
+		btn.classList.toggle('active', this.noResize);
+
+		// Update icon based on state
+		btn.innerHTML = this.noResize ? lockSimpleIcon : lockSimpleOpenIcon;
+
+		// Find parent grid and update GridStack
+		const grid = this.closest('t-grid');
+		if (grid && grid._grid) {
+			grid._grid.resizable(this, !this.noResize);
+		}
+
+		this.dispatchEvent(new CustomEvent('widget-lock-resize', {
+			detail: { locked: this.noResize },
+			bubbles: true,
+			composed: true
+		}));
+	}
+
+	/**
+	 * Remove widget from grid
+	 * @private
+	 */
+	_removeWidget() {
+		const grid = this.closest('t-grid');
+		if (grid) {
+			this.dispatchEvent(new CustomEvent('widget-remove', {
+				detail: { id: this.itemId },
+				bubbles: true,
+				composed: true
+			}));
+			grid.removeWidget(this);
+		}
 	}
 }
 

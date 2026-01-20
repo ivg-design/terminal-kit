@@ -56,15 +56,15 @@ class TCalendarLit extends LitElement {
 
 	static styles = css`
 		:host {
-			display: inline-flex;
+			display: block;
 			flex-direction: column;
 			font-family: var(--t-font-mono, 'JetBrains Mono', monospace);
 			background: var(--t-cal-bg, var(--terminal-gray-darkest, #1a1a1a));
 			border: 1px solid var(--t-cal-border, var(--terminal-gray-dark, #333));
 			color: var(--t-cal-color, var(--terminal-green, #00ff41));
 			padding: 8px;
-			width: auto;
-			max-width: 280px;
+			width: 100%;
+			max-width: 100%;
 			box-sizing: border-box;
 			overflow: hidden;
 			user-select: none;
@@ -72,6 +72,7 @@ class TCalendarLit extends LitElement {
 		}
 
 		:host([inline]) {
+			display: inline-flex;
 			width: auto;
 			max-width: 320px;
 		}

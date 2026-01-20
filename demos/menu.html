@@ -3,241 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TMenuLit Component Demo</title>
+    <title>TMenuLit - Component Demo</title>
+    <link rel="stylesheet" href="../css/demo-template.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
-
-        :root {
-            --terminal-green: #00ff41;
-            --terminal-green-dim: #00cc33;
-            --terminal-amber: #ffb000;
-            --terminal-red: #ff003c;
-            --terminal-cyan: #00ffff;
-            --terminal-gray: #666;
-            --terminal-gray-dark: #333;
-            --terminal-gray-darkest: #1a1a1a;
-            --terminal-bg: #0a0a0a;
-            --terminal-black: #0a0a0a;
-            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-        }
-
-        body {
-            background: var(--terminal-bg);
-            color: var(--terminal-green);
-            font-family: var(--font-mono);
-            padding: 40px;
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        h1, h2 {
-            color: var(--terminal-green);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        h1 {
-            border-bottom: 2px solid var(--terminal-green);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        h2 {
-            margin-top: 50px;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-
-        .description {
-            color: var(--terminal-gray);
-            margin-bottom: 40px;
-        }
-
-        .demo-section {
-            margin-bottom: 40px;
-        }
-
-        .demo-row {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .demo-item {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .demo-label {
-            font-size: 11px;
-            color: var(--terminal-gray);
-            text-transform: uppercase;
-            margin-top: 10px;
-        }
-
-        button {
+        /* Menu trigger buttons - default style */
+        t-menu [slot="trigger"] {
             background: transparent;
             border: 1px solid var(--terminal-green);
             color: var(--terminal-green);
             padding: 8px 16px;
-            font-family: var(--font-mono);
+            font-family: var(--font-mono, 'Courier New', monospace);
             font-size: 12px;
             cursor: pointer;
             text-transform: uppercase;
-            transition: all 0.2s;
+            letter-spacing: 0.05em;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
-
-        button:hover {
+        t-menu [slot="trigger"]:hover {
             background: var(--terminal-green);
-            color: var(--terminal-black);
+            color: var(--terminal-black, #0a0a0a);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+        t-menu [slot="trigger"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 255, 65, 0.4);
         }
 
-        .event-log {
-            background: #111;
-            border: 1px solid #333;
-            padding: 15px;
-            font-size: 12px;
-            max-height: 150px;
-            overflow-y: auto;
-            margin-top: 20px;
+        /* Button variants */
+        .btn-icon-only {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        .event-log p {
-            margin: 5px 0;
+        .btn-icon-only svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+            stroke: currentColor;
+        }
+        .btn-text-only {
+            border: none;
+            padding: 8px 12px;
+            text-transform: none;
+        }
+        .btn-text-only:hover {
+            background: rgba(0, 255, 65, 0.1);
+            box-shadow: none;
+        }
+        .btn-ghost {
+            border-color: var(--terminal-green-dim, #00cc33);
+            color: var(--terminal-green-dim, #00cc33);
+            background: transparent;
+        }
+        .btn-ghost:hover {
+            border-color: var(--terminal-green);
             color: var(--terminal-green);
         }
-
-        .event-log .timestamp {
-            color: var(--terminal-gray);
+        .btn-small {
+            padding: 4px 10px;
+            font-size: 11px;
+        }
+        .btn-medium {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+        .btn-large {
+            padding: 12px 24px;
+            font-size: 14px;
+        }
+        .btn-icon-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-icon-text svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
         }
 
         .context-area {
             background: var(--terminal-gray-darkest);
-            border: 1px dashed var(--terminal-gray);
+            border: 1px dashed var(--terminal-green-dim, #00cc33);
             padding: 40px;
             text-align: center;
-            margin-bottom: 20px;
+            color: var(--terminal-green-dim, #00cc33);
         }
     </style>
 </head>
 <body>
-    <h1>TMenuLit Component Demo</h1>
-    <p class="description">
-        Dropdown menu component with keyboard navigation, search, and various trigger types.
-    </p>
-
-    <!-- Basic Menu -->
-    <div class="demo-section">
-        <h2>Basic Menu</h2>
-        <div class="demo-row">
-            <t-menu id="basic-menu">
-                <button slot="trigger">Open Menu</button>
-            </t-menu>
-        </div>
-    </div>
-
-    <!-- Positions -->
-    <div class="demo-section">
-        <h2>Positions</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-menu id="menu-bottom-start" position="bottom-start">
-                    <button slot="trigger">Bottom Start</button>
-                </t-menu>
-                <span class="demo-label">Bottom Start</span>
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TMenuLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Menu
+                </div>
             </div>
-            <div class="demo-item">
-                <t-menu id="menu-bottom-end" position="bottom-end">
-                    <button slot="trigger">Bottom End</button>
-                </t-menu>
-                <span class="demo-label">Bottom End</span>
-            </div>
-            <div class="demo-item">
-                <t-menu id="menu-top-start" position="top-start">
-                    <button slot="trigger">Top Start</button>
-                </t-menu>
-                <span class="demo-label">Top Start</span>
-            </div>
-            <div class="demo-item">
-                <t-menu id="menu-top-end" position="top-end">
-                    <button slot="trigger">Top End</button>
-                </t-menu>
-                <span class="demo-label">Top End</span>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- With Shortcuts -->
-    <div class="demo-section">
-        <h2>With Shortcuts</h2>
-        <div class="demo-row">
-            <t-menu id="menu-shortcuts">
-                <button slot="trigger">File Menu</button>
-            </t-menu>
-        </div>
-    </div>
+    <!-- Main Content -->
+    <div class="demo-container">
+        <div class="component-section">
+            <h2 class="component-title">Menu Component</h2>
+            <p class="component-description">
+                Dropdown menu component with keyboard navigation, search, and various trigger types.
+            </p>
 
-    <!-- With Dividers and Groups -->
-    <div class="demo-section">
-        <h2>With Dividers and Groups</h2>
-        <div class="demo-row">
-            <t-menu id="menu-groups">
-                <button slot="trigger">Edit Menu</button>
-            </t-menu>
-        </div>
-    </div>
-
-    <!-- Searchable Menu -->
-    <div class="demo-section">
-        <h2>Searchable Menu</h2>
-        <div class="demo-row">
-            <t-menu id="menu-searchable" searchable>
-                <button slot="trigger">Select Command</button>
-            </t-menu>
-        </div>
-    </div>
-
-    <!-- Disabled Items -->
-    <div class="demo-section">
-        <h2>Disabled Items</h2>
-        <div class="demo-row">
-            <t-menu id="menu-disabled">
-                <button slot="trigger">Actions Menu</button>
-            </t-menu>
-        </div>
-    </div>
-
-    <!-- Context Menu -->
-    <div class="demo-section">
-        <h2>Context Menu (Right Click)</h2>
-        <t-menu id="menu-context" trigger="context">
-            <div slot="trigger" class="context-area">
-                Right-click in this area to open context menu
+            <h3>Basic Menu</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <t-menu id="basic-menu">
+                        <button slot="trigger">Open Menu</button>
+                    </t-menu>
+                </div>
             </div>
-        </t-menu>
+
+            <h3>Positions</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <t-menu id="menu-bottom-start" position="bottom-start">
+                        <button slot="trigger">Bottom Start</button>
+                    </t-menu>
+                    <span class="demo-label">Bottom Start</span>
+                </div>
+                <div class="demo-item">
+                    <t-menu id="menu-bottom-end" position="bottom-end">
+                        <button slot="trigger">Bottom End</button>
+                    </t-menu>
+                    <span class="demo-label">Bottom End</span>
+                </div>
+                <div class="demo-item">
+                    <t-menu id="menu-top-start" position="top-start">
+                        <button slot="trigger">Top Start</button>
+                    </t-menu>
+                    <span class="demo-label">Top Start</span>
+                </div>
+                <div class="demo-item">
+                    <t-menu id="menu-top-end" position="top-end">
+                        <button slot="trigger">Top End</button>
+                    </t-menu>
+                    <span class="demo-label">Top End</span>
+                </div>
+            </div>
+
+            <h3>With Shortcuts</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <t-menu id="menu-shortcuts">
+                        <button slot="trigger">File Menu</button>
+                    </t-menu>
+                </div>
+            </div>
+
+            <h3>With Dividers and Groups</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <t-menu id="menu-groups">
+                        <button slot="trigger">Edit Menu</button>
+                    </t-menu>
+                </div>
+            </div>
+
+            <h3>Searchable Menu</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">Type to filter options</span>
+                    <t-menu id="menu-searchable" searchable>
+                        <button slot="trigger">Select Command</button>
+                    </t-menu>
+                </div>
+            </div>
+
+            <h3>Disabled Items</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <t-menu id="menu-disabled">
+                        <button slot="trigger">Actions Menu</button>
+                    </t-menu>
+                </div>
+            </div>
+
+            <h3>Button Variants</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <t-menu id="menu-icon">
+                        <button slot="trigger" class="btn-icon-only">
+                            <svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                        </button>
+                    </t-menu>
+                    <span class="demo-label">Icon Only</span>
+                </div>
+                <div class="demo-item">
+                    <t-menu id="menu-text">
+                        <button slot="trigger" class="btn-text-only">Actions</button>
+                    </t-menu>
+                    <span class="demo-label">Text Only</span>
+                </div>
+                <div class="demo-item">
+                    <t-menu id="menu-ghost">
+                        <button slot="trigger" class="btn-ghost">Ghost</button>
+                    </t-menu>
+                    <span class="demo-label">Ghost</span>
+                </div>
+                <div class="demo-item">
+                    <t-menu id="menu-icontext">
+                        <button slot="trigger" class="btn-icon-text">
+                            <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+                            Menu
+                        </button>
+                    </t-menu>
+                    <span class="demo-label">Icon + Text</span>
+                </div>
+            </div>
+
+            <h3>Sizes</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <t-menu id="menu-small">
+                        <button slot="trigger" class="btn-small">Small</button>
+                    </t-menu>
+                    <span class="demo-label">Small</span>
+                </div>
+                <div class="demo-item">
+                    <t-menu id="menu-medium">
+                        <button slot="trigger" class="btn-medium">Medium</button>
+                    </t-menu>
+                    <span class="demo-label">Medium</span>
+                </div>
+                <div class="demo-item">
+                    <t-menu id="menu-large">
+                        <button slot="trigger" class="btn-large">Large</button>
+                    </t-menu>
+                    <span class="demo-label">Large</span>
+                </div>
+            </div>
+
+            <h3>Context Menu (Right Click)</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <t-menu id="menu-context" trigger="context">
+                        <div slot="trigger" class="context-area">
+                            Right-click in this area to open context menu
+                        </div>
+                    </t-menu>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;!-- Basic menu --&gt;
+&lt;t-menu&gt;
+  &lt;button slot="trigger"&gt;Open&lt;/button&gt;
+&lt;/t-menu&gt;
+
+&lt;!-- With position --&gt;
+&lt;t-menu position="bottom-end"&gt;...&lt;/t-menu&gt;
+
+&lt;!-- Searchable --&gt;
+&lt;t-menu searchable&gt;...&lt;/t-menu&gt;
+
+&lt;!-- Context menu --&gt;
+&lt;t-menu trigger="context"&gt;
+  &lt;div slot="trigger"&gt;Right-click area&lt;/div&gt;
+&lt;/t-menu&gt;
+
+&lt;!-- JavaScript API --&gt;
+&lt;script&gt;
+  const menu = document.querySelector('t-menu');
+  menu.items = [
+    { id: 'new', label: 'New', shortcut: 'Ctrl+N' },
+    { id: 'divider', divider: true },
+    { id: 'exit', label: 'Exit', disabled: true }
+  ];
+  menu.addEventListener('menu-select', (e) =&gt; {});
+&lt;/script&gt;</code>
+            </div>
+        </div>
     </div>
 
-    <!-- Event Log -->
-    <div class="demo-section">
-        <h2>Event Log</h2>
-        <div class="event-log" id="event-log">
-            <p><span class="timestamp">[LOG]</span> Select menu items to see events...</p>
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
+            </div>
         </div>
+        <div class="event-log" id="eventLog"></div>
     </div>
 
     <script type="module">
         import '../js/components/TMenuLit.js';
 
-        const eventLog = document.getElementById('event-log');
+        // Event log functionality
+        let eventCount = 0;
+        const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
 
-        function logEvent(menuId, event) {
+        function logEvent(component, event, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
             const timestamp = new Date().toLocaleTimeString();
-            const p = document.createElement('p');
-            p.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${menuId}: ${event.type} - ${JSON.stringify(event.detail)}`;
-            eventLog.insertBefore(p, eventLog.firstChild);
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
         }
+
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
 
         // Basic menu
         document.getElementById('basic-menu').items = [
@@ -315,12 +423,29 @@
             { id: 'inspect', label: 'Inspect Element' }
         ];
 
+        // Button variants
+        const variantItems = [
+            { id: 'action1', label: 'Action One' },
+            { id: 'action2', label: 'Action Two' },
+            { id: 'action3', label: 'Action Three' }
+        ];
+        document.getElementById('menu-icon').items = variantItems;
+        document.getElementById('menu-text').items = variantItems;
+        document.getElementById('menu-ghost').items = variantItems;
+        document.getElementById('menu-icontext').items = variantItems;
+        document.getElementById('menu-small').items = variantItems;
+        document.getElementById('menu-medium').items = variantItems;
+        document.getElementById('menu-large').items = variantItems;
+
         // Listen to all menu events
         document.querySelectorAll('t-menu').forEach(menu => {
-            menu.addEventListener('menu-select', (e) => logEvent(menu.id, e));
-            menu.addEventListener('menu-open', (e) => logEvent(menu.id, e));
-            menu.addEventListener('menu-close', (e) => logEvent(menu.id, e));
+            menu.addEventListener('menu-select', (e) => logEvent(menu.id, 'menu-select', e.detail));
+            menu.addEventListener('menu-open', (e) => logEvent(menu.id, 'menu-open'));
+            menu.addEventListener('menu-close', (e) => logEvent(menu.id, 'menu-close'));
         });
+
+        logEvent('System', 'Demo initialized');
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

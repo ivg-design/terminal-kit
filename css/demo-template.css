@@ -1,7 +1,10 @@
 /**
  * Demo Template Styles
  * Standard styles for all component demo pages
- * Based on sliders.html pattern
+ * Features:
+ * - Fixed header with title, breadcrumb, and controls
+ * - Floating collapsible event log at bottom
+ * - Responsive grid layouts
  */
 
 :root {
@@ -10,18 +13,22 @@
     --terminal-gray-dark: #242424;
     --terminal-gray-medium: #2a2a2a;
     --terminal-gray-light: #333333;
-    --terminal-green: #00ff41;
-    --terminal-green-dim: #00cc33;
-    --terminal-green-bright: #00ff66;
+    --tk-green: #00ff41;
+    --tk-green-dim: #00cc33;
+    --tk-green-bright: #00ff66;
+    --tk-green-dark: #009929;
+    --tk-green-glow: rgba(0, 255, 65, 0.2);
+    --terminal-green: var(--tk-green);
+    --terminal-green-dim: var(--tk-green-dim);
+    --terminal-green-bright: var(--tk-green-bright);
+    --terminal-green-dark: var(--tk-green-dark);
+    --terminal-green-glow: var(--tk-green-glow);
     --terminal-amber: #ffb000;
     --terminal-red: #ff003c;
     --terminal-cyan: #00ffff;
     --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-    --spacing-xs: 4px;
-    --spacing-sm: 8px;
-    --spacing-md: 12px;
-    --spacing-lg: 16px;
-    --spacing-xl: 24px;
+    --header-height: 80px;
+    --event-log-height: 180px;
 }
 
 * {
@@ -33,38 +40,64 @@
 html,
 body {
     width: 100%;
-    height: auto !important;
-    overflow: visible !important;
+    height: 100%;
+    overflow-x: hidden;
 }
 
 body {
     font-family: var(--font-mono);
     background: var(--terminal-black);
     color: var(--terminal-green);
-    padding: 40px 20px;
     line-height: 1.6;
+    padding-top: var(--header-height);
+    padding-bottom: 20px;
 }
 
-/* Container */
-.demo-container {
+/* ============================================
+   FIXED HEADER
+   ============================================ */
+.demo-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
+    background: var(--terminal-black);
+    border-bottom: 1px solid var(--terminal-gray-light);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.demo-header-content {
     max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
 }
 
-/* Page Title */
-h1 {
+.demo-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.demo-header h1 {
+    font-size: 18px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    border-bottom: 2px solid var(--terminal-green);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    font-size: 24px;
+    color: var(--terminal-green);
+    margin: 0;
+    border: none;
+    padding: 0;
 }
 
-/* Breadcrumb Navigation */
 .breadcrumb {
-    margin-bottom: 30px;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--terminal-green-dim);
 }
 
@@ -77,35 +110,76 @@ h1 {
     color: var(--terminal-green);
 }
 
-/* Component Section - main container for demo groups */
+.demo-header-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.header-btn {
+    background: transparent;
+    border: 1px solid var(--terminal-green-dim);
+    color: var(--terminal-green-dim);
+    padding: 6px 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.header-btn:hover {
+    border-color: var(--terminal-green);
+    color: var(--terminal-green);
+}
+
+.header-btn.active {
+    background: var(--terminal-green);
+    color: var(--terminal-black);
+    border-color: var(--terminal-green);
+}
+
+/* ============================================
+   MAIN CONTENT CONTAINER
+   ============================================ */
+.demo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-bottom: 60px; /* Space for floating event log toggle */
+}
+
+/* ============================================
+   COMPONENT SECTIONS
+   ============================================ */
 .component-section {
-    margin-bottom: 60px;
-    padding: 30px;
+    margin-bottom: 40px;
+    padding: 25px;
     background: var(--terminal-gray-darkest);
     border: 1px solid var(--terminal-gray-light);
 }
 
-/* Section Title */
 h2.component-title {
     color: var(--terminal-green);
-    font-size: 18px;
-    margin-bottom: 10px;
+    font-size: 16px;
+    margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
-/* Section Description */
 .component-description {
     color: var(--terminal-green-dim);
-    font-size: 13px;
-    margin-bottom: 30px;
+    font-size: 12px;
+    margin-bottom: 25px;
 }
 
-/* Sub-section headings */
 h3 {
     color: var(--terminal-green);
-    font-size: 14px;
-    margin: 30px 0 20px 0;
+    font-size: 13px;
+    margin: 25px 0 15px 0;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -114,65 +188,70 @@ h3:first-of-type {
     margin-top: 0;
 }
 
-/* Demo Grid - responsive grid for demo items */
+/* ============================================
+   DEMO GRID LAYOUTS
+   ============================================ */
 .demo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    margin-bottom: 30px;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
-/* Demo Grid - wider items for components needing more space */
 .demo-grid.wide {
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
 }
 
-/* Demo Grid - narrow items for smaller components */
 .demo-grid.narrow {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
-/* Demo Item - individual component wrapper */
+.demo-grid.single {
+    grid-template-columns: 1fr;
+}
+
+/* ============================================
+   DEMO ITEMS
+   ============================================ */
 .demo-item {
     background: var(--terminal-gray-dark);
     border: 1px solid var(--terminal-gray-light);
-    padding: 20px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 
-/* Demo Item - centered content variant */
 .demo-item.centered {
     align-items: center;
     justify-content: center;
 }
 
-/* Demo Label - describes each demo */
 .demo-label {
     display: block;
     color: var(--terminal-green-dim);
-    font-size: 11px;
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
-/* Selection Info - shows current state/value */
 .selection-info {
-    font-size: 11px;
+    font-size: 10px;
     color: var(--terminal-amber);
-    margin-top: 10px;
+    margin-top: 8px;
     word-break: break-all;
 }
 
-/* Controls Section - for interactive buttons/inputs */
+/* ============================================
+   CONTROLS
+   ============================================ */
 .controls {
     background: var(--terminal-gray-dark);
     border: 1px solid var(--terminal-gray-light);
-    padding: 15px;
-    margin-bottom: 20px;
+    padding: 12px;
+    margin-bottom: 15px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
     align-items: center;
 }
@@ -181,9 +260,9 @@ h3:first-of-type {
     background: transparent;
     border: 1px solid var(--terminal-green);
     color: var(--terminal-green);
-    padding: 6px 12px;
+    padding: 5px 10px;
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 10px;
     cursor: pointer;
     text-transform: uppercase;
     transition: all 0.2s;
@@ -199,25 +278,24 @@ h3:first-of-type {
     color: var(--terminal-black);
 }
 
-/* Control Grid - for multi-column control layouts */
 .controls-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
     width: 100%;
 }
 
 .control-group {
     background: var(--terminal-gray-medium);
-    padding: 10px;
+    padding: 8px;
     border: 1px solid var(--terminal-gray-light);
 }
 
 .control-group label {
     display: block;
-    font-size: 10px;
+    font-size: 9px;
     color: var(--terminal-green-dim);
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .control-group select,
@@ -227,75 +305,153 @@ h3:first-of-type {
     background: var(--terminal-gray-dark);
     color: var(--terminal-green);
     border: 1px solid var(--terminal-gray-light);
-    padding: 4px 6px;
+    padding: 3px 5px;
     font-family: var(--font-mono);
-    font-size: 11px;
-    margin-bottom: 5px;
+    font-size: 10px;
+    margin-bottom: 4px;
 }
 
 .control-group input[type="checkbox"],
 .control-group input[type="radio"] {
     width: auto;
-    margin-right: 5px;
+    margin-right: 4px;
 }
 
-/* Code Block - for usage examples */
+/* ============================================
+   CODE BLOCK
+   ============================================ */
 .code-block {
     background: var(--terminal-black);
     border: 1px solid var(--terminal-gray-light);
-    padding: 20px;
-    margin-top: 30px;
+    padding: 15px;
+    margin-top: 20px;
     overflow-x: auto;
 }
 
 .code-block code {
     color: var(--terminal-green-dim);
-    font-size: 12px;
-    line-height: 1.5;
+    font-size: 11px;
+    line-height: 1.4;
     white-space: pre;
     font-family: var(--font-mono);
 }
 
-/* Event Log - for displaying component events */
+/* ============================================
+   FLOATING EVENT LOG
+   ============================================ */
+.event-log-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    transition: transform 0.3s ease;
+}
+
+.event-log-container.collapsed {
+    transform: translateY(calc(100% - 36px));
+}
+
+.event-log-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--terminal-gray-darkest);
+    border: 1px solid var(--terminal-gray-light);
+    border-bottom: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.event-log-toggle:hover {
+    background: var(--terminal-gray-dark);
+}
+
+.event-log-toggle h3 {
+    color: var(--terminal-green);
+    font-size: 11px;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.event-log-toggle .toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+.event-log-container.collapsed .toggle-icon {
+    transform: rotate(180deg);
+}
+
+.event-log-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.event-log-count {
+    font-size: 10px;
+    color: var(--terminal-amber);
+    background: rgba(255, 176, 0, 0.1);
+    padding: 2px 8px;
+    border-radius: 2px;
+}
+
+.event-log-clear {
+    background: transparent;
+    border: 1px solid var(--terminal-gray-light);
+    color: var(--terminal-green-dim);
+    padding: 3px 8px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.event-log-clear:hover {
+    border-color: var(--terminal-red);
+    color: var(--terminal-red);
+}
+
 .event-log {
     background: var(--terminal-black);
     border: 1px solid var(--terminal-gray-light);
-    padding: 20px;
-    margin-top: 30px;
-    max-height: 200px;
+    padding: 10px 15px;
+    height: var(--event-log-height);
     overflow-y: auto;
 }
 
-.event-log h3 {
-    color: var(--terminal-green);
-    font-size: 14px;
-    margin: 0 0 15px 0;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
 .event-entry {
-    font-size: 11px;
+    font-size: 10px;
     color: var(--terminal-green-dim);
-    margin: 5px 0;
-    padding: 5px;
+    margin: 4px 0;
+    padding: 4px 8px;
     background: var(--terminal-gray-darkest);
     border-left: 2px solid var(--terminal-green);
     font-family: var(--font-mono);
 }
 
-/* Separator - horizontal divider */
-.demo-separator {
-    border: none;
-    border-top: 1px solid var(--terminal-gray-light);
-    margin: 30px 0;
+.event-entry.error {
+    border-left-color: var(--terminal-red);
+    color: var(--terminal-red);
 }
 
-/* Status Indicators */
+.event-entry.warning {
+    border-left-color: var(--terminal-amber);
+    color: var(--terminal-amber);
+}
+
+/* ============================================
+   STATUS BADGES
+   ============================================ */
 .status-badge {
     display: inline-block;
-    padding: 2px 8px;
-    font-size: 10px;
+    padding: 2px 6px;
+    font-size: 9px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -324,17 +480,44 @@ h3:first-of-type {
     border: 1px solid var(--terminal-cyan);
 }
 
-/* Responsive adjustments */
+/* ============================================
+   SEPARATOR
+   ============================================ */
+.demo-separator {
+    border: none;
+    border-top: 1px solid var(--terminal-gray-light);
+    margin: 25px 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
 @media (max-width: 768px) {
-    body {
-        padding: 20px 10px;
+    :root {
+        --header-height: 70px;
+    }
+
+    .demo-header h1 {
+        font-size: 14px;
+    }
+
+    .demo-header-controls {
+        display: none;
+    }
+
+    .demo-container {
+        padding: 15px;
     }
 
     .component-section {
-        padding: 20px;
+        padding: 15px;
     }
 
     .demo-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .demo-grid.wide {
         grid-template-columns: 1fr;
     }
 

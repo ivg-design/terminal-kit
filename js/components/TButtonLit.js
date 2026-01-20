@@ -29,10 +29,11 @@ export class TButton extends LitElement {
   static styles = css`
     :host {
       --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
-      --terminal-green: #00ff41;
-      --terminal-green-bright: #33ff66;
-      --terminal-green-dim: #00cc33;
-      --terminal-green-dark: #008820;
+      --terminal-green: var(--tk-green, #00ff41);
+      --terminal-green-bright: var(--tk-green-bright, #33ff66);
+      --terminal-green-dim: var(--tk-green-dim, #00cc33);
+      --terminal-green-dark: var(--tk-green-dark, #008820);
+      --terminal-green-glow: var(--tk-green-glow, rgba(0, 255, 65, 0.5));
       --terminal-gray-dark: #242424;
       --terminal-gray-light: #333333;
       --terminal-gray: #808080;

@@ -3,436 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAvatarLit Component Demo</title>
+    <title>TAvatarLit - Component Demo</title>
+    <link rel="stylesheet" href="../css/demo-template.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
-
-        :root {
-            --terminal-green: #00ff41;
-            --terminal-amber: #ffb000;
-            --terminal-red: #ff003c;
-            --terminal-cyan: #00ffff;
-            --terminal-gray: #666;
-            --terminal-bg: #0a0a0a;
-            --terminal-black: #0a0a0a;
-            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-        }
-
-        body {
-            background: var(--terminal-bg);
-            color: var(--terminal-green);
-            font-family: var(--font-mono);
-            padding: 40px;
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        h1, h2 {
-            color: var(--terminal-green);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        h1 {
-            border-bottom: 2px solid var(--terminal-green);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        h2 {
-            margin-top: 50px;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-
-        .description {
-            color: var(--terminal-gray);
-            margin-bottom: 40px;
-        }
-
-        .demo-section {
-            margin-bottom: 40px;
-        }
-
-        .demo-row {
+        .avatar-group {
             display: flex;
-            gap: 30px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
         }
-
-        .demo-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
+        .avatar-group t-avt {
+            margin-left: -12px;
         }
-
-        .demo-label {
-            font-size: 11px;
-            color: var(--terminal-gray);
-            text-transform: uppercase;
+        .avatar-group t-avt:first-child {
+            margin-left: 0;
         }
-
-        .controls {
-            background: rgba(0, 255, 65, 0.05);
-            border: 1px solid var(--terminal-green);
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .control-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        button {
-            background: transparent;
-            border: 1px solid var(--terminal-green);
-            color: var(--terminal-green);
-            padding: 8px 16px;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s;
-        }
-
-        button:hover {
-            background: var(--terminal-green);
-            color: var(--terminal-black);
-        }
-
-        .event-log {
-            background: #111;
-            border: 1px solid #333;
-            padding: 15px;
-            font-size: 12px;
-            max-height: 150px;
-            overflow-y: auto;
-            margin-top: 20px;
-        }
-
-        .event-log p {
-            margin: 5px 0;
-            color: var(--terminal-green);
-        }
-
-        .event-log .timestamp {
-            color: var(--terminal-gray);
-        }
-
         .user-card {
             display: flex;
             align-items: center;
             gap: 15px;
-            background: #111;
-            border: 1px solid #333;
+            background: var(--terminal-gray-darkest);
+            border: 1px solid var(--terminal-gray-light);
             padding: 15px;
             max-width: 300px;
         }
-
         .user-card-info {
             flex: 1;
         }
-
         .user-card-name {
             color: var(--terminal-green);
             font-weight: bold;
         }
-
         .user-card-role {
-            color: var(--terminal-gray);
+            color: var(--terminal-green-dim);
             font-size: 12px;
-        }
-
-        .avatar-group {
-            display: flex;
-        }
-
-        .avatar-group t-avt {
-            margin-left: -12px;
-        }
-
-        .avatar-group t-avt:first-child {
-            margin-left: 0;
         }
     </style>
 </head>
 <body>
-    <h1>TAvatarLit Component Demo</h1>
-    <p class="description">
-        User/entity avatar display component with images, initials, status indicators, and various shapes.
-    </p>
-
-    <!-- Sizes -->
-    <div class="demo-section">
-        <h2>Sizes</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-avt initials="XS" size="xs"></t-avt>
-                <span class="demo-label">XS (24px)</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="SM" size="sm"></t-avt>
-                <span class="demo-label">SM (32px)</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="MD" size="md"></t-avt>
-                <span class="demo-label">MD (40px)</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="LG" size="lg"></t-avt>
-                <span class="demo-label">LG (48px)</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="XL" size="xl"></t-avt>
-                <span class="demo-label">XL (64px)</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="2X" size="2xl"></t-avt>
-                <span class="demo-label">2XL (80px)</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Shapes -->
-    <div class="demo-section">
-        <h2>Shapes</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-avt initials="CI" shape="circle" size="lg"></t-avt>
-                <span class="demo-label">Circle</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="RD" shape="rounded" size="lg"></t-avt>
-                <span class="demo-label">Rounded</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="SQ" shape="square" size="lg"></t-avt>
-                <span class="demo-label">Square</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- With Images -->
-    <div class="demo-section">
-        <h2>With Images</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-avt src="https://i.pravatar.cc/80?img=1" alt="User 1" size="lg"></t-avt>
-                <span class="demo-label">Image</span>
-            </div>
-            <div class="demo-item">
-                <t-avt src="https://i.pravatar.cc/80?img=2" alt="User 2" size="lg" shape="rounded"></t-avt>
-                <span class="demo-label">Rounded</span>
-            </div>
-            <div class="demo-item">
-                <t-avt src="https://i.pravatar.cc/80?img=3" alt="User 3" size="lg" shape="square"></t-avt>
-                <span class="demo-label">Square</span>
-            </div>
-            <div class="demo-item">
-                <t-avt src="https://i.pravatar.cc/80?img=4" alt="User 4" size="lg" border></t-avt>
-                <span class="demo-label">With Border</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Initials -->
-    <div class="demo-section">
-        <h2>Initials Fallback</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-avt initials="JD" size="lg"></t-avt>
-                <span class="demo-label">John Doe</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="AS" size="lg"></t-avt>
-                <span class="demo-label">Alice Smith</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="BC" size="lg"></t-avt>
-                <span class="demo-label">Bob Chen</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="ABCD" size="lg"></t-avt>
-                <span class="demo-label">Truncated to 2</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Status Indicators -->
-    <div class="demo-section">
-        <h2>Status Indicators</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-avt initials="ON" status="online" size="lg"></t-avt>
-                <span class="demo-label">Online</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="OF" status="offline" size="lg"></t-avt>
-                <span class="demo-label">Offline</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="BU" status="busy" size="lg"></t-avt>
-                <span class="demo-label">Busy</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="AW" status="away" size="lg"></t-avt>
-                <span class="demo-label">Away</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Status Positions -->
-    <div class="demo-section">
-        <h2>Status Positions</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-avt initials="TR" status="online" status-position="top-right" size="lg"></t-avt>
-                <span class="demo-label">Top Right</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="TL" status="online" status-position="top-left" size="lg"></t-avt>
-                <span class="demo-label">Top Left</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="BR" status="online" status-position="bottom-right" size="lg"></t-avt>
-                <span class="demo-label">Bottom Right</span>
-            </div>
-            <div class="demo-item">
-                <t-avt initials="BL" status="online" status-position="bottom-left" size="lg"></t-avt>
-                <span class="demo-label">Bottom Left</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Fallback Icon -->
-    <div class="demo-section">
-        <h2>Fallback Icon</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-avt size="lg"></t-avt>
-                <span class="demo-label">No Image/Initials</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Clickable Avatars -->
-    <div class="demo-section">
-        <h2>Clickable Avatars</h2>
-        <div class="demo-row">
-            <t-avt id="clickable-1" initials="C1" clickable size="lg"></t-avt>
-            <t-avt id="clickable-2" src="https://i.pravatar.cc/80?img=5" clickable size="lg"></t-avt>
-            <t-avt id="clickable-3" initials="C3" clickable size="lg" status="online"></t-avt>
-        </div>
-        <div class="event-log" id="click-log">
-            <p><span class="timestamp">[LOG]</span> Click on avatars...</p>
-        </div>
-    </div>
-
-    <!-- Avatar Group -->
-    <div class="demo-section">
-        <h2>Avatar Group</h2>
-        <div class="avatar-group">
-            <t-avt src="https://i.pravatar.cc/80?img=1" border size="md"></t-avt>
-            <t-avt src="https://i.pravatar.cc/80?img=2" border size="md"></t-avt>
-            <t-avt src="https://i.pravatar.cc/80?img=3" border size="md"></t-avt>
-            <t-avt initials="+5" border size="md"></t-avt>
-        </div>
-    </div>
-
-    <!-- User Card Example -->
-    <div class="demo-section">
-        <h2>User Card Example</h2>
-        <div class="demo-row">
-            <div class="user-card">
-                <t-avt src="https://i.pravatar.cc/80?img=8" status="online" size="lg"></t-avt>
-                <div class="user-card-info">
-                    <div class="user-card-name">Sarah Connor</div>
-                    <div class="user-card-role">System Administrator</div>
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TAvatarLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Avatar
                 </div>
             </div>
-            <div class="user-card">
-                <t-avt initials="JM" status="busy" size="lg"></t-avt>
-                <div class="user-card-info">
-                    <div class="user-card-name">John Matrix</div>
-                    <div class="user-card-role">DevOps Engineer</div>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="demo-container">
+        <div class="component-section">
+            <h2 class="component-title">Avatar Component</h2>
+            <p class="component-description">
+                User/entity avatar display with images, initials, status indicators, and various shapes.
+            </p>
+
+            <h3>Sizes</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-avt initials="XS" size="xs"></t-avt>
+                    <span class="demo-label">XS (24px)</span>
                 </div>
+                <div class="demo-item centered">
+                    <t-avt initials="SM" size="sm"></t-avt>
+                    <span class="demo-label">SM (32px)</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="MD" size="md"></t-avt>
+                    <span class="demo-label">MD (40px)</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="LG" size="lg"></t-avt>
+                    <span class="demo-label">LG (48px)</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="XL" size="xl"></t-avt>
+                    <span class="demo-label">XL (64px)</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="2X" size="2xl"></t-avt>
+                    <span class="demo-label">2XL (80px)</span>
+                </div>
+            </div>
+
+            <h3>Shapes</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-avt initials="CI" shape="circle" size="lg"></t-avt>
+                    <span class="demo-label">Circle</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="RD" shape="rounded" size="lg"></t-avt>
+                    <span class="demo-label">Rounded</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="SQ" shape="square" size="lg"></t-avt>
+                    <span class="demo-label">Square</span>
+                </div>
+            </div>
+
+            <h3>With Images</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-avt src="https://i.pravatar.cc/80?img=1" alt="User 1" size="lg"></t-avt>
+                    <span class="demo-label">Image</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt src="https://i.pravatar.cc/80?img=2" alt="User 2" size="lg" shape="rounded"></t-avt>
+                    <span class="demo-label">Rounded</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt src="https://i.pravatar.cc/80?img=3" alt="User 3" size="lg" shape="square"></t-avt>
+                    <span class="demo-label">Square</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt src="https://i.pravatar.cc/80?img=4" alt="User 4" size="lg" border></t-avt>
+                    <span class="demo-label">With Border</span>
+                </div>
+            </div>
+
+            <h3>Initials Fallback</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-avt initials="JD" size="lg"></t-avt>
+                    <span class="demo-label">John Doe</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="AS" size="lg"></t-avt>
+                    <span class="demo-label">Alice Smith</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="BC" size="lg"></t-avt>
+                    <span class="demo-label">Bob Chen</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="ABCD" size="lg"></t-avt>
+                    <span class="demo-label">Truncated to 2</span>
+                </div>
+            </div>
+
+            <h3>Status Indicators</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-avt initials="ON" status="online" size="lg"></t-avt>
+                    <span class="demo-label">Online</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="OF" status="offline" size="lg"></t-avt>
+                    <span class="demo-label">Offline</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="BU" status="busy" size="lg"></t-avt>
+                    <span class="demo-label">Busy</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="AW" status="away" size="lg"></t-avt>
+                    <span class="demo-label">Away</span>
+                </div>
+            </div>
+
+            <h3>Status Positions</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-avt initials="TR" status="online" status-position="top-right" size="lg"></t-avt>
+                    <span class="demo-label">Top Right</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="TL" status="online" status-position="top-left" size="lg"></t-avt>
+                    <span class="demo-label">Top Left</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="BR" status="online" status-position="bottom-right" size="lg"></t-avt>
+                    <span class="demo-label">Bottom Right</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt initials="BL" status="online" status-position="bottom-left" size="lg"></t-avt>
+                    <span class="demo-label">Bottom Left</span>
+                </div>
+            </div>
+
+            <h3>Clickable Avatars</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-avt id="clickable-1" initials="C1" clickable size="lg"></t-avt>
+                    <span class="demo-label">Click Me</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt id="clickable-2" src="https://i.pravatar.cc/80?img=5" clickable size="lg"></t-avt>
+                    <span class="demo-label">Click Me</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-avt id="clickable-3" initials="C3" clickable size="lg" status="online"></t-avt>
+                    <span class="demo-label">With Status</span>
+                </div>
+            </div>
+
+            <h3>Avatar Group</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Overlapping avatars</span>
+                    <div class="avatar-group">
+                        <t-avt src="https://i.pravatar.cc/80?img=1" border size="md"></t-avt>
+                        <t-avt src="https://i.pravatar.cc/80?img=2" border size="md"></t-avt>
+                        <t-avt src="https://i.pravatar.cc/80?img=3" border size="md"></t-avt>
+                        <t-avt initials="+5" border size="md"></t-avt>
+                    </div>
+                </div>
+            </div>
+
+            <h3>User Card Example</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <div class="user-card">
+                        <t-avt src="https://i.pravatar.cc/80?img=8" status="online" size="lg"></t-avt>
+                        <div class="user-card-info">
+                            <div class="user-card-name">Sarah Connor</div>
+                            <div class="user-card-role">System Administrator</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-item">
+                    <div class="user-card">
+                        <t-avt initials="JM" status="busy" size="lg"></t-avt>
+                        <div class="user-card-info">
+                            <div class="user-card-name">John Matrix</div>
+                            <div class="user-card-role">DevOps Engineer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Interactive Demo</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">Control with buttons</span>
+                    <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                        <t-avt id="interactive-avatar" initials="IA" size="xl" clickable></t-avt>
+                        <div class="controls">
+                            <button onclick="setOnline()">Online</button>
+                            <button onclick="setOffline()">Offline</button>
+                            <button onclick="setBusy()">Busy</button>
+                            <button onclick="setAway()">Away</button>
+                            <button onclick="clearStatus()">Clear</button>
+                            <button onclick="toggleShape()">Shape</button>
+                            <button onclick="toggleBorder()">Border</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;!-- Basic avatar --&gt;
+&lt;t-avt initials="JD" size="lg"&gt;&lt;/t-avt&gt;
+
+&lt;!-- With image --&gt;
+&lt;t-avt src="user.jpg" alt="User"&gt;&lt;/t-avt&gt;
+
+&lt;!-- With status --&gt;
+&lt;t-avt initials="ON" status="online"&gt;&lt;/t-avt&gt;
+
+&lt;!-- Shapes --&gt;
+&lt;t-avt initials="SQ" shape="square"&gt;&lt;/t-avt&gt;
+&lt;t-avt initials="RD" shape="rounded"&gt;&lt;/t-avt&gt;
+
+&lt;!-- Clickable --&gt;
+&lt;t-avt initials="CL" clickable&gt;&lt;/t-avt&gt;
+
+&lt;!-- JavaScript API --&gt;
+&lt;script&gt;
+  const avatar = document.querySelector('t-avt');
+  avatar.setStatus('online');
+  avatar.addEventListener('avatar-click', (e) =&gt; {});
+&lt;/script&gt;</code>
             </div>
         </div>
     </div>
 
-    <!-- Interactive Demo -->
-    <div class="demo-section">
-        <h2>Interactive Demo</h2>
-        <div class="controls">
-            <div class="control-row">
-                <t-avt id="interactive-avatar" initials="IA" size="xl" clickable></t-avt>
-            </div>
-            <div class="control-row">
-                <button onclick="setOnline()">Set Online</button>
-                <button onclick="setOffline()">Set Offline</button>
-                <button onclick="setBusy()">Set Busy</button>
-                <button onclick="setAway()">Set Away</button>
-                <button onclick="clearStatus()">Clear Status</button>
-            </div>
-            <div class="control-row">
-                <button onclick="toggleShape()">Toggle Shape</button>
-                <button onclick="toggleBorder()">Toggle Border</button>
-                <button onclick="cycleSize()">Cycle Size</button>
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
             </div>
         </div>
+        <div class="event-log" id="eventLog"></div>
     </div>
 
     <script type="module">
         import '../js/components/TAvatarLit.js';
 
-        const clickLog = document.getElementById('click-log');
-        const interactiveAvatar = document.getElementById('interactive-avatar');
+        // Event log functionality
+        let eventCount = 0;
+        const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
 
-        const shapes = ['circle', 'rounded', 'square'];
-        const sizes = ['sm', 'md', 'lg', 'xl', '2xl'];
-        let shapeIndex = 0;
-        let sizeIndex = 3; // xl
-
-        // Log click events
-        function logClick(avatar) {
+        function logEvent(component, event, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
             const timestamp = new Date().toLocaleTimeString();
-            const p = document.createElement('p');
-            p.innerHTML = `<span class="timestamp">[${timestamp}]</span> avatar-click: initials=${avatar.initials || 'N/A'}`;
-            clickLog.insertBefore(p, clickLog.firstChild);
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
         }
+
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
+
+        const interactiveAvatar = document.getElementById('interactive-avatar');
+        const shapes = ['circle', 'rounded', 'square'];
+        let shapeIndex = 0;
 
         // Add click listeners to clickable avatars
         document.querySelectorAll('t-avt[clickable]').forEach(avatar => {
-            avatar.addEventListener('avatar-click', () => logClick(avatar));
+            avatar.addEventListener('avatar-click', () => {
+                logEvent(avatar.id || 'avatar', 'avatar-click', { initials: avatar.initials });
+            });
         });
 
         // Interactive controls
-        window.setOnline = () => interactiveAvatar.setStatus('online');
-        window.setOffline = () => interactiveAvatar.setStatus('offline');
-        window.setBusy = () => interactiveAvatar.setStatus('busy');
-        window.setAway = () => interactiveAvatar.setStatus('away');
-        window.clearStatus = () => interactiveAvatar.setStatus(null);
+        window.setOnline = () => { interactiveAvatar.setStatus('online'); logEvent('interactive', 'setStatus', { status: 'online' }); };
+        window.setOffline = () => { interactiveAvatar.setStatus('offline'); logEvent('interactive', 'setStatus', { status: 'offline' }); };
+        window.setBusy = () => { interactiveAvatar.setStatus('busy'); logEvent('interactive', 'setStatus', { status: 'busy' }); };
+        window.setAway = () => { interactiveAvatar.setStatus('away'); logEvent('interactive', 'setStatus', { status: 'away' }); };
+        window.clearStatus = () => { interactiveAvatar.setStatus(null); logEvent('interactive', 'setStatus', { status: null }); };
 
         window.toggleShape = () => {
             shapeIndex = (shapeIndex + 1) % shapes.length;
             interactiveAvatar.shape = shapes[shapeIndex];
+            logEvent('interactive', 'shape', { shape: shapes[shapeIndex] });
         };
 
         window.toggleBorder = () => {
             interactiveAvatar.border = !interactiveAvatar.border;
+            logEvent('interactive', 'border', { border: interactiveAvatar.border });
         };
 
-        window.cycleSize = () => {
-            sizeIndex = (sizeIndex + 1) % sizes.length;
-            interactiveAvatar.size = sizes[sizeIndex];
-        };
+        logEvent('System', 'Demo initialized');
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

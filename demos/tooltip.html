@@ -3,95 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TTooltipLit Component Demo</title>
+    <title>TTooltipLit - Component Demo</title>
+    <link rel="stylesheet" href="../css/demo-template.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
-
-        :root {
-            --terminal-green: #00ff41;
-            --terminal-amber: #ffb000;
-            --terminal-red: #ff003c;
-            --terminal-cyan: #00ffff;
-            --terminal-gray: #666;
-            --terminal-gray-darkest: #1a1a1a;
-            --terminal-bg: #0a0a0a;
-            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-        }
-
-        body {
-            background: var(--terminal-bg);
-            color: var(--terminal-green);
-            font-family: var(--font-mono);
-            padding: 40px;
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        h1, h2 {
-            color: var(--terminal-green);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        h1 {
-            border-bottom: 2px solid var(--terminal-green);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        h2 {
-            margin-top: 50px;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-
-        .description {
-            color: var(--terminal-gray);
-            margin-bottom: 40px;
-        }
-
-        .demo-section {
-            margin-bottom: 40px;
-        }
-
-        .demo-row {
-            display: flex;
-            gap: 40px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .demo-item {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .demo-label {
-            font-size: 11px;
-            color: var(--terminal-gray);
-            text-transform: uppercase;
-        }
-
-        button {
-            background: transparent;
-            border: 1px solid var(--terminal-green);
-            color: var(--terminal-green);
-            padding: 10px 20px;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s;
-        }
-
-        button:hover {
-            background: var(--terminal-green);
-            color: var(--terminal-bg);
-        }
-
         .icon-button {
             width: 40px;
             height: 40px;
@@ -100,201 +15,347 @@
             align-items: center;
             justify-content: center;
             border-radius: 4px;
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            cursor: pointer;
         }
-
+        .icon-button:hover {
+            background: var(--terminal-green);
+            color: var(--terminal-black, #0a0a0a);
+        }
         .icon-button svg {
             width: 20px;
             height: 20px;
             fill: currentColor;
         }
+        /* Style tooltip trigger buttons */
+        button.controls {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 8px 16px;
+            font-family: var(--font-mono, 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        button.controls:hover {
+            background: var(--terminal-green);
+            color: var(--terminal-black, #0a0a0a);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+        button.controls:active {
+            transform: scale(0.98);
+        }
+        /* Controls container for grouped buttons */
+        .controls:not(button) {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .controls:not(button) button {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 8px 16px;
+            font-family: var(--font-mono, 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .controls:not(button) button:hover {
+            background: var(--terminal-green);
+            color: var(--terminal-black, #0a0a0a);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
     </style>
 </head>
 <body>
-    <h1>TTooltipLit Component Demo</h1>
-    <p class="description">
-        Hover/focus information tooltip component with positioning, triggers, and variants.
-    </p>
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TTooltipLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Tooltip
+                </div>
+            </div>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
+            </div>
+        </div>
+    </header>
 
-    <!-- Positions -->
-    <div class="demo-section">
-        <h2>Positions</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-tip content="Tooltip on top" position="top">
-                    <button>Top</button>
-                </t-tip>
+    <!-- Main Content -->
+    <div class="demo-container">
+        <div class="component-section">
+            <h2 class="component-title">Tooltip Component</h2>
+            <p class="component-description">
+                Hover/focus information tooltip with positioning, triggers, and variants.
+            </p>
+
+            <h3>Positions</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-tip content="Tooltip on top" position="top">
+                        <button class="controls">Top</button>
+                    </t-tip>
+                    <span class="demo-label">Top</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-tip content="Tooltip on bottom" position="bottom">
+                        <button class="controls">Bottom</button>
+                    </t-tip>
+                    <span class="demo-label">Bottom</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-tip content="Tooltip on left" position="left">
+                        <button class="controls">Left</button>
+                    </t-tip>
+                    <span class="demo-label">Left</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-tip content="Tooltip on right" position="right">
+                        <button class="controls">Right</button>
+                    </t-tip>
+                    <span class="demo-label">Right</span>
+                </div>
             </div>
-            <div class="demo-item">
-                <t-tip content="Tooltip on bottom" position="bottom">
-                    <button>Bottom</button>
-                </t-tip>
+
+            <h3>Triggers</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-tip content="Hover triggered (default)" trigger="hover">
+                        <button class="controls">Hover Me</button>
+                    </t-tip>
+                    <span class="demo-label">Hover</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-tip content="Click triggered" trigger="click">
+                        <button class="controls">Click Me</button>
+                    </t-tip>
+                    <span class="demo-label">Click</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-tip content="Focus triggered" trigger="focus">
+                        <button class="controls">Focus Me</button>
+                    </t-tip>
+                    <span class="demo-label">Focus</span>
+                </div>
             </div>
-            <div class="demo-item">
-                <t-tip content="Tooltip on left" position="left">
-                    <button>Left</button>
-                </t-tip>
+
+            <h3>Variants</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-tip content="Default tooltip" variant="default">
+                        <button class="controls">Default</button>
+                    </t-tip>
+                    <span class="demo-label">Default</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-tip content="Warning: Check your input" variant="warning">
+                        <button class="controls">Warning</button>
+                    </t-tip>
+                    <span class="demo-label">Warning</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-tip content="Error: Something went wrong" variant="error">
+                        <button class="controls">Error</button>
+                    </t-tip>
+                    <span class="demo-label">Error</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-tip content="Info: Additional information" variant="info">
+                        <button class="controls">Info</button>
+                    </t-tip>
+                    <span class="demo-label">Info</span>
+                </div>
             </div>
-            <div class="demo-item">
-                <t-tip content="Tooltip on right" position="right">
-                    <button>Right</button>
-                </t-tip>
+
+            <h3>Arrow Control</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-tip content="With arrow (default)" arrow>
+                        <button class="controls">With Arrow</button>
+                    </t-tip>
+                    <span class="demo-label">With Arrow</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-tip content="No arrow" no-arrow>
+                        <button class="controls">No Arrow</button>
+                    </t-tip>
+                    <span class="demo-label">No Arrow</span>
+                </div>
+            </div>
+
+            <h3>Custom Delays</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-tip content="Shows immediately" delay="0">
+                        <button class="controls">No Delay</button>
+                    </t-tip>
+                    <span class="demo-label">0ms</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-tip content="Shows after 500ms" delay="500">
+                        <button class="controls">500ms Delay</button>
+                    </t-tip>
+                    <span class="demo-label">500ms</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-tip content="Shows after 1000ms" delay="1000">
+                        <button class="controls">1s Delay</button>
+                    </t-tip>
+                    <span class="demo-label">1000ms</span>
+                </div>
+            </div>
+
+            <h3>Long Content (Multiline)</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-tip content="This is a much longer tooltip that will automatically wrap to multiple lines because it exceeds the maximum width setting." max-width="500px">
+                        <button class="controls">Long Text</button>
+                    </t-tip>
+                    <span class="demo-label">Max Width</span>
+                </div>
+            </div>
+
+            <h3>HTML Content</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-tip content="<strong>Bold</strong> and <em>italic</em> text" html>
+                        <button class="controls">HTML Content</button>
+                    </t-tip>
+                    <span class="demo-label">Rich Text</span>
+                </div>
+            </div>
+
+            <h3>Disabled State</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-tip content="This won't show" disabled>
+                        <button class="controls">Disabled Tooltip</button>
+                    </t-tip>
+                    <span class="demo-label">Disabled</span>
+                </div>
+            </div>
+
+            <h3>Programmatic Control</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">Manual trigger control</span>
+                    <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                        <t-tip id="controlled" content="Programmatically controlled tooltip" trigger="manual">
+                            <button class="controls" id="target">Target Element</button>
+                        </t-tip>
+                        <div class="controls">
+                            <button onclick="document.getElementById('controlled').show()">Show</button>
+                            <button onclick="document.getElementById('controlled').hide()">Hide</button>
+                            <button onclick="document.getElementById('controlled').toggle()">Toggle</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;!-- Basic tooltip --&gt;
+&lt;t-tip content="Tooltip text"&gt;
+  &lt;button&gt;Hover me&lt;/button&gt;
+&lt;/t-tip&gt;
+
+&lt;!-- Position --&gt;
+&lt;t-tip content="Top" position="top"&gt;...&lt;/t-tip&gt;
+&lt;t-tip content="Bottom" position="bottom"&gt;...&lt;/t-tip&gt;
+
+&lt;!-- Triggers --&gt;
+&lt;t-tip content="Click to show" trigger="click"&gt;...&lt;/t-tip&gt;
+
+&lt;!-- Variants --&gt;
+&lt;t-tip content="Warning!" variant="warning"&gt;...&lt;/t-tip&gt;
+
+&lt;!-- Custom delay --&gt;
+&lt;t-tip content="Delayed" delay="500"&gt;...&lt;/t-tip&gt;
+
+&lt;!-- HTML content --&gt;
+&lt;t-tip content="&lt;b&gt;Bold&lt;/b&gt;" html&gt;...&lt;/t-tip&gt;
+
+&lt;!-- Programmatic control --&gt;
+&lt;t-tip id="tip" trigger="manual"&gt;...&lt;/t-tip&gt;
+&lt;script&gt;
+  document.getElementById('tip').show();
+  document.getElementById('tip').hide();
+  document.getElementById('tip').toggle();
+&lt;/script&gt;</code>
             </div>
         </div>
     </div>
 
-    <!-- Triggers -->
-    <div class="demo-section">
-        <h2>Triggers</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-tip content="Hover triggered (default)" trigger="hover">
-                    <button>Hover Me</button>
-                </t-tip>
-                <span class="demo-label">Hover</span>
-            </div>
-            <div class="demo-item">
-                <t-tip content="Click triggered" trigger="click">
-                    <button>Click Me</button>
-                </t-tip>
-                <span class="demo-label">Click</span>
-            </div>
-            <div class="demo-item">
-                <t-tip content="Focus triggered" trigger="focus">
-                    <button>Focus Me</button>
-                </t-tip>
-                <span class="demo-label">Focus</span>
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
             </div>
         </div>
-    </div>
-
-    <!-- Variants -->
-    <div class="demo-section">
-        <h2>Variants</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-tip content="Default tooltip" variant="default">
-                    <button>Default</button>
-                </t-tip>
-            </div>
-            <div class="demo-item">
-                <t-tip content="Warning: Check your input" variant="warning">
-                    <button>Warning</button>
-                </t-tip>
-            </div>
-            <div class="demo-item">
-                <t-tip content="Error: Something went wrong" variant="error">
-                    <button>Error</button>
-                </t-tip>
-            </div>
-            <div class="demo-item">
-                <t-tip content="Info: Additional information" variant="info">
-                    <button>Info</button>
-                </t-tip>
-            </div>
-        </div>
-    </div>
-
-    <!-- Arrow Control -->
-    <div class="demo-section">
-        <h2>Arrow Control</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-tip content="With arrow (default)" arrow>
-                    <button>With Arrow</button>
-                </t-tip>
-            </div>
-            <div class="demo-item">
-                <t-tip content="No arrow" no-arrow>
-                    <button>No Arrow</button>
-                </t-tip>
-            </div>
-        </div>
-    </div>
-
-    <!-- Delays -->
-    <div class="demo-section">
-        <h2>Custom Delays</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-tip content="Shows immediately" delay="0">
-                    <button>No Delay</button>
-                </t-tip>
-                <span class="demo-label">0ms</span>
-            </div>
-            <div class="demo-item">
-                <t-tip content="Shows after 500ms" delay="500">
-                    <button>500ms Delay</button>
-                </t-tip>
-                <span class="demo-label">500ms</span>
-            </div>
-            <div class="demo-item">
-                <t-tip content="Shows after 1000ms" delay="1000">
-                    <button>1s Delay</button>
-                </t-tip>
-                <span class="demo-label">1000ms</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Long Content -->
-    <div class="demo-section">
-        <h2>Long Content (Multiline)</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-tip content="This is a much longer tooltip that will automatically wrap to multiple lines because it exceeds the maximum width setting." max-width="200px">
-                    <button>Long Text</button>
-                </t-tip>
-            </div>
-        </div>
-    </div>
-
-    <!-- HTML Content -->
-    <div class="demo-section">
-        <h2>HTML Content</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-tip content="<strong>Bold</strong> and <em>italic</em> text" html>
-                    <button>HTML Content</button>
-                </t-tip>
-            </div>
-        </div>
-    </div>
-
-    <!-- Disabled State -->
-    <div class="demo-section">
-        <h2>Disabled State</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-tip content="This won't show" disabled>
-                    <button>Disabled Tooltip</button>
-                </t-tip>
-            </div>
-        </div>
-    </div>
-
-    <!-- Programmatic Control -->
-    <div class="demo-section">
-        <h2>Programmatic Control</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-tip id="controlled" content="Programmatically controlled tooltip" trigger="manual">
-                    <button id="target">Target Element</button>
-                </t-tip>
-            </div>
-            <div class="demo-item">
-                <button onclick="document.getElementById('controlled').show()">Show</button>
-            </div>
-            <div class="demo-item">
-                <button onclick="document.getElementById('controlled').hide()">Hide</button>
-            </div>
-            <div class="demo-item">
-                <button onclick="document.getElementById('controlled').toggle()">Toggle</button>
-            </div>
-        </div>
+        <div class="event-log" id="eventLog"></div>
     </div>
 
     <script type="module">
         import '../js/components/TTooltipLit.js';
+
+        // Event log functionality
+        let eventCount = 0;
+        const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
+
+        function logEvent(component, event, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
+        }
+
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
+
+        // Log tooltip events
+        document.querySelectorAll('t-tip').forEach(tip => {
+            tip.addEventListener('tooltip-show', (e) => {
+                logEvent('tooltip', 'tooltip-show', e.detail);
+            });
+            tip.addEventListener('tooltip-hide', (e) => {
+                logEvent('tooltip', 'tooltip-hide', e.detail);
+            });
+        });
+
+        logEvent('System', 'Demo initialized');
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

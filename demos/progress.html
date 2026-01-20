@@ -3,379 +3,392 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TProgressLit Component Demo</title>
+    <title>TProgressLit - Component Demo</title>
+    <link rel="stylesheet" href="../css/demo-template.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
-
-        :root {
-            --terminal-green: #00ff41;
-            --terminal-amber: #ffb000;
-            --terminal-red: #ff003c;
-            --terminal-cyan: #00ffff;
-            --terminal-gray: #666;
-            --terminal-gray-dark: #1a1a1a;
-            --terminal-bg: #0a0a0a;
-            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-        }
-
-        body {
-            background: var(--terminal-bg);
-            color: var(--terminal-green);
-            font-family: var(--font-mono);
-            padding: 40px;
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        h1, h2 {
-            color: var(--terminal-green);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        h1 {
-            border-bottom: 2px solid var(--terminal-green);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        h2 {
-            margin-top: 50px;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-
-        .description {
-            color: var(--terminal-gray);
-            margin-bottom: 40px;
-        }
-
-        .demo-section {
-            margin-bottom: 40px;
-        }
-
-        .demo-row {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .demo-item {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
         .demo-item.wide {
             width: 300px;
         }
-
-        .demo-label {
-            font-size: 11px;
-            color: var(--terminal-gray);
-            text-transform: uppercase;
+        .demo-grid.vertical-grid {
+            height: 220px;
+            grid-template-columns: repeat(4, minmax(120px, 1fr));
+            align-items: stretch;
+            margin-bottom: 32px;
         }
-
-        .controls {
-            background: rgba(0, 255, 65, 0.05);
-            border: 1px solid var(--terminal-green);
-            padding: 20px;
-            margin-bottom: 30px;
+        .demo-grid.vertical-grid .demo-item {
+            height: 100%;
+            overflow: hidden;
         }
-
-        .control-row {
+        .demo-grid.vertical-grid t-prg[vertical] {
+            height: 100%;
+        }
+        .interactive-demo {
             display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .interactive-metrics {
+            display: flex;
             align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            flex-wrap: nowrap;
         }
-
-        button {
-            background: transparent;
-            border: 1px solid var(--terminal-green);
-            color: var(--terminal-green);
-            padding: 8px 16px;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s;
+        .interactive-bar {
+            flex: 1 1 320px;
+            min-width: 260px;
         }
-
-        button:hover {
-            background: var(--terminal-green);
-            color: var(--terminal-bg);
+        .interactive-ring {
+            flex: 0 0 auto;
+        }
+        .interactive-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 1100px) {
+            .demo-grid.vertical-grid {
+                grid-template-columns: repeat(2, minmax(160px, 1fr));
+            }
+        }
+        @media (max-width: 700px) {
+            .demo-grid.vertical-grid {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            .demo-grid.vertical-grid .demo-item {
+                height: 220px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>TProgressLit Component Demo</h1>
-    <p class="description">
-        Progress indicator component with bar and ring types, variants, and animations.
-    </p>
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TProgressLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Progress
+                </div>
+            </div>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
+            </div>
+        </div>
+    </header>
 
-    <!-- Basic Bar Progress -->
-    <div class="demo-section">
-        <h2>Bar Progress</h2>
-        <div class="demo-row">
-            <div class="demo-item wide">
-                <t-prg value="25" show-label></t-prg>
-                <span class="demo-label">25%</span>
+    <!-- Main Content -->
+    <div class="demo-container">
+        <div class="component-section">
+            <h2 class="component-title">Progress Component</h2>
+            <p class="component-description">
+                Progress indicator component with bar and ring types, variants, and animations.
+            </p>
+
+            <h3>Bar Progress</h3>
+            <div class="demo-grid">
+                <div class="demo-item wide">
+                    <t-prg value="25" show-label></t-prg>
+                    <span class="demo-label">25%</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg value="50" show-label></t-prg>
+                    <span class="demo-label">50%</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg value="75" show-label></t-prg>
+                    <span class="demo-label">75%</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg value="100" show-label></t-prg>
+                    <span class="demo-label">100%</span>
+                </div>
             </div>
-            <div class="demo-item wide">
-                <t-prg value="50" show-label></t-prg>
-                <span class="demo-label">50%</span>
+
+            <h3>Variants</h3>
+            <div class="demo-grid">
+                <div class="demo-item wide">
+                    <t-prg value="60" variant="default" show-label></t-prg>
+                    <span class="demo-label">Default</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg value="60" variant="success" show-label></t-prg>
+                    <span class="demo-label">Success</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg value="60" variant="warning" show-label></t-prg>
+                    <span class="demo-label">Warning</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg value="60" variant="error" show-label></t-prg>
+                    <span class="demo-label">Error</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg value="60" variant="info" show-label></t-prg>
+                    <span class="demo-label">Info</span>
+                </div>
             </div>
-            <div class="demo-item wide">
-                <t-prg value="75" show-label></t-prg>
-                <span class="demo-label">75%</span>
+
+            <h3>Sizes</h3>
+            <div class="demo-grid">
+                <div class="demo-item wide">
+                    <t-prg value="60" size="sm" show-label></t-prg>
+                    <span class="demo-label">Small</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg value="60" size="md" show-label></t-prg>
+                    <span class="demo-label">Medium</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg value="60" size="lg" show-label></t-prg>
+                    <span class="demo-label">Large</span>
+                </div>
             </div>
-            <div class="demo-item wide">
-                <t-prg value="100" show-label></t-prg>
-                <span class="demo-label">100%</span>
+
+            <h3>Striped & Animated</h3>
+            <div class="demo-grid">
+                <div class="demo-item wide">
+                    <t-prg value="60" striped show-label></t-prg>
+                    <span class="demo-label">Striped</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg value="60" striped animated show-label></t-prg>
+                    <span class="demo-label">Striped + Animated</span>
+                </div>
+            </div>
+
+            <h3>Buffer (Secondary Progress)</h3>
+            <div class="demo-grid">
+                <div class="demo-item wide">
+                    <t-prg value="40" buffer="70" show-label></t-prg>
+                    <span class="demo-label">Value: 40% / Buffer: 70%</span>
+                </div>
+            </div>
+
+            <h3>Indeterminate</h3>
+            <div class="demo-grid">
+                <div class="demo-item wide">
+                    <t-prg indeterminate></t-prg>
+                    <span class="demo-label">Loading...</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg indeterminate variant="warning"></t-prg>
+                    <span class="demo-label">Warning State</span>
+                </div>
+            </div>
+
+            <h3>Segmented Progress</h3>
+            <div class="demo-grid">
+                <div class="demo-item wide">
+                    <t-prg value="60" segments="5" show-label></t-prg>
+                    <span class="demo-label">5 Segments</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg value="80" segments="10" show-label></t-prg>
+                    <span class="demo-label">10 Segments</span>
+                </div>
+            </div>
+
+            <h3>Squared Style</h3>
+            <div class="demo-grid">
+                <div class="demo-item wide">
+                    <t-prg value="60" squared show-label></t-prg>
+                    <span class="demo-label">Squared Corners</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg value="60" squared striped show-label></t-prg>
+                    <span class="demo-label">Squared + Striped</span>
+                </div>
+            </div>
+
+            <h3>With Tick Marks</h3>
+            <div class="demo-grid">
+                <div class="demo-item wide">
+                    <t-prg value="75" show-ticks show-label></t-prg>
+                    <span class="demo-label">Default Ticks (10%)</span>
+                </div>
+                <div class="demo-item wide">
+                    <t-prg value="75" show-ticks tick-interval="20" squared show-label></t-prg>
+                    <span class="demo-label">20% Ticks + Squared</span>
+                </div>
+            </div>
+
+            <h3>Vertical Orientation</h3>
+            <div class="demo-grid vertical-grid">
+                <div class="demo-item">
+                    <t-prg value="30" vertical show-label></t-prg>
+                    <span class="demo-label">30%</span>
+                </div>
+                <div class="demo-item">
+                    <t-prg value="60" vertical squared show-label></t-prg>
+                    <span class="demo-label">Squared</span>
+                </div>
+                <div class="demo-item">
+                    <t-prg value="75" vertical show-ticks show-label></t-prg>
+                    <span class="demo-label">With Ticks</span>
+                </div>
+                <div class="demo-item">
+                    <t-prg indeterminate vertical variant="info"></t-prg>
+                    <span class="demo-label">Indeterminate</span>
+                </div>
+            </div>
+
+            <h3>Ring Progress</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-prg type="ring" value="25" size="sm" show-label></t-prg>
+                    <span class="demo-label">Small 25%</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-prg type="ring" value="50" size="md" show-label></t-prg>
+                    <span class="demo-label">Medium 50%</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-prg type="ring" value="75" size="lg" show-label></t-prg>
+                    <span class="demo-label">Large 75%</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-prg type="ring" value="100" size="lg" show-label variant="success"></t-prg>
+                    <span class="demo-label">Complete</span>
+                </div>
+            </div>
+
+            <h3>Ring Variants</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-prg type="ring" value="60" variant="default" show-label></t-prg>
+                    <span class="demo-label">Default</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-prg type="ring" value="60" variant="warning" show-label></t-prg>
+                    <span class="demo-label">Warning</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-prg type="ring" value="60" variant="error" show-label></t-prg>
+                    <span class="demo-label">Error</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-prg type="ring" value="60" variant="info" show-label></t-prg>
+                    <span class="demo-label">Info</span>
+                </div>
+            </div>
+
+            <h3>Ring Indeterminate</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-prg type="ring" indeterminate></t-prg>
+                    <span class="demo-label">Loading</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-prg type="ring" indeterminate variant="warning"></t-prg>
+                    <span class="demo-label">Warning</span>
+                </div>
+            </div>
+
+            <h3>Interactive Demo</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">Control with buttons</span>
+                    <div class="interactive-demo">
+                        <div class="interactive-metrics">
+                            <t-prg id="demo-bar" class="interactive-bar" value="0" show-label></t-prg>
+                            <t-prg id="demo-ring" class="interactive-ring" type="ring" value="0" show-label></t-prg>
+                        </div>
+                        <div class="interactive-actions">
+                            <t-btn size="sm" onclick="increment()">+10</t-btn>
+                            <t-btn size="sm" onclick="decrement()">-10</t-btn>
+                            <t-btn size="sm" onclick="resetProgress()">Reset</t-btn>
+                            <t-btn size="sm" onclick="simulateLoading()">Simulate Loading</t-btn>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;!-- Basic progress bar --&gt;
+&lt;t-prg value="50" show-label&gt;&lt;/t-prg&gt;
+
+&lt;!-- Ring progress --&gt;
+&lt;t-prg type="ring" value="75"&gt;&lt;/t-prg&gt;
+
+&lt;!-- Variants --&gt;
+&lt;t-prg value="60" variant="success"&gt;&lt;/t-prg&gt;
+&lt;t-prg value="60" variant="warning"&gt;&lt;/t-prg&gt;
+
+&lt;!-- Striped & animated --&gt;
+&lt;t-prg value="50" striped animated&gt;&lt;/t-prg&gt;
+
+&lt;!-- Indeterminate --&gt;
+&lt;t-prg indeterminate&gt;&lt;/t-prg&gt;
+
+&lt;!-- JavaScript API --&gt;
+&lt;script&gt;
+  const progress = document.querySelector('t-prg');
+  progress.setValue(75);
+  progress.increment(10);
+  progress.decrement(10);
+  progress.reset();
+  progress.addEventListener('progress-complete', () =&gt; {});
+&lt;/script&gt;</code>
             </div>
         </div>
     </div>
 
-    <!-- Variants -->
-    <div class="demo-section">
-        <h2>Variants</h2>
-        <div class="demo-row">
-            <div class="demo-item wide">
-                <t-prg value="60" variant="default" show-label></t-prg>
-                <span class="demo-label">Default</span>
-            </div>
-            <div class="demo-item wide">
-                <t-prg value="60" variant="success" show-label></t-prg>
-                <span class="demo-label">Success</span>
-            </div>
-            <div class="demo-item wide">
-                <t-prg value="60" variant="warning" show-label></t-prg>
-                <span class="demo-label">Warning</span>
-            </div>
-            <div class="demo-item wide">
-                <t-prg value="60" variant="error" show-label></t-prg>
-                <span class="demo-label">Error</span>
-            </div>
-            <div class="demo-item wide">
-                <t-prg value="60" variant="info" show-label></t-prg>
-                <span class="demo-label">Info</span>
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
             </div>
         </div>
-    </div>
-
-    <!-- Sizes -->
-    <div class="demo-section">
-        <h2>Sizes</h2>
-        <div class="demo-row">
-            <div class="demo-item wide">
-                <t-prg value="60" size="sm" show-label></t-prg>
-                <span class="demo-label">Small</span>
-            </div>
-            <div class="demo-item wide">
-                <t-prg value="60" size="md" show-label></t-prg>
-                <span class="demo-label">Medium</span>
-            </div>
-            <div class="demo-item wide">
-                <t-prg value="60" size="lg" show-label></t-prg>
-                <span class="demo-label">Large</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Striped & Animated -->
-    <div class="demo-section">
-        <h2>Striped & Animated</h2>
-        <div class="demo-row">
-            <div class="demo-item wide">
-                <t-prg value="60" striped show-label></t-prg>
-                <span class="demo-label">Striped</span>
-            </div>
-            <div class="demo-item wide">
-                <t-prg value="60" striped animated show-label></t-prg>
-                <span class="demo-label">Striped + Animated</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Buffer -->
-    <div class="demo-section">
-        <h2>Buffer (Secondary Progress)</h2>
-        <div class="demo-row">
-            <div class="demo-item wide">
-                <t-prg value="40" buffer="70" show-label></t-prg>
-                <span class="demo-label">Value: 40% / Buffer: 70%</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Indeterminate -->
-    <div class="demo-section">
-        <h2>Indeterminate</h2>
-        <div class="demo-row">
-            <div class="demo-item wide">
-                <t-prg indeterminate></t-prg>
-                <span class="demo-label">Loading...</span>
-            </div>
-            <div class="demo-item wide">
-                <t-prg indeterminate variant="warning"></t-prg>
-                <span class="demo-label">Warning State</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Segments -->
-    <div class="demo-section">
-        <h2>Segmented Progress</h2>
-        <div class="demo-row">
-            <div class="demo-item wide">
-                <t-prg value="60" segments="5" show-label></t-prg>
-                <span class="demo-label">5 Segments</span>
-            </div>
-            <div class="demo-item wide">
-                <t-prg value="80" segments="10" show-label></t-prg>
-                <span class="demo-label">10 Segments</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Squared Style -->
-    <div class="demo-section">
-        <h2>Squared Style</h2>
-        <div class="demo-row">
-            <div class="demo-item wide">
-                <t-prg value="60" squared show-label></t-prg>
-                <span class="demo-label">Squared Corners</span>
-            </div>
-            <div class="demo-item wide">
-                <t-prg value="60" squared striped show-label></t-prg>
-                <span class="demo-label">Squared + Striped</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- With Ticks -->
-    <div class="demo-section">
-        <h2>With Tick Marks</h2>
-        <div class="demo-row">
-            <div class="demo-item wide">
-                <t-prg value="75" show-ticks show-label></t-prg>
-                <span class="demo-label">Default Ticks (10%)</span>
-            </div>
-            <div class="demo-item wide">
-                <t-prg value="75" show-ticks tick-interval="20" squared show-label></t-prg>
-                <span class="demo-label">20% Ticks + Squared</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Vertical Orientation -->
-    <div class="demo-section">
-        <h2>Vertical Orientation</h2>
-        <div class="demo-row" style="height: 200px; align-items: flex-end;">
-            <div class="demo-item" style="height: 100%;">
-                <t-prg value="30" vertical show-label></t-prg>
-                <span class="demo-label">30%</span>
-            </div>
-            <div class="demo-item" style="height: 100%;">
-                <t-prg value="60" vertical squared show-label></t-prg>
-                <span class="demo-label">Squared</span>
-            </div>
-            <div class="demo-item" style="height: 100%;">
-                <t-prg value="75" vertical show-ticks show-label></t-prg>
-                <span class="demo-label">With Ticks</span>
-            </div>
-            <div class="demo-item" style="height: 100%;">
-                <t-prg indeterminate vertical variant="info"></t-prg>
-                <span class="demo-label">Indeterminate</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Ring Progress -->
-    <div class="demo-section">
-        <h2>Ring Progress</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-prg type="ring" value="25" size="sm" show-label></t-prg>
-                <span class="demo-label">Small 25%</span>
-            </div>
-            <div class="demo-item">
-                <t-prg type="ring" value="50" size="md" show-label></t-prg>
-                <span class="demo-label">Medium 50%</span>
-            </div>
-            <div class="demo-item">
-                <t-prg type="ring" value="75" size="lg" show-label></t-prg>
-                <span class="demo-label">Large 75%</span>
-            </div>
-            <div class="demo-item">
-                <t-prg type="ring" value="100" size="lg" show-label variant="success"></t-prg>
-                <span class="demo-label">Complete</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Ring Variants -->
-    <div class="demo-section">
-        <h2>Ring Variants</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-prg type="ring" value="60" variant="default" show-label></t-prg>
-                <span class="demo-label">Default</span>
-            </div>
-            <div class="demo-item">
-                <t-prg type="ring" value="60" variant="warning" show-label></t-prg>
-                <span class="demo-label">Warning</span>
-            </div>
-            <div class="demo-item">
-                <t-prg type="ring" value="60" variant="error" show-label></t-prg>
-                <span class="demo-label">Error</span>
-            </div>
-            <div class="demo-item">
-                <t-prg type="ring" value="60" variant="info" show-label></t-prg>
-                <span class="demo-label">Info</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Ring Indeterminate -->
-    <div class="demo-section">
-        <h2>Ring Indeterminate</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-prg type="ring" indeterminate></t-prg>
-                <span class="demo-label">Loading</span>
-            </div>
-            <div class="demo-item">
-                <t-prg type="ring" indeterminate variant="warning"></t-prg>
-                <span class="demo-label">Warning</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Interactive Demo -->
-    <div class="demo-section">
-        <h2>Interactive Demo</h2>
-        <div class="controls">
-            <div class="control-row">
-                <t-prg id="demo-bar" value="0" show-label style="width: 300px;"></t-prg>
-            </div>
-            <div class="control-row">
-                <t-prg id="demo-ring" type="ring" value="0" show-label></t-prg>
-            </div>
-            <div class="control-row">
-                <button onclick="increment()">+10</button>
-                <button onclick="decrement()">-10</button>
-                <button onclick="resetProgress()">Reset</button>
-                <button onclick="simulateLoading()">Simulate Loading</button>
-            </div>
-        </div>
+        <div class="event-log" id="eventLog"></div>
     </div>
 
     <script type="module">
+        import '../js/components/TButtonLit.js';
         import '../js/components/TProgressLit.js';
+
+        // Event log functionality
+        let eventCount = 0;
+        const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
+
+        function logEvent(component, event, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
+        }
+
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
 
         const demoBar = document.getElementById('demo-bar');
         const demoRing = document.getElementById('demo-ring');
@@ -383,21 +396,25 @@
         window.increment = () => {
             demoBar.increment(10);
             demoRing.increment(10);
+            logEvent('interactive', 'increment', { barValue: demoBar.value, ringValue: demoRing.value });
         };
 
         window.decrement = () => {
             demoBar.decrement(10);
             demoRing.decrement(10);
+            logEvent('interactive', 'decrement', { barValue: demoBar.value, ringValue: demoRing.value });
         };
 
         window.resetProgress = () => {
             demoBar.reset();
             demoRing.reset();
+            logEvent('interactive', 'reset');
         };
 
         window.simulateLoading = () => {
             demoBar.reset();
             demoRing.reset();
+            logEvent('interactive', 'simulate-start');
             let value = 0;
             const interval = setInterval(() => {
                 value += Math.random() * 15;
@@ -412,8 +429,15 @@
 
         // Listen for complete event
         demoBar.addEventListener('progress-complete', () => {
-            console.log('Progress complete!');
+            logEvent('demo-bar', 'progress-complete');
         });
+
+        demoRing.addEventListener('progress-complete', () => {
+            logEvent('demo-ring', 'progress-complete');
+        });
+
+        logEvent('System', 'Demo initialized');
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

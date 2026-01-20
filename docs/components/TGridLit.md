@@ -31,8 +31,9 @@ A dashboard grid layout component wrapping GridStack for drag-and-drop and resiz
 | `compact` | `Boolean` | `false` | Yes | Compact mode (smaller margins) |
 | `float` | `Boolean` | `false` | No | Float mode (no auto-compact) |
 | `storageKey` | `String` | `` | No | Storage key for layout persistence (`storage-key`) |
-| `minWidth` | `Number` | `1` | No | Minimum item width (`min-width`) |
+| `minWidth` | `Number` | `2` | No | Minimum item width (`min-width`) |
 | `minHeight` | `Number` | `1` | No | Minimum item height (`min-height`) |
+| `lockSize` | `Boolean` | `true` | Yes | Lock grid width to initial dimensions (`lock-size`) |
 
 ### Grid Item Properties (t-grid-item)
 
@@ -44,7 +45,7 @@ A dashboard grid layout component wrapping GridStack for drag-and-drop and resiz
 | `y` | `Number` | `0` | Yes | Row position (`gs-y`) |
 | `w` | `Number` | `2` | Yes | Width in columns (`gs-w`) |
 | `h` | `Number` | `2` | Yes | Height in rows (`gs-h`) |
-| `minW` | `Number` | `1` | Yes | Minimum width (`gs-min-w`) |
+| `minW` | `Number` | `2` | Yes | Minimum width (`gs-min-w`) |
 | `minH` | `Number` | `1` | Yes | Minimum height (`gs-min-h`) |
 | `maxW` | `Number` | - | Yes | Maximum width (`gs-max-w`) (no default) |
 | `maxH` | `Number` | - | Yes | Maximum height (`gs-max-h`) (no default) |

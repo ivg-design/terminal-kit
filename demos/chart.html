@@ -3,329 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TChartLit Component Demo</title>
+    <title>TChartLit - Component Demo</title>
+    <link rel="stylesheet" href="../css/demo-template.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
-
-        :root {
-            --terminal-green: #00ff41;
-            --terminal-green-dim: #00cc33;
-            --terminal-amber: #ffb000;
-            --terminal-red: #ff003c;
-            --terminal-cyan: #00ffff;
-            --terminal-gray: #666;
-            --terminal-gray-dark: #333;
-            --terminal-gray-darkest: #1a1a1a;
-            --terminal-bg: #0a0a0a;
-            --terminal-black: #0a0a0a;
-            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+        /* Charts fill their grid cell */
+        .demo-grid t-chart {
+            width: 100%;
         }
-
-        body {
-            background: var(--terminal-bg);
-            color: var(--terminal-green);
-            font-family: var(--font-mono);
-            padding: 40px;
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        h1, h2 {
-            color: var(--terminal-green);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        h1 {
-            border-bottom: 2px solid var(--terminal-green);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        h2 {
-            margin-top: 50px;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-
-        .description {
-            color: var(--terminal-gray);
-            margin-bottom: 40px;
-        }
-
-        .demo-section {
-            margin-bottom: 40px;
-        }
-
-        .demo-row {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .demo-label {
-            font-size: 11px;
-            color: var(--terminal-gray);
-            text-transform: uppercase;
-            margin-top: 10px;
-        }
-
-        button {
-            background: transparent;
-            border: 1px solid var(--terminal-green);
-            color: var(--terminal-green);
-            padding: 8px 16px;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s;
-        }
-
-        button:hover {
-            background: var(--terminal-green);
-            color: var(--terminal-black);
-        }
-
-        .event-log {
-            background: #111;
-            border: 1px solid #333;
-            padding: 15px;
-            font-size: 12px;
-            max-height: 150px;
-            overflow-y: auto;
-            margin-top: 20px;
-        }
-
-        .event-log p {
-            margin: 5px 0;
-            color: var(--terminal-green);
-        }
-
-        .event-log .timestamp {
-            color: var(--terminal-gray);
-        }
-
-        .controls {
-            background: rgba(0, 255, 65, 0.05);
-            border: 1px solid var(--terminal-green);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .control-row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        t-chart {
-            max-width: 450px;
+        /* Wide grids should show charts at reasonable size */
+        .demo-grid.wide t-chart {
+            max-width: 600px;
         }
     </style>
 </head>
 <body>
-    <h1>TChartLit Component Demo</h1>
-    <p class="description">
-        Simple data visualizations with bar, line, pie, and donut chart types.
-    </p>
-
-    <!-- Bar Chart -->
-    <div class="demo-section">
-        <h2>Bar Chart</h2>
-        <t-chart
-            id="bar-chart"
-            type="bar"
-            title="Monthly Revenue"
-            height="220px"
-            show-legend
-        ></t-chart>
-    </div>
-
-    <!-- Line Chart -->
-    <div class="demo-section">
-        <h2>Line Chart</h2>
-        <t-chart
-            id="line-chart"
-            type="line"
-            title="Daily Active Users"
-            height="220px"
-        ></t-chart>
-    </div>
-
-    <!-- Pie and Donut Charts -->
-    <div class="demo-section">
-        <h2>Pie & Donut Charts</h2>
-        <div class="demo-row">
-            <div>
-                <t-chart
-                    id="pie-chart"
-                    type="pie"
-                    title="Market Share"
-                    height="220px"
-                    show-legend
-                ></t-chart>
-                <p class="demo-label">Pie Chart</p>
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TChartLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Chart
+                </div>
             </div>
-            <div>
-                <t-chart
-                    id="donut-chart"
-                    type="donut"
-                    title="Resource Usage"
-                    height="220px"
-                    show-legend
-                ></t-chart>
-                <p class="demo-label">Donut Chart</p>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="demo-container">
+        <div class="component-section">
+            <h2 class="component-title">Chart Component</h2>
+            <p class="component-description">
+                Simple data visualizations with bar, line, pie, and donut chart types.
+            </p>
+
+            <h3>Bar Chart</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <t-chart id="bar-chart" type="bar" title="Monthly Revenue" height="220px" show-legend></t-chart>
+                </div>
+            </div>
+
+            <h3>Line Chart</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <t-chart id="line-chart" type="line" title="Daily Active Users" height="220px"></t-chart>
+                </div>
+            </div>
+
+            <h3>Pie & Donut Charts</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <t-chart id="pie-chart" type="pie" title="Market Share" height="220px" show-legend></t-chart>
+                    <span class="demo-label">Pie Chart</span>
+                </div>
+                <div class="demo-item">
+                    <t-chart id="donut-chart" type="donut" title="Resource Usage" height="220px" show-legend></t-chart>
+                    <span class="demo-label">Donut Chart</span>
+                </div>
+            </div>
+
+            <h3>Minimal Style</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">No Grid/Labels</span>
+                    <t-chart id="minimal-chart" type="bar" title="Clean View" height="180px"></t-chart>
+                </div>
+            </div>
+
+            <h3>Custom Colors</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <t-chart id="custom-colors-chart" type="bar" title="Quarterly Results" height="200px"></t-chart>
+                </div>
+            </div>
+
+            <h3>Monochrome Mode</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <t-chart id="mono-green-chart" type="pie" title="Green Monochrome" height="200px" monochrome base-color="#00ff41" show-legend></t-chart>
+                    <span class="demo-label">Base: Green</span>
+                </div>
+                <div class="demo-item">
+                    <t-chart id="mono-cyan-chart" type="donut" title="Cyan Monochrome" height="200px" monochrome base-color="#00ffff" show-legend></t-chart>
+                    <span class="demo-label">Base: Cyan</span>
+                </div>
+                <div class="demo-item">
+                    <t-chart id="mono-amber-chart" type="bar" title="Amber Monochrome" height="200px" monochrome base-color="#ffb000"></t-chart>
+                    <span class="demo-label">Base: Amber</span>
+                </div>
+            </div>
+
+            <h3>Color Schemes</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">Click to change scheme</span>
+                    <div class="controls" style="margin-bottom: 15px;">
+                        <button onclick="setScheme('terminal')">Terminal</button>
+                        <button onclick="setScheme('neon')">Neon</button>
+                        <button onclick="setScheme('cool')">Cool</button>
+                        <button onclick="setScheme('warm')">Warm</button>
+                        <button onclick="setScheme('grayscale')">Grayscale</button>
+                        <button onclick="setScheme('mono-green')">Mono Green</button>
+                        <button onclick="setScheme('mono-cyan')">Mono Cyan</button>
+                        <button onclick="setScheme('mono-amber')">Mono Amber</button>
+                    </div>
+                    <t-chart id="scheme-chart" type="bar" title="Color Scheme Demo" height="220px" show-legend></t-chart>
+                </div>
+            </div>
+
+            <h3>Outline Only Mode</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <t-chart id="outline-chart" type="bar" title="Outline Bars" height="200px" outline-only monochrome base-color="#00ff41"></t-chart>
+                    <span class="demo-label">outline-only monochrome</span>
+                </div>
+                <div class="demo-item">
+                    <t-chart id="outline-chart-multi" type="bar" title="Outline Colors" height="200px" outline-only color-scheme="terminal"></t-chart>
+                    <span class="demo-label">outline-only with colors</span>
+                </div>
+            </div>
+
+            <h3>Interactive Demo</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">Control with buttons</span>
+                    <div class="controls" style="margin-bottom: 15px;">
+                        <button onclick="setChartType('bar')">Bar</button>
+                        <button onclick="setChartType('line')">Line</button>
+                        <button onclick="setChartType('pie')">Pie</button>
+                        <button onclick="setChartType('donut')">Donut</button>
+                        <button onclick="toggleLegend()">Toggle Legend</button>
+                        <button onclick="toggleGrid()">Toggle Grid</button>
+                        <button onclick="randomizeData()">Randomize Data</button>
+                    </div>
+                    <t-chart id="interactive-chart" type="bar" title="Interactive Chart" height="250px" show-legend></t-chart>
+                </div>
+            </div>
+
+            <h3>Real-time Updates</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">Live data feed</span>
+                    <div class="controls" style="margin-bottom: 15px;">
+                        <button id="start-btn" onclick="startRealtime()">Start Updates</button>
+                        <button id="stop-btn" onclick="stopRealtime()" disabled>Stop Updates</button>
+                    </div>
+                    <t-chart id="realtime-chart" type="line" title="Live Data Feed" height="200px"></t-chart>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;!-- Basic chart --&gt;
+&lt;t-chart type="bar" title="My Chart"&gt;&lt;/t-chart&gt;
+
+&lt;!-- Chart types --&gt;
+&lt;t-chart type="line"&gt;&lt;/t-chart&gt;
+&lt;t-chart type="pie"&gt;&lt;/t-chart&gt;
+&lt;t-chart type="donut"&gt;&lt;/t-chart&gt;
+
+&lt;!-- With options --&gt;
+&lt;t-chart type="bar" show-legend show-grid&gt;&lt;/t-chart&gt;
+
+&lt;!-- Monochrome --&gt;
+&lt;t-chart type="pie" monochrome base-color="#00ff41"&gt;&lt;/t-chart&gt;
+
+&lt;!-- JavaScript API --&gt;
+&lt;script&gt;
+  const chart = document.querySelector('t-chart');
+  chart.setData([
+    { label: 'Jan', value: 100 },
+    { label: 'Feb', value: 200 }
+  ]);
+  chart.addEventListener('segment-click', (e) =&gt; {});
+&lt;/script&gt;</code>
             </div>
         </div>
     </div>
 
-    <!-- Without Grid/Labels -->
-    <div class="demo-section">
-        <h2>Minimal Style (No Grid/Labels)</h2>
-        <t-chart
-            id="minimal-chart"
-            type="bar"
-            title="Clean View"
-            height="180px"
-        ></t-chart>
-    </div>
-
-    <!-- Custom Colors -->
-    <div class="demo-section">
-        <h2>Custom Colors</h2>
-        <t-chart
-            id="custom-colors-chart"
-            type="bar"
-            title="Quarterly Results"
-            height="200px"
-        ></t-chart>
-    </div>
-
-    <!-- Monochrome Charts -->
-    <div class="demo-section">
-        <h2>Monochrome Mode</h2>
-        <div class="demo-row">
-            <div>
-                <t-chart
-                    id="mono-green-chart"
-                    type="pie"
-                    title="Green Monochrome"
-                    height="200px"
-                    monochrome
-                    base-color="#00ff41"
-                    show-legend
-                ></t-chart>
-                <p class="demo-label">Base: Green</p>
-            </div>
-            <div>
-                <t-chart
-                    id="mono-cyan-chart"
-                    type="donut"
-                    title="Cyan Monochrome"
-                    height="200px"
-                    monochrome
-                    base-color="#00ffff"
-                    show-legend
-                ></t-chart>
-                <p class="demo-label">Base: Cyan</p>
-            </div>
-            <div>
-                <t-chart
-                    id="mono-amber-chart"
-                    type="bar"
-                    title="Amber Monochrome"
-                    height="200px"
-                    monochrome
-                    base-color="#ffb000"
-                ></t-chart>
-                <p class="demo-label">Base: Amber</p>
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
             </div>
         </div>
-    </div>
-
-    <!-- Color Schemes -->
-    <div class="demo-section">
-        <h2>Color Schemes</h2>
-        <div class="controls">
-            <div class="control-row">
-                <button onclick="setScheme('terminal')">Terminal</button>
-                <button onclick="setScheme('neon')">Neon</button>
-                <button onclick="setScheme('cool')">Cool</button>
-                <button onclick="setScheme('warm')">Warm</button>
-                <button onclick="setScheme('grayscale')">Grayscale</button>
-            </div>
-        </div>
-        <t-chart
-            id="scheme-chart"
-            type="bar"
-            title="Color Scheme Demo"
-            height="220px"
-            show-legend
-        ></t-chart>
-    </div>
-
-    <!-- Interactive Chart -->
-    <div class="demo-section">
-        <h2>Interactive Demo</h2>
-        <div class="controls">
-            <div class="control-row">
-                <button onclick="setChartType('bar')">Bar</button>
-                <button onclick="setChartType('line')">Line</button>
-                <button onclick="setChartType('pie')">Pie</button>
-                <button onclick="setChartType('donut')">Donut</button>
-                <button onclick="toggleLegend()">Toggle Legend</button>
-                <button onclick="toggleGrid()">Toggle Grid</button>
-                <button onclick="randomizeData()">Randomize Data</button>
-            </div>
-        </div>
-        <t-chart
-            id="interactive-chart"
-            type="bar"
-            title="Interactive Chart"
-            height="250px"
-            show-legend
-        ></t-chart>
-    </div>
-
-    <!-- Real-time Updates -->
-    <div class="demo-section">
-        <h2>Real-time Updates</h2>
-        <div class="controls">
-            <div class="control-row">
-                <button id="start-btn" onclick="startRealtime()">Start Updates</button>
-                <button id="stop-btn" onclick="stopRealtime()" disabled>Stop Updates</button>
-            </div>
-        </div>
-        <t-chart
-            id="realtime-chart"
-            type="line"
-            title="Live Data Feed"
-            height="200px"
-        ></t-chart>
-    </div>
-
-    <!-- Event Log -->
-    <div class="demo-section">
-        <h2>Event Log</h2>
-        <div class="event-log" id="event-log">
-            <p><span class="timestamp">[LOG]</span> Click on chart segments to see events...</p>
-        </div>
+        <div class="event-log" id="eventLog"></div>
     </div>
 
     <script type="module">
         import '../js/components/TChartLit.js';
 
-        const eventLog = document.getElementById('event-log');
+        // Event log functionality
+        let eventCount = 0;
+        const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
 
-        function logEvent(chartId, event) {
+        function logEvent(component, event, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
             const timestamp = new Date().toLocaleTimeString();
-            const p = document.createElement('p');
-            p.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${chartId}: ${event.type} - ${event.detail.label}: ${event.detail.value}`;
-            eventLog.insertBefore(p, eventLog.firstChild);
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
         }
+
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
 
         // Sample data
         const monthlyData = [
@@ -408,8 +319,13 @@
         ];
         schemeChart.setData(schemeData);
 
+        // Outline charts
+        document.getElementById('outline-chart').setData(monthlyData);
+        document.getElementById('outline-chart-multi').setData(monthlyData);
+
         window.setScheme = (scheme) => {
             schemeChart.colorScheme = scheme;
+            logEvent('scheme-chart', 'colorScheme', { scheme });
         };
 
         // Interactive chart
@@ -419,14 +335,17 @@
 
         window.setChartType = (type) => {
             interactiveChart.type = type;
+            logEvent('interactive', 'type', { type });
         };
 
         window.toggleLegend = () => {
             interactiveChart.showLegend = !interactiveChart.showLegend;
+            logEvent('interactive', 'showLegend', { showLegend: interactiveChart.showLegend });
         };
 
         window.toggleGrid = () => {
             interactiveChart.showGrid = !interactiveChart.showGrid;
+            logEvent('interactive', 'showGrid', { showGrid: interactiveChart.showGrid });
         };
 
         window.randomizeData = () => {
@@ -435,6 +354,7 @@
                 value: Math.floor(Math.random() * 5000) + 1000
             }));
             interactiveChart.setData(interactiveData);
+            logEvent('interactive', 'randomize');
         };
 
         // Real-time chart
@@ -460,20 +380,24 @@
         window.startRealtime = () => {
             document.getElementById('start-btn').disabled = true;
             document.getElementById('stop-btn').disabled = false;
+            logEvent('realtime', 'start');
 
             realtimeInterval = setInterval(() => {
                 realtimeData.shift();
+                const newValue = Math.floor(Math.random() * 100) + 50;
                 realtimeData.push({
                     label: `T${counter++}`,
-                    value: Math.floor(Math.random() * 100) + 50
+                    value: newValue
                 });
                 realtimeChart.setData([...realtimeData]);
+                logEvent('realtime', 'update', { label: `T${counter - 1}`, value: newValue });
             }, 1000);
         };
 
         window.stopRealtime = () => {
             document.getElementById('start-btn').disabled = false;
             document.getElementById('stop-btn').disabled = true;
+            logEvent('realtime', 'stop');
 
             if (realtimeInterval) {
                 clearInterval(realtimeInterval);
@@ -483,8 +407,13 @@
 
         // Listen to chart events
         document.querySelectorAll('t-chart').forEach(chart => {
-            chart.addEventListener('segment-click', (e) => logEvent(chart.id || 'chart', e));
+            chart.addEventListener('segment-click', (e) => {
+                logEvent(chart.id || 'chart', 'segment-click', { label: e.detail.label, value: e.detail.value });
+            });
         });
+
+        logEvent('System', 'Demo initialized');
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

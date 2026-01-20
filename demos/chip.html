@@ -3,130 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TChipLit Component Demo</title>
+    <title>TChipLit - Component Demo</title>
+    <link rel="stylesheet" href="../css/demo-template.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
-
-        :root {
-            --terminal-green: #00ff41;
-            --terminal-amber: #ffb000;
-            --terminal-red: #ff003c;
-            --terminal-cyan: #00ffff;
-            --terminal-purple: #9d00ff;
-            --terminal-gray: #666;
-            --terminal-bg: #0a0a0a;
-            --terminal-black: #0a0a0a;
-            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-        }
-
-        body {
-            background: var(--terminal-bg);
-            color: var(--terminal-green);
-            font-family: var(--font-mono);
-            padding: 40px;
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        h1, h2 {
-            color: var(--terminal-green);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        h1 {
-            border-bottom: 2px solid var(--terminal-green);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        h2 {
-            margin-top: 50px;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-
-        .description {
-            color: var(--terminal-gray);
-            margin-bottom: 40px;
-        }
-
-        .demo-section {
-            margin-bottom: 40px;
-        }
-
-        .demo-row {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .demo-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .demo-label {
-            font-size: 11px;
-            color: var(--terminal-gray);
-            text-transform: uppercase;
-        }
-
-        .controls {
-            background: rgba(0, 255, 65, 0.05);
-            border: 1px solid var(--terminal-green);
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .control-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        button {
-            background: transparent;
-            border: 1px solid var(--terminal-green);
-            color: var(--terminal-green);
-            padding: 8px 16px;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s;
-        }
-
-        button:hover {
-            background: var(--terminal-green);
-            color: var(--terminal-black);
-        }
-
-        .event-log {
-            background: #111;
-            border: 1px solid #333;
-            padding: 15px;
-            font-size: 12px;
-            max-height: 150px;
-            overflow-y: auto;
-            margin-top: 20px;
-        }
-
-        .event-log p {
-            margin: 5px 0;
-            color: var(--terminal-green);
-        }
-
-        .event-log .timestamp {
-            color: var(--terminal-gray);
-        }
-
         .chip-group {
             display: flex;
             gap: 8px;
@@ -135,173 +15,322 @@
     </style>
 </head>
 <body>
-    <h1>TChipLit Component Demo</h1>
-    <p class="description">
-        Tag/filter chip component with variants, sizes, selection, and removal.
-    </p>
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TChipLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Chip
+                </div>
+            </div>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
+            </div>
+        </div>
+    </header>
 
-    <!-- Variants -->
-    <div class="demo-section">
-        <h2>Variants</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-chip label="Default"></t-chip>
-                <span class="demo-label">Default</span>
+    <!-- Main Content -->
+    <div class="demo-container">
+        <div class="component-section">
+            <h2 class="component-title">Chip Component</h2>
+            <p class="component-description">
+                Tag/filter chip component with variants, sizes, selection, and removal.
+            </p>
+
+            <h3>Variants</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-chip label="Default"></t-chip>
+                    <span class="demo-label">Default</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Success" variant="success"></t-chip>
+                    <span class="demo-label">Success</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Warning" variant="warning"></t-chip>
+                    <span class="demo-label">Warning</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Error" variant="error"></t-chip>
+                    <span class="demo-label">Error</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Info" variant="info"></t-chip>
+                    <span class="demo-label">Info</span>
+                </div>
             </div>
-            <div class="demo-item">
-                <t-chip label="Success" variant="success"></t-chip>
-                <span class="demo-label">Success</span>
+
+            <h3>Sizes</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-chip label="Small" size="sm"></t-chip>
+                    <span class="demo-label">Small</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Medium" size="md"></t-chip>
+                    <span class="demo-label">Medium</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Large" size="lg"></t-chip>
+                    <span class="demo-label">Large</span>
+                </div>
             </div>
-            <div class="demo-item">
-                <t-chip label="Warning" variant="warning"></t-chip>
-                <span class="demo-label">Warning</span>
+
+            <h3>Shapes</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-chip label="Pill (default)" shape="pill"></t-chip>
+                    <span class="demo-label">Pill</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Tag Style" shape="tag"></t-chip>
+                    <span class="demo-label">Tag</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Square" shape="square"></t-chip>
+                    <span class="demo-label">Square</span>
+                </div>
             </div>
-            <div class="demo-item">
-                <t-chip label="Error" variant="error"></t-chip>
-                <span class="demo-label">Error</span>
+
+            <h3>Custom Colors</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-chip label="Custom BG" bg-color="#2d1b4e" text-color="#a855f7" border-color="#7c3aed"></t-chip>
+                    <span class="demo-label">Purple</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Orange Tag" shape="tag" bg-color="#3d2c1e" text-color="#f97316" border-color="#ea580c"></t-chip>
+                    <span class="demo-label">Orange Tag</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Pink Square" shape="square" bg-color="#3d1f32" text-color="#ec4899" border-color="#db2777" selectable></t-chip>
+                    <span class="demo-label">Pink Selectable</span>
+                </div>
             </div>
-            <div class="demo-item">
-                <t-chip label="Info" variant="info"></t-chip>
-                <span class="demo-label">Info</span>
+
+            <h3>Removable Chips</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">Click X to remove</span>
+                    <div class="chip-group" id="removable-group">
+                        <t-chip label="JavaScript" removable></t-chip>
+                        <t-chip label="TypeScript" removable></t-chip>
+                        <t-chip label="Python" removable></t-chip>
+                        <t-chip label="Rust" removable></t-chip>
+                        <t-chip label="Go" removable></t-chip>
+                    </div>
+                    <div class="controls" style="margin-top: 15px;">
+                        <button onclick="resetRemovableChips()">Reset Chips</button>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Selectable Chips</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">Click to select/deselect</span>
+                    <div class="chip-group" id="selectable-group">
+                        <t-chip label="Frontend" selectable></t-chip>
+                        <t-chip label="Backend" selectable></t-chip>
+                        <t-chip label="DevOps" selectable></t-chip>
+                        <t-chip label="Mobile" selectable></t-chip>
+                    </div>
+                    <p style="margin-top: 15px; color: var(--terminal-green-dim); font-size: 12px;">Selected: <span id="selected-display">None</span></p>
+                </div>
+            </div>
+
+            <h3>With Icons</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-chip label="Star" icon="star"></t-chip>
+                    <span class="demo-label">Star</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Heart" icon="heart" variant="error"></t-chip>
+                    <span class="demo-label">Heart</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Check" icon="check" variant="success"></t-chip>
+                    <span class="demo-label">Check</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Info" icon="info" variant="info"></t-chip>
+                    <span class="demo-label">Info</span>
+                </div>
+            </div>
+
+            <h3>With Avatar</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-chip label="User A" avatar="https://i.pravatar.cc/32?img=1"></t-chip>
+                    <span class="demo-label">Basic</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="User B" avatar="https://i.pravatar.cc/32?img=2" removable></t-chip>
+                    <span class="demo-label">Removable</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="User C" avatar="https://i.pravatar.cc/32?img=3" selectable selected></t-chip>
+                    <span class="demo-label">Selected</span>
+                </div>
+            </div>
+
+            <h3>Disabled State</h3>
+            <div class="demo-grid">
+                <div class="demo-item centered">
+                    <t-chip label="Disabled" disabled></t-chip>
+                    <span class="demo-label">Basic</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Disabled Removable" disabled removable></t-chip>
+                    <span class="demo-label">Removable</span>
+                </div>
+                <div class="demo-item centered">
+                    <t-chip label="Disabled Selectable" disabled selectable></t-chip>
+                    <span class="demo-label">Selectable</span>
+                </div>
+            </div>
+
+            <h3>Filter Example</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">Single select filter (radio behavior)</span>
+                    <div class="chip-group" id="filter-group">
+                        <t-chip label="All" selectable selected variant="success"></t-chip>
+                        <t-chip label="Components" selectable></t-chip>
+                        <t-chip label="Utilities" selectable></t-chip>
+                        <t-chip label="Hooks" selectable></t-chip>
+                        <t-chip label="Services" selectable></t-chip>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Interactive Demo</h3>
+            <div class="demo-grid wide">
+                <div class="demo-item">
+                    <span class="demo-label">Control with buttons</span>
+                    <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                        <t-chip id="interactive-chip" label="Interactive" selectable removable></t-chip>
+                        <div class="controls">
+                            <button onclick="toggleSelect()">Toggle Select</button>
+                            <button onclick="toggleVariant()">Toggle Variant</button>
+                            <button onclick="toggleDisabled()">Toggle Disabled</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;!-- Basic chip --&gt;
+&lt;t-chip label="Tag"&gt;&lt;/t-chip&gt;
+
+&lt;!-- Variants --&gt;
+&lt;t-chip label="Success" variant="success"&gt;&lt;/t-chip&gt;
+&lt;t-chip label="Error" variant="error"&gt;&lt;/t-chip&gt;
+
+&lt;!-- Shapes --&gt;
+&lt;t-chip label="Pill" shape="pill"&gt;&lt;/t-chip&gt;
+&lt;t-chip label="Tag" shape="tag"&gt;&lt;/t-chip&gt;
+&lt;t-chip label="Square" shape="square"&gt;&lt;/t-chip&gt;
+
+&lt;!-- Custom Colors --&gt;
+&lt;t-chip label="Custom" bg-color="#2d1b4e" text-color="#a855f7" border-color="#7c3aed"&gt;&lt;/t-chip&gt;
+
+&lt;!-- Removable --&gt;
+&lt;t-chip label="Remove me" removable&gt;&lt;/t-chip&gt;
+
+&lt;!-- Selectable --&gt;
+&lt;t-chip label="Select me" selectable&gt;&lt;/t-chip&gt;
+
+&lt;!-- With avatar --&gt;
+&lt;t-chip label="User" avatar="user.jpg"&gt;&lt;/t-chip&gt;
+
+&lt;!-- JavaScript API --&gt;
+&lt;script&gt;
+  const chip = document.querySelector('t-chip');
+  chip.toggle();
+  chip.addEventListener('chip-select', (e) =&gt; {});
+  chip.addEventListener('chip-remove', (e) =&gt; {});
+&lt;/script&gt;</code>
             </div>
         </div>
     </div>
 
-    <!-- Sizes -->
-    <div class="demo-section">
-        <h2>Sizes</h2>
-        <div class="demo-row">
-            <div class="demo-item">
-                <t-chip label="Small" size="sm"></t-chip>
-                <span class="demo-label">Small</span>
-            </div>
-            <div class="demo-item">
-                <t-chip label="Medium" size="md"></t-chip>
-                <span class="demo-label">Medium</span>
-            </div>
-            <div class="demo-item">
-                <t-chip label="Large" size="lg"></t-chip>
-                <span class="demo-label">Large</span>
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
             </div>
         </div>
-    </div>
-
-    <!-- Removable Chips -->
-    <div class="demo-section">
-        <h2>Removable Chips</h2>
-        <div class="chip-group" id="removable-group">
-            <t-chip label="JavaScript" removable></t-chip>
-            <t-chip label="TypeScript" removable></t-chip>
-            <t-chip label="Python" removable></t-chip>
-            <t-chip label="Rust" removable></t-chip>
-            <t-chip label="Go" removable></t-chip>
-        </div>
-        <button onclick="resetRemovableChips()" style="margin-top: 15px;">Reset Chips</button>
-    </div>
-
-    <!-- Selectable Chips -->
-    <div class="demo-section">
-        <h2>Selectable Chips</h2>
-        <div class="chip-group" id="selectable-group">
-            <t-chip label="Frontend" selectable></t-chip>
-            <t-chip label="Backend" selectable></t-chip>
-            <t-chip label="DevOps" selectable></t-chip>
-            <t-chip label="Mobile" selectable></t-chip>
-        </div>
-        <p style="margin-top: 15px; color: var(--terminal-gray); font-size: 12px;">Selected: <span id="selected-display">None</span></p>
-    </div>
-
-    <!-- With Icons -->
-    <div class="demo-section">
-        <h2>With Icons</h2>
-        <div class="demo-row">
-            <t-chip label="Star" icon="star"></t-chip>
-            <t-chip label="Heart" icon="heart" variant="error"></t-chip>
-            <t-chip label="Check" icon="check" variant="success"></t-chip>
-            <t-chip label="Info" icon="info" variant="info"></t-chip>
-        </div>
-    </div>
-
-    <!-- With Avatar -->
-    <div class="demo-section">
-        <h2>With Avatar</h2>
-        <div class="demo-row">
-            <t-chip label="User A" avatar="https://i.pravatar.cc/32?img=1"></t-chip>
-            <t-chip label="User B" avatar="https://i.pravatar.cc/32?img=2" removable></t-chip>
-            <t-chip label="User C" avatar="https://i.pravatar.cc/32?img=3" selectable selected></t-chip>
-        </div>
-    </div>
-
-    <!-- Disabled State -->
-    <div class="demo-section">
-        <h2>Disabled State</h2>
-        <div class="demo-row">
-            <t-chip label="Disabled" disabled></t-chip>
-            <t-chip label="Disabled Removable" disabled removable></t-chip>
-            <t-chip label="Disabled Selectable" disabled selectable></t-chip>
-        </div>
-    </div>
-
-    <!-- Filter Example -->
-    <div class="demo-section">
-        <h2>Filter Example</h2>
-        <div class="controls">
-            <p style="margin-bottom: 15px; color: var(--terminal-gray);">Select categories to filter:</p>
-            <div class="chip-group" id="filter-group">
-                <t-chip label="All" selectable selected variant="success"></t-chip>
-                <t-chip label="Components" selectable></t-chip>
-                <t-chip label="Utilities" selectable></t-chip>
-                <t-chip label="Hooks" selectable></t-chip>
-                <t-chip label="Services" selectable></t-chip>
-            </div>
-        </div>
-    </div>
-
-    <!-- Interactive Demo -->
-    <div class="demo-section">
-        <h2>Interactive Demo</h2>
-        <div class="controls">
-            <div class="control-row">
-                <t-chip id="interactive-chip" label="Interactive" selectable removable></t-chip>
-                <button onclick="toggleSelect()">Toggle Select</button>
-                <button onclick="toggleVariant()">Toggle Variant</button>
-                <button onclick="toggleDisabled()">Toggle Disabled</button>
-            </div>
-        </div>
-        <div class="event-log" id="event-log">
-            <p><span class="timestamp">[LOG]</span> Events will appear here...</p>
-        </div>
+        <div class="event-log" id="eventLog"></div>
     </div>
 
     <script type="module">
         import '../js/components/TChipLit.js';
 
-        const eventLog = document.getElementById('event-log');
+        // Event log functionality
+        let eventCount = 0;
+        const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
+
+        function logEvent(component, event, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
+        }
+
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
+
         const interactiveChip = document.getElementById('interactive-chip');
         const variants = ['default', 'success', 'warning', 'error', 'info'];
         let variantIndex = 0;
 
-        // Log events
-        function logEvent(type, detail) {
-            const timestamp = new Date().toLocaleTimeString();
-            const p = document.createElement('p');
-            p.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${type}: ${JSON.stringify(detail)}`;
-            eventLog.insertBefore(p, eventLog.firstChild);
-        }
-
         // Interactive chip events
-        interactiveChip.addEventListener('chip-click', (e) => logEvent('chip-click', e.detail));
-        interactiveChip.addEventListener('chip-select', (e) => logEvent('chip-select', e.detail));
-        interactiveChip.addEventListener('chip-remove', (e) => logEvent('chip-remove', e.detail));
+        interactiveChip.autoRemove = false;
+        interactiveChip.addEventListener('chip-click', (e) => logEvent('interactive', 'chip-click', e.detail));
+        interactiveChip.addEventListener('chip-select', (e) => logEvent('interactive', 'chip-select', e.detail));
+        interactiveChip.addEventListener('chip-remove', (e) => logEvent('interactive', 'chip-remove', e.detail));
 
         // Control functions
         window.toggleSelect = () => interactiveChip.toggle();
         window.toggleVariant = () => {
             variantIndex = (variantIndex + 1) % variants.length;
             interactiveChip.variant = variants[variantIndex];
+            logEvent('interactive', 'variant', { variant: variants[variantIndex] });
         };
         window.toggleDisabled = () => {
             interactiveChip.disabled = !interactiveChip.disabled;
+            logEvent('interactive', 'disabled', { disabled: interactiveChip.disabled });
         };
 
         // Removable chips
@@ -309,11 +338,12 @@
         const originalRemovableHTML = removableGroup.innerHTML;
 
         removableGroup.addEventListener('chip-remove', (e) => {
-            e.target.remove();
+            logEvent('removable', 'chip-remove', { label: e.target.label });
         });
 
         window.resetRemovableChips = () => {
             removableGroup.innerHTML = originalRemovableHTML;
+            logEvent('System', 'chips-reset');
         };
 
         // Selectable chips
@@ -326,18 +356,33 @@
             selectedDisplay.textContent = selected.length ? selected.join(', ') : 'None';
         }
 
-        selectableGroup.addEventListener('chip-select', updateSelectedDisplay);
+        selectableGroup.addEventListener('chip-select', (e) => {
+            logEvent('selectable', 'chip-select', { label: e.target.label, selected: e.detail.selected });
+            updateSelectedDisplay();
+        });
 
         // Filter chips (single select behavior)
         const filterGroup = document.getElementById('filter-group');
+        let isFilterUpdating = false;
         filterGroup.addEventListener('chip-select', (e) => {
+            // Prevent recursive event logging during deselect cascade
+            if (isFilterUpdating) return;
+
             if (e.detail.selected) {
-                // Deselect others
+                isFilterUpdating = true;
+                // Deselect others without triggering more log events
                 filterGroup.querySelectorAll('t-chip').forEach(chip => {
-                    if (chip !== e.target) chip.deselect();
+                    if (chip !== e.target && chip.selected) {
+                        chip.selected = false; // Direct property change, no event
+                    }
                 });
+                isFilterUpdating = false;
             }
+            logEvent('filter', 'chip-select', { label: e.target.label, selected: e.detail.selected });
         });
+
+        logEvent('System', 'Demo initialized');
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

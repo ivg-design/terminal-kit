@@ -77,6 +77,8 @@ The `TSliderLit` component (`<t-sld>`) is a terminal-themed range slider with co
 | `showInput` | boolean | false | `show-input` | Show editable input field for direct value entry |
 | `showOutput` | boolean | false | `show-output` | Show read-only output field displaying current value |
 | `showValueInThumb` | boolean | false | `show-value-in-thumb` | Display the current value inside the slider thumb |
+| `stepperStyle` | string | 'plusminus' | `stepper-style` | Input stepper icon style: plusminus, chevron, arrows |
+| `stepperSize` | string | 'md' | `stepper-size` | Input stepper size preset: sm, md, lg |
 
 ### Style Properties
 
@@ -303,6 +305,17 @@ t-sld {
 
   /* Icon styling */
   --t-sld-icon-size: 14px;         /* Size of the icon */
+
+  /* Stepper controls (shared across numeric inputs) */
+  --t-stepper-bg: #1a1a1a;         /* Stepper button background */
+  --t-stepper-border: #333;        /* Stepper button border */
+  --t-stepper-color: #00ff41;      /* Stepper icon/text color */
+  --t-stepper-hover-bg: rgba(0, 255, 65, 0.2); /* Hover background */
+  --t-stepper-active-bg: #00ff41;  /* Active background */
+  --t-stepper-active-color: #0a0a0a; /* Active text color */
+  --t-stepper-size: 18px;          /* Stepper width */
+  --t-stepper-height: 18px;        /* Stepper height */
+  --t-stepper-icon-size: 12px;     /* Stepper icon size */
 }
 ```
 
@@ -1103,4 +1116,3 @@ slider.addEventListener('slider-change', handler); // After drag
 ## Slots
 
 None.
-

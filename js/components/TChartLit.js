@@ -132,9 +132,10 @@ class TChartLit extends LitElement {
 
 		/* Grid lines */
 		.grid-line {
-			stroke: var(--terminal-gray-dark, #333);
+			stroke: var(--terminal-gray, #444);
 			stroke-width: 1;
-			stroke-dasharray: 4, 4;
+			stroke-dasharray: 3, 3;
+			opacity: 0.6;
 		}
 
 		/* Axis */
@@ -160,7 +161,10 @@ class TChartLit extends LitElement {
 			gap: 12px;
 			justify-content: center;
 			margin-top: 16px;
+			margin-bottom: 8px;
+			padding-bottom: 8px;
 			font-size: 11px;
+			flex-shrink: 0;
 		}
 
 		.legend-item {
@@ -220,6 +224,18 @@ class TChartLit extends LitElement {
 			text-anchor: middle;
 		}
 
+		/* Data labels on pie/donut - need contrast */
+		.data-label.on-slice {
+			fill: var(--terminal-gray-darkest, #1a1a1a);
+			font-weight: 600;
+			font-size: 11px;
+		}
+
+		/* Monochrome mode - labels should be same green color */
+		:host([monochrome]) .data-label.on-slice {
+			fill: var(--chart-base-color, var(--terminal-green, #00ff41));
+		}
+
 		/* Empty state */
 		.empty-state {
 			text-align: center;
@@ -227,6 +243,12 @@ class TChartLit extends LitElement {
 			color: var(--terminal-gray, #666);
 		}
 	`;
+
+	// ============================================================
+	// BLOCK 4: Internal State
+	// ============================================================
+	_lastMeasuredWidth = 400;
+	_lastMeasuredHeight = 200;
 
 	// ============================================================
 	// BLOCK 3: Reactive Properties
@@ -338,7 +360,15 @@ class TChartLit extends LitElement {
 		 * @default 'terminal'
 		 * @attribute color-scheme
 		 */
-		colorScheme: { type: String, attribute: 'color-scheme', reflect: true }
+		colorScheme: { type: String, attribute: 'color-scheme', reflect: true },
+
+		/**
+		 * Outline-only mode (no fill, just strokes) - for bar charts
+		 * @property {Boolean} outlineOnly
+		 * @default false
+		 * @attribute outline-only
+		 */
+		outlineOnly: { type: Boolean, attribute: 'outline-only', reflect: true }
 	};
 
 	// ============================================================
@@ -355,14 +385,14 @@ class TChartLit extends LitElement {
 	/** @private - Color scheme presets */
 	static _colorSchemes = {
 		terminal: [
-			'#00ff41', // Green
-			'#00ffff', // Cyan
-			'#ffb000', // Amber
-			'#ff003c', // Red
-			'#9d00ff', // Purple
+			'#00ff41', // Terminal green (primary)
 			'#00cc33', // Green dim
-			'#0099ff', // Blue
-			'#ff9900'  // Orange
+			'#00ffff', // Cyan
+			'#00b8b8', // Cyan dim
+			'#ffb000', // Amber
+			'#cc8c00', // Amber dim
+			'#ff5050', // Red light
+			'#9966ff'  // Purple soft
 		],
 		neon: [
 			'#ff00ff', // Magenta
@@ -385,24 +415,55 @@ class TChartLit extends LitElement {
 			'#00ff99'  // Aqua
 		],
 		warm: [
-			'#ff003c', // Red
+			'#ff5050', // Red light
 			'#ffb000', // Amber
 			'#ff9900', // Orange
 			'#ff6600', // Dark orange
-			'#ff3366', // Pink
+			'#ff6699', // Pink
 			'#ffcc00', // Gold
 			'#ff4400', // Red-orange
 			'#cc6600'  // Brown
 		],
 		grayscale: [
-			'#ffffff', // White
-			'#cccccc', // Light gray
-			'#999999', // Gray
+			'#e0e0e0', // Light gray
+			'#b0b0b0', // Medium light
+			'#888888', // Gray
 			'#666666', // Dark gray
-			'#444444', // Darker gray
-			'#333333', // Very dark gray
-			'#222222', // Almost black
-			'#111111'  // Near black
+			'#505050', // Darker
+			'#404040', // Very dark
+			'#303030', // Near black
+			'#202020'  // Almost black
+		],
+		// Monochrome schemes
+		'mono-green': [
+			'#00ff41',
+			'#00dd38',
+			'#00bb2f',
+			'#009926',
+			'#00771d',
+			'#005514',
+			'#00330b',
+			'#001102'
+		],
+		'mono-cyan': [
+			'#00ffff',
+			'#00dddd',
+			'#00bbbb',
+			'#009999',
+			'#007777',
+			'#005555',
+			'#003333',
+			'#001111'
+		],
+		'mono-amber': [
+			'#ffb000',
+			'#dd9a00',
+			'#bb8400',
+			'#996e00',
+			'#775800',
+			'#554200',
+			'#332c00',
+			'#111600'
 		]
 	};
 
@@ -441,6 +502,7 @@ class TChartLit extends LitElement {
 		this.monochrome = false;
 		this.baseColor = '#00ff41';
 		this.colorScheme = 'terminal';
+		this.outlineOnly = false;
 
 		this._logger.debug('Component constructed');
 	}
@@ -461,6 +523,7 @@ class TChartLit extends LitElement {
 
 	firstUpdated() {
 		this._logger.debug('First update complete');
+		requestAnimationFrame(() => this.requestUpdate());
 	}
 
 	updated(changedProperties) {
@@ -504,29 +567,14 @@ class TChartLit extends LitElement {
 	}
 
 	/**
-	 * Generate monochrome color shade
+	 * Generate monochrome color - returns same base color for all items
 	 * @private
-	 * @param {number} index - Data point index
+	 * @param {number} index - Data point index (unused - all same color)
 	 * @returns {string} Color value
 	 */
 	_getMonochromeColor(index) {
-		const baseColor = this.baseColor || '#00ff41';
-		const totalItems = Math.max(this.data.length, 8);
-
-		// Parse hex color
-		const r = parseInt(baseColor.slice(1, 3), 16);
-		const g = parseInt(baseColor.slice(3, 5), 16);
-		const b = parseInt(baseColor.slice(5, 7), 16);
-
-		// Calculate shade factor (from full color to dim)
-		const shadeFactor = 1 - (index / totalItems) * 0.7;
-
-		// Apply shade
-		const newR = Math.round(r * shadeFactor);
-		const newG = Math.round(g * shadeFactor);
-		const newB = Math.round(b * shadeFactor);
-
-		return `rgb(${newR}, ${newG}, ${newB})`;
+		// True monochrome: ALL items use the SAME base color
+		return this.baseColor || '#00ff41';
 	}
 
 	// ============================================================
@@ -586,8 +634,11 @@ class TChartLit extends LitElement {
 			`;
 		}
 
+		// Set CSS variable for base color (used in monochrome mode)
+		const containerStyle = this.monochrome ? `--chart-base-color: ${this.baseColor}` : '';
+
 		return html`
-			<div class="chart-container">
+			<div class="chart-container" style="${containerStyle}">
 				${this.title ? html`<div class="chart-title">${this.title}</div>` : ''}
 				${this._renderChart()}
 				${this.showLegend ? this._renderLegend() : ''}
@@ -619,13 +670,51 @@ class TChartLit extends LitElement {
 		}
 	}
 
+	_getChartWidth() {
+		const rect = this.getBoundingClientRect();
+		if (rect.width) {
+			const width = Math.max(240, rect.width - 16);
+			this._lastMeasuredWidth = width;
+			return width;
+		}
+		return this._lastMeasuredWidth || 400;
+	}
+
+	_getChartHeight() {
+		const raw = this.height;
+		if (typeof raw === 'string' && (raw.includes('%') || raw === 'auto')) {
+			const rect = this.getBoundingClientRect();
+			if (rect.height) {
+				const height = Math.max(180, rect.height - 16);
+				this._lastMeasuredHeight = height;
+				return height;
+			}
+			return this._lastMeasuredHeight || 200;
+		}
+
+		const parsed = parseInt(raw, 10);
+		if (Number.isFinite(parsed) && parsed > 0) {
+			this._lastMeasuredHeight = parsed;
+			return parsed;
+		}
+
+		return this._lastMeasuredHeight || 200;
+	}
+
+	_getHeightStyle() {
+		if (typeof this.height === 'string' && (this.height.includes('%') || this.height === 'auto')) {
+			return 'height: 100%;';
+		}
+		return `height: ${this.height}`;
+	}
+
 	/**
 	 * Render bar chart
 	 * @private
 	 */
 	_renderBarChart() {
-		const height = parseInt(this.height) || 200;
-		const width = 400;
+		const height = this._getChartHeight();
+		const width = this._getChartWidth();
 		const padding = { top: 20, right: 20, bottom: 40, left: 50 };
 		const chartWidth = width - padding.left - padding.right;
 		const chartHeight = height - padding.top - padding.bottom;
@@ -637,7 +726,7 @@ class TChartLit extends LitElement {
 		const isVertical = this.orientation === 'vertical';
 
 		return html`
-			<svg viewBox="0 0 ${width} ${height}" style="height: ${this.height}" part="svg">
+			<svg viewBox="0 0 ${width} ${height}" style="${this._getHeightStyle()}" part="svg">
 				<!-- Grid lines -->
 				${this.showGrid ? this._renderGrid(padding, chartWidth, chartHeight, maxValue, isVertical) : ''}
 
@@ -657,7 +746,9 @@ class TChartLit extends LitElement {
 								y=${y}
 								width=${barWidth}
 								height=${barHeight}
-								fill=${color}
+								fill=${this.outlineOnly ? 'transparent' : color}
+								stroke=${this.outlineOnly ? color : 'none'}
+								stroke-width=${this.outlineOnly ? '2' : '0'}
 								@click=${() => this._handleSegmentClick(item, i)}
 								@mouseenter=${(e) => this._handleSegmentHover(e, item, i, true)}
 								@mouseleave=${(e) => this._handleSegmentHover(e, item, i, false)}
@@ -698,8 +789,8 @@ class TChartLit extends LitElement {
 	 * @private
 	 */
 	_renderLineChart() {
-		const height = parseInt(this.height) || 200;
-		const width = 400;
+		const height = this._getChartHeight();
+		const width = this._getChartWidth();
 		const padding = { top: 20, right: 20, bottom: 40, left: 50 };
 		const chartWidth = width - padding.left - padding.right;
 		const chartHeight = height - padding.top - padding.bottom;
@@ -716,7 +807,7 @@ class TChartLit extends LitElement {
 		const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
 
 		return html`
-			<svg viewBox="0 0 ${width} ${height}" style="height: ${this.height}" part="svg">
+			<svg viewBox="0 0 ${width} ${height}" style="${this._getHeightStyle()}" part="svg">
 				<!-- Grid lines -->
 				${this.showGrid ? this._renderGrid(padding, chartWidth, chartHeight, maxValue, true) : ''}
 
@@ -789,7 +880,7 @@ class TChartLit extends LitElement {
 	 * @private
 	 */
 	_renderCircularChart(isDonut) {
-		const size = parseInt(this.height) || 200;
+		const size = Math.min(this._getChartWidth(), this._getChartHeight());
 		const centerX = size / 2;
 		const centerY = size / 2;
 		const radius = size * 0.4;
@@ -833,7 +924,7 @@ class TChartLit extends LitElement {
 		});
 
 		return html`
-			<svg viewBox="0 0 ${size} ${size}" style="height: ${this.height}" part="svg">
+			<svg viewBox="0 0 ${size} ${size}" style="${this._getHeightStyle()}" part="svg">
 				${slices.map(slice => svg`
 					<path
 						class="slice"
@@ -846,7 +937,7 @@ class TChartLit extends LitElement {
 					/>
 					${this.showLabels && parseFloat(slice.percentage) > 5 ? svg`
 						<text
-							class="data-label"
+							class="data-label on-slice"
 							x=${slice.labelX}
 							y=${slice.labelY}
 							dominant-baseline="middle"

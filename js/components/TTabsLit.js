@@ -82,6 +82,8 @@ export class TTabsLit extends LitElement {
 		/* Vertical orientation */
 		:host([orientation="vertical"]) {
 			display: flex;
+			flex-direction: row;
+			align-items: stretch;
 		}
 
 		:host([orientation="vertical"]) .tab-list {

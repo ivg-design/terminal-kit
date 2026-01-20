@@ -27,7 +27,7 @@ A compact tag/chip component for displaying labels, filters, or selections with 
 | `disabled` | `Boolean` | `false` | Yes | Disable interactions |
 | `icon` | `String` | `''` | No | Icon SVG string (left side) |
 | `avatar` | `String` | `''` | No | Avatar image URL |
-| `autoRemove` | `Boolean` | `false` | Yes | Auto-remove from DOM when remove button clicked |
+| `autoRemove` | `Boolean` | `true` | Yes | Auto-remove from DOM when remove button clicked |
 | `shape` | `String` | `'pill'` | Yes | Shape variant: `'pill'` (rounded), `'tag'` (left accent), `'square'` |
 
 ## Methods
@@ -47,8 +47,8 @@ Toggle selection state.
 
 **Fires:** `chip-select`
 
-### remove()
-Remove the chip (triggers event).
+### requestRemove()
+Request chip removal (triggers event, auto-removes if enabled).
 
 **Fires:** `chip-remove`
 
@@ -203,7 +203,7 @@ chip.deselect();
 chip.toggle();
 
 // Remove
-chip.remove();
+chip.requestRemove();
 
 // Listen for events
 chip.addEventListener('chip-click', (e) => {
@@ -216,7 +216,6 @@ chip.addEventListener('chip-select', (e) => {
 
 chip.addEventListener('chip-remove', (e) => {
   console.log('Removed:', e.detail.label);
-  chip.remove(); // Actually remove from DOM
 });
 ```
 

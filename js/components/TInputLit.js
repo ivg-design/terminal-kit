@@ -7,8 +7,12 @@ import { generateManifest } from '../utils/manifest-generator.js';
 import {
   eyeIcon,
   eyeClosedIcon,
-  plusSquareIcon,
-  minusSquareIcon,
+  plusIcon,
+  minusIcon,
+  caretUpIcon,
+  caretDownIcon,
+  arrowUpIcon,
+  arrowDownIcon,
   xIcon,
 } from '../utils/phosphor-icons.js';
 
@@ -43,6 +47,15 @@ export class TInputLit extends LitElement {
     :host {
       display: block;
       width: 100%;
+      --t-stepper-bg: var(--terminal-gray-dark, #242424);
+      --t-stepper-border: var(--terminal-gray-light, #333333);
+      --t-stepper-color: var(--terminal-green-dim, #00cc33);
+      --t-stepper-hover-bg: rgba(0, 255, 65, 0.1);
+      --t-stepper-active-bg: rgba(0, 255, 65, 0.15);
+      --t-stepper-active-color: var(--terminal-black, #0a0a0a);
+      --t-stepper-size: 28px;
+      --t-stepper-height: 24px;
+      --t-stepper-icon-size: 14px;
     }
 
     /* Control Label */
@@ -203,50 +216,53 @@ export class TInputLit extends LitElement {
     }
 
     input.has-number-controls {
-      padding-right: 70px;
+      padding-right: calc((var(--t-stepper-size) * 2) + 14px);
     }
 
     .number-controls {
       position: absolute;
-      right: 4px;
+      right: 6px;
       top: 50%;
       transform: translateY(-50%);
       display: flex;
-      gap: 2px;
+      gap: 4px;
+      z-index: 2;
     }
 
     .number-increment,
     .number-decrement {
-      background: var(--terminal-gray-dark, #242424);
-      border: 1px solid var(--terminal-gray-light, #333333);
-      color: var(--terminal-green-dim, #00cc33);
+      background: var(--t-stepper-bg);
+      border: 1px solid var(--t-stepper-border);
+      color: var(--t-stepper-color);
       cursor: pointer;
-      padding: 2px;
+      padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.2s ease;
-      width: 28px;
-      height: 24px;
+      width: var(--t-stepper-size);
+      height: var(--t-stepper-height);
+      border-radius: 2px;
     }
 
     .number-increment:hover,
     .number-decrement:hover {
-      background: rgba(0, 255, 65, 0.1);
+      background: var(--t-stepper-hover-bg);
       border-color: var(--terminal-green-dim, #00cc33);
       color: var(--terminal-green, #00ff41);
     }
 
     .number-increment:active,
     .number-decrement:active {
-      background: rgba(0, 255, 65, 0.15);
+      background: var(--t-stepper-active-bg);
+      color: var(--t-stepper-active-color);
       transform: scale(0.95);
     }
 
     .number-increment svg,
     .number-decrement svg {
-      width: 16px;
-      height: 16px;
+      width: var(--t-stepper-icon-size);
+      height: var(--t-stepper-icon-size);
       fill: currentColor;
     }
 
@@ -328,6 +344,20 @@ export class TInputLit extends LitElement {
      * @attribute value
      */
     value: { type: String },
+
+    /**
+     * @property {('plusminus'|'chevron'|'arrows')} stepperStyle - Stepper icon style
+     * @default 'plusminus'
+     * @attribute stepper-style
+     */
+    stepperStyle: { type: String, attribute: 'stepper-style' },
+
+    /**
+     * @property {('sm'|'md'|'lg')} stepperSize - Stepper size preset
+     * @default 'md'
+     * @attribute stepper-size
+     */
+    stepperSize: { type: String, attribute: 'stepper-size' },
 
     /**
      * @property {boolean} disabled - Disabled state
@@ -469,6 +499,8 @@ export class TInputLit extends LitElement {
     this.label = '';
     this.helperText = '';
     this.icon = '';
+    this.stepperStyle = 'plusminus';
+    this.stepperSize = 'md';
 
     // Initialize logger
     this._logger = componentLogger.for(TInputLit.tagName);
@@ -512,6 +544,8 @@ export class TInputLit extends LitElement {
     super.firstUpdated(changedProperties);
     this._logger.debug('First update complete', { changedProperties });
 
+    this._applyStepperSize();
+
     // Sync form value
     if (this._internals) {
       this._internals.setFormValue(this.value);
@@ -530,6 +564,10 @@ export class TInputLit extends LitElement {
     // Sync form value when value changes
     if (changedProperties.has('value') && this._internals) {
       this._internals.setFormValue(this.value);
+    }
+
+    if (changedProperties.has('stepperSize')) {
+      this._applyStepperSize();
     }
   }
 
@@ -945,11 +983,13 @@ export class TInputLit extends LitElement {
 
     const inputType = this.type === 'password' ? (this._showPassword ? 'text' : 'password') :
                       this.type === 'url' ? 'text' : this.type;
+    const numberWidth = this.type === 'number' ? this._getNumberWidth() : '';
+    const wrapperStyle = numberWidth ? `width: ${numberWidth}; max-width: ${numberWidth};` : '';
 
     return html`
       ${this.label ? html`<label class="control-label">${this.label}</label>` : ''}
 
-      <div class="input-wrapper">
+      <div class="input-wrapper" style=${wrapperStyle}>
         ${this.icon ? html`<span class="input-icon" .innerHTML=${this.icon}></span>` : ''}
 
         <input
@@ -957,6 +997,7 @@ export class TInputLit extends LitElement {
           class=${inputClasses.join(' ')}
           .value=${this.value}
           placeholder=${this.placeholder}
+          style=${numberWidth ? `width: ${numberWidth}; max-width: ${numberWidth};` : ''}
           ?disabled=${this.disabled}
           ?readonly=${this.readonly}
           ?required=${this.required}
@@ -988,6 +1029,61 @@ export class TInputLit extends LitElement {
   // ----------------------------------------------------------
   // BLOCK 13: PRIVATE HELPERS (LAST)
   // ----------------------------------------------------------
+
+  /**
+   * Apply stepper size presets
+   * @private
+   */
+  _applyStepperSize() {
+    const sizes = {
+      sm: { size: 18, height: 18, icon: 10 },
+      md: { size: 22, height: 20, icon: 12 },
+      lg: { size: 28, height: 24, icon: 14 }
+    };
+
+    const preset = sizes[this.stepperSize] || sizes.md;
+    this.style.setProperty('--t-stepper-size', `${preset.size}px`);
+    this.style.setProperty('--t-stepper-height', `${preset.height}px`);
+    this.style.setProperty('--t-stepper-icon-size', `${preset.icon}px`);
+  }
+
+  /**
+   * Resolve stepper icons based on style
+   * @private
+   */
+  _getStepperIcons() {
+    switch (this.stepperStyle) {
+      case 'chevron':
+        return { inc: caretUpIcon, dec: caretDownIcon };
+      case 'arrows':
+        return { inc: arrowUpIcon, dec: arrowDownIcon };
+      default:
+        return { inc: plusIcon, dec: minusIcon };
+    }
+  }
+
+  /**
+   * Calculate number input width based on range digits
+   * @private
+   */
+  _getNumberWidth() {
+    const min = Number.isFinite(this.min) ? this.min : 0;
+    const max = Number.isFinite(this.max) ? this.max : 0;
+    const step = Number.isFinite(this.step) ? this.step : 1;
+
+    const minDigits = Math.abs(min).toString().length;
+    const maxDigits = Math.abs(max).toString().length;
+    const hasNegative = min < 0;
+    const hasDecimals = step < 1;
+    const decimalPlaces = hasDecimals ? (String(step).split('.')[1]?.length || 0) : 0;
+
+    let digits = Math.max(minDigits, maxDigits);
+    if (hasDecimals) digits += decimalPlaces + 1;
+    if (hasNegative) digits += 1;
+
+    const safeDigits = Math.max(3, digits);
+    return `calc(${safeDigits}ch + 16px)`;
+  }
 
   /**
    * Handle input event
@@ -1119,6 +1215,7 @@ export class TInputLit extends LitElement {
    * @returns {TemplateResult}
    */
   _renderNumberControls() {
+    const icons = this._getStepperIcons();
     return html`
       <div class="number-controls">
         <button
@@ -1127,7 +1224,7 @@ export class TInputLit extends LitElement {
           @click=${this._incrementNumber}
           ?disabled=${this.disabled || this.readonly}
           aria-label="Increment"
-          .innerHTML=${plusSquareIcon}
+          .innerHTML=${icons.inc}
         ></button>
         <button
           type="button"
@@ -1135,7 +1232,7 @@ export class TInputLit extends LitElement {
           @click=${this._decrementNumber}
           ?disabled=${this.disabled || this.readonly}
           aria-label="Decrement"
-          .innerHTML=${minusSquareIcon}
+          .innerHTML=${icons.dec}
         ></button>
       </div>
     `;

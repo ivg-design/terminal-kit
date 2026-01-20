@@ -28,6 +28,7 @@ A comprehensive library of terminal-styled web components built with Lit 3.x.
 
 - [TListLit](./components/TListLit.md) - Virtualized list with selection (`t-list`)
 - [TTreeLit](./components/TTreeLit.md) - Hierarchical tree view (`t-tree`)
+- [TBreadcrumbsLit](./components/TBreadcrumbsLit.md) - Breadcrumb navigation trail (`t-bread`)
 - [TMenuLit](./components/TMenuLit.md) - Dropdown/context menu (`t-menu`)
 - [TTimelineLit](./components/TTimelineLit.md) - Vertical timeline display (`t-tmln`)
 - [TCalendarLit](./components/TCalendarLit.md) - Date picker calendar (`t-cal`)
@@ -113,6 +114,10 @@ Components use a terminal-inspired design system with:
 - Monospace fonts (JetBrains Mono, SF Mono)
 - CRT-inspired effects (glow, scanlines)
 - CSS variables for theming
+
+### Demo Utilities
+
+All demo pages include a global tint picker in the header that updates `--terminal-green` (and related glow colors) for quick palette testing.
 
 Key CSS variables:
 ```css

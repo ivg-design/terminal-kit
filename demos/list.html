@@ -3,248 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TListLit Component Demo</title>
+    <title>TListLit - Component Demo</title>
+    <link rel="stylesheet" href="../css/demo-template.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
-
-        :root {
-            --terminal-green: #00ff41;
-            --terminal-green-dim: #00cc33;
-            --terminal-amber: #ffb000;
-            --terminal-red: #ff003c;
-            --terminal-cyan: #00ffff;
-            --terminal-gray: #666;
-            --terminal-gray-dark: #333;
-            --terminal-gray-darkest: #1a1a1a;
-            --terminal-bg: #0a0a0a;
-            --terminal-black: #0a0a0a;
-            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-        }
-
-        body {
-            background: var(--terminal-bg);
-            color: var(--terminal-green);
-            font-family: var(--font-mono);
-            padding: 40px;
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        h1, h2 {
-            color: var(--terminal-green);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        h1 {
-            border-bottom: 2px solid var(--terminal-green);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        h2 {
-            margin-top: 50px;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-
-        .description {
-            color: var(--terminal-gray);
-            margin-bottom: 40px;
-        }
-
-        .demo-section {
-            margin-bottom: 40px;
-        }
-
-        .demo-row {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .demo-label {
-            font-size: 11px;
-            color: var(--terminal-gray);
-            text-transform: uppercase;
-            margin-top: 10px;
-        }
-
-        button {
-            background: transparent;
-            border: 1px solid var(--terminal-green);
-            color: var(--terminal-green);
-            padding: 8px 16px;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s;
-        }
-
-        button:hover {
-            background: var(--terminal-green);
-            color: var(--terminal-black);
-        }
-
-        .event-log {
-            background: #111;
-            border: 1px solid #333;
-            padding: 15px;
-            font-size: 12px;
-            max-height: 150px;
-            overflow-y: auto;
-            margin-top: 20px;
-        }
-
-        .event-log p {
-            margin: 5px 0;
-            color: var(--terminal-green);
-        }
-
-        .event-log .timestamp {
-            color: var(--terminal-gray);
-        }
-
-        .controls {
-            background: rgba(0, 255, 65, 0.05);
-            border: 1px solid var(--terminal-green);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .control-row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .selection-info {
-            margin-top: 10px;
-            font-size: 12px;
-            color: var(--terminal-gray);
-        }
-
         t-list {
             height: 300px;
             width: 100%;
             max-width: 500px;
         }
+        .selection-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--terminal-gray);
+        }
     </style>
 </head>
 <body>
-    <h1>TListLit Component Demo</h1>
-    <p class="description">
-        Virtualized scrollable list with selection, grouping, drag-and-drop, and infinite scroll.
-    </p>
-
-    <!-- Basic List -->
-    <div class="demo-section">
-        <h2>Basic List</h2>
-        <t-list id="basic-list"></t-list>
-    </div>
-
-    <!-- Single Selection -->
-    <div class="demo-section">
-        <h2>Single Selection</h2>
-        <t-list id="single-select" selectable="single"></t-list>
-        <p class="selection-info">Selected: <span id="single-selected">None</span></p>
-    </div>
-
-    <!-- Multiple Selection -->
-    <div class="demo-section">
-        <h2>Multiple Selection</h2>
-        <div class="controls">
-            <div class="control-row">
-                <button onclick="selectAll()">Select All</button>
-                <button onclick="clearSelection()">Clear Selection</button>
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TListLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / List
+                </div>
+            </div>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
             </div>
         </div>
-        <t-list id="multi-select" selectable="multiple"></t-list>
-        <p class="selection-info">Selected: <span id="multi-selected">None</span></p>
-    </div>
+    </header>
 
-    <!-- With Dividers & Dense -->
-    <div class="demo-section">
-        <h2>Variants: Dividers & Dense</h2>
-        <div class="demo-row">
-            <div>
-                <t-list id="dividers-list" dividers style="height: 200px;"></t-list>
-                <p class="demo-label">With Dividers</p>
+    <!-- Main Content -->
+    <div class="demo-container">
+        <div class="component-section">
+            <h2 class="component-title">List Component</h2>
+            <p class="component-description">
+                Virtualized scrollable list with selection, grouping, drag-and-drop, and infinite scroll.
+            </p>
+
+            <h3>Basic List</h3>
+            <div class="demo-grid single">
+                <div class="demo-item">
+                    <t-list id="basic-list"></t-list>
+                </div>
             </div>
-            <div>
-                <t-list id="dense-list" dense dividers style="height: 200px;"></t-list>
-                <p class="demo-label">Dense Mode</p>
+
+            <h3>Single Selection</h3>
+            <div class="demo-grid single">
+                <div class="demo-item">
+                    <t-list id="single-select" selectable="single"></t-list>
+                    <p class="selection-info">Selected: <span id="single-selected">None</span></p>
+                </div>
+            </div>
+
+            <h3>Multiple Selection</h3>
+            <div class="demo-grid single">
+                <div class="demo-item">
+                    <div class="controls" style="margin-bottom: 10px;">
+                        <button onclick="selectAll()">Select All</button>
+                        <button onclick="clearSelection()">Clear Selection</button>
+                    </div>
+                    <t-list id="multi-select" selectable="multiple"></t-list>
+                    <p class="selection-info">Selected: <span id="multi-selected">None</span></p>
+                </div>
+            </div>
+
+            <h3>Variants: Dividers & Dense</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">With Dividers</span>
+                    <t-list id="dividers-list" dividers style="height: 200px;"></t-list>
+                </div>
+                <div class="demo-item">
+                    <span class="demo-label">Dense Mode</span>
+                    <t-list id="dense-list" dense dividers style="height: 200px;"></t-list>
+                </div>
+            </div>
+
+            <h3>Items with Secondary Text</h3>
+            <div class="demo-grid single">
+                <div class="demo-item">
+                    <t-list id="secondary-list" dividers></t-list>
+                </div>
+            </div>
+
+            <h3>Grouped Items</h3>
+            <div class="demo-grid single">
+                <div class="demo-item">
+                    <t-list id="grouped-list" group-by="category" dividers></t-list>
+                </div>
+            </div>
+
+            <h3>Draggable (Reorderable)</h3>
+            <div class="demo-grid single">
+                <div class="demo-item">
+                    <span class="demo-label">Drag items to reorder</span>
+                    <t-list id="draggable-list" draggable></t-list>
+                </div>
+            </div>
+
+            <h3>Loading States</h3>
+            <div class="demo-grid single">
+                <div class="demo-item">
+                    <div class="controls" style="margin-bottom: 10px;">
+                        <button onclick="toggleLoading()">Toggle Loading</button>
+                        <button onclick="toggleLoadingMore()">Toggle Load More</button>
+                    </div>
+                    <t-list id="loading-list"></t-list>
+                </div>
+            </div>
+
+            <h3>Empty State</h3>
+            <div class="demo-grid single">
+                <div class="demo-item">
+                    <t-list id="empty-list" empty-text="No items to display" style="height: 150px;"></t-list>
+                </div>
+            </div>
+
+            <h3>Infinite Scroll</h3>
+            <div class="demo-grid single">
+                <div class="demo-item">
+                    <span class="demo-label">Scroll to bottom to load more items</span>
+                    <t-list id="infinite-list" style="height: 250px;"></t-list>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <code>&lt;!-- Basic list --&gt;
+&lt;t-list id="list"&gt;&lt;/t-list&gt;
+&lt;script&gt;
+  document.getElementById('list').items = [
+    { id: '1', label: 'Item 1' },
+    { id: '2', label: 'Item 2' }
+  ];
+&lt;/script&gt;
+
+&lt;!-- Single selection --&gt;
+&lt;t-list selectable="single"&gt;&lt;/t-list&gt;
+
+&lt;!-- Multiple selection --&gt;
+&lt;t-list selectable="multiple"&gt;&lt;/t-list&gt;
+
+&lt;!-- With secondary text --&gt;
+&lt;script&gt;
+  list.items = [
+    { id: '1', label: 'File.js', secondary: 'Description' }
+  ];
+&lt;/script&gt;
+
+&lt;!-- Grouped --&gt;
+&lt;t-list group-by="category"&gt;&lt;/t-list&gt;
+
+&lt;!-- Draggable --&gt;
+&lt;t-list draggable&gt;&lt;/t-list&gt;</code>
             </div>
         </div>
     </div>
 
-    <!-- With Secondary Text -->
-    <div class="demo-section">
-        <h2>Items with Secondary Text</h2>
-        <t-list id="secondary-list" dividers></t-list>
-    </div>
-
-    <!-- Grouped List -->
-    <div class="demo-section">
-        <h2>Grouped Items</h2>
-        <t-list id="grouped-list" group-by="category" dividers></t-list>
-    </div>
-
-    <!-- Draggable List -->
-    <div class="demo-section">
-        <h2>Draggable (Reorderable)</h2>
-        <t-list id="draggable-list" draggable></t-list>
-        <p class="demo-label">Drag items to reorder</p>
-    </div>
-
-    <!-- Loading States -->
-    <div class="demo-section">
-        <h2>Loading States</h2>
-        <div class="controls">
-            <div class="control-row">
-                <button onclick="toggleLoading()">Toggle Loading</button>
-                <button onclick="toggleLoadingMore()">Toggle Load More</button>
+    <!-- Floating Event Log -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle">
+            <h3><span class="toggle-icon">▲</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count">0</span>
+                <button class="event-log-clear">Clear</button>
             </div>
         </div>
-        <t-list id="loading-list"></t-list>
-    </div>
-
-    <!-- Empty State -->
-    <div class="demo-section">
-        <h2>Empty State</h2>
-        <t-list id="empty-list" empty-text="No items to display" style="height: 150px;"></t-list>
-    </div>
-
-    <!-- Infinite Scroll -->
-    <div class="demo-section">
-        <h2>Infinite Scroll</h2>
-        <t-list id="infinite-list" style="height: 250px;"></t-list>
-        <p class="demo-label">Scroll to bottom to load more items</p>
-    </div>
-
-    <!-- Event Log -->
-    <div class="demo-section">
-        <h2>Event Log</h2>
-        <div class="event-log" id="event-log">
-            <p><span class="timestamp">[LOG]</span> Interact with lists to see events...</p>
-        </div>
+        <div class="event-log" id="eventLog"></div>
     </div>
 
     <script type="module">
         import '../js/components/TListLit.js';
 
-        const eventLog = document.getElementById('event-log');
+        // Event log functionality
+        let eventCount = 0;
+        const eventLog = document.getElementById('eventLog');
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const countEl = document.querySelector('.event-log-count');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
 
-        function logEvent(listId, event) {
+        function logEvent(component, event, detail) {
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
             const timestamp = new Date().toLocaleTimeString();
-            const p = document.createElement('p');
-            const detail = event.detail ? JSON.stringify(event.detail) : 'N/A';
-            p.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${listId}: ${event.type}`;
-            eventLog.insertBefore(p, eventLog.firstChild);
+            entry.textContent = `[${timestamp}] ${component}: ${event}${detail ? ' - ' + JSON.stringify(detail) : ''}`;
+            eventLog.appendChild(entry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+            eventCount++;
+            countEl.textContent = eventCount;
         }
+
+        // Toggle event log
+        document.querySelector('.event-log-toggle').addEventListener('click', (e) => {
+            if (e.target.closest('.event-log-clear')) return;
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.classList.toggle('active');
+        });
+
+        // Clear log
+        document.querySelector('.event-log-clear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLog.innerHTML = '';
+            eventCount = 0;
+            countEl.textContent = '0';
+        });
 
         // Basic items
         const basicItems = Array.from({ length: 20 }, (_, i) => ({
@@ -293,7 +262,7 @@
         const singleDisplay = document.getElementById('single-selected');
         singleSelect.addEventListener('selection-change', (e) => {
             singleDisplay.textContent = e.detail.selected.length ? e.detail.selected.join(', ') : 'None';
-            logEvent('single-select', e);
+            logEvent('single-select', 'selection-change', e.detail);
         });
 
         // Multiple selection tracking
@@ -301,7 +270,7 @@
         const multiDisplay = document.getElementById('multi-selected');
         multiSelect.addEventListener('selection-change', (e) => {
             multiDisplay.textContent = e.detail.selected.length ? `${e.detail.selected.length} items` : 'None';
-            logEvent('multi-select', e);
+            logEvent('multi-select', 'selection-change', e.detail);
         });
 
         window.selectAll = () => multiSelect.selectAll();
@@ -315,16 +284,18 @@
             const [removed] = items.splice(fromIndex, 1);
             items.splice(toIndex, 0, removed);
             draggableList.items = items;
-            logEvent('draggable-list', e);
+            logEvent('draggable-list', 'reorder', e.detail);
         });
 
         // Loading states
         const loadingList = document.getElementById('loading-list');
         window.toggleLoading = () => {
             loadingList.loading = !loadingList.loading;
+            logEvent('loading-list', 'loading', { loading: loadingList.loading });
         };
         window.toggleLoadingMore = () => {
             loadingList.loadingMore = !loadingList.loadingMore;
+            logEvent('loading-list', 'loadingMore', { loadingMore: loadingList.loadingMore });
         };
 
         // Infinite scroll
@@ -339,7 +310,7 @@
             if (infiniteList.loadingMore) return;
 
             infiniteList.loadingMore = true;
-            logEvent('infinite-list', e);
+            logEvent('infinite-list', 'load-more', { currentCount: infiniteItems.length });
 
             // Simulate async loading
             setTimeout(() => {
@@ -356,8 +327,11 @@
 
         // Listen to all list events
         document.querySelectorAll('t-list').forEach(list => {
-            list.addEventListener('item-click', (e) => logEvent(list.id || 'list', e));
+            list.addEventListener('item-click', (e) => logEvent(list.id || 'list', 'item-click', e.detail));
         });
+
+        logEvent('System', 'Demo initialized');
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

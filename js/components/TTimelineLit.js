@@ -694,11 +694,13 @@ class TTimelineLit extends LitElement {
 		const lastDotRect = lastDot.getBoundingClientRect();
 
 		// Line goes from center of first dot to center of last dot
-		const top = firstDotRect.top - containerRect.top + firstDotRect.height / 2;
-		const bottom = containerRect.bottom - lastDotRect.top - lastDotRect.height / 2;
+		const firstCenter = firstDotRect.top - containerRect.top + firstDotRect.height / 2;
+		const lastCenter = lastDotRect.top - containerRect.top + lastDotRect.height / 2;
+		const height = Math.max(0, lastCenter - firstCenter);
 
-		line.style.top = `${top}px`;
-		line.style.bottom = `${bottom}px`;
+		line.style.top = `${firstCenter}px`;
+		line.style.height = `${height}px`;
+		line.style.bottom = 'auto';
 	}
 
 	/**
@@ -722,11 +724,15 @@ class TTimelineLit extends LitElement {
 		const lastRect = lastWrapper.getBoundingClientRect();
 
 		// Line goes from center of first dot to center of last dot horizontally
-		const left = firstRect.left - gridRect.left + firstRect.width / 2;
-		const right = gridRect.right - lastRect.right + lastRect.width / 2;
+		const firstCenter = firstRect.left - gridRect.left + firstRect.width / 2;
+		const lastCenter = lastRect.left - gridRect.left + lastRect.width / 2;
+		const width = Math.max(0, lastCenter - firstCenter);
 
-		line.style.marginLeft = `${left}px`;
-		line.style.marginRight = `${right}px`;
+		line.style.left = `${firstCenter}px`;
+		line.style.width = `${width}px`;
+		line.style.right = 'auto';
+		line.style.marginLeft = '0';
+		line.style.marginRight = '0';
 	}
 
 	// ============================================================

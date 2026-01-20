@@ -525,7 +525,7 @@
 
         <!-- Main Grid -->
         <main class="demo-main">
-            <t-grid id="demo-grid" columns="12" cell-height="100" margin="10" show-overlay float>
+            <t-grid id="demo-grid" columns="24" cell-height="80" margin="8" show-overlay float lock-size>
                 <!-- Widgets will be added dynamically -->
             </t-grid>
         </main>
@@ -548,7 +548,7 @@
         import '../js/components/TGridLit.js';
         import '../js/components/TButtonLit.js';
         import '../js/components/TToggleLit.js';
-        import { pushPinIcon, boundingBoxIcon, xIcon, caretLeftIcon } from '../js/utils/phosphor-icons.js';
+        import { xIcon, caretLeftIcon } from '../js/utils/phosphor-icons.js';
 
         const grid = document.getElementById('demo-grid');
         const widgetBank = document.getElementById('widget-bank');
@@ -704,20 +704,13 @@
             const item = document.createElement('t-grid-item');
             item.setAttribute('gs-w', template.w);
             item.setAttribute('gs-h', template.h);
+            item.setAttribute('gs-min-w', '2');
+            item.setAttribute('gs-min-h', '2');
             item.setAttribute('item-id', widgetId);
             item.setAttribute('widget-title', template.name);
 
-            // Create header with controls
-            const headerControls = document.createElement('div');
-            headerControls.className = 'widget-header-controls';
-            headerControls.setAttribute('slot', 'controls');
-            headerControls.innerHTML = `
-                <button class="widget-control-btn lock-move" title="Lock Position">${pushPinIcon}</button>
-                <button class="widget-control-btn lock-resize" title="Lock Size">${boundingBoxIcon}</button>
-                <button class="widget-control-btn remove" title="Remove">${xIcon}</button>
-            `;
-
-            item.appendChild(headerControls);
+            // TGridItemLit now provides built-in header controls (pushpin, lock, remove)
+            // No need to add custom slot controls
 
             // Add content
             const contentDiv = document.createElement('div');
@@ -735,88 +728,23 @@
                 lockedResize: false
             });
 
-            // Set up control handlers after element is in DOM and wrapped
-            // Wait for grid to process the item (mutation observer uses 50ms + processing time)
-            setTimeout(() => setupWidgetControls(item, widgetId), 200);
+            // Listen to component events for logging
+            item.addEventListener('widget-lock-move', (e) => {
+                const data = activeWidgets.get(widgetId);
+                if (data) data.lockedMove = e.detail.locked;
+                logEvent('lock-move', { widget: widgetId, locked: e.detail.locked });
+            });
+            item.addEventListener('widget-lock-resize', (e) => {
+                const data = activeWidgets.get(widgetId);
+                if (data) data.lockedResize = e.detail.locked;
+                logEvent('lock-resize', { widget: widgetId, locked: e.detail.locked });
+            });
+            item.addEventListener('widget-remove', (e) => {
+                activeWidgets.delete(widgetId);
+                logEvent('removed', { widget: widgetId });
+            });
 
             logEvent('added', { widget: template.name });
-        }
-
-        // Setup widget control buttons
-        function setupWidgetControls(item, widgetId, retryCount = 0) {
-            // Query buttons - they should be deep inside the wrapped content
-            const lockMoveBtn = item.querySelector('.lock-move');
-            const lockResizeBtn = item.querySelector('.lock-resize');
-            const removeBtn = item.querySelector('.remove');
-
-            const widgetData = activeWidgets.get(widgetId);
-            if (!widgetData) {
-                console.warn('Widget data not found for', widgetId);
-                return;
-            }
-
-            if (!lockMoveBtn || !lockResizeBtn || !removeBtn) {
-                if (retryCount < 5) {
-                    // Retry after a short delay (DOM might not be ready)
-                    setTimeout(() => setupWidgetControls(item, widgetId, retryCount + 1), 100);
-                } else {
-                    console.error('Failed to find control buttons for', widgetId, 'after', retryCount, 'retries');
-                }
-                return;
-            }
-
-            lockMoveBtn?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                widgetData.lockedMove = !widgetData.lockedMove;
-                lockMoveBtn.classList.toggle('active', widgetData.lockedMove);
-
-                // Toggle gridstack no-move
-                if (widgetData.lockedMove) {
-                    item.setAttribute('gs-no-move', '');
-                } else {
-                    item.removeAttribute('gs-no-move');
-                }
-
-                // Use public API to update gridstack
-                grid.updateWidget(item, { noMove: widgetData.lockedMove });
-
-                logEvent('lock-move', { widget: widgetId, locked: widgetData.lockedMove });
-            });
-
-            lockResizeBtn?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                widgetData.lockedResize = !widgetData.lockedResize;
-                lockResizeBtn.classList.toggle('active', widgetData.lockedResize);
-
-                // Toggle gridstack no-resize
-                if (widgetData.lockedResize) {
-                    item.setAttribute('gs-no-resize', '');
-                } else {
-                    item.removeAttribute('gs-no-resize');
-                }
-
-                // Use public API to update gridstack
-                grid.updateWidget(item, { noResize: widgetData.lockedResize });
-
-                logEvent('lock-resize', { widget: widgetId, locked: widgetData.lockedResize });
-            });
-
-            removeBtn?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                removeWidget(widgetId);
-            });
-        }
-
-        // Remove widget
-        function removeWidget(widgetId) {
-            const widgetData = activeWidgets.get(widgetId);
-            if (!widgetData) return;
-
-            // Use public API
-            grid.removeWidget(widgetData.element, true);
-
-            activeWidgets.delete(widgetId);
-            logEvent('removed', { widget: widgetId });
         }
 
         // Log events
@@ -888,18 +816,11 @@
                     el.setAttribute('item-id', item.id);
                     el.setAttribute('widget-title', template.name);
 
+                    // Set lock state via attributes - TGridItemLit will initialize icons correctly
                     if (widgetState.lockedMove) el.setAttribute('gs-no-move', '');
                     if (widgetState.lockedResize) el.setAttribute('gs-no-resize', '');
 
-                    const headerControls = document.createElement('div');
-                    headerControls.className = 'widget-header-controls';
-                    headerControls.setAttribute('slot', 'controls');
-                    headerControls.innerHTML = `
-                        <button class="widget-control-btn lock-move ${widgetState.lockedMove ? 'active' : ''}" title="Lock Position">${pushPinIcon}</button>
-                        <button class="widget-control-btn lock-resize ${widgetState.lockedResize ? 'active' : ''}" title="Lock Size">${boundingBoxIcon}</button>
-                        <button class="widget-control-btn remove" title="Remove">${xIcon}</button>
-                    `;
-                    el.appendChild(headerControls);
+                    // TGridItemLit now provides built-in header controls
 
                     const contentDiv = document.createElement('div');
                     contentDiv.innerHTML = template.content;
@@ -915,7 +836,21 @@
                         lockedResize: widgetState.lockedResize
                     });
 
-                    setTimeout(() => setupWidgetControls(el, item.id), 100);
+                    // Listen to component events for logging
+                    el.addEventListener('widget-lock-move', (e) => {
+                        const data = activeWidgets.get(item.id);
+                        if (data) data.lockedMove = e.detail.locked;
+                        logEvent('lock-move', { widget: item.id, locked: e.detail.locked });
+                    });
+                    el.addEventListener('widget-lock-resize', (e) => {
+                        const data = activeWidgets.get(item.id);
+                        if (data) data.lockedResize = e.detail.locked;
+                        logEvent('lock-resize', { widget: item.id, locked: e.detail.locked });
+                    });
+                    el.addEventListener('widget-remove', (e) => {
+                        activeWidgets.delete(item.id);
+                        logEvent('removed', { widget: item.id });
+                    });
                 });
 
                 logEvent('loaded', { widgets: activeWidgets.size });
@@ -927,11 +862,21 @@
         // Initialize
         renderWidgetBank();
 
+        function syncSquareCells() {
+            const rect = grid.getBoundingClientRect();
+            if (!rect.width) return;
+            const columns = Number(grid.columns || 12);
+            const margin = Number(grid.margin || 0);
+            const cellWidth = (rect.width - (columns - 1) * margin) / columns;
+            grid.cellHeight = Math.max(40, Math.round(cellWidth));
+        }
+
         // Wait for grid to be ready before adding default widgets
         // The grid needs to be connected and have its firstUpdated run
         function initializeDefaultWidgets() {
             // Check if grid is ready (has _grid instance)
             if (grid._grid) {
+                syncSquareCells();
                 addWidgetFromTemplate(widgetTemplates[0]); // Stats
                 addWidgetFromTemplate(widgetTemplates[1]); // Performance
                 addWidgetFromTemplate(widgetTemplates[2]); // Chart
@@ -981,5 +926,6 @@
             eventLog.innerHTML = '<div class="event-entry">Log cleared</div>';
         });
     </script>
+    <script type="module" src="../js/utils/demo-color-picker.js"></script>
 </body>
 </html>

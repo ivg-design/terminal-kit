@@ -53,6 +53,8 @@ This component was built from the ground up as Pure Lit because:
 | `autocomplete` | string | `'off'` | ✅ | Autocomplete attribute |
 | `label` | string | `''` | ✅ | Optional label above input |
 | `helperText` | string | `''` | ✅ | Optional helper text below input |
+| `stepperStyle` | string | `'plusminus'` | ✅ | Number stepper icon style: plusminus, chevron, arrows |
+| `stepperSize` | string | `'md'` | ✅ | Number stepper size preset: sm, md, lg |
 | `icon` | string | `''` | ❌ | Optional icon SVG string |
 
 ### Property Details
@@ -110,6 +112,16 @@ Optional icon displayed on left side of input. Pass SVG string from `phosphor-ic
 import { userIcon } from '../utils/phosphor-icons.js';
 input.icon = userIcon;
 ```
+
+#### `stepperStyle`
+Controls the icon style for number input steppers:
+- `plusminus`: plus/minus icons
+- `chevron`: chevrons up/down
+- `arrows`: arrows up/down
+
+#### `stepperSize`
+Preset sizing for number input steppers:
+- `sm`, `md`, `lg` (default `md`)
 
 ---
 
@@ -895,6 +907,17 @@ TInputLit uses CSS variables for theming. Override in your stylesheet:
   --terminal-gray-dark: #242424;
   --terminal-gray-light: #333333;
 
+  /* Stepper controls (number input) */
+  --t-stepper-bg: #242424;
+  --t-stepper-border: #333333;
+  --t-stepper-color: #00cc33;
+  --t-stepper-hover-bg: rgba(0, 255, 65, 0.1);
+  --t-stepper-active-bg: rgba(0, 255, 65, 0.15);
+  --t-stepper-active-color: #0a0a0a;
+  --t-stepper-size: 28px;
+  --t-stepper-height: 24px;
+  --t-stepper-icon-size: 14px;
+
   /* Controls */
   --control-height: 28px;
 }
@@ -1163,7 +1186,7 @@ import './js/components/TInputLit.js';
 
 ## API Reference Summary
 
-### Properties (15)
+### Properties (17)
 `type`, `placeholder`, `value`, `disabled`, `readonly`, `required`, `min`, `max`, `minlength`, `maxlength`, `pattern`, `autocomplete`, `label`, `helperText`, `icon`
 
 ### Methods (8)
@@ -1202,4 +1225,3 @@ Part of Terminal Kit component library.
 ## Slots
 
 None.
-

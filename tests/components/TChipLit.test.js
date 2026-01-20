@@ -180,18 +180,18 @@ describe('TChipLit', () => {
 			expect(chip.selected).toBe(false);
 		});
 
-		it('remove() should emit chip-remove event', async () => {
+		it('requestRemove() should emit chip-remove event', async () => {
 			chip.removable = true;
 			await chip.updateComplete;
 
 			const handler = vi.fn();
 			chip.addEventListener('chip-remove', handler);
 
-			chip.remove();
+			chip.requestRemove();
 			expect(handler).toHaveBeenCalled();
 		});
 
-		it('remove() should not work when disabled', async () => {
+		it('requestRemove() should not work when disabled', async () => {
 			chip.removable = true;
 			chip.disabled = true;
 			await chip.updateComplete;
@@ -199,7 +199,7 @@ describe('TChipLit', () => {
 			const handler = vi.fn();
 			chip.addEventListener('chip-remove', handler);
 
-			chip.remove();
+			chip.requestRemove();
 			expect(handler).not.toHaveBeenCalled();
 		});
 	});

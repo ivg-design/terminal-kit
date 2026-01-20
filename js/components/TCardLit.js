@@ -269,9 +269,17 @@ const styles = css`
 	}
 
 	.card-content.collapsed {
-		max-height: 0;
-		padding-top: 0;
-		padding-bottom: 0;
+		max-height: 0 !important;
+		height: 0 !important;
+		min-height: 0 !important;
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+		padding: 0 !important;
+		margin: 0 !important;
+		overflow: hidden !important;
+		pointer-events: none;
+		visibility: hidden;
+		opacity: 0;
 	}
 
 	.card-content ::slotted(*) {
@@ -295,6 +303,7 @@ const styles = css`
 		display: none;
 	}
 
+	/* Style buttons slotted directly */
 	.card-actions ::slotted(button) {
 		background: transparent;
 		border: 1px solid var(--card-green);
@@ -310,6 +319,14 @@ const styles = css`
 	.card-actions ::slotted(button:hover) {
 		background: var(--card-green);
 		color: var(--card-bg);
+	}
+
+	/* Slotted containers display flex */
+	.card-actions ::slotted(div),
+	.card-actions ::slotted(span) {
+		display: flex;
+		gap: 8px;
+		align-items: center;
 	}
 `;
 

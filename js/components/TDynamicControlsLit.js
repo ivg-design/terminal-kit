@@ -203,7 +203,7 @@ export class TDynamicControlsLit extends LitElement {
 			flex: 0 0 var(--dyn-label-width);
 			min-width: 60px;
 			font-size: 10px;
-			color: var(--terminal-white, #fff);
+			color: var(--dyn-color);
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
@@ -212,6 +212,16 @@ export class TDynamicControlsLit extends LitElement {
 		.control-input {
 			flex: 1;
 			min-width: 80px;
+		}
+
+		.control-input t-sld,
+		.control-input t-prg {
+			width: 100%;
+			min-width: 120px;
+		}
+
+		.control-input t-prg {
+			display: block;
 		}
 
 		/* Dropdown overflow fix */
@@ -522,19 +532,24 @@ export class TDynamicControlsLit extends LitElement {
 		if (!this.showFilter) return '';
 
 		const types = this._collectAllTypes();
+		const allValue = '__all__';
 		const options = [
-			{ value: '', label: 'All types' },
+			{ value: allValue, label: 'All types' },
 			...types.map(t => ({ value: t, label: t }))
 		];
+		const activeValue = this.typeFilter || allValue;
 
 		return html`
 			<div class="type-filter">
 				<span>Filter:</span>
 				<t-drp
-					size="sm"
-					.value=${this.typeFilter}
+					compact
+					.value=${activeValue}
 					.options=${options}
-					@dropdown-change=${(e) => { this.typeFilter = e.detail.value; }}
+					@dropdown-change=${(e) => {
+						const selected = e.detail.value === allValue ? '' : e.detail.value;
+						this.typeFilter = selected;
+					}}
 				></t-drp>
 			</div>
 		`;
@@ -719,6 +734,7 @@ export class TDynamicControlsLit extends LitElement {
 				break;
 
 			case 'number':
+				const numberWidth = this._getNumberInputWidth(config);
 				controlHtml = html`
 					<t-inp
 						type="number"
@@ -727,6 +743,7 @@ export class TDynamicControlsLit extends LitElement {
 						min=${config.min ?? ''}
 						max=${config.max ?? ''}
 						step=${config.step ?? 'any'}
+						style="width: ${numberWidth}; max-width: ${numberWidth};"
 						?disabled=${this.disabled}
 						@input-change=${(e) => this._handleValueChange(path, parseFloat(e.detail.value) || 0)}
 					></t-inp>
@@ -761,7 +778,7 @@ export class TDynamicControlsLit extends LitElement {
 				const options = config.metadata?.enumValues || config.values || [];
 				controlHtml = html`
 					<t-drp
-						size="sm"
+						compact
 						.value=${value ?? ''}
 						.options=${options.map(v => ({ value: v, label: v }))}
 						?disabled=${this.disabled}
@@ -886,6 +903,28 @@ export class TDynamicControlsLit extends LitElement {
 		}
 
 		return values;
+	}
+
+	/**
+	 * @private
+	 */
+	_getNumberInputWidth(config = {}) {
+		const min = Number.isFinite(config.min) ? config.min : 0;
+		const max = Number.isFinite(config.max) ? config.max : 0;
+		const step = Number.isFinite(config.step) ? config.step : 1;
+
+		const minDigits = Math.abs(min).toString().length;
+		const maxDigits = Math.abs(max).toString().length;
+		const hasNegative = min < 0;
+		const hasDecimals = step < 1;
+		const decimalPlaces = hasDecimals ? (String(step).split('.')[1]?.length || 0) : 0;
+
+		let digits = Math.max(minDigits, maxDigits);
+		if (hasDecimals) digits += decimalPlaces + 1;
+		if (hasNegative) digits += 1;
+
+		const safeDigits = Math.max(3, digits);
+		return `calc(${safeDigits}ch + 16px)`;
 	}
 
 	/**

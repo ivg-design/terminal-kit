@@ -32,6 +32,7 @@ A **Pure Lit** navigation breadcrumb component with multiple style variants and 
 | `size` | String | `'md'` | `size` | ✅ | Size: 'sm', 'md', 'lg' |
 | `separator` | String | `''` | `separator` | - | Custom separator character/string |
 | `maxItems` | Number | `0` | `max-items` | - | Maximum items to show before collapsing (0 = no collapse) |
+| `preventNavigation` | Boolean | `false` | `prevent-navigation` | ✅ | Prevent default navigation on link clicks (emit events only) |
 | `disabled` | Boolean | `false` | `disabled` | ✅ | Disabled state |
 
 ### Items Array Structure
