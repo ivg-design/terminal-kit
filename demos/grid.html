@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TGridLit Component Demo</title>
     <link rel="stylesheet" href="../css/theme/terminal.css">
-    <!-- GridStack CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack.min.css" rel="stylesheet"/>
     <style>
         :root {
             --terminal-black: #0a0a0a;
@@ -541,10 +539,11 @@
         </div>
     </div>
 
-    <!-- GridStack library (required by TGridLit) -->
-    <script src="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack-all.min.js"></script>
-
     <script type="module">
+        import 'gridstack/dist/gridstack.min.css';
+        import { GridStack } from 'gridstack';
+        window.GridStack = GridStack;
+
         import '../js/components/TGridLit.js';
         import '../js/components/TButtonLit.js';
         import '../js/components/TToggleLit.js';

@@ -154,6 +154,6 @@ Lock/unlock all widgets from drag/resize.
 
 ## Notes
 
-- Requires GridStack on the page: `gridstack-all.min.js` from CDN or bundle.
+- Requires GridStack available on `window.GridStack` (import from `gridstack` and assign to `window` or include the bundle).
 - `t-grid-item` uses light DOM for GridStack compatibility.
 - If you provide a custom header slot, add `data-drag-handle` to enable drag from that header.

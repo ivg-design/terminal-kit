@@ -657,6 +657,10 @@ class TGridLit extends LitElement {
 			this._updateOverlay();
 		}
 
+		if (changedProperties.has('columns') || changedProperties.has('margin') || changedProperties.has('cellHeight')) {
+			this._applyGridVars();
+		}
+
 		if (this.lockSize && (changedProperties.has('columns') || changedProperties.has('margin'))) {
 			this._applyFixedWidth();
 		}
@@ -933,6 +937,7 @@ class TGridLit extends LitElement {
 		if (typeof ResizeObserver === 'undefined' || this._resizeObserver) return;
 		this._resizeObserver = new ResizeObserver(() => {
 			if (!this._grid) return;
+			this._applyGridVars();
 			this._grid.onResize();
 			if (this._overlayVisible) {
 				this._refreshOverlayCells();
@@ -984,6 +989,26 @@ class TGridLit extends LitElement {
 		this.style.width = `${width}px`;
 		this.style.minWidth = `${width}px`;
 		this.style.maxWidth = `${width}px`;
+
+		this._applyGridVars();
+		if (this._grid) {
+			this._grid.onResize();
+		}
+		this._refreshOverlayCells();
+	}
+
+	_applyGridVars() {
+		const rect = this.getBoundingClientRect();
+		if (!rect.width) return false;
+		const columnWidth = (rect.width - (this.columns - 1) * this.margin) / this.columns;
+		this.style.setProperty('--gs-column-width', `${columnWidth}px`);
+		this.style.setProperty('--gs-cell-height', `${this.cellHeight}px`);
+		const margin = `${this.margin}px`;
+		this.style.setProperty('--gs-item-margin-top', margin);
+		this.style.setProperty('--gs-item-margin-right', margin);
+		this.style.setProperty('--gs-item-margin-bottom', margin);
+		this.style.setProperty('--gs-item-margin-left', margin);
+		return true;
 	}
 
 	_clearFixedWidth() {
