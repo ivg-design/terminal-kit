@@ -673,6 +673,13 @@ class TChartLit extends LitElement {
 		}
 	}
 
+	_getXAxisLabelStep(chartWidth, count) {
+		if (!count || count <= 1) return 1;
+		const minLabelSpacing = 48;
+		const maxLabels = Math.max(1, Math.floor(chartWidth / minLabelSpacing));
+		return Math.max(1, Math.ceil(count / maxLabels));
+	}
+
 	_getChartWidth() {
 		if (this._lastMeasuredWidth) return this._lastMeasuredWidth;
 		const rect = this.getBoundingClientRect();
@@ -776,6 +783,7 @@ class TChartLit extends LitElement {
 		const maxValue = Math.max(...this.data.map(d => d.value));
 		const barWidth = chartWidth / this.data.length * 0.7;
 		const barGap = chartWidth / this.data.length * 0.3;
+		const labelStep = this._getXAxisLabelStep(chartWidth, this.data.length);
 
 		const isVertical = this.orientation === 'vertical';
 
@@ -824,6 +832,7 @@ class TChartLit extends LitElement {
 				<g transform="translate(${padding.left}, ${height - padding.bottom + 15})">
 					${this.data.map((item, i) => {
 						const x = i * (barWidth + barGap) + barGap / 2 + barWidth / 2;
+						if (labelStep > 1 && i % labelStep !== 0 && i !== this.data.length - 1) return '';
 						return svg`
 							<text class="axis-label" x=${x} text-anchor="middle">
 								${item.label}
@@ -851,6 +860,7 @@ class TChartLit extends LitElement {
 
 		const maxValue = Math.max(...this.data.map(d => d.value));
 		const stepX = chartWidth / (this.data.length - 1 || 1);
+		const labelStep = this._getXAxisLabelStep(chartWidth, this.data.length);
 
 		const points = this.data.map((item, i) => {
 			const x = i * stepX;
@@ -899,6 +909,7 @@ class TChartLit extends LitElement {
 				<g transform="translate(${padding.left}, ${height - padding.bottom + 15})">
 					${this.data.map((item, i) => {
 						const x = i * stepX;
+						if (labelStep > 1 && i % labelStep !== 0 && i !== this.data.length - 1) return '';
 						return svg`
 							<text class="axis-label" x=${x} text-anchor="middle">
 								${item.label}
