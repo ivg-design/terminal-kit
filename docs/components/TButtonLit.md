@@ -32,7 +32,7 @@ All properties are reactive Lit properties:
 
 | Property | Type | Default | Reflects | Description |
 |----------|------|---------|----------|-------------|
-| `variant` | String | `'primary'` | ✅ | Button style: 'primary', 'secondary', 'danger', 'success', 'warning', 'info', 'toggle' |
+| `variant` | String | `'primary'` | ✅ | Button style: 'primary', 'secondary', 'danger', 'error', 'success', 'warning', 'info', 'ghost', 'toggle' |
 | `type` | String | `'text'` | ✅ | Display type: 'text', 'icon', 'icon-text' |
 | `size` | String | `'default'` | ✅ | Size: 'xs', 'small'/'sm', 'default', 'large'/'lg' |
 | `disabled` | Boolean | `false` | ✅ | Disabled state |
@@ -52,9 +52,11 @@ All properties are reactive Lit properties:
 - `primary` - Primary action button (green filled on hover)
 - `secondary` - Secondary action (transparent with glow on hover)
 - `danger` - Danger/destructive action (red theme)
+- `error` - Error action (alias of danger, red theme)
 - `success` - Success action (green theme)
 - `warning` - Warning action (yellow/amber theme)
 - `info` - Informational action (blue theme)
+- `ghost` - Minimal action (transparent background)
 - `toggle` - Toggle button with on/off states
 
 ### Types

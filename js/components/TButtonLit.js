@@ -138,14 +138,17 @@ export class TButton extends LitElement {
                   inset 0 0 20px var(--terminal-green-glow, rgba(0, 255, 65, 0.1));
     }
 
-    .t-btn--danger {
+    .t-btn--danger,
+    .t-btn--error {
       background: var(--terminal-red-glow, rgba(255, 0, 65, 0.2));
-      color: var(--terminal-gray, #808080);
+      color: var(--terminal-red, #ff0041);
       border-color: var(--terminal-red, rgba(255, 0, 65, 0.4));
     }
 
     .t-btn--danger:hover:not(:disabled),
-    .t-btn--danger:active:not(:disabled) {
+    .t-btn--danger:active:not(:disabled),
+    .t-btn--error:hover:not(:disabled),
+    .t-btn--error:active:not(:disabled) {
       background: var(--terminal-red, #ff0041);
       color: white;
       border-color: var(--terminal-red, #ff0041);
@@ -185,6 +188,18 @@ export class TButton extends LitElement {
       background: var(--terminal-green, #00ff41);
       color: var(--terminal-black, #0a0a0a);
       border-color: var(--terminal-green, #00ff41);
+    }
+
+    .t-btn--ghost {
+      background: transparent;
+      border-color: var(--terminal-gray-light, #333333);
+      color: var(--terminal-green-dim, #00cc33);
+    }
+
+    .t-btn--ghost:hover:not(:disabled) {
+      background: rgba(0, 255, 65, 0.08);
+      border-color: var(--terminal-green, #00ff41);
+      color: var(--terminal-green, #00ff41);
     }
 
     .t-btn--icon-text {
@@ -581,12 +596,14 @@ export class TButton extends LitElement {
   // ============================================================
 
   /**
-   * @property {('primary'|'secondary'|'danger'|'success'|'warning'|'info'|'toggle')} variant - Button visual variant
+   * @property {('primary'|'secondary'|'danger'|'error'|'success'|'warning'|'info'|'ghost'|'toggle')} variant - Button visual variant
    * @default 'primary'
    * @attribute variant
    * @reflects true
    * @example
    * <t-btn variant="danger">Delete</t-btn>
+   * <t-btn variant="error">Error</t-btn>
+   * <t-btn variant="ghost">Ghost</t-btn>
    */
   /**
    * @property {('text'|'icon'|'icon-text')} type - Button content type
