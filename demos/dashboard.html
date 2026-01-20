@@ -743,6 +743,32 @@
         const dashboardState = {
             interacting: false
         };
+        const perfChartData = [
+            { label: '00:00', value: 45 },
+            { label: '02:00', value: 52 },
+            { label: '04:00', value: 38 },
+            { label: '06:00', value: 41 },
+            { label: '08:00', value: 55 },
+            { label: '10:00', value: 42 },
+            { label: '12:00', value: 48 },
+            { label: '14:00', value: 51 },
+            { label: '16:00', value: 44 },
+            { label: '18:00', value: 39 },
+            { label: '20:00', value: 47 },
+            { label: '22:00', value: 43 }
+        ];
+
+        function applyPerfChartData(root = document) {
+            const charts = Array.from(root.querySelectorAll('t-chart[data-chart="perf"]'));
+            if (!charts.length) return;
+            customElements.whenDefined('t-chart').then(() => {
+                charts.forEach(chart => {
+                    if (chart && typeof chart.setData === 'function') {
+                        chart.setData(perfChartData);
+                    }
+                });
+            });
+        }
 
         function syncSquareCells() {
             const rect = grid.getBoundingClientRect();
@@ -791,7 +817,7 @@
                 name: 'Performance Metrics',
                 x: 4, y: 0, w: 8, h: 4,
                 multi: true,  // Can add multiple charts
-                content: `<t-chart id="perf-chart" type="line" height="100%" show-grid style="height: 100%;"></t-chart>`
+                content: `<t-chart data-chart="perf" type="line" height="100%" show-grid style="height: 100%;"></t-chart>`
             },
             {
                 id: 'logs',
@@ -995,6 +1021,7 @@
             }
 
             grid.appendChild(item);
+            applyPerfChartData(item);
 
             // Track widget
             activeWidgets.set(def.id, {
@@ -1035,25 +1062,7 @@
             }
 
             // Performance Chart
-            customElements.whenDefined('t-chart').then(() => {
-                const perfChart = document.getElementById('perf-chart');
-                if (perfChart && perfChart.setData) {
-                    perfChart.setData([
-                        { label: '00:00', value: 45 },
-                        { label: '02:00', value: 52 },
-                        { label: '04:00', value: 38 },
-                        { label: '06:00', value: 41 },
-                        { label: '08:00', value: 55 },
-                        { label: '10:00', value: 42 },
-                        { label: '12:00', value: 48 },
-                        { label: '14:00', value: 51 },
-                        { label: '16:00', value: 44 },
-                        { label: '18:00', value: 39 },
-                        { label: '20:00', value: 47 },
-                        { label: '22:00', value: 43 }
-                    ]);
-                }
-            });
+            applyPerfChartData();
 
             // Demo Dropdown
             setTimeout(() => {
