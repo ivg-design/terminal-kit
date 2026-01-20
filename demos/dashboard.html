@@ -225,22 +225,10 @@
             border-radius: 4px;
         }
 
-        /* Resize handles */
-        t-grid > .grid-stack-item > .ui-resizable-se::before {
-            content: '';
-            position: absolute;
-            right: 4px;
-            bottom: 4px;
-            width: 8px;
-            height: 8px;
-            border-right: 2px solid var(--terminal-green);
-            border-bottom: 2px solid var(--terminal-green);
-            opacity: 0.5;
-            transition: opacity 0.15s ease;
-        }
-
-        t-grid > .grid-stack-item:hover > .ui-resizable-se::before {
-            opacity: 1;
+        /* Resize handles - hide any pseudo-elements, component handles its own icon */
+        t-grid > .grid-stack-item > .ui-resizable-se::before,
+        t-grid > .grid-stack-item > .ui-resizable-se::after {
+            display: none !important;
         }
 
         /* Grid overlay */
@@ -778,7 +766,7 @@
         import '../js/components/TChartLit.js';
         import '../js/components/TLogListLit.js';
         import {
-            pushPinIcon, boundingBoxIcon, xIcon,
+            pushPinIcon, lockSimpleIcon, lockSimpleOpenIcon, xIcon,
             chartBarIcon, listIcon, slidersHorizontalIcon,
             tableIcon, treeViewIcon, stackIcon,
             toggleLeftIcon, userCircleIcon, spinnerIcon, listChecksIcon, gaugeIcon, codeIcon
@@ -1025,7 +1013,7 @@
             headerControls.setAttribute('slot', 'controls');
             headerControls.innerHTML = `
                 <button class="widget-control-btn lock-move" title="Lock Position">${pushPinIcon}</button>
-                <button class="widget-control-btn lock-resize" title="Lock Size">${boundingBoxIcon}</button>
+                <button class="widget-control-btn lock-resize" title="Lock Size">${lockSimpleOpenIcon}</button>
                 <button class="widget-control-btn remove" title="Remove">${xIcon}</button>
             `;
             item.appendChild(headerControls);
@@ -1083,6 +1071,8 @@
                 e.stopPropagation();
                 widgetData.lockedResize = !widgetData.lockedResize;
                 lockResizeBtn.classList.toggle('active', widgetData.lockedResize);
+                // Toggle icon between locked and unlocked
+                lockResizeBtn.innerHTML = widgetData.lockedResize ? lockSimpleIcon : lockSimpleOpenIcon;
                 if (widgetData.lockedResize) {
                     item.setAttribute('gs-no-resize', '');
                 } else {
