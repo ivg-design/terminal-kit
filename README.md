@@ -1,6 +1,12 @@
-# Terminal Kit
+# T-Kit
 
 A retro-futuristic web components library with terminal aesthetics. Built with **Pure Lit Architecture** for zero FOUC, complete Shadow DOM encapsulation, and maximum performance.
+
+## Installation
+
+```bash
+npm install t-kit
+```
 
 ## Features
 
@@ -81,13 +87,12 @@ A retro-futuristic web components library with terminal aesthetics. Built with *
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Terminal Kit Demo</title>
+  <title>T-Kit Demo</title>
 </head>
 <body>
   <!-- Import components -->
   <script type="module">
-    import './js/components/TPanelLit.js';
-    import './js/components/TButtonLit.js';
+    import { TPanelLit, TButtonLit } from 't-kit';
   </script>
 
   <!-- Use components -->

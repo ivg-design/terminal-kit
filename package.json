@@ -1,9 +1,23 @@
 {
-  "name": "terminal-kit",
+  "name": "t-kit",
   "version": "1.0.0",
   "description": "A retro-futuristic web components library with terminal aesthetics",
   "type": "module",
   "main": "index.js",
+  "module": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./components/*": "./js/components/*"
+  },
+  "files": [
+    "index.js",
+    "js/",
+    "css/",
+    "assets/",
+    "public/icons/",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "dev": "concurrently --kill-others-on-fail \"npm:dev:vite\" \"npm:docs:dev\"",
     "dev:vite": "vite",
@@ -18,17 +32,28 @@
     "docs:dev": "vitepress dev docs --port 5174",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "dev:all:mirror": "DEVMIRROR_PKG_PATH=\"/Users/ivg/github/terminal-kit\" concurrently \"node \\\"./.vscode/devmirror/cli.cjs\\\"\" \"concurrently --kill-others-on-fail \"npm:dev\" \"npm:docs:dev\"\""
+    "prepublishOnly": "npm test"
   },
   "keywords": [
     "web-components",
+    "lit",
     "terminal",
     "ui-library",
     "cyberpunk",
-    "retro"
+    "retro",
+    "components",
+    "design-system"
   ],
-  "author": "IVG Design",
+  "author": "IVG Design <https://forge.mograph.life>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivg-design/terminal-kit.git"
+  },
+  "homepage": "https://forge.mograph.life",
+  "bugs": {
+    "url": "https://github.com/ivg-design/terminal-kit/issues"
+  },
   "devDependencies": {
     "@open-wc/testing-helpers": "^3.0.1",
     "@testing-library/dom": "^10.4.1",
