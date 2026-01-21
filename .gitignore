@@ -20,7 +20,12 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
-.claude
+
+# Claude Code / Development tools
+.claude/
+
+# Development scripts (not needed for library users)
+scripts/
 
 
 # Logs
@@ -50,12 +55,14 @@ docs/.vitepress/cache/
 docs/.vitepress/dist/
 docs/.vitepress/temp/
 
-# DevMirror logs
+# DevMirror
 devmirror-logs/
+devmirror.config.json
 
 # Archive folders
 .archive/
 archives/
+_archive/
 
 # Documentation build
 public/docs/
