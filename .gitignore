@@ -82,3 +82,4 @@ docs/AUDIT*.md
 **/AUDIT*.md
 SESSION_HANDOFF*.md
 .dev/
+package-lock.json
