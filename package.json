@@ -1,5 +1,5 @@
 {
-  "name": "t-kit",
+  "name": "@ivg-design/tkit",
   "version": "1.0.0",
   "description": "A retro-futuristic web components library with terminal aesthetics",
   "type": "module",

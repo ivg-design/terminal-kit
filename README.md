@@ -5,7 +5,7 @@ A retro-futuristic web components library with terminal aesthetics. Built with *
 ## Installation
 
 ```bash
-npm install t-kit
+npm install @ivg-design/tkit
 ```
 
 ## Features
@@ -92,7 +92,7 @@ npm install t-kit
 <body>
   <!-- Import components -->
   <script type="module">
-    import { TPanelLit, TButtonLit } from 't-kit';
+    import { TPanelLit, TButtonLit } from '@ivg-design/tkit';
   </script>
 
   <!-- Use components -->
