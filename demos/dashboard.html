@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terminal Kit Dashboard Demo</title>
+    <script src="../js/utils/accent-init.js"></script>
     <link rel="stylesheet" href="../css/theme/terminal.css">
     <!-- GridStack CSS -->
     <style>
@@ -14,7 +15,6 @@
             --terminal-gray: #666;
             --terminal-gray-light: #888;
             --terminal-white: #fff;
-            --terminal-green: #00ff41;
             --terminal-cyan: #00ffff;
             --terminal-amber: #ffb000;
             --terminal-red: #ff003c;
@@ -221,7 +221,7 @@
 
         /* Placeholder during drag */
         t-grid > .grid-stack-placeholder > .placeholder-content {
-            background: rgba(0, 255, 65, 0.1);
+            background: color-mix(in srgb, var(--terminal-green) 10%, transparent);
             border: 2px dashed var(--terminal-green);
             border-radius: 4px;
         }
@@ -248,7 +248,7 @@
 
         t-grid .grid-overlay-cell {
             position: absolute;
-            border: 1px dashed rgba(0, 255, 65, 0.2);
+            border: 1px dashed color-mix(in srgb, var(--terminal-green) 20%, transparent);
             box-sizing: border-box;
         }
 
@@ -301,15 +301,18 @@
 
         t-grid-item .grid-item-content::-webkit-scrollbar-track {
             background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
         }
 
         t-grid-item .grid-item-content::-webkit-scrollbar-thumb {
             background: var(--terminal-gray-dark);
+            border: 1px solid var(--terminal-green-dim, var(--terminal-green));
             border-radius: 3px;
         }
 
         t-grid-item .grid-item-content::-webkit-scrollbar-thumb:hover {
-            background: var(--terminal-gray);
+            background: var(--terminal-green-dark, #006622);
+            border-color: var(--terminal-green);
         }
 
         t-grid-item .grid-item-content {
@@ -326,21 +329,56 @@
         .grid-container::-webkit-scrollbar-track,
         .sidebar::-webkit-scrollbar-track {
             background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
         }
 
         .grid-container::-webkit-scrollbar-thumb,
         .sidebar::-webkit-scrollbar-thumb {
             background: var(--terminal-gray-dark);
+            border: 1px solid var(--terminal-green-dim, var(--terminal-green));
             border-radius: 6px;
         }
 
         .grid-container::-webkit-scrollbar-thumb:hover,
         .sidebar::-webkit-scrollbar-thumb:hover {
-            background: var(--terminal-gray);
+            background: var(--terminal-green-dark, #006622);
+            border-color: var(--terminal-green);
         }
 
         .grid-container,
         .sidebar {
+            scrollbar-width: thin;
+            scrollbar-color: var(--terminal-gray-dark) var(--terminal-black);
+        }
+
+        /* Global page scrollbar styles */
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        html::-webkit-scrollbar-track,
+        body::-webkit-scrollbar-track {
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
+        }
+
+        html::-webkit-scrollbar-thumb,
+        body::-webkit-scrollbar-thumb {
+            background: var(--terminal-gray-dark);
+            border: 1px solid var(--terminal-green-dim, var(--terminal-green));
+            border-radius: 5px;
+        }
+
+        html::-webkit-scrollbar-thumb:hover,
+        body::-webkit-scrollbar-thumb:hover {
+            background: var(--terminal-green-dark, #006622);
+            border-color: var(--terminal-green);
+        }
+
+        html,
+        body {
             scrollbar-width: thin;
             scrollbar-color: var(--terminal-gray-dark) var(--terminal-black);
         }
@@ -395,7 +433,7 @@
         }
 
         .widget-bank-item:hover {
-            background: rgba(0, 255, 65, 0.1);
+            background: color-mix(in srgb, var(--terminal-green) 10%, transparent);
             border-color: var(--terminal-green);
         }
 
@@ -420,7 +458,7 @@
 
         /* Widget bank - active/disabled states */
         .widget-bank-item.active {
-            background: rgba(0, 255, 65, 0.15);
+            background: color-mix(in srgb, var(--terminal-green) 15%, transparent);
             border-color: var(--terminal-green);
             opacity: 0.6;
             cursor: default;
@@ -477,7 +515,7 @@
         }
 
         .dev-console-details .markdown-content code {
-            background: rgba(0, 255, 65, 0.1);
+            background: color-mix(in srgb, var(--terminal-green) 10%, transparent);
             padding: 1px 4px;
             border-radius: 2px;
             font-family: var(--font-mono);

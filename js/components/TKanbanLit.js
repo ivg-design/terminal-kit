@@ -224,7 +224,22 @@ export class TKanbanCardLit extends LitElement {
 		cardId: { type: String, attribute: 'card-id', reflect: true },
 		title: { type: String, reflect: true },
 		description: { type: String },
-		tags: { type: Array },
+		tags: {
+			type: Array,
+			converter: {
+				fromAttribute: (value) => {
+					if (!value) return [];
+					try {
+						return JSON.parse(value);
+					} catch (e) {
+						return value.split(',').map(s => s.trim());
+					}
+				},
+				toAttribute: (value) => {
+					return JSON.stringify(value);
+				}
+			}
+		},
 		priority: { type: String, reflect: true },
 		expanded: { type: Boolean, reflect: true },
 		dragging: { type: Boolean, reflect: true },
@@ -556,6 +571,7 @@ export class TKanbanColumnLit extends LitElement {
 	_cardCount = 0;
 	_dragOver = false;
 	_dragLeaveTimeout = null;
+	_dropTargetIndex = -1; // Index where placeholder should appear
 
 	// ----------------------------------------------------------
 	// BLOCK 5: LOGGER INSTANCE (REQUIRED)
@@ -657,8 +673,7 @@ export class TKanbanColumnLit extends LitElement {
 					@drop=${this._handleDrop}
 				>
 					<slot></slot>
-					<div class="drop-placeholder"></div>
-					${this._cardCount === 0 ? html`
+					${this._cardCount === 0 && !this._dragOver ? html`
 						<div class="empty-state">No cards</div>
 					` : ''}
 				</div>
@@ -683,11 +698,62 @@ export class TKanbanColumnLit extends LitElement {
 			clearTimeout(this._dragLeaveTimeout);
 			this._dragLeaveTimeout = null;
 		}
-		if (!this._dragOver) {
-			this._dragOver = true;
-			this.requestUpdate();
+
+		// Calculate drop position based on mouse Y
+		const cards = Array.from(this.querySelectorAll('t-kanban-card:not([dragging])'));
+		let newIndex = cards.length; // Default to end
+
+		for (let i = 0; i < cards.length; i++) {
+			const card = cards[i];
+			const rect = card.getBoundingClientRect();
+			const midY = rect.top + rect.height / 2;
+			if (e.clientY < midY) {
+				newIndex = i;
+				break;
+			}
+		}
+
+		const needsUpdate = !this._dragOver || this._dropTargetIndex !== newIndex;
+		this._dragOver = true;
+		this._dropTargetIndex = newIndex;
+
+		if (needsUpdate) {
+			this._updatePlaceholderPosition();
 		}
 	};
+
+	_updatePlaceholderPosition() {
+		// Get or create placeholder
+		let placeholder = this.querySelector('.drag-placeholder');
+		if (!placeholder) {
+			placeholder = document.createElement('div');
+			placeholder.className = 'drag-placeholder';
+			placeholder.style.cssText = `
+				height: 40px;
+				border: 2px dashed var(--column-color, var(--terminal-green, #00ff41));
+				background: color-mix(in srgb, var(--column-color, var(--terminal-green)) 10%, transparent);
+				margin: 3px 0;
+				border-radius: 2px;
+			`;
+		}
+
+		const cards = Array.from(this.querySelectorAll('t-kanban-card:not([dragging])'));
+
+		if (this._dropTargetIndex >= cards.length) {
+			// Append at end
+			this.appendChild(placeholder);
+		} else {
+			// Insert before the target card
+			this.insertBefore(placeholder, cards[this._dropTargetIndex]);
+		}
+	}
+
+	_removePlaceholder() {
+		const placeholder = this.querySelector('.drag-placeholder');
+		if (placeholder) {
+			placeholder.remove();
+		}
+	}
 
 	_handleDragLeave = (e) => {
 		// Debounce drag leave to prevent flickering
@@ -702,6 +768,8 @@ export class TKanbanColumnLit extends LitElement {
 			// Check if truly outside the column
 			if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
 				this._dragOver = false;
+				this._dropTargetIndex = -1;
+				this._removePlaceholder();
 				this.requestUpdate();
 			}
 			this._dragLeaveTimeout = null;
@@ -712,7 +780,20 @@ export class TKanbanColumnLit extends LitElement {
 		e.preventDefault();
 		this._dragOver = false;
 		const cardId = e.dataTransfer.getData('text/plain');
-		this._emitEvent('card-drop', { cardId, columnId: this.columnId });
+
+		// Use tracked position from dragover
+		const cards = Array.from(this.querySelectorAll('t-kanban-card:not([dragging])'));
+		let insertBeforeId = null;
+
+		if (this._dropTargetIndex >= 0 && this._dropTargetIndex < cards.length) {
+			insertBeforeId = cards[this._dropTargetIndex].cardId;
+		}
+
+		// Clean up
+		this._removePlaceholder();
+		this._dropTargetIndex = -1;
+
+		this._emitEvent('card-drop', { cardId, columnId: this.columnId, insertBeforeId });
 		this.requestUpdate();
 	};
 
@@ -878,19 +959,29 @@ export class TKanbanLit extends LitElement {
 	// BLOCK 8: PUBLIC API METHODS (REQUIRED)
 	// ----------------------------------------------------------
 	/**
-	 * Move a card to a different column
+	 * Move a card to a different column or position
 	 * @public
 	 * @param {string} cardId - Card ID
 	 * @param {string} targetColumnId - Target column ID
+	 * @param {string} [insertBeforeId] - Card ID to insert before (null = append to end)
 	 */
-	moveCard(cardId, targetColumnId) {
-		this._logger.debug('Moving card', { cardId, targetColumnId });
+	moveCard(cardId, targetColumnId, insertBeforeId = null) {
+		this._logger.debug('Moving card', { cardId, targetColumnId, insertBeforeId });
 		const card = this.querySelector(`t-kanban-card[card-id="${cardId}"]`);
 		const targetColumn = this.querySelector(`t-kanban-column[column-id="${targetColumnId}"]`);
 
 		if (card && targetColumn) {
-			targetColumn.appendChild(card);
-			this._emitEvent('card-moved', { cardId, columnId: targetColumnId });
+			if (insertBeforeId) {
+				const beforeCard = targetColumn.querySelector(`t-kanban-card[card-id="${insertBeforeId}"]`);
+				if (beforeCard) {
+					targetColumn.insertBefore(card, beforeCard);
+				} else {
+					targetColumn.appendChild(card);
+				}
+			} else {
+				targetColumn.appendChild(card);
+			}
+			this._emitEvent('card-moved', { cardId, columnId: targetColumnId, insertBeforeId });
 		}
 	}
 
@@ -960,9 +1051,22 @@ export class TKanbanLit extends LitElement {
 	// BLOCK 13: PRIVATE HELPERS (REQUIRED)
 	// ----------------------------------------------------------
 	_handleCardDrop = (e) => {
-		const { cardId, columnId } = e.detail;
-		this._logger.debug('Card dropped', { cardId, columnId });
-		this._emitEvent('card-move', { cardId, columnId });
+		const { cardId, columnId, insertBeforeId } = e.detail;
+		this._logger.debug('Card dropped', { cardId, columnId, insertBeforeId });
+
+		// Emit event first - consumer can preventDefault if needed
+		const event = new CustomEvent('card-move', {
+			detail: { cardId, columnId, insertBeforeId },
+			bubbles: true,
+			composed: true,
+			cancelable: true
+		});
+		const shouldMove = this.dispatchEvent(event);
+
+		// Auto-move the card unless consumer prevented it
+		if (shouldMove) {
+			this.moveCard(cardId, columnId, insertBeforeId);
+		}
 	};
 
 	_handleAddColumn() {

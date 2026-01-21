@@ -53,7 +53,7 @@ export class TInputLit extends LitElement {
       --t-stepper-hover-bg: rgba(0, 255, 65, 0.1);
       --t-stepper-active-bg: rgba(0, 255, 65, 0.15);
       --t-stepper-active-color: var(--terminal-black, #0a0a0a);
-      --t-stepper-size: 28px;
+      --t-stepper-size: 24px;
       --t-stepper-height: 24px;
       --t-stepper-icon-size: 14px;
     }
@@ -256,7 +256,8 @@ export class TInputLit extends LitElement {
     .number-decrement:active {
       background: var(--t-stepper-active-bg);
       color: var(--t-stepper-active-color);
-      transform: scale(0.95);
+      transform: scale(0.92);
+      transform-origin: center;
     }
 
     .number-increment svg,
@@ -984,7 +985,7 @@ export class TInputLit extends LitElement {
     const inputType = this.type === 'password' ? (this._showPassword ? 'text' : 'password') :
                       this.type === 'url' ? 'text' : this.type;
     const numberWidth = this.type === 'number' ? this._getNumberWidth() : '';
-    const wrapperStyle = numberWidth ? `width: ${numberWidth}; max-width: ${numberWidth};` : '';
+    const wrapperStyle = numberWidth ? `min-width: ${numberWidth};` : '';
 
     return html`
       ${this.label ? html`<label class="control-label">${this.label}</label>` : ''}
@@ -997,7 +998,6 @@ export class TInputLit extends LitElement {
           class=${inputClasses.join(' ')}
           .value=${this.value}
           placeholder=${this.placeholder}
-          style=${numberWidth ? `width: ${numberWidth}; max-width: ${numberWidth};` : ''}
           ?disabled=${this.disabled}
           ?readonly=${this.readonly}
           ?required=${this.required}
@@ -1036,9 +1036,9 @@ export class TInputLit extends LitElement {
    */
   _applyStepperSize() {
     const sizes = {
-      sm: { size: 18, height: 18, icon: 10 },
-      md: { size: 22, height: 20, icon: 12 },
-      lg: { size: 28, height: 24, icon: 14 }
+      sm: { size: 20, height: 20, icon: 12 },
+      md: { size: 24, height: 24, icon: 14 },
+      lg: { size: 28, height: 28, icon: 16 }
     };
 
     const preset = sizes[this.stepperSize] || sizes.md;
@@ -1063,7 +1063,7 @@ export class TInputLit extends LitElement {
   }
 
   /**
-   * Calculate number input width based on range digits
+   * Calculate number input width based on range digits and stepper buttons
    * @private
    */
   _getNumberWidth() {
@@ -1082,7 +1082,13 @@ export class TInputLit extends LitElement {
     if (hasNegative) digits += 1;
 
     const safeDigits = Math.max(3, digits);
-    return `calc(${safeDigits}ch + 16px)`;
+
+    // Account for stepper buttons: (size * 2) + gap + margins
+    // sm: 20*2=40, md: 24*2=48, lg: 28*2=56, plus ~18px for gap/margins
+    const stepperSizes = { sm: 58, md: 66, lg: 74 };
+    const stepperWidth = stepperSizes[this.stepperSize] || stepperSizes.md;
+
+    return `calc(${safeDigits}ch + ${stepperWidth + 16}px)`;
   }
 
   /**

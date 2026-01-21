@@ -74,6 +74,24 @@ const setAccent = (hex) => {
   const bright = hslToRgb({ h: hsl.h, s: hsl.s, l: clamp(hsl.l * 1.2) });
   const dark = hslToRgb({ h: hsl.h, s: hsl.s, l: clamp(hsl.l * 0.5) });
 
+  // Update accent-init-styles if it exists (uses !important, so we must update it)
+  const accentInitStyle = document.getElementById('accent-init-styles');
+  if (accentInitStyle) {
+    accentInitStyle.textContent = `:root {
+      --tk-green: ${hex} !important;
+      --tk-green-dim: ${rgbToHex(dim)} !important;
+      --tk-green-bright: ${rgbToHex(bright)} !important;
+      --tk-green-dark: ${rgbToHex(dark)} !important;
+      --tk-green-glow: rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2) !important;
+      --terminal-green: ${hex} !important;
+      --terminal-green-dim: ${rgbToHex(dim)} !important;
+      --terminal-green-bright: ${rgbToHex(bright)} !important;
+      --terminal-green-dark: ${rgbToHex(dark)} !important;
+      --terminal-green-glow: rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2) !important;
+    }`;
+  }
+
+  // Also set inline styles for pages without accent-init.js
   root.style.setProperty('--tk-green', hex);
   root.style.setProperty('--tk-green-dim', rgbToHex(dim));
   root.style.setProperty('--tk-green-bright', rgbToHex(bright));

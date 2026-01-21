@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TGridLit Component Demo</title>
+    <script src="../js/utils/accent-init.js"></script>
     <link rel="stylesheet" href="../css/theme/terminal.css">
     <style>
         :root {
@@ -12,7 +13,6 @@
             --terminal-gray-dark: #333;
             --terminal-gray: #666;
             --terminal-gray-light: #888;
-            --terminal-green: #00ff41;
             --terminal-cyan: #00ffff;
             --terminal-amber: #ffb000;
             --terminal-red: #ff003c;
@@ -284,19 +284,22 @@
         .widget-bank-content::-webkit-scrollbar-track,
         .event-log-content::-webkit-scrollbar-track {
             background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
         }
 
         .widget-content::-webkit-scrollbar-thumb,
         .widget-bank-content::-webkit-scrollbar-thumb,
         .event-log-content::-webkit-scrollbar-thumb {
             background: var(--terminal-gray-dark);
+            border: 1px solid var(--terminal-green-dim, var(--terminal-green));
             border-radius: 3px;
         }
 
         .widget-content::-webkit-scrollbar-thumb:hover,
         .widget-bank-content::-webkit-scrollbar-thumb:hover,
         .event-log-content::-webkit-scrollbar-thumb:hover {
-            background: var(--terminal-gray);
+            background: var(--terminal-green-dark, #006622);
+            border-color: var(--terminal-green);
         }
 
         /* Firefox scrollbar */
@@ -480,15 +483,18 @@
 
         t-grid-item .grid-item-content::-webkit-scrollbar-track {
             background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
         }
 
         t-grid-item .grid-item-content::-webkit-scrollbar-thumb {
             background: var(--terminal-gray-dark);
+            border: 1px solid var(--terminal-green-dim, var(--terminal-green));
             border-radius: 3px;
         }
 
         t-grid-item .grid-item-content::-webkit-scrollbar-thumb:hover {
-            background: var(--terminal-gray);
+            background: var(--terminal-green-dark, #006622);
+            border-color: var(--terminal-green);
         }
 
         t-grid-item .grid-item-content {

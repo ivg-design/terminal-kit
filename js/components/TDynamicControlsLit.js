@@ -210,17 +210,23 @@ export class TDynamicControlsLit extends LitElement {
 		}
 
 		.control-input {
-			flex: 1;
+			flex: 1 1 auto;
 			min-width: 80px;
+			display: flex;
+			align-items: center;
 		}
 
-		.control-input t-sld,
+		.control-input t-sld {
+			width: 100%;
+			flex: 1 1 auto;
+			min-width: 200px;
+			display: block;
+		}
+
 		.control-input t-prg {
 			width: 100%;
+			flex: 1 1 auto;
 			min-width: 120px;
-		}
-
-		.control-input t-prg {
 			display: block;
 		}
 
@@ -745,6 +751,7 @@ export class TDynamicControlsLit extends LitElement {
 						step=${config.step ?? 'any'}
 						style="width: ${numberWidth}; max-width: ${numberWidth};"
 						?disabled=${this.disabled}
+						@input-value=${(e) => this._handleValueChange(path, parseFloat(e.detail.value) || 0)}
 						@input-change=${(e) => this._handleValueChange(path, parseFloat(e.detail.value) || 0)}
 					></t-inp>
 				`;
@@ -757,6 +764,7 @@ export class TDynamicControlsLit extends LitElement {
 						size="sm"
 						.value=${value ?? ''}
 						?disabled=${this.disabled}
+						@input-value=${(e) => this._handleValueChange(path, e.detail.value)}
 						@input-change=${(e) => this._handleValueChange(path, e.detail.value)}
 					></t-inp>
 				`;
@@ -803,12 +811,16 @@ export class TDynamicControlsLit extends LitElement {
 				controlHtml = html`
 					<t-sld
 						size="sm"
+						hide-min-max
+						show-input
+						stepper-size="sm"
 						.value=${value ?? 0}
 						min=${config.min ?? 0}
 						max=${config.max ?? 100}
 						step=${config.step ?? 1}
 						?disabled=${this.disabled}
 						@slider-change=${(e) => this._handleValueChange(path, e.detail.value)}
+						@slider-input=${(e) => this._handleValueChange(path, e.detail.value)}
 					></t-sld>
 				`;
 				break;

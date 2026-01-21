@@ -6,6 +6,7 @@
     <title>TPanelLit - Component Demo</title>
 
     <!-- Demo Template Styles -->
+    <script src="../js/utils/accent-init.js"></script>
     <link rel="stylesheet" href="../css/demo-template.css">
 
     <style>
@@ -64,26 +65,6 @@
         }
 
 
-        .compact-toggle-container {
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            z-index: 1000;
-            background: var(--terminal-gray-dark);
-            padding: 10px;
-            border: 1px solid var(--terminal-green);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .size-label {
-            color: var(--terminal-green);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
         .nested-highlight t-pnl {
             border-left: 2px solid rgba(0, 255, 65, 0.3);
             margin-left: 10px;
@@ -124,6 +105,7 @@
             display: flex;
             gap: 0;
             border: 1px solid var(--terminal-green);
+            margin-right: 10px;
         }
 
         .size-toggle-btn {
@@ -170,20 +152,16 @@
                 </div>
             </div>
             <div class="demo-header-controls">
+                <div class="size-toggle-group">
+                    <button class="size-toggle-btn" data-size="large">Large</button>
+                    <button class="size-toggle-btn active" data-size="standard">Standard</button>
+                    <button class="size-toggle-btn" data-size="compact">Compact</button>
+                </div>
                 <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
             </div>
         </div>
     </header>
 
-    <!-- Size Mode Selector -->
-    <div class="compact-toggle-container">
-        <span class="size-label">Size:</span>
-        <div class="size-toggle-group">
-            <button class="size-toggle-btn" data-size="large">Large</button>
-            <button class="size-toggle-btn active" data-size="standard">Standard</button>
-            <button class="size-toggle-btn" data-size="compact">Compact</button>
-        </div>
-    </div>
 
     <!-- Main Content -->
     <div class="demo-container">
@@ -556,9 +534,7 @@
             if (level1Btn1 && level1Btn1.setIcon) level1Btn1.setIcon(gearSixIcon);
             if (level1Btn2 && level1Btn2.setIcon) level1Btn2.setIcon(arrowsClockwiseIcon);
 
-            // Size mode selector
-            const sizeButtons = document.querySelectorAll('.size-toggle-btn');
-
+            // Size mode handler - listens to panel's built-in size toggle
             function updateComponentSizes(mode) {
                 const allPanels = document.querySelectorAll('t-pnl');
                 const allButtons = document.querySelectorAll('t-btn');
@@ -602,12 +578,13 @@
                 logEvent('System', 'size-mode-changed', { mode });
             }
 
+            // Size toggle buttons in page header
+            const sizeButtons = document.querySelectorAll('.size-toggle-btn');
             sizeButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
                     sizeButtons.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    const mode = btn.dataset.size;
-                    updateComponentSizes(mode);
+                    updateComponentSizes(btn.dataset.size);
                 });
             });
 

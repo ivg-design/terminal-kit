@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Slider Debug</title>
+  <style>
+    body { background: #1a1a1a; color: #00ff41; font-family: monospace; padding: 20px; }
+    .container { display: flex; gap: 20px; align-items: center; margin: 20px 0; }
+    .label { width: 120px; }
+    .control { flex: 1; display: flex; align-items: center; }
+    pre { background: #0a0a0a; padding: 10px; overflow: auto; font-size: 11px; max-height: 400px; }
+    h4 { margin: 5px 0; color: #ff0; }
+  </style>
+</head>
+<body>
+  <h2>Slider Debug</h2>
+
+  <h3>Progress Bar (for comparison)</h3>
+  <div class="container">
+    <div class="label">progress</div>
+    <div class="control">
+      <t-prg value="65" max="100"></t-prg>
+    </div>
+  </div>
+
+  <h3>Slider with hide-min-max + show-input (like dynamic controls)</h3>
+  <div class="container">
+    <div class="label">slider</div>
+    <div class="control">
+      <t-sld id="test-slider" hide-min-max show-input stepper-size="sm" size="sm" value="50" min="0" max="100"></t-sld>
+    </div>
+  </div>
+
+  <h3>Dynamic Controls (actual component)</h3>
+  <div id="dynamic-container" style="width: 100%; padding: 10px; background: #0a0a0a; border-radius: 4px;">
+    <t-dyn id="test-dynamic"></t-dyn>
+  </div>
+
+  <h3>Debug Info</h3>
+  <pre id="debug"></pre>
+
+  <script type="module">
+    import './js/components/TSliderLit.js';
+    import './js/components/TProgressLit.js';
+    import './js/components/TDynamicControlsLit.js';
+
+    // Set up dynamic controls with a slider
+    const dynControls = document.getElementById('test-dynamic');
+    dynControls.schema = {
+      groups: {
+        test: {
+          label: 'Test Group',
+          controls: {
+            testSlider: {
+              type: 'slider',
+              label: 'Test Slider',
+              min: 0,
+              max: 100,
+              step: 1
+            }
+          }
+        }
+      }
+    };
+    dynControls.values = { testSlider: 50 };
+
+    setTimeout(() => {
+      const slider = document.getElementById('test-slider');
+      const debug = document.getElementById('debug');
+
+      // Get all relevant elements
+      const shadowRoot = slider.shadowRoot;
+      const container = shadowRoot?.querySelector('.slider-container');
+      const wrapper = shadowRoot?.querySelector('.slider-wrapper');
+      const track = shadowRoot?.querySelector('.slider-track');
+      const inputWrapper = shadowRoot?.querySelector('.input-wrapper');
+
+      // Get computed styles
+      const hostStyles = getComputedStyle(slider);
+      const containerStyles = container ? getComputedStyle(container) : null;
+      const wrapperStyles = wrapper ? getComputedStyle(wrapper) : null;
+      const trackStyles = track ? getComputedStyle(track) : null;
+      const inputWrapperStyles = inputWrapper ? getComputedStyle(inputWrapper) : null;
+
+      // Get dynamic controls slider
+      const dynSlider = document.querySelector('#test-dynamic')?.shadowRoot?.querySelector('t-sld');
+      const dynContainer = dynSlider?.shadowRoot?.querySelector('.slider-container');
+      const dynWrapper = dynSlider?.shadowRoot?.querySelector('.slider-wrapper');
+      const dynTrack = dynSlider?.shadowRoot?.querySelector('.slider-track');
+
+      const attrs = [];
+      for (const attr of slider.attributes) {
+        attrs.push(`${attr.name}="${attr.value}"`);
+      }
+
+      const dynAttrs = [];
+      if (dynSlider) {
+        for (const attr of dynSlider.attributes) {
+          dynAttrs.push(`${attr.name}="${attr.value}"`);
+        }
+      }
+
+      debug.textContent = `
+=== STANDALONE SLIDER ===
+ATTRIBUTES: ${attrs.join(', ')}
+
+HOST:
+  width: ${hostStyles.width}
+  display: ${hostStyles.display}
+  min-width: ${hostStyles.minWidth}
+
+CONTAINER (.slider-container):
+  display: ${containerStyles?.display}
+  width: ${containerStyles?.width}
+  grid-template-columns: ${containerStyles?.gridTemplateColumns}
+  flex-direction: ${containerStyles?.flexDirection}
+  gap: ${containerStyles?.gap}
+
+WRAPPER (.slider-wrapper):
+  width: ${wrapperStyles?.width}
+  min-width: ${wrapperStyles?.minWidth}
+  flex: ${wrapperStyles?.flex}
+  boundingRect: ${wrapper?.getBoundingClientRect().width}px
+
+TRACK (.slider-track):
+  width: ${trackStyles?.width}
+  min-width: ${trackStyles?.minWidth}
+  boundingRect: ${track?.getBoundingClientRect().width}px
+
+INPUT-WRAPPER (.input-wrapper):
+  width: ${inputWrapperStyles?.width}
+  flex: ${inputWrapperStyles?.flex}
+  boundingRect: ${inputWrapper?.getBoundingClientRect().width}px
+
+BOUNDING RECTS:
+  slider: ${slider.getBoundingClientRect().width}px
+  container: ${container?.getBoundingClientRect().width}px
+  wrapper: ${wrapper?.getBoundingClientRect().width}px
+  track: ${track?.getBoundingClientRect().width}px
+
+=== DYNAMIC CONTROLS SLIDER ===
+ATTRIBUTES: ${dynAttrs.join(', ') || 'N/A'}
+
+HOST:
+  width: ${dynSlider ? getComputedStyle(dynSlider).width : 'N/A'}
+  display: ${dynSlider ? getComputedStyle(dynSlider).display : 'N/A'}
+
+CONTAINER:
+  display: ${dynContainer ? getComputedStyle(dynContainer).display : 'N/A'}
+  width: ${dynContainer ? getComputedStyle(dynContainer).width : 'N/A'}
+  grid-template-columns: ${dynContainer ? getComputedStyle(dynContainer).gridTemplateColumns : 'N/A'}
+  flex-direction: ${dynContainer ? getComputedStyle(dynContainer).flexDirection : 'N/A'}
+
+WRAPPER:
+  width: ${dynWrapper ? getComputedStyle(dynWrapper).width : 'N/A'}
+  min-width: ${dynWrapper ? getComputedStyle(dynWrapper).minWidth : 'N/A'}
+  boundingRect: ${dynWrapper?.getBoundingClientRect().width}px
+
+TRACK:
+  width: ${dynTrack ? getComputedStyle(dynTrack).width : 'N/A'}
+  boundingRect: ${dynTrack?.getBoundingClientRect().width}px
+
+=== PROGRESS BAR COMPARISON ===
+progress boundingRect: ${document.querySelector('t-prg')?.getBoundingClientRect().width}px
+`;
+    }, 1000);
+  </script>
+</body>
+</html>

@@ -108,6 +108,58 @@ export class TPanelLit extends LitElement {
       margin-left: auto;
     }
 
+    /* Size Toggle */
+    .t-pnl__size-toggle {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--terminal-green-dark);
+      border-radius: 2px;
+      margin-right: 8px;
+    }
+
+    .t-pnl__size-btn {
+      background: transparent;
+      color: var(--terminal-green);
+      border: none;
+      padding: 2px 6px;
+      font-size: 9px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .t-pnl__size-btn:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 20%;
+      height: 60%;
+      width: 1px;
+      background: var(--terminal-green-dark);
+    }
+
+    .t-pnl__size-btn:hover {
+      background: rgba(0, 255, 65, 0.1);
+    }
+
+    .t-pnl__size-btn.active {
+      background: var(--terminal-green);
+      color: var(--terminal-black);
+    }
+
+    .t-pnl--compact .t-pnl__size-btn {
+      padding: 1px 4px;
+      font-size: 8px;
+    }
+
+    .t-pnl--large .t-pnl__size-btn {
+      padding: 3px 8px;
+      font-size: 10px;
+    }
+
     .t-pnl__collapse-btn {
       background: transparent;
       border: none;
@@ -468,7 +520,15 @@ export class TPanelLit extends LitElement {
      * @attribute footer-collapsed
      * @reflects
      */
-    footerCollapsed: { type: Boolean, reflect: true, attribute: 'footer-collapsed' }
+    footerCollapsed: { type: Boolean, reflect: true, attribute: 'footer-collapsed' },
+
+    /**
+     * @property {boolean} showSizeToggle - Show size toggle in header
+     * @default false
+     * @attribute show-size-toggle
+     * @reflects
+     */
+    showSizeToggle: { type: Boolean, reflect: true, attribute: 'show-size-toggle' }
   };
 
   // ============================================
@@ -522,8 +582,10 @@ export class TPanelLit extends LitElement {
     if (this.loading === undefined) this.loading = false;
     if (this.icon === undefined) this.icon = '';
     if (this.footerCollapsed === undefined) this.footerCollapsed = false;
+    if (this.showSizeToggle === undefined) this.showSizeToggle = false;
 
     this._handleHeaderClick = this._handleHeaderClick.bind(this);
+    this._handleSizeChange = this._handleSizeChange.bind(this);
     this._handleHeaderKeydown = this._handleHeaderKeydown.bind(this);
   }
 
@@ -1015,6 +1077,7 @@ export class TPanelLit extends LitElement {
           ${this.icon ? html`<span class="t-pnl__title-icon" .innerHTML=${this.icon}></span>` : ''}
           ${this.title}
         </div>
+        ${this.showSizeToggle ? this._renderSizeToggle() : ''}
         <div class="t-pnl__actions">
           <slot name="actions"></slot>
         </div>
@@ -1043,6 +1106,53 @@ export class TPanelLit extends LitElement {
         <span class="t-pnl__collapse-icon" .innerHTML=${icon}></span>
       </button>
     `;
+  }
+
+  /**
+   * Render size toggle
+   *
+   * @private
+   * @returns {TemplateResult}
+   */
+  _renderSizeToggle() {
+    const currentSize = this.large ? 'large' : this.compact ? 'compact' : 'standard';
+
+    return html`
+      <div class="t-pnl__size-toggle" @click=${(e) => e.stopPropagation()}>
+        <button
+          class="t-pnl__size-btn ${currentSize === 'large' ? 'active' : ''}"
+          @click=${() => this._handleSizeChange('large')}
+          title="Large size"
+        >L</button>
+        <button
+          class="t-pnl__size-btn ${currentSize === 'standard' ? 'active' : ''}"
+          @click=${() => this._handleSizeChange('standard')}
+          title="Standard size"
+        >M</button>
+        <button
+          class="t-pnl__size-btn ${currentSize === 'compact' ? 'active' : ''}"
+          @click=${() => this._handleSizeChange('compact')}
+          title="Compact size"
+        >S</button>
+      </div>
+    `;
+  }
+
+  /**
+   * Handle size change from toggle
+   *
+   * @private
+   * @param {string} size - New size (large, standard, compact)
+   */
+  _handleSizeChange(size) {
+    this._logger.debug('Size change requested', { size });
+
+    // Update panel size
+    this.large = size === 'large';
+    this.compact = size === 'compact';
+
+    // Emit event for parent components to react
+    this._emitEvent('panel-size-changed', { size });
   }
 
   /**
@@ -1376,7 +1486,8 @@ export const TPanelManifest = generateManifest(TPanelLit, {
     large: { description: 'Large size variant (36px header)' },
     loading: { description: 'Show loading state' },
     icon: { description: 'SVG icon string to display in header' },
-    footerCollapsed: { description: 'Footer collapsed state' }
+    footerCollapsed: { description: 'Footer collapsed state' },
+    showSizeToggle: { description: 'Show size toggle (L/M/S) in header' }
   },
 
   methods: {
@@ -1441,6 +1552,12 @@ export const TPanelManifest = generateManifest(TPanelLit, {
     'panel-loading-end': {
       description: 'Fired when loading state ends',
       detail: {},
+      bubbles: true,
+      composed: true
+    },
+    'panel-size-changed': {
+      description: 'Fired when size toggle is clicked',
+      detail: { size: 'string' },
       bubbles: true,
       composed: true
     }

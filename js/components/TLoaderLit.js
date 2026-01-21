@@ -366,13 +366,33 @@ export class TLoaderLit extends LitElement {
     // Set default property values
     this.type = 'atom-spinner';
     this.size = 60;
-    this.color = '#00ff41';
+    this.color = ''; // Empty - will use CSS variable --terminal-green
     this.duration = 1;
     this.text = '';
     this.hidden = false;
     this.glow = false;
 
     this.logger.debug('Component constructed with defaults');
+  }
+
+  /**
+   * Get effective color - reads from CSS variable if not explicitly set
+   * @private
+   */
+  _getEffectiveColor() {
+    if (this.color) return this.color;
+    // Read from CSS variable - try element first, then document root
+    let computed = '';
+    try {
+      computed = getComputedStyle(this).getPropertyValue('--terminal-green').trim();
+      if (!computed) {
+        // Fallback to document root
+        computed = getComputedStyle(document.documentElement).getPropertyValue('--terminal-green').trim();
+      }
+    } catch (e) {
+      // Element not in DOM yet
+    }
+    return computed || '#00ff41';
   }
 
   // ----------------------------------------------------------
@@ -396,8 +416,11 @@ export class TLoaderLit extends LitElement {
       `;
     }
 
+    // Get effective color (from prop or CSS variable)
+    const effectiveColor = this._getEffectiveColor();
+
     // Update CSS custom properties
-    this.style.setProperty('--loader-color', this.color);
+    this.style.setProperty('--loader-color', effectiveColor);
     this.style.setProperty('--loader-size', `${this.size}px`);
     this.style.setProperty('--loader-duration', `${this.duration}s`);
 
@@ -417,7 +440,7 @@ export class TLoaderLit extends LitElement {
       const width = Math.max(1, widthHeightConfig.width * scale);
       const height = Math.max(1, widthHeightConfig.height * scale);
       const attrs = [
-        `color="${this.color}"`,
+        `color="${effectiveColor}"`,
         `width="${formatNumber(width)}"`,
         `height="${formatNumber(height)}"`
       ];
@@ -438,7 +461,7 @@ export class TLoaderLit extends LitElement {
       const ratio = innerMax ? sizeConfig.defaultSize / innerMax : 1;
       const normalizedSize = Math.max(1, targetSize * ratio);
       spinnerHTML = `<${this.type}
-        color="${this.color}"
+        color="${effectiveColor}"
         size="${formatNumber(normalizedSize)}"
         duration="${this.duration}">
       </${this.type}>`;
@@ -446,13 +469,13 @@ export class TLoaderLit extends LitElement {
       const innerMax = sizeLessConfig.innerMax || targetSize;
       const scale = innerMax ? targetSize / innerMax : 1;
       spinnerHTML = `<${this.type}
-        color="${this.color}"
+        color="${effectiveColor}"
         duration="${this.duration}"
         style="transform: scale(${formatNumber(scale)}); transform-origin: center;">
       </${this.type}>`;
     } else {
       spinnerHTML = `<${this.type}
-        color="${this.color}"
+        color="${effectiveColor}"
         size="${targetSize}"
         duration="${this.duration}">
       </${this.type}>`;

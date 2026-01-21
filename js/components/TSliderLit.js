@@ -36,19 +36,20 @@ export class TSliderLit extends LitElement {
       display: block;
       width: 100%;
       min-width: 120px;
+      flex: 1 1 auto;
       min-height: calc(var(--t-sld-track-height) + 16px);
       --t-sld-track-height: 14px;
       --t-sld-thumb-size: 14px;
       --t-sld-track-bg: #1e1e1e;
       --t-sld-track-border: #3a3a3a;
       --t-sld-fill-bg: var(--terminal-green, #00ff41);
-      --t-sld-fill-glow: rgba(0, 255, 65, 0.3);
-      --t-sld-thumb-bg: #005520;
-      --t-sld-thumb-border: #00aa40;
+      --t-sld-fill-glow: var(--terminal-green-glow, rgba(0, 255, 65, 0.3));
+      --t-sld-thumb-bg: var(--terminal-green-dark, #005520);
+      --t-sld-thumb-border: var(--terminal-green-dim, #00aa40);
       --t-sld-value-bg: #1a1a1a;
       --t-sld-value-border: #333;
-      --t-sld-value-color: #00ff41;
-      --t-sld-label-color: rgba(0, 255, 65, 0.8);
+      --t-sld-value-color: var(--terminal-green, #00ff41);
+      --t-sld-label-color: var(--terminal-green-dim, rgba(0, 255, 65, 0.8));
       --t-sld-tick-color: #333;
       --t-sld-tick-major-color: #555; /* Darker gray for visibility */
       --t-sld-icon-size: 14px;
@@ -147,24 +148,100 @@ export class TSliderLit extends LitElement {
     /* Container */
     .slider-container {
       display: grid;
-      grid-template-columns: max-content 1fr auto;
+      grid-template-columns: max-content minmax(80px, 1fr) auto;
       align-items: center;
       gap: 8px;
       width: 100%;
+      min-width: 0;
       min-height: 24px;
+      flex: 1 1 auto;
     }
 
-    :host(:not([label]):not([icon])) .slider-container {
+    /* Horizontal slider without label - use flexbox for proper expansion */
+    :host(:not([label]):not([icon]):not([vertical])) .slider-container {
+      display: flex !important;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+    }
+
+    :host(:not([label]):not([icon]):not([vertical])) .slider-wrapper {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100%;
+    }
+
+    :host(:not([label]):not([icon]):not([vertical])) .slider-track {
+      width: 100%;
+      min-width: 0;
+    }
+
+    :host(:not([label]):not([icon]):not([vertical])) .input-wrapper,
+    :host(:not([label]):not([icon]):not([vertical])) .output-wrapper {
+      flex: 0 0 auto;
+    }
+
+    /* Hide min-max with output = track + output */
+    :host([hide-min-max][show-output]:not([label]):not([icon]):not([show-input])) .slider-container {
       grid-template-columns: 1fr auto;
     }
 
-    :host(:not([label]):not([icon]):not([show-input]):not([show-value])) .slider-container {
+    /* Hide min-max = simple single track layout (no visible value display) */
+    :host([hide-min-max]:not([label]):not([icon]):not([show-input]):not([show-output]):not([show-value])) .slider-container {
       grid-template-columns: 1fr;
+    }
+
+    /* Simplified layout mode - more aggressive width inheritance (horizontal only, no input) */
+    :host([hide-min-max]:not([label]):not([icon]):not([vertical]):not([show-input])) {
+      min-width: 0;
+    }
+
+    :host([hide-min-max]:not([label]):not([icon]):not([vertical]):not([show-input])) .slider-container {
+      min-width: 0;
+    }
+
+    :host([hide-min-max]:not([label]):not([icon]):not([vertical]):not([show-input])) .slider-wrapper {
+      min-width: 0;
+      width: 100%;
+    }
+
+    :host([hide-min-max]:not([label]):not([icon]):not([vertical]):not([show-input])) .slider-track {
+      min-width: 0;
+      width: 100%;
+    }
+
+    /* Hide-min-max with input - use flexbox for better expansion */
+    :host([hide-min-max][show-input]) {
+      width: 100%;
+      display: block;
+    }
+
+    :host([hide-min-max][show-input]) .slider-container {
+      display: flex !important;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    :host([hide-min-max][show-input]) .slider-wrapper {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: auto;
+    }
+
+    :host([hide-min-max][show-input]) .slider-track {
+      width: 100%;
+      min-width: 0;
+    }
+
+    :host([hide-min-max][show-input]) .input-wrapper {
+      flex: 0 0 auto;
     }
 
     /* Only icon, no label */
     :host([icon]:not([label])) .slider-container {
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: auto minmax(80px, 1fr) auto;
     }
 
     :host([icon]:not([label])) .slider-label {
@@ -173,17 +250,17 @@ export class TSliderLit extends LitElement {
 
     /* Fill color variants */
     :host([fill-color="bright"]) .slider-fill {
-      background: #40ff40 !important;
+      background: var(--terminal-green-bright, var(--terminal-green, #00ff41)) !important;
       box-shadow: none;
     }
 
     :host([fill-color="dim"]) .slider-fill {
-      background: rgba(0, 255, 65, 0.5) !important;
+      background: var(--terminal-green-dim, rgba(0, 255, 65, 0.5)) !important;
       box-shadow: none;
     }
 
     :host([fill-color="dark"]) .slider-fill {
-      background: #006622 !important;
+      background: var(--terminal-green-dark, #006622) !important;
       box-shadow: none;
     }
 
@@ -208,7 +285,7 @@ export class TSliderLit extends LitElement {
       flex-direction: column;
       height: 100%;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
       gap: 8px;
     }
 
@@ -252,6 +329,7 @@ export class TSliderLit extends LitElement {
 
     /* Input field */
     .slider-input {
+      flex: 1 1 auto;
       width: auto;
       min-width: 0;
       padding: 2px 4px;
@@ -371,6 +449,8 @@ export class TSliderLit extends LitElement {
     .slider-wrapper {
       position: relative;
       width: 100%;
+      min-width: 80px;
+      flex: 1 1 auto;
       display: flex;
       align-items: center;
       height: var(--t-sld-track-height);
@@ -378,9 +458,10 @@ export class TSliderLit extends LitElement {
 
     :host([vertical]) .slider-wrapper {
       width: var(--t-sld-track-height);
-      min-height: 200px;
-      height: 100%;
-      flex: 1;
+      min-width: 0;
+      max-width: var(--t-sld-track-height);
+      height: 200px;
+      flex: 0 0 200px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -390,6 +471,8 @@ export class TSliderLit extends LitElement {
     .slider-track {
       position: relative;
       width: 100%;
+      min-width: 80px;
+      flex: 1 1 auto;
       height: var(--t-sld-track-height);
       background: var(--t-sld-track-bg);
       border: 1px solid var(--t-sld-track-border);
@@ -400,6 +483,8 @@ export class TSliderLit extends LitElement {
 
     :host([vertical]) .slider-track {
       width: var(--t-sld-track-height);
+      min-width: 0;
+      max-width: var(--t-sld-track-height);
       height: 100%;
       margin: 0 auto;
     }
@@ -439,7 +524,7 @@ export class TSliderLit extends LitElement {
       align-items: center;
       justify-content: center;
       font-size: 9px;
-      color: #00ff41;
+      color: var(--terminal-green, #00ff41);
       font-weight: bold;
     }
 
@@ -579,19 +664,28 @@ export class TSliderLit extends LitElement {
     }
 
     :host([vertical]) .slider-min {
-      left: auto;
-      bottom: -8px;
-      right: -20px;
+      left: calc(50% + 12px);
+      right: auto;
+      bottom: 0;
+      text-align: left;
     }
 
     :host([vertical]) .slider-max {
-      right: -20px;
-      top: -8px;
+      left: calc(50% + 12px);
+      right: auto;
+      top: 0;
       bottom: auto;
+      text-align: left;
     }
 
     /* Hide value display when showValue is false */
     :host(:not([showValue])) .slider-value {
+      display: none;
+    }
+
+    /* Hide min/max labels when hide-min-max attribute is present */
+    :host([hide-min-max]) .slider-min,
+    :host([hide-min-max]) .slider-max {
       display: none;
     }
 
@@ -631,7 +725,8 @@ export class TSliderLit extends LitElement {
     fillColor: { type: String, reflect: true, attribute: 'fill-color' },
     minimal: { type: Boolean, reflect: true },
     stepperStyle: { type: String, reflect: true, attribute: 'stepper-style' },
-    stepperSize: { type: String, reflect: true, attribute: 'stepper-size' }
+    stepperSize: { type: String, reflect: true, attribute: 'stepper-size' },
+    hideMinMax: { type: Boolean, reflect: true, attribute: 'hide-min-max' }
   };
 
   // ----------------------------------------------------------
@@ -661,7 +756,7 @@ export class TSliderLit extends LitElement {
     this._logger.debug('Component constructed');
 
     // Initialize property defaults
-    this.label = '';
+    // NOTE: label and icon are NOT initialized to allow :not([label]) CSS selectors to work
     this.min = 0;
     this.max = 100;
     this.value = 50;
@@ -674,12 +769,12 @@ export class TSliderLit extends LitElement {
     this.showInput = false;
     this.showOutput = false;
     this.showValueInThumb = false;
-    this.icon = '';
     this.size = 'default';
     this.fillColor = 'default';
     this.minimal = false;
     this.stepperStyle = 'plusminus';
     this.stepperSize = 'md';
+    this.hideMinMax = false;
 
     // Initialize ElementInternals for form participation
     if (this.attachInternals) {
@@ -911,7 +1006,7 @@ export class TSliderLit extends LitElement {
   }
 
   /**
-   * Calculate input width based on range digits
+   * Calculate input width based on range digits and stepper buttons
    * @private
    */
   _getInputWidth() {
@@ -926,7 +1021,13 @@ export class TSliderLit extends LitElement {
     if (hasNegative) digits += 1;
 
     const safeDigits = Math.max(3, digits);
-    return `calc(${safeDigits}ch + 16px)`;
+
+    // Account for stepper buttons: (size * 2) + gap + margins
+    // sm: 14*2=28, md: 18*2=36, lg: 22*2=44, plus ~14px for gap/margins
+    const stepperSizes = { sm: 42, md: 50, lg: 58 };
+    const stepperWidth = stepperSizes[this.stepperSize] || stepperSizes.md;
+
+    return `calc(${safeDigits}ch + ${stepperWidth + 16}px)`;
   }
 
   // ----------------------------------------------------------

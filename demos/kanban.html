@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kanban Board - Terminal Components</title>
+    <script src="../js/utils/accent-init.js"></script>
     <link rel="stylesheet" href="../css/theme/terminal.css">
     <style>
         :root {
             --terminal-black: #0a0a0a;
             --terminal-gray-darkest: #1a1a1a;
             --terminal-gray-dark: #333;
-            --terminal-green: #00ff41;
             --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
         }
 
@@ -107,7 +107,7 @@
                         card-id="1"
                         title="Research new authentication methods"
                         description="Evaluate OAuth 2.0, SAML, and WebAuthn for user authentication"
-                        .tags=${['research', 'security']}
+                        tags='["research", "security"]'
                         priority="low"
                         assignee="alice"
                     ></t-kanban-card>
@@ -115,7 +115,7 @@
                         card-id="2"
                         title="Performance audit"
                         description="Analyze and optimize bundle size and load times"
-                        .tags=${['performance']}
+                        tags='["performance"]'
                         priority="medium"
                     ></t-kanban-card>
                 </t-kanban-column>
@@ -125,7 +125,7 @@
                         card-id="3"
                         title="Implement user settings page"
                         description="Create settings UI with profile, notifications, and preferences tabs"
-                        .tags=${['feature', 'ui']}
+                        tags='["feature", "ui"]'
                         priority="high"
                         assignee="bob"
                         due-date="2024-01-20"
@@ -133,7 +133,7 @@
                     <t-kanban-card
                         card-id="4"
                         title="Add dark mode toggle"
-                        .tags=${['enhancement']}
+                        tags='["enhancement"]'
                     ></t-kanban-card>
                 </t-kanban-column>
 
@@ -142,7 +142,7 @@
                         card-id="5"
                         title="Fix login redirect bug"
                         description="Users are redirected to wrong page after OAuth callback"
-                        .tags=${['bug', 'auth']}
+                        tags='["bug", "auth"]'
                         priority="high"
                         assignee="charlie"
                     ></t-kanban-card>
@@ -153,7 +153,7 @@
                         card-id="6"
                         title="Update API documentation"
                         description="Document new endpoints and update examples"
-                        .tags=${['docs']}
+                        tags='["docs"]'
                         assignee="diana"
                     ></t-kanban-card>
                 </t-kanban-column>
@@ -162,12 +162,12 @@
                     <t-kanban-card
                         card-id="7"
                         title="Setup CI/CD pipeline"
-                        .tags=${['devops']}
+                        tags='["devops"]'
                     ></t-kanban-card>
                     <t-kanban-card
                         card-id="8"
                         title="Initialize project repository"
-                        .tags=${['setup']}
+                        tags='["setup"]'
                     ></t-kanban-card>
                 </t-kanban-column>
             </t-kanban>
@@ -274,10 +274,10 @@
         }
 
         // Listen for kanban events
+        // Note: card-move is automatically handled by the component
+        // This listener is just for logging purposes
         kanban.addEventListener('card-move', e => {
             logEvent('card-move', e.detail);
-            // Actually move the card
-            kanban.moveCard(e.detail.cardId, e.detail.columnId);
         });
 
         kanban.addEventListener('card-drag-start', e => logEvent('card-drag-start', e.detail));

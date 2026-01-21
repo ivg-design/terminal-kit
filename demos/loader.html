@@ -6,6 +6,7 @@
     <title>TLoaderLit - Component Demo</title>
 
     <!-- Demo Template Styles -->
+    <script src="../js/utils/accent-init.js"></script>
     <link rel="stylesheet" href="../css/demo-template.css">
 
     <!-- Terminal Kit Component Styles -->
@@ -26,8 +27,8 @@
             flex-direction: column;
             gap: 15px;
             padding: 20px;
-            background: rgba(0, 255, 65, 0.02);
-            border: 1px solid rgba(0, 255, 65, 0.1);
+            background: color-mix(in srgb, var(--terminal-green) 2%, transparent);
+            border: 1px solid color-mix(in srgb, var(--terminal-green) 10%, transparent);
             margin-bottom: 20px;
         }
 
@@ -62,7 +63,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            color: rgba(0, 255, 65, 0.7);
+            color: var(--terminal-green-dim, color-mix(in srgb, var(--terminal-green) 70%, transparent));
             font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
@@ -105,8 +106,8 @@
             gap: 15px;
             padding: 20px;
             margin-bottom: 20px;
-            background: rgba(0, 255, 65, 0.02);
-            border: 1px solid rgba(0, 255, 65, 0.1);
+            background: color-mix(in srgb, var(--terminal-green) 2%, transparent);
+            border: 1px solid color-mix(in srgb, var(--terminal-green) 10%, transparent);
             align-items: flex-end;
         }
 
@@ -132,13 +133,13 @@
 
         t-drp {
             --t-drp-bg: #1a1a1a;
-            --t-drp-border: rgba(0, 255, 65, 0.3);
+            --t-drp-border: color-mix(in srgb, var(--terminal-green) 30%, transparent);
             --t-drp-text: var(--terminal-green);
         }
 
         t-inp {
             --t-inp-bg: #1a1a1a;
-            --t-inp-border: rgba(0, 255, 65, 0.3);
+            --t-inp-border: color-mix(in srgb, var(--terminal-green) 30%, transparent);
             --t-inp-text: var(--terminal-green);
         }
 
@@ -156,8 +157,8 @@
         .code-output-section {
             margin: 20px 0;
             padding: 20px;
-            background: rgba(0, 255, 65, 0.02);
-            border: 1px solid rgba(0, 255, 65, 0.1);
+            background: color-mix(in srgb, var(--terminal-green) 2%, transparent);
+            border: 1px solid color-mix(in srgb, var(--terminal-green) 10%, transparent);
         }
 
         .code-output-section h3 {
@@ -170,7 +171,7 @@
 
         #codeOutput {
             --t-ta-bg: #0a0a0a;
-            --t-ta-border: rgba(0, 255, 65, 0.3);
+            --t-ta-border: color-mix(in srgb, var(--terminal-green) 30%, transparent);
             --t-ta-text: var(--terminal-green);
             --t-ta-font-size: 12px;
             width: 100%;
@@ -229,7 +230,7 @@
 
         .spinner-item:hover .spinner-box {
             border-color: var(--terminal-green);
-            background: rgba(0, 255, 65, 0.05);
+            background: color-mix(in srgb, var(--terminal-green) 5%, transparent);
         }
 
         .spinner-name {
@@ -285,7 +286,7 @@
             gap: 30px;
             margin-bottom: 20px;
             padding: 15px;
-            background: rgba(0, 255, 65, 0.05);
+            background: color-mix(in srgb, var(--terminal-green) 5%, transparent);
             border: 1px solid var(--terminal-green);
         }
 
@@ -374,7 +375,7 @@
             </div>
 
             <div class="loader-preview">
-                <t-ldr id="mainLoader" type="atom-spinner" size="60" color="#00ff41"></t-ldr>
+                <t-ldr id="mainLoader" type="atom-spinner" size="60"></t-ldr>
             </div>
 
             <div class="code-output-section">
@@ -544,14 +545,19 @@
             const speed = gridSpeedSlider.value || 2;
             const cellSize = parseInt(gridSizeSlider.value || 120);
             const size = gridSizeSlider.dataset.baseSize || Math.floor(cellSize * 0.4);
-            let color = gridColorPicker.value || '#00ff41';
-            if (color.length === 9) color = color.substring(0, 7);
+            // Get color from picker - if empty or default, don't pass it to let CSS variable apply
+            let colorAttr = '';
+            let colorVal = gridColorPicker.value;
+            if (colorVal && colorVal !== '#00ff41ff' && colorVal !== '#00ff41') {
+                if (colorVal.length === 9) colorVal = colorVal.substring(0, 7);
+                colorAttr = `color="${colorVal}"`;
+            }
 
             container.innerHTML = spinners.map(type => `
                 <div class="spinner-item">
                     <div class="spinner-name">${type}</div>
                     <div class="spinner-box">
-                        <t-ldr type="${type}" size="${size}" color="${color}" duration="${speed}"></t-ldr>
+                        <t-ldr type="${type}" size="${size}" ${colorAttr} duration="${speed}"></t-ldr>
                     </div>
                 </div>
             `).join('');
@@ -776,7 +782,7 @@ document.body.appendChild(loader);
         if (mainLoader) {
             mainLoader.type = 'atom-spinner';
             mainLoader.size = 60;
-            mainLoader.color = '#00ff41';
+            // Don't set color explicitly - let it read from CSS variable --terminal-green
             mainLoader.duration = 1;
         }
 

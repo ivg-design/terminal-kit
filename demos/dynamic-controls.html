@@ -3,85 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Controls - Terminal Components</title>
-    <link rel="stylesheet" href="../css/theme/terminal.css">
+    <title>TDynamicControlsLit - Component Demo</title>
+    <script src="../js/utils/accent-init.js"></script>
+    <link rel="stylesheet" href="../css/demo-template.css">
     <link rel="stylesheet" href="../css/components/t-clr-iro.css">
+
     <style>
-        :root {
-            --terminal-black: #0a0a0a;
-            --terminal-gray-darkest: #1a1a1a;
-            --terminal-gray-dark: #333;
-            --terminal-green: #00ff41;
-            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font-mono);
-            background: var(--terminal-black);
-            color: var(--terminal-green);
-            padding: 20px;
-            min-height: 100vh;
-        }
-
-        h1 {
-            font-size: 18px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .subtitle {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 24px;
-        }
-
-        .demo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 24px;
-        }
-
-        .demo-section {
-            margin-bottom: 24px;
-        }
-
-        .section-title {
-            font-size: 14px;
-            color: var(--terminal-green);
-            margin-bottom: 12px;
-            padding: 8px 12px;
-            background: var(--terminal-gray-darkest);
-            border-left: 3px solid var(--terminal-green);
-        }
-
-        .demo-container {
-            border: 1px solid var(--terminal-gray-dark);
-            background: var(--terminal-gray-darkest);
-            padding: 16px;
-            overflow: visible;
-        }
-
-        .controls {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
-
         .value-monitor {
             margin-top: 12px;
             padding: 12px;
             background: var(--terminal-black);
             border: 1px solid var(--terminal-gray-dark);
             font-size: 11px;
-            max-height: 200px;
+            max-height: 150px;
             overflow-y: auto;
             white-space: pre-wrap;
             color: #888;
@@ -95,101 +29,124 @@
             color: var(--terminal-green);
         }
 
-        .event-log {
-            margin-top: 12px;
-            padding: 12px;
-            background: var(--terminal-black);
-            border: 1px solid var(--terminal-gray-dark);
-            font-size: 11px;
-            max-height: 150px;
-            overflow-y: auto;
+        /* Styled scrollbars for value monitor */
+        .value-monitor::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .event-entry {
-            color: #888;
-            padding: 2px 0;
-            border-bottom: 1px solid #222;
+        .value-monitor::-webkit-scrollbar-track {
+            background: var(--terminal-gray-darkest, #1a1a1a);
+            border: 1px solid var(--terminal-gray-light, #333);
         }
 
-        .event-entry.trigger {
-            color: var(--terminal-amber, #ffb000);
+        .value-monitor::-webkit-scrollbar-thumb {
+            background: var(--terminal-gray-light, #333);
+            border: 1px solid var(--terminal-green-dim, #00cc33);
+        }
+
+        .value-monitor::-webkit-scrollbar-thumb:hover {
+            background: var(--terminal-green-dark, #009929);
+            border-color: var(--terminal-green, #00ff41);
         }
     </style>
 </head>
 <body>
-    <h1>Dynamic Controls Component</h1>
-    <p class="subtitle">General-purpose schema-driven control generation. Click section headers to collapse/expand. Supports nested structures with individual collapsibility.</p>
-
-    <div class="demo-grid">
-        <!-- Simple Schema -->
-        <div class="demo-section">
-            <h2 class="section-title">Simple Schema</h2>
-            <div class="controls">
-                <t-btn id="toggle-disabled" variant="secondary" size="sm">Toggle Disabled</t-btn>
-                <t-btn id="toggle-types" variant="secondary" size="sm">Toggle Type Badges</t-btn>
+    <!-- Fixed Header -->
+    <header class="demo-header">
+        <div class="demo-header-content">
+            <div class="demo-header-left">
+                <h1>TDynamicControlsLit</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">← Components</a> / Dynamic Controls
+                </div>
             </div>
-            <div class="demo-container">
-                <t-dynamic-controls id="simple-controls"></t-dynamic-controls>
-            </div>
-            <div class="value-monitor">
-                <div class="value-monitor-title">Current Values</div>
-                <pre id="simple-values">{}</pre>
+            <div class="demo-header-controls">
+                <button class="header-btn" id="toggleLogBtn">▼ Event Log</button>
             </div>
         </div>
+    </header>
 
-        <!-- Complex Nested Schema -->
-        <div class="demo-section">
-            <h2 class="section-title">Nested ViewModels (5 Levels)</h2>
-            <div class="controls">
-                <t-btn id="random-update" variant="secondary" size="sm">Randomize Values</t-btn>
+    <!-- Main Content -->
+    <div class="demo-container">
+        <div class="component-section">
+            <h2 class="component-title">Dynamic Controls</h2>
+            <p class="component-description">
+                Schema-driven control generation for ViewModel and State Machine data. Supports nested structures, multiple control types, and automatic value binding.
+            </p>
+
+            <h3>Simple Schema</h3>
+            <div class="demo-grid">
+                <div class="demo-item" style="grid-column: span 2;">
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <t-btn id="toggle-disabled" variant="secondary" size="sm">Toggle Disabled</t-btn>
+                        <t-btn id="toggle-types" variant="secondary" size="sm">Toggle Type Badges</t-btn>
+                    </div>
+                    <t-dynamic-controls id="simple-controls"></t-dynamic-controls>
+                    <div class="value-monitor">
+                        <div class="value-monitor-title">Current Values</div>
+                        <pre id="simple-values">{}</pre>
+                    </div>
+                </div>
             </div>
-            <div class="demo-container">
-                <t-dynamic-controls id="nested-controls" show-types show-filter></t-dynamic-controls>
+
+            <h3>Nested ViewModels (5 Levels)</h3>
+            <div class="demo-grid">
+                <div class="demo-item" style="grid-column: span 2;">
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <t-btn id="random-update" variant="secondary" size="sm">Randomize Values</t-btn>
+                    </div>
+                    <t-dynamic-controls id="nested-controls" show-types show-filter></t-dynamic-controls>
+                    <div class="value-monitor">
+                        <div class="value-monitor-title">Current Values</div>
+                        <pre id="nested-values">{}</pre>
+                    </div>
+                </div>
             </div>
-            <div class="value-monitor">
-                <div class="value-monitor-title">Current Values</div>
-                <pre id="nested-values">{}</pre>
+
+            <h3>State Machine Controls</h3>
+            <div class="demo-grid">
+                <div class="demo-item" style="grid-column: span 2;">
+                    <t-dynamic-controls id="sm-controls"></t-dynamic-controls>
+                </div>
+            </div>
+
+            <h3>All Control Types</h3>
+            <div class="demo-grid">
+                <div class="demo-item" style="grid-column: span 2;">
+                    <t-dynamic-controls id="all-types-controls" show-types></t-dynamic-controls>
+                    <div class="value-monitor">
+                        <div class="value-monitor-title">Current Values</div>
+                        <pre id="all-types-values">{}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Extended Control Types (Slider, Progress, Textarea)</h3>
+            <div class="demo-grid">
+                <div class="demo-item" style="grid-column: span 2;">
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <t-btn id="animate-progress" variant="secondary" size="sm">Animate Progress</t-btn>
+                    </div>
+                    <t-dynamic-controls id="extended-controls" show-types show-filter></t-dynamic-controls>
+                    <div class="value-monitor">
+                        <div class="value-monitor-title">Current Values</div>
+                        <pre id="extended-values">{}</pre>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- State Machine Only -->
-        <div class="demo-section">
-            <h2 class="section-title">State Machine Controls</h2>
-            <div class="demo-container">
-                <t-dynamic-controls id="sm-controls"></t-dynamic-controls>
-            </div>
-            <div class="event-log">
-                <div class="value-monitor-title">Events</div>
-                <div id="sm-events"></div>
+    <!-- Event Log Panel -->
+    <div class="event-log-container collapsed" id="eventLogContainer">
+        <div class="event-log-toggle" id="eventLogToggle">
+            <h3><span class="toggle-icon">▼</span> Event Log</h3>
+            <div class="event-log-controls">
+                <span class="event-log-count" id="eventCount">0 events</span>
+                <button class="event-log-clear" id="clearLogBtn">Clear</button>
             </div>
         </div>
-
-        <!-- All Control Types -->
-        <div class="demo-section">
-            <h2 class="section-title">All Control Types</h2>
-            <div class="demo-container">
-                <t-dynamic-controls id="all-types-controls" show-types></t-dynamic-controls>
-            </div>
-            <div class="value-monitor">
-                <div class="value-monitor-title">Current Values</div>
-                <pre id="all-types-values">{}</pre>
-            </div>
-        </div>
-
-        <!-- Extended Control Types (slider, progress, textarea) -->
-        <div class="demo-section">
-            <h2 class="section-title">Extended Control Types</h2>
-            <div class="controls">
-                <t-btn id="animate-progress" variant="secondary" size="sm">Animate Progress</t-btn>
-            </div>
-            <div class="demo-container">
-                <t-dynamic-controls id="extended-controls" show-types show-filter></t-dynamic-controls>
-            </div>
-            <div class="value-monitor">
-                <div class="value-monitor-title">Current Values</div>
-                <pre id="extended-values">{}</pre>
-            </div>
-        </div>
+        <div class="event-log" id="eventLogContent"></div>
     </div>
 
     <script type="module">
@@ -216,6 +173,49 @@
             customElements.whenDefined('t-prg'),
             customElements.whenDefined('t-textarea')
         ]);
+
+        // Event log functionality
+        const eventLogContainer = document.getElementById('eventLogContainer');
+        const eventLogToggle = document.getElementById('eventLogToggle');
+        const eventLogContent = document.getElementById('eventLogContent');
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
+        const clearLogBtn = document.getElementById('clearLogBtn');
+        const eventCount = document.getElementById('eventCount');
+        let eventCounter = 0;
+
+        function logEvent(eventName, detail) {
+            eventCounter++;
+            eventCount.textContent = `${eventCounter} events`;
+
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            const time = new Date().toLocaleTimeString();
+            const detailStr = JSON.stringify(detail).substring(0, 60);
+            entry.innerHTML = `[${time}] <strong>${eventName}</strong>: ${detailStr}`;
+            eventLogContent.insertBefore(entry, eventLogContent.firstChild);
+            if (eventLogContent.children.length > 50) {
+                eventLogContent.removeChild(eventLogContent.lastChild);
+            }
+        }
+
+        // Header button toggle
+        toggleLogBtn.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.textContent = eventLogContainer.classList.contains('collapsed') ? '▼ Event Log' : '▲ Event Log';
+        });
+
+        // Click on toggle bar
+        eventLogToggle.addEventListener('click', () => {
+            eventLogContainer.classList.toggle('collapsed');
+            toggleLogBtn.textContent = eventLogContainer.classList.contains('collapsed') ? '▼ Event Log' : '▲ Event Log';
+        });
+
+        clearLogBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            eventLogContent.innerHTML = '';
+            eventCounter = 0;
+            eventCount.textContent = '0 events';
+        });
 
         // Schema definitions
         const simpleSchema = {
@@ -371,7 +371,6 @@
         const nestedValues = document.getElementById('nested-values');
         const allTypesValues = document.getElementById('all-types-values');
         const extendedValues = document.getElementById('extended-values');
-        const smEvents = document.getElementById('sm-events');
 
         function updateDisplay(el, pre) {
             pre.textContent = JSON.stringify(el.getValues(), null, 2);
@@ -383,25 +382,20 @@
         updateDisplay(allTypesControls, allTypesValues);
         updateDisplay(extendedControls, extendedValues);
 
-        // Event listeners
+        // Event listeners for all controls
+        [simpleControls, nestedControls, smControls, allTypesControls, extendedControls].forEach(ctrl => {
+            ctrl.addEventListener('control-change', (e) => {
+                logEvent('control-change', e.detail);
+            });
+            ctrl.addEventListener('control-trigger', (e) => {
+                logEvent('control-trigger', e.detail);
+            });
+        });
+
         simpleControls.addEventListener('control-change', () => updateDisplay(simpleControls, simpleValues));
         nestedControls.addEventListener('control-change', () => updateDisplay(nestedControls, nestedValues));
         allTypesControls.addEventListener('control-change', () => updateDisplay(allTypesControls, allTypesValues));
         extendedControls.addEventListener('control-change', () => updateDisplay(extendedControls, extendedValues));
-
-        // SM events
-        function logEvent(name, detail, isTrigger = false) {
-            const entry = document.createElement('div');
-            entry.className = 'event-entry' + (isTrigger ? ' trigger' : '');
-            entry.textContent = `${new Date().toLocaleTimeString()} - ${name}: ${JSON.stringify(detail).substring(0, 60)}`;
-            smEvents.insertBefore(entry, smEvents.firstChild);
-            if (smEvents.children.length > 15) {
-                smEvents.removeChild(smEvents.lastChild);
-            }
-        }
-
-        smControls.addEventListener('control-change', (e) => logEvent('change', e.detail));
-        smControls.addEventListener('control-trigger', (e) => logEvent('TRIGGER', e.detail, true));
 
         // Button handlers
         document.getElementById('toggle-disabled').addEventListener('button-click', () => {
@@ -435,14 +429,12 @@
 
             let start = performance.now();
             const animate = (now) => {
-                const elapsed = (now - start) / 50; // Speed factor
+                const elapsed = (now - start) / 50;
                 const progress1 = Math.round(elapsed % 100);
                 const progress2 = Math.round((elapsed * 0.7) % 100);
 
                 extendedControls.updateValue('vm.ExtendedTypesVM.downloadProgress', progress1);
                 extendedControls.updateValue('vm.ExtendedTypesVM.uploadProgress', progress2);
-
-                // Also animate task progress
                 extendedControls.updateValue('vm.TaskProgress.task3', Math.round((elapsed * 0.5) % 100));
                 extendedControls.updateValue('vm.TaskProgress.task4', Math.round((elapsed * 0.3) % 100));
 

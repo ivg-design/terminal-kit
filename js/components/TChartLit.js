@@ -224,16 +224,11 @@ class TChartLit extends LitElement {
 			text-anchor: middle;
 		}
 
-		/* Data labels on pie/donut - need contrast */
+		/* Data labels on pie/donut - need contrast (dark on light slices) */
 		.data-label.on-slice {
 			fill: var(--terminal-gray-darkest, #1a1a1a);
 			font-weight: 600;
 			font-size: 11px;
-		}
-
-		/* Monochrome mode - labels should be same green color */
-		:host([monochrome]) .data-label.on-slice {
-			fill: var(--chart-base-color, var(--terminal-green, #00ff41));
 		}
 
 		/* Empty state */
@@ -577,7 +572,13 @@ class TChartLit extends LitElement {
 	 */
 	_getMonochromeColor(index) {
 		// True monochrome: ALL items use the SAME base color
-		return this.baseColor || '#00ff41';
+		// If no explicit baseColor, read from CSS variable for global accent support
+		if (this.baseColor && this.baseColor !== '#00ff41') {
+			return this.baseColor;
+		}
+		// Read from CSS variable to follow global accent
+		const computedColor = getComputedStyle(this).getPropertyValue('--terminal-green').trim();
+		return computedColor || this.baseColor || '#00ff41';
 	}
 
 	// ============================================================

@@ -123,18 +123,18 @@
 }
 
 .iro-swatches::-webkit-scrollbar-track {
-	background: #0a0a0a;
+	background: var(--terminal-black, #0a0a0a);
 	border-radius: 0;
-	border: 1px solid #333333;
+	border: 1px solid var(--terminal-gray-dark, #333333);
 }
 
 .iro-swatches::-webkit-scrollbar-thumb {
-	background: #00cc33;
+	background: var(--terminal-green-dim, #00cc33);
 	border-radius: 0;
 }
 
 .iro-swatches::-webkit-scrollbar-thumb:hover {
-	background: #00ff41;
+	background: var(--terminal-green, #00ff41);
 }
 
 .iro-swatch {

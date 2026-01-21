@@ -37,6 +37,33 @@
     box-sizing: border-box;
 }
 
+/* ============================================
+   STYLED SCROLLBARS
+   ============================================ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--terminal-gray-darkest);
+    border: 1px solid var(--terminal-gray-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--terminal-gray-light);
+    border: 1px solid var(--terminal-green-dim);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--terminal-green-dark);
+    border-color: var(--terminal-green);
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--terminal-gray-darkest);
+}
+
 html,
 body {
     width: 100%;

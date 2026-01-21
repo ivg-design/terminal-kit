@@ -13,6 +13,9 @@
         <link rel="apple-touch-icon" sizes="180x180" href="../public/icons/apple-touch-icon.png">
         <meta name="theme-color" content="#00ff41">
 
+        <!-- Accent color initialization (before CSS to prevent FOUC) -->
+        <script src="../js/utils/accent-init.js"></script>
+
         <!-- Load CSS -->
         <link rel="stylesheet" href="../css/theme/terminal.css">
         <link rel="stylesheet" href="../css/components/buttons.css">
@@ -22,9 +25,6 @@
                 --terminal-black: #0a0a0a;
                 --terminal-gray-darkest: #1a1a1a;
                 --terminal-gray-dark: #242424;
-                --terminal-green: #00ff41;
-                --terminal-green-dim: #00cc33;
-                --terminal-green-glow: rgba(0, 255, 65, 0.2);
                 --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
                 --spacing-sm: 8px;
                 --spacing-md: 12px;
@@ -36,6 +36,31 @@
                 margin: 0;
                 padding: 0;
                 box-sizing: border-box;
+            }
+
+            /* Styled scrollbars */
+            ::-webkit-scrollbar {
+                width: 8px;
+                height: 8px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: var(--terminal-gray-darkest);
+                border: 1px solid var(--terminal-gray-dark);
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: var(--terminal-gray-dark);
+                border: 1px solid var(--terminal-green-dim, var(--terminal-green));
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--terminal-green-dark, #006622);
+                border-color: var(--terminal-green);
+            }
+
+            ::-webkit-scrollbar-corner {
+                background: var(--terminal-gray-darkest);
             }
 
             html,
