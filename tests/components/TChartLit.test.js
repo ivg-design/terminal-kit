@@ -148,8 +148,9 @@ describe('TChartLit', () => {
 		});
 
 		it('getColor() should return default colors', () => {
+			// Terminal color scheme: #00ff41, #00cc33, #00ffff, #00b8b8, ...
 			expect(chart.getColor(0)).toBe('#00ff41');
-			expect(chart.getColor(1)).toBe('#00ffff');
+			expect(chart.getColor(1)).toBe('#00cc33');
 		});
 
 		it('getColor() should return custom colors when set', async () => {

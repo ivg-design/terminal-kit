@@ -11,16 +11,15 @@ A retro-futuristic web components library with terminal aesthetics. Built with *
 - **Reactive Properties** - Automatic re-rendering on property changes
 - **Framework-Agnostic** - Works with React, Vue, Angular, or vanilla JS
 - **Lightweight** - Minimal dependencies, tree-shakeable
-- **Type-Safe** - Full TypeScript support
 
 ## Architecture
 
 **CRITICAL:** This library uses **Pure Lit Architecture**:
-- ✅ All styles in `static styles` CSS template literal
-- ✅ No external CSS loading
-- ✅ No `adoptedStyleSheets`
-- ✅ No FOUC (Flash of Unstyled Content)
-- ✅ Complete Shadow DOM encapsulation
+- All styles in `static styles` CSS template literal
+- No external CSS loading
+- No `adoptedStyleSheets`
+- No FOUC (Flash of Unstyled Content)
+- Complete Shadow DOM encapsulation
 
 ## Components
 
@@ -75,12 +74,6 @@ A retro-futuristic web components library with terminal aesthetics. Built with *
 ### Composite Components
 - **TChatPanel** (`<t-chat>`) - Chat UI with markdown, streaming, attachments
 
-## Installation
-
-```bash
-npm install terminal-kit
-```
-
 ## Quick Start
 
 ```html
@@ -93,8 +86,8 @@ npm install terminal-kit
 <body>
   <!-- Import components -->
   <script type="module">
-    import './node_modules/terminal-kit/js/components/TPanelLit.js';
-    import './node_modules/terminal-kit/js/components/TButtonLit.js';
+    import './js/components/TPanelLit.js';
+    import './js/components/TButtonLit.js';
   </script>
 
   <!-- Use components -->
@@ -199,62 +192,71 @@ t-btn::part(button) {
 git clone https://github.com/ivg-design/terminal-kit.git
 cd terminal-kit
 
-# Install dependencies (includes Lit 3.x)
-npm install
+# Install dependencies
+yarn install
 
 # Start development server with hot reload
-npm run dev
-
-# Start with DevMirror (Chrome CDP integration)
-npm run dev:all:mirror
+yarn dev
 
 # Build for production
-npm run build
+yarn build
 
 # Run tests
-npm test
+yarn test
+
+# Build documentation
+yarn docs:build
 ```
 
-## API Documentation
+## Documentation
 
-Full API documentation available in [`docs/API.md`](./docs/API.md)
+- **API Documentation**: [`docs/API.md`](./docs/API.md)
+- **Component Docs**: [`docs/components/`](./docs/components/) (full coverage for all 37 components)
+- **Component Schema**: [`docs/COMPONENT_SCHEMA.md`](./docs/COMPONENT_SCHEMA.md)
+- **Component Specs**: [`docs/COMPONENT_SPECIFICATIONS.md`](./docs/COMPONENT_SPECIFICATIONS.md)
 
-### Component Documentation
-- Documentation lives in `docs/components/` (full coverage).
-- Component list and demos: [`docs/README.md`](./docs/README.md).
-- Component schema reference: [`docs/COMPONENT_SCHEMA.md`](./docs/COMPONENT_SCHEMA.md).
+## Demos
+
+Interactive demos available in the `/demos` directory:
+
+- [`demos/index.html`](./demos/index.html) - Demo gallery
+- [`demos/dashboard.html`](./demos/dashboard.html) - Full dashboard showcase
+- [`demos/buttons.html`](./demos/buttons.html) - Button variants
+- [`demos/panels.html`](./demos/panels.html) - Panel component showcase
+
+Run `yarn dev` and open http://localhost:12359/demos/ to explore.
 
 ## Third-Party Notices
 
-This project bundles and depends on third-party libraries (Lit, GridStack, iro.js, marked, PrismJS, Phosphor Icons, wc-spinners, and spinner sets). See [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md) for license details.
+This project bundles third-party libraries (Lit, GridStack, iro.js, marked, PrismJS, Phosphor Icons). See [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md) for license details.
 
 ## Architecture Rules
 
-### ❌ NEVER DO THIS:
+### NEVER DO THIS:
 ```javascript
-// ❌ External CSS imports
+// External CSS imports
 import './styles.css';
 
-// ❌ adoptedStyleSheets
+// adoptedStyleSheets
 this.shadowRoot.adoptedStyleSheets = [sheet];
 
-// ❌ innerHTML in constructor
+// innerHTML in constructor
 constructor() {
   this.innerHTML = '...';
 }
 
-// ❌ Extend HTMLElement for new components
+// Extend HTMLElement for new components
 class MyComponent extends HTMLElement { }
 ```
 
-### ✅ ALWAYS DO THIS:
+### ALWAYS DO THIS:
 ```javascript
 import { LitElement, html, css } from 'lit';
 import { property } from 'lit/decorators.js';
 
-// ✅ Extend LitElement
+// Extend LitElement
 class MyComponent extends LitElement {
-  // ✅ Static styles block
+  // Static styles block
   static styles = css`
     :host {
       display: block;
@@ -262,14 +264,14 @@ class MyComponent extends LitElement {
     }
   `;
 
-  // ✅ Reactive properties
+  // Reactive properties
   @property({ type: String })
   title = '';
 
   @property({ type: Boolean })
   collapsed = false;
 
-  // ✅ Lit render method
+  // Lit render method
   render() {
     return html`
       <div class="container">
@@ -279,7 +281,7 @@ class MyComponent extends LitElement {
     `;
   }
 
-  // ✅ Lifecycle methods
+  // Lifecycle methods
   firstUpdated() {
     // Called after first render
   }
@@ -297,23 +299,6 @@ customElements.define('my-component', MyComponent);
 
 Older browsers require [Lit polyfills](https://lit.dev/docs/tools/requirements/#polyfills).
 
-## Examples
-
-Check out the demos:
-- [`demos/panels.html`](./demos/panels.html) - Panel component showcase
-- [`demos/buttons.html`](./demos/buttons.html) - Button variants
-- Live demo: [https://terminal-kit-demo.netlify.app](https://terminal-kit-demo.netlify.app)
-
-## Migration from Legacy Components
-
-If you're using old `TerminalComponent` base class components:
-
-1. Replace `<terminal-panel>` with `<t-pnl>`
-2. Replace `<terminal-button>` with `<t-btn>`
-3. Remove external CSS imports
-4. Use Lit properties instead of `setProp()`
-5. See [Migration Guide](./docs/MIGRATION_COMPLETE.md)
-
 ## Contributing
 
 Contributions welcome! Please:
@@ -321,14 +306,14 @@ Contributions welcome! Please:
 1. Follow Pure Lit architecture
 2. Add tests for new components
 3. Update documentation
-4. Run `npm run lint` before committing
+4. Run `yarn test` before committing
 
 ## License
 
-MIT
+MIT License - Free to use, modify, and distribute with attribution required. See [LICENSE](./LICENSE) for details.
 
 ## Author
 
-IVG Design
+**IVG Design**
+- Website: [forge.mograph.life](https://forge.mograph.life)
 - GitHub: [@ivg-design](https://github.com/ivg-design)
-- Website: [ivg.design](https://ivg.design)
