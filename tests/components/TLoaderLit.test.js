@@ -32,7 +32,8 @@ describe('TLoaderLit', () => {
     it('should have correct default values', () => {
       expect(component.type).toBe('atom-spinner');
       expect(component.size).toBe(60);
-      expect(component.color).toBe('#00ff41');
+      // color defaults to empty - uses CSS variable --terminal-green
+      expect(component.color).toBe('');
       expect(component.text).toBe('');
       expect(component.hidden).toBe(false);
       expect(component.glow).toBe(false);

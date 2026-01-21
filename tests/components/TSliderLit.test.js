@@ -80,7 +80,8 @@ describe('TSliderLit', () => {
   // ==============================
   describe('Properties', () => {
     it('should have correct default values', () => {
-      expect(component.label).toBe('');
+      // NOTE: label is intentionally undefined to allow :not([label]) CSS selectors
+      expect(component.label).toBeUndefined();
       expect(component.min).toBe(0);
       expect(component.max).toBe(100);
       expect(component.value).toBe(50);

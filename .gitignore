@@ -66,7 +66,6 @@ _archive/
 
 # Documentation build
 public/docs/
-site/
 
 # OS files
 .DS_Store

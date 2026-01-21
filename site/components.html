@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Components | TERMINAL-KIT</title>
+    <meta name="description" content="Browse all 37 TERMINAL-KIT components with live demos.">
+    <link rel="icon" type="image/svg+xml" href="../public/icons/favicon.svg">
+    <meta name="theme-color" content="#00ff41">
+
+    <style>
+        :root {
+            --terminal-black: #0a0a0a;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-gray-dark: #242424;
+            --terminal-gray: #333;
+            --terminal-gray-light: #666;
+            --terminal-white: #fff;
+            --terminal-green: #00ff41;
+            --terminal-green-dim: #00cc33;
+            --terminal-green-glow: rgba(0, 255, 65, 0.2);
+            --terminal-cyan: #00ffff;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff003c;
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--terminal-black);
+            color: var(--terminal-green);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Scanline */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            background: var(--terminal-gray-darkest);
+            border-bottom: 1px solid var(--terminal-gray-dark);
+            flex-shrink: 0;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 16px; }
+
+        .logo {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--terminal-green);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo svg { width: 18px; height: 18px; }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        /* Main Layout */
+        .main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar - Always Visible */
+        .sidebar {
+            width: 200px;
+            background: var(--terminal-gray-darkest);
+            border-right: 1px solid var(--terminal-gray-dark);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            flex-shrink: 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--terminal-gray-dark) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--terminal-gray-dark); border-radius: 3px; }
+
+        .sidebar-section {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--terminal-gray-dark);
+        }
+
+        .sidebar-title {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--terminal-gray-light);
+            margin-bottom: 6px;
+        }
+
+        .sidebar-links { list-style: none; }
+        .sidebar-links li { margin-bottom: 1px; }
+
+        .sidebar-links a {
+            display: block;
+            padding: 5px 8px;
+            color: var(--terminal-gray-light);
+            text-decoration: none;
+            font-size: 11px;
+            border-radius: 3px;
+            border-left: 2px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .sidebar-links a:hover {
+            background: rgba(0, 255, 65, 0.08);
+            color: var(--terminal-green);
+        }
+
+        .sidebar-links a.active {
+            background: rgba(0, 255, 65, 0.12);
+            color: var(--terminal-green);
+            border-left-color: var(--terminal-green);
+        }
+
+        .sidebar-links a.highlight {
+            color: var(--terminal-amber);
+        }
+
+        .sidebar-links a.highlight:hover,
+        .sidebar-links a.highlight.active {
+            color: var(--terminal-amber);
+            border-left-color: var(--terminal-amber);
+            background: rgba(255, 176, 0, 0.1);
+        }
+
+        /* Content - Shows ONE component at a time */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .content-header {
+            padding: 12px 16px;
+            background: var(--terminal-gray-darkest);
+            border-bottom: 1px solid var(--terminal-gray-dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .content-header h1 {
+            font-size: 16px;
+            color: var(--terminal-white);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .content-header .tag-name {
+            font-size: 11px;
+            color: var(--terminal-cyan);
+            margin-left: 12px;
+        }
+
+        .content-header-links { display: flex; gap: 8px; }
+
+        /* iframe container */
+        .demo-frame {
+            flex: 1;
+            border: none;
+            background: var(--terminal-black);
+        }
+
+        .footer { flex-shrink: 0; }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 160px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="index.html" class="logo">
+                <svg viewBox="0 0 50 50" fill="none">
+                    <rect width="50" height="50" rx="10" ry="10" fill="currentColor"/>
+                    <polyline points="36.4 15.02 46 25.58 36 36.58" fill="none" stroke="#0a0a0a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <polyline points="13.6 15.02 4 25.58 14 36.58" fill="none" stroke="#0a0a0a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="29" y1="9.33" x2="21" y2="40.67" fill="none" stroke="#0a0a0a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                TERMINAL-KIT
+            </a>
+            <t-chip label="Components" variant="info" size="sm"></t-chip>
+        </div>
+        <div class="header-right">
+            <t-btn id="btn-home" variant="ghost" size="sm">Dashboard</t-btn>
+            <t-btn id="btn-docs" variant="ghost" size="sm">API Docs</t-btn>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Sidebar - Always Visible -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Core</div>
+                <ul class="sidebar-links">
+                    <li><a href="#button" data-demo="buttons" data-tag="t-btn" data-doc="button">Button</a></li>
+                    <li><a href="#badge" data-demo="badge" data-tag="t-bdg" data-doc="badge">Badge</a></li>
+                    <li><a href="#chip" data-demo="chip" data-tag="t-chip" data-doc="chip">Chip</a></li>
+                    <li><a href="#panel" data-demo="panels" data-tag="t-pnl" data-doc="panel">Panel</a></li>
+                    <li><a href="#card" data-demo="card" data-tag="t-card" data-doc="card">Card</a></li>
+                    <li><a href="#modal" data-demo="modals" data-tag="t-mdl" data-doc="modal">Modal</a></li>
+                    <li><a href="#tooltip" data-demo="tooltip" data-tag="t-tip" data-doc="tooltip">Tooltip</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Form Controls</div>
+                <ul class="sidebar-links">
+                    <li><a href="#input" data-demo="input" data-tag="t-inp" data-doc="input">Input</a></li>
+                    <li><a href="#textarea" data-demo="textarea" data-tag="t-textarea" data-doc="textarea">Textarea</a></li>
+                    <li><a href="#dropdown" data-demo="dropdowns" data-tag="t-drp" data-doc="dropdown">Dropdown</a></li>
+                    <li><a href="#slider" data-demo="sliders" data-tag="t-sld" data-doc="slider">Slider</a></li>
+                    <li><a href="#toggle" data-demo="toggles" data-tag="t-tog" data-doc="toggle">Toggle</a></li>
+                    <li><a href="#colorpicker" data-demo="color-picker" data-tag="t-clr" data-doc="color-picker">Color Picker</a></li>
+                    <li><a href="#calendar" data-demo="calendar" data-tag="t-cal" data-doc="calendar">Calendar</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Layout</div>
+                <ul class="sidebar-links">
+                    <li><a href="#accordion" data-demo="accordion" data-tag="t-accordion" data-doc="accordion">Accordion</a></li>
+                    <li><a href="#tabs" data-demo="tabs" data-tag="t-tabs" data-doc="tabs">Tabs</a></li>
+                    <li><a href="#splitter" data-demo="splitter" data-tag="t-split" data-doc="splitter">Splitter</a></li>
+                    <li><a href="#grid" data-demo="grid" data-tag="t-grid" data-doc="grid">Grid (Dashboard)</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Data Display</div>
+                <ul class="sidebar-links">
+                    <li><a href="#list" data-demo="list" data-tag="t-list" data-doc="list">List</a></li>
+                    <li><a href="#tree" data-demo="tree" data-tag="t-tree" data-doc="tree">Tree</a></li>
+                    <li><a href="#chart" data-demo="chart" data-tag="t-chart" data-doc="chart">Chart</a></li>
+                    <li><a href="#timeline" data-demo="timeline" data-tag="t-tmln" data-doc="timeline">Timeline</a></li>
+                    <li><a href="#kanban" data-demo="kanban" data-tag="t-kanban" data-doc="kanban">Kanban</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Feedback</div>
+                <ul class="sidebar-links">
+                    <li><a href="#loader" data-demo="loader" data-tag="t-ldr" data-doc="loader">Loader</a></li>
+                    <li><a href="#progress" data-demo="progress" data-tag="t-prg" data-doc="progress">Progress</a></li>
+                    <li><a href="#toast" data-demo="toast" data-tag="t-tst" data-doc="toast">Toast</a></li>
+                    <li><a href="#skeleton" data-demo="skeleton" data-tag="t-skel" data-doc="skeleton">Skeleton</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Navigation</div>
+                <ul class="sidebar-links">
+                    <li><a href="#menu" data-demo="menu" data-tag="t-menu" data-doc="menu">Menu</a></li>
+                    <li><a href="#breadcrumbs" data-demo="breadcrumbs" data-tag="t-bread" data-doc="breadcrumbs">Breadcrumbs</a></li>
+                    <li><a href="#statusbar" data-demo="status-bar" data-tag="t-sta" data-doc="status-bar">Status Bar</a></li>
+                    <li><a href="#usermenu" data-demo="user-menu" data-tag="t-usr" data-doc="user-menu">User Menu</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Composite</div>
+                <ul class="sidebar-links">
+                    <li><a href="#chat" data-demo="chat-panel" data-tag="t-chat" data-doc="chat-panel">Chat Panel</a></li>
+                    <li><a href="#loglist" data-demo="log-list" data-tag="t-log-list" data-doc="log-list">Log List</a></li>
+                    <li><a href="#avatar" data-demo="avatar" data-tag="t-avt" data-doc="avatar">Avatar</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Showcase</div>
+                <ul class="sidebar-links">
+                    <li><a href="#dashboard" data-demo="dashboard" data-tag="All" data-doc="" class="highlight">Full Dashboard</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Content - Shows ONE component -->
+        <main class="content">
+            <div class="content-header">
+                <div style="display: flex; align-items: center;">
+                    <h1 id="component-title">Button</h1>
+                    <span class="tag-name" id="component-tag">&lt;t-btn&gt;</span>
+                </div>
+                <div class="content-header-links">
+                    <t-btn id="btn-doc" variant="ghost" size="sm">View API Docs</t-btn>
+                    <t-btn id="btn-open" variant="primary" size="sm">Open in New Tab</t-btn>
+                </div>
+            </div>
+
+            <iframe id="demo-frame" class="demo-frame" src="../demos/buttons.html"></iframe>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <t-sta>
+            <t-sta-field slot="left" label="Components" value="37"></t-sta-field>
+            <t-sta-field slot="center" id="current-component" label="Viewing" value="Button"></t-sta-field>
+            <t-sta-field slot="right" label="Navigate" value="sidebar"></t-sta-field>
+        </t-sta>
+    </footer>
+
+    <script type="module">
+        import '../js/components/TButtonLit.js';
+        import '../js/components/TChipLit.js';
+        import '../js/components/TStatusBarLit.js';
+        import '../js/components/TStatusFieldLit.js';
+
+        const frame = document.getElementById('demo-frame');
+        const title = document.getElementById('component-title');
+        const tag = document.getElementById('component-tag');
+        const statusField = document.getElementById('current-component');
+        const btnDoc = document.getElementById('btn-doc');
+        const btnOpen = document.getElementById('btn-open');
+
+        let currentDemo = 'buttons';
+        let currentDoc = 'button';
+
+        function loadDemo(demoName, tagName, docName, displayName) {
+            currentDemo = demoName;
+            currentDoc = docName;
+            frame.src = `../demos/${demoName}.html`;
+            title.textContent = displayName;
+            tag.textContent = tagName === 'All' ? 'All Components' : `<${tagName}>`;
+            if (statusField) statusField.value = displayName;
+
+            document.querySelectorAll('.sidebar-links a').forEach(a => a.classList.remove('active'));
+            document.querySelector(`.sidebar-links a[data-demo="${demoName}"]`)?.classList.add('active');
+        }
+
+        // Hide demo page header when loaded in iframe
+        frame.addEventListener('load', () => {
+            try {
+                const iframeDoc = frame.contentDocument || frame.contentWindow.document;
+                const header = iframeDoc.querySelector('.demo-header');
+                if (header) header.style.display = 'none';
+                // Reset body padding that accommodates header
+                const body = iframeDoc.body;
+                if (body) {
+                    body.style.paddingTop = '0';
+                    body.style.setProperty('--header-height', '0px');
+                }
+            } catch (e) { /* cross-origin error, ignore */ }
+        });
+
+        document.querySelectorAll('.sidebar-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadDemo(link.dataset.demo, link.dataset.tag, link.dataset.doc, link.textContent.trim());
+                history.pushState(null, '', link.href);
+            });
+        });
+
+        function handleHash() {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const link = document.querySelector(`.sidebar-links a[href="#${hash}"]`);
+                if (link) {
+                    loadDemo(link.dataset.demo, link.dataset.tag, link.dataset.doc, link.textContent.trim());
+                    return;
+                }
+            }
+            document.querySelector('.sidebar-links a')?.classList.add('active');
+        }
+
+        handleHash();
+        window.addEventListener('hashchange', handleHash);
+
+        document.getElementById('btn-home').addEventListener('button-click', () => window.location.href = 'index.html');
+        document.getElementById('btn-docs').addEventListener('button-click', () => window.open('http://localhost:5174/', '_blank'));
+
+        btnDoc.addEventListener('button-click', () => {
+            if (currentDoc) window.open(`http://localhost:5174/components/${currentDoc}`, '_blank');
+        });
+
+        btnOpen.addEventListener('button-click', () => window.open(`../demos/${currentDemo}.html`, '_blank'));
+    </script>
+</body>
+</html>

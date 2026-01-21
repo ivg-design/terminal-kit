@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL-KIT | Retro-Futuristic Dashboard UI</title>
+    <meta name="description" content="37 production-ready web components with terminal aesthetics. Built with Lit for zero FOUC and maximum performance.">
+    <link rel="icon" type="image/svg+xml" href="../public/icons/favicon.svg">
+    <meta name="theme-color" content="#00ff41">
+
+    <!-- Accent init for FOUC prevention -->
+    <script src="../js/utils/accent-init.js"></script>
+
+    <!-- Terminal Kit Theme -->
+    <link rel="stylesheet" href="../css/theme/terminal.css">
+
+    <style>
+        :root {
+            --terminal-black: #0a0a0a;
+            --terminal-gray-darkest: #1a1a1a;
+            --terminal-gray-dark: #242424;
+            --terminal-gray: #333;
+            --terminal-gray-light: #666;
+            --terminal-white: #fff;
+            --terminal-cyan: #00ffff;
+            --terminal-amber: #ffb000;
+            --terminal-red: #ff003c;
+            --terminal-purple: #9d00ff;
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+
+            /* Layout */
+            --header-height: 56px;
+            --left-rail-width: 280px;
+            --grid-gap: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--terminal-black);
+            color: var(--terminal-green, #00ff41);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Scanline overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
+            pointer-events: none;
+            z-index: 10000;
+            opacity: 0.5;
+        }
+
+        /* ========== TOP APP BAR ========== */
+        .app-bar {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            background: var(--terminal-gray-darkest);
+            border-bottom: 1px solid var(--terminal-gray-dark);
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .app-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .app-bar-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            padding: 0 24px;
+        }
+
+        .app-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--terminal-green, #00ff41);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--terminal-green, #00ff41);
+        }
+
+        /* Search */
+        .search-container {
+            width: 300px;
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+        .main-layout {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* ========== LEFT RAIL ========== */
+        .left-rail {
+            width: var(--left-rail-width);
+            background: var(--terminal-gray-darkest);
+            border-right: 1px solid var(--terminal-gray-dark);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .left-rail.collapsed {
+            width: 56px;
+        }
+
+        .rail-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--terminal-gray-dark);
+        }
+
+        .rail-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--terminal-green, #00ff41);
+            margin-bottom: 12px;
+        }
+
+        .rail-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .rail-section {
+            margin-bottom: 16px;
+        }
+
+        .rail-section-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--terminal-gray-light);
+            margin-bottom: 8px;
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .demo-controls t-btn {
+            width: 100%;
+        }
+
+        /* Filter chips */
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        /* ========== MAIN CANVAS ========== */
+        .main-canvas {
+            flex: 1;
+            overflow: auto;
+            padding: var(--grid-gap);
+        }
+
+        /* Grid scrollbar */
+        .main-canvas::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .main-canvas::-webkit-scrollbar-track {
+            background: var(--terminal-black);
+        }
+        .main-canvas::-webkit-scrollbar-thumb {
+            background: var(--terminal-gray-dark);
+            border: 1px solid var(--terminal-green-dim, var(--terminal-green, #00ff41));
+        }
+        .main-canvas::-webkit-scrollbar-thumb:hover {
+            background: var(--terminal-green-dark, #006622);
+        }
+
+        /* Widget panels */
+        .widget {
+            height: 100%;
+        }
+
+        .widget t-pnl {
+            height: 100%;
+        }
+
+        .widget-content {
+            padding: 12px;
+            height: 100%;
+            overflow: auto;
+        }
+
+        /* ========== WIDGET SPECIFIC STYLES ========== */
+
+        /* Welcome widget */
+        .welcome-intro {
+            margin-bottom: 16px;
+            line-height: 1.6;
+            color: var(--terminal-gray-light);
+        }
+
+        .welcome-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Install widget */
+        .install-tabs {
+            margin-bottom: 12px;
+        }
+
+        .code-block {
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
+            padding: 12px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            overflow-x: auto;
+        }
+
+        /* Theme studio */
+        .theme-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .theme-preview {
+            padding: 16px;
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
+            margin-top: 12px;
+        }
+
+        /* Controls studio */
+        .controls-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .controls-output {
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
+            padding: 8px;
+            font-size: 11px;
+            max-height: 200px;
+            overflow: auto;
+        }
+
+        /* Telemetry */
+        .telemetry-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        /* Log widget */
+        .log-header-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--terminal-gray-dark);
+        }
+
+        .log-header-controls t-inp {
+            width: 200px;
+        }
+
+        /* Timeline */
+        .timeline-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Component explorer */
+        .explorer-layout {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 16px;
+            height: 100%;
+        }
+
+        .explorer-preview {
+            background: var(--terminal-black);
+            border: 1px solid var(--terminal-gray-dark);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        /* Layout demos */
+        .layout-demo-content {
+            min-height: 300px;
+        }
+
+        /* Chat */
+        .chat-container {
+            height: 400px;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1199px) {
+            :root {
+                --left-rail-width: 56px;
+                --grid-gap: 12px;
+            }
+            .left-rail .rail-content { display: none; }
+            .left-rail.expanded .rail-content { display: block; }
+            .left-rail.expanded { width: 280px; position: absolute; z-index: 50; height: calc(100% - var(--header-height)); }
+        }
+
+        @media (max-width: 767px) {
+            :root {
+                --header-height: 48px;
+                --grid-gap: 10px;
+            }
+            .left-rail { display: none; }
+            .app-bar-center { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ========== TOP APP BAR ========== -->
+    <header class="app-bar">
+        <div class="app-bar-left">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2"/>
+                    <path d="M8 21h8M12 17v4"/>
+                    <path d="M7 8l3 3-3 3M12 14h4"/>
+                </svg>
+                TERMINAL-KIT
+            </div>
+            <t-bread id="breadcrumbs"></t-bread>
+        </div>
+
+        <div class="app-bar-center">
+            <div class="search-container">
+                <t-inp id="global-search" placeholder="Search components..." icon="magnifyingGlassIcon" size="sm"></t-inp>
+            </div>
+        </div>
+
+        <div class="app-bar-right">
+            <t-sta id="status-bar" compact>
+                <t-sta-field label="Build" value="1.0.0" variant="info"></t-sta-field>
+                <t-sta-field label="Mode" value="demo"></t-sta-field>
+                <t-sta-field id="status-wc" label="Components" value="booting" variant="warning"></t-sta-field>
+                <t-sta-field id="status-events" label="Events/s" value="0"></t-sta-field>
+            </t-sta>
+            <t-usr id="user-menu" name="Guest" compact></t-usr>
+        </div>
+    </header>
+
+    <!-- ========== MAIN LAYOUT ========== -->
+    <div class="main-layout">
+        <!-- ========== LEFT RAIL ========== -->
+        <aside class="left-rail" id="left-rail">
+            <div class="rail-header">
+                <div class="rail-title">Navigation</div>
+                <t-tabs id="nav-tabs" compact>
+                    <t-tab-item label="Overview" value="overview" active></t-tab-item>
+                    <t-tab-item label="Components" value="components"></t-tab-item>
+                    <t-tab-item label="Demos" value="demos"></t-tab-item>
+                </t-tabs>
+            </div>
+
+            <div class="rail-content">
+                <div class="rail-section">
+                    <div class="rail-section-title">Demo Controls</div>
+                    <div class="demo-controls">
+                        <t-btn id="btn-run" variant="primary" size="sm" icon="playIcon">Run All Demos</t-btn>
+                        <t-btn id="btn-pause" variant="secondary" size="sm" icon="pauseIcon" disabled>Pause</t-btn>
+                        <t-btn id="btn-reset" variant="ghost" size="sm" icon="arrowCounterClockwiseIcon">Reset</t-btn>
+                    </div>
+                </div>
+
+                <div class="rail-section">
+                    <div class="rail-section-title">Log Filters</div>
+                    <div class="filter-chips">
+                        <t-chip label="Info" variant="info" selectable selected></t-chip>
+                        <t-chip label="Warn" variant="warning" selectable selected></t-chip>
+                        <t-chip label="Error" variant="error" selectable selected></t-chip>
+                        <t-chip label="Debug" variant="default" selectable></t-chip>
+                    </div>
+                </div>
+
+                <div class="rail-section">
+                    <div class="rail-section-title">Sources</div>
+                    <div class="filter-chips">
+                        <t-chip label="System" selectable selected></t-chip>
+                        <t-chip label="UI" selectable selected></t-chip>
+                        <t-chip label="Network" selectable selected></t-chip>
+                        <t-chip label="AI" selectable selected></t-chip>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========== MAIN CANVAS ========== -->
+        <main class="main-canvas">
+            <t-grid id="dashboard-grid" columns="12" gap="16" cell-height="80">
+                <!-- Row 1: Welcome (cols 1-6) + Install (cols 7-12) -->
+                <t-grid-item gs-x="0" gs-y="0" gs-w="6" gs-h="3" gs-min-w="3" gs-min-h="2" item-id="welcome" widget-title="Welcome">
+                    <div class="widget-content">
+                        <p class="welcome-intro">
+                            <strong>Terminal Kit</strong> is a library of 37 production-ready web components
+                            with retro-futuristic terminal aesthetics. Built with Lit 3.x for zero FOUC.
+                        </p>
+                        <div class="welcome-actions">
+                            <t-btn id="btn-theme-studio" variant="primary" size="sm">Open Theme Studio</t-btn>
+                            <t-btn id="btn-start-demos" variant="success" size="sm">Start Demos</t-btn>
+                            <t-btn id="btn-view-components" variant="secondary" size="sm">View Components</t-btn>
+                        </div>
+                        <t-bdg id="demo-status-badge" label="Idle" variant="default" style="margin-top: 12px;"></t-bdg>
+                    </div>
+                </t-grid-item>
+
+                <t-grid-item gs-x="6" gs-y="0" gs-w="6" gs-h="3" gs-min-w="3" gs-min-h="2" item-id="install" widget-title="Install">
+                    <div class="widget-content">
+                        <t-tabs id="install-tabs" compact>
+                            <t-tab-item label="npm" value="npm" active></t-tab-item>
+                            <t-tab-item label="yarn" value="yarn"></t-tab-item>
+                            <t-tab-item label="pnpm" value="pnpm"></t-tab-item>
+                        </t-tabs>
+                        <div class="code-block" id="install-code">npm i @ivg-design/tkit</div>
+                        <div style="margin-top: 12px; display: flex; gap: 8px;">
+                            <t-btn id="btn-copy-install" variant="secondary" size="sm" icon="copyIcon">Copy</t-btn>
+                            <t-btn id="btn-copy-starter" variant="ghost" size="sm">Copy Starter</t-btn>
+                            <t-btn id="btn-readme" variant="ghost" size="sm" icon="arrowSquareOutIcon">README</t-btn>
+                        </div>
+                    </div>
+                </t-grid-item>
+
+                <!-- Row 2: Theme Studio (cols 1-4) + Dynamic Controls (cols 5-8) + Telemetry (cols 9-12) -->
+                <t-grid-item gs-x="0" gs-y="3" gs-w="4" gs-h="4" gs-min-w="3" gs-min-h="3" item-id="theme" widget-title="Theme Studio">
+                    <div class="widget-content">
+                        <div class="theme-controls">
+                            <t-clr id="theme-color" label="Accent Color" value="#00ff41" variant="standard"></t-clr>
+                            <t-sld id="theme-glow" label="Glow Intensity" min="0" max="100" value="20" show-value size="sm"></t-sld>
+                            <t-tog id="theme-scanlines" label="Scanlines" checked></t-tog>
+                            <t-tog id="theme-reduced-motion" label="Reduced Motion"></t-tog>
+                        </div>
+                        <div style="margin-top: 12px; display: flex; gap: 8px;">
+                            <t-btn id="btn-export-theme" variant="primary" size="sm">Export CSS</t-btn>
+                            <t-btn id="btn-reset-theme" variant="ghost" size="sm">Reset</t-btn>
+                        </div>
+                        <div class="theme-preview">
+                            <t-bdg label="Primary" variant="primary"></t-bdg>
+                            <t-bdg label="Success" variant="success"></t-bdg>
+                            <t-bdg label="Warning" variant="warning"></t-bdg>
+                            <t-bdg label="Error" variant="error"></t-bdg>
+                        </div>
+                    </div>
+                </t-grid-item>
+
+                <t-grid-item gs-x="4" gs-y="3" gs-w="4" gs-h="4" gs-min-w="3" gs-min-h="3" item-id="controls" widget-title="Dynamic Controls">
+                    <div class="widget-content">
+                        <t-drp id="controls-preset" label="Preset" size="sm" style="margin-bottom: 12px;"></t-drp>
+                        <t-dynamic-controls id="dynamic-controls"></t-dynamic-controls>
+                        <div style="margin-top: 12px;">
+                            <div class="rail-section-title">Output</div>
+                            <div class="controls-output" id="controls-output">{}</div>
+                        </div>
+                    </div>
+                </t-grid-item>
+
+                <t-grid-item gs-x="8" gs-y="3" gs-w="4" gs-h="4" gs-min-w="3" gs-min-h="3" item-id="telemetry" widget-title="Telemetry">
+                    <div class="widget-content">
+                        <div class="telemetry-grid">
+                            <t-chart id="chart-events" type="line" monochrome compact></t-chart>
+                            <t-chart id="chart-distribution" type="donut" monochrome compact></t-chart>
+                        </div>
+                        <t-prg id="demo-progress" value="0" show-label label="Demo Progress" style="margin-top: 12px;"></t-prg>
+                        <div class="stat-row">
+                            <t-sta-field label="Events" value="0" id="stat-events"></t-sta-field>
+                            <t-sta-field label="Errors" value="0" id="stat-errors" variant="error"></t-sta-field>
+                            <t-sta-field label="Uptime" value="0s" id="stat-uptime"></t-sta-field>
+                        </div>
+                    </div>
+                </t-grid-item>
+
+                <!-- Row 3-4: Logs (cols 1-8, tall) + Timeline (cols 9-12) -->
+                <t-grid-item gs-x="0" gs-y="7" gs-w="8" gs-h="5" gs-min-w="4" gs-min-h="3" item-id="logs" widget-title="Logs">
+                    <div class="widget-content">
+                        <div class="log-header-controls">
+                            <t-inp id="log-search" placeholder="Search logs..." size="sm" icon="magnifyingGlassIcon"></t-inp>
+                            <t-tog id="log-autoscroll" label="Auto-scroll" checked size="sm"></t-tog>
+                            <t-btn id="btn-clear-logs" variant="ghost" size="sm">Clear</t-btn>
+                            <t-btn id="btn-simulate-error" variant="error" size="sm">Simulate Error</t-btn>
+                        </div>
+                        <t-log-list id="log-list" max-entries="500" auto-scroll></t-log-list>
+                    </div>
+                </t-grid-item>
+
+                <t-grid-item gs-x="8" gs-y="7" gs-w="4" gs-h="5" gs-min-w="3" gs-min-h="3" item-id="timeline" widget-title="Timeline">
+                    <div class="widget-content">
+                        <div class="timeline-container">
+                            <t-tmln id="event-timeline"></t-tmln>
+                            <t-skel id="timeline-skeleton" type="list" rows="5" style="display: none;"></t-skel>
+                        </div>
+                    </div>
+                </t-grid-item>
+
+                <!-- Row 5: Component Explorer (full width) -->
+                <t-grid-item gs-x="0" gs-y="12" gs-w="12" gs-h="4" gs-min-w="6" gs-min-h="3" item-id="explorer" widget-title="Component Explorer">
+                    <div class="widget-content">
+                        <div class="explorer-layout">
+                            <div>
+                                <t-inp id="explorer-search" placeholder="Search..." size="sm" style="margin-bottom: 8px;"></t-inp>
+                                <t-tabs id="explorer-tabs" vertical compact>
+                                    <t-tab-item label="Core" value="core" active></t-tab-item>
+                                    <t-tab-item label="Forms" value="forms"></t-tab-item>
+                                    <t-tab-item label="Display" value="display"></t-tab-item>
+                                    <t-tab-item label="Layout" value="layout"></t-tab-item>
+                                </t-tabs>
+                                <t-list id="component-list" selectable dense style="max-height: 200px;"></t-list>
+                            </div>
+                            <div class="explorer-preview" id="component-preview">
+                                <t-skel type="card"></t-skel>
+                            </div>
+                        </div>
+                    </div>
+                </t-grid-item>
+
+                <!-- Row 6: Layout Demos (full width) -->
+                <t-grid-item gs-x="0" gs-y="16" gs-w="12" gs-h="4" gs-min-w="6" gs-min-h="3" item-id="layout-demos" widget-title="Layout Demos">
+                    <div class="widget-content">
+                        <t-tabs id="layout-tabs" compact>
+                            <t-tab-item label="Splitter" value="splitter" active></t-tab-item>
+                            <t-tab-item label="Tree" value="tree"></t-tab-item>
+                            <t-tab-item label="Kanban" value="kanban"></t-tab-item>
+                            <t-tab-item label="Virtual List" value="list"></t-tab-item>
+                        </t-tabs>
+                        <div class="layout-demo-content" id="layout-demo-content">
+                            <t-split id="demo-splitter" initial-ratio="0.3">
+                                <div slot="left" style="padding: 16px;">
+                                    <strong>Nodes</strong>
+                                    <p style="color: var(--terminal-gray-light);">Drag divider to resize</p>
+                                </div>
+                                <div slot="right" style="padding: 16px;">
+                                    <strong>Details</strong>
+                                    <t-card compact>Select a node to view details</t-card>
+                                </div>
+                            </t-split>
+                        </div>
+                    </div>
+                </t-grid-item>
+
+                <!-- Row 7: Chat (full width) -->
+                <t-grid-item gs-x="0" gs-y="20" gs-w="12" gs-h="5" gs-min-w="6" gs-min-h="4" item-id="chat" widget-title="Docs Assistant">
+                    <div class="widget-content chat-container">
+                        <t-chat id="docs-chat" placeholder="Ask about components..."></t-chat>
+                    </div>
+                </t-grid-item>
+            </t-grid>
+        </main>
+    </div>
+
+    <!-- Toast container -->
+    <t-tst-container id="toast-container" position="bottom-right"></t-tst-container>
+
+    <!-- Connect AI Modal -->
+    <t-mdl id="ai-modal" title="Connect AI Backend" size="md">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <t-drp id="ai-provider" label="Provider"></t-drp>
+            <t-inp id="ai-url" label="Base URL" placeholder="http://localhost:11434"></t-inp>
+            <t-inp id="ai-model" label="Model" placeholder="gemma3"></t-inp>
+            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <t-btn id="btn-test-ai" variant="secondary">Test Connection</t-btn>
+                <t-btn id="btn-save-ai" variant="primary">Save</t-btn>
+            </div>
+        </div>
+    </t-mdl>
+
+    <!-- Import Terminal Kit components -->
+    <script type="module">
+        // Core imports
+        import '../js/components/TButtonLit.js';
+        import '../js/components/TBadgeLit.js';
+        import '../js/components/TChipLit.js';
+        import '../js/components/TPanelLit.js';
+        import '../js/components/TCardLit.js';
+        import '../js/components/TModalLit.js';
+        import '../js/components/TTooltipLit.js';
+
+        // Form imports
+        import '../js/components/TInputLit.js';
+        import '../js/components/TTextareaLit.js';
+        import '../js/components/TDropdownLit.js';
+        import '../js/components/TSliderLit.js';
+        import '../js/components/TToggleLit.js';
+        import '../js/components/TColorPickerLit.js';
+        import '../js/components/TDynamicControlsLit.js';
+
+        // Display imports
+        import '../js/components/TChartLit.js';
+        import '../js/components/TSkeletonLit.js';
+        import '../js/components/TTimelineLit.js';
+        import '../js/components/TAvatarLit.js';
+
+        // Status imports
+        import '../js/components/TLoaderLit.js';
+        import '../js/components/TProgressLit.js';
+        import '../js/components/TToastLit.js';
+        import '../js/components/TStatusBarLit.js';
+        import '../js/components/TStatusFieldLit.js';
+
+        // Navigation imports
+        import '../js/components/TBreadcrumbsLit.js';
+        import '../js/components/TMenuLit.js';
+        import '../js/components/TTabsLit.js';
+        import '../js/components/TUserMenuLit.js';
+
+        // Layout imports
+        import '../js/components/TSplitterLit.js';
+        import '../js/components/TListLit.js';
+        import '../js/components/TTreeLit.js';
+        import '../js/components/TKanbanLit.js';
+        import '../js/components/TGridLit.js';
+
+        // Composite imports
+        import '../js/components/TChatPanelLit.js';
+        import '../js/components/TLogListLit.js';
+        import '../js/components/TLogEntryLit.js';
+    </script>
+
+    <!-- Main application script -->
+    <script type="module">
+        import { eventBus, EVENT_NAMES } from './js/event-bus.js';
+        import { logGenerator, chartGenerator, generateLog } from './js/data-generators.js';
+        import { createChatAdapter } from './js/chat-adapter.js';
+
+        // ========== STATE ==========
+        const state = {
+            demosRunning: false,
+            startTime: null,
+            chatAdapter: createChatAdapter({ provider: 'offline' })
+        };
+
+        // ========== PERSISTENCE ==========
+        const STORAGE_KEYS = {
+            LAYOUT: 'tk_landing_layout_v1',
+            LEFT_RAIL: 'tk_landing_leftrail_v1',
+            SPLIT_RATIO: 'tk_split_ratio_v1'
+        };
+
+        // ========== INITIALIZATION ==========
+        async function init() {
+            console.log('[TK] Initializing landing dashboard...');
+
+            // Update status to ready
+            setTimeout(() => {
+                const wcStatus = document.getElementById('status-wc');
+                if (wcStatus) {
+                    wcStatus.value = 'ready';
+                    wcStatus.variant = 'success';
+                }
+            }, 300);
+
+            // Setup breadcrumbs
+            const breadcrumbs = document.getElementById('breadcrumbs');
+            if (breadcrumbs?.setItems) {
+                breadcrumbs.setItems([
+                    { label: 'Terminal Kit', href: '#' },
+                    { label: 'Dashboard', href: '#' }
+                ]);
+            }
+
+            // Setup install tabs
+            setupInstallWidget();
+
+            // Setup theme studio
+            setupThemeStudio();
+
+            // Setup dynamic controls
+            setupDynamicControls();
+
+            // Setup log widget
+            setupLogWidget();
+
+            // Setup component explorer
+            setupComponentExplorer();
+
+            // Setup layout demos
+            setupLayoutDemos();
+
+            // Setup chat
+            setupChat();
+
+            // Setup demo controls
+            setupDemoControls();
+
+            // Setup AI provider dropdown
+            setupAIModal();
+
+            // Start uptime counter
+            startUptimeCounter();
+
+            // Event bus stats update
+            setInterval(updateEventStats, 1000);
+
+            console.log('[TK] Dashboard initialized');
+        }
+
+        // ========== INSTALL WIDGET ==========
+        function setupInstallWidget() {
+            const installTabs = document.getElementById('install-tabs');
+            const installCode = document.getElementById('install-code');
+            const btnCopy = document.getElementById('btn-copy-install');
+            const btnStarter = document.getElementById('btn-copy-starter');
+            const btnReadme = document.getElementById('btn-readme');
+
+            const installCommands = {
+                npm: 'npm i @ivg-design/tkit',
+                yarn: 'yarn add @ivg-design/tkit',
+                pnpm: 'pnpm add @ivg-design/tkit'
+            };
+
+            const starterCode = `import { TPanelLit, TButtonLit } from '@ivg-design/tkit';
+
+// Use components
+const panel = document.createElement('t-pnl');
+panel.title = 'My Panel';
+panel.collapsible = true;
+document.body.appendChild(panel);`;
+
+            if (installTabs) {
+                installTabs.addEventListener('tab-change', (e) => {
+                    const tab = e.detail?.value || 'npm';
+                    if (installCode) installCode.textContent = installCommands[tab];
+                });
+            }
+
+            if (btnCopy) {
+                btnCopy.addEventListener('click', async () => {
+                    const text = installCode?.textContent || '';
+                    await navigator.clipboard.writeText(text);
+                    showToast('Install command copied!');
+                });
+            }
+
+            if (btnStarter) {
+                btnStarter.addEventListener('click', async () => {
+                    await navigator.clipboard.writeText(starterCode);
+                    showToast('Starter code copied!');
+                });
+            }
+
+            if (btnReadme) {
+                btnReadme.addEventListener('click', () => {
+                    window.open('https://github.com/ivg-design/terminal-kit', '_blank');
+                });
+            }
+        }
+
+        // ========== THEME STUDIO ==========
+        function setupThemeStudio() {
+            const colorPicker = document.getElementById('theme-color');
+            const glowSlider = document.getElementById('theme-glow');
+            const scanlines = document.getElementById('theme-scanlines');
+            const reducedMotion = document.getElementById('theme-reduced-motion');
+            const btnExport = document.getElementById('btn-export-theme');
+            const btnReset = document.getElementById('btn-reset-theme');
+
+            if (colorPicker) {
+                colorPicker.addEventListener('change', (e) => {
+                    const color = e.detail?.value || '#00ff41';
+                    document.documentElement.style.setProperty('--terminal-green', color);
+                    eventBus.emit(EVENT_NAMES.THEME_CHANGED, { color });
+                    localStorage.setItem('terminal-kit-demo-accent', color);
+                });
+            }
+
+            if (scanlines) {
+                scanlines.addEventListener('toggle-change', (e) => {
+                    const enabled = e.detail?.checked;
+                    document.body.style.setProperty('--scanline-opacity', enabled ? '0.5' : '0');
+                });
+            }
+
+            if (btnExport) {
+                btnExport.addEventListener('click', async () => {
+                    const color = getComputedStyle(document.documentElement).getPropertyValue('--terminal-green').trim();
+                    const css = `:root {
+  --terminal-green: ${color};
+  --terminal-green-dim: ${adjustBrightness(color, -30)};
+  --terminal-green-bright: ${adjustBrightness(color, 30)};
+  --terminal-green-dark: ${adjustBrightness(color, -50)};
+}`;
+                    await navigator.clipboard.writeText(css);
+                    showToast('Theme CSS copied!');
+                });
+            }
+
+            if (btnReset) {
+                btnReset.addEventListener('click', () => {
+                    document.documentElement.style.setProperty('--terminal-green', '#00ff41');
+                    if (colorPicker?.setValue) colorPicker.setValue('#00ff41');
+                    localStorage.removeItem('terminal-kit-demo-accent');
+                    showToast('Theme reset to defaults');
+                });
+            }
+        }
+
+        // ========== DYNAMIC CONTROLS ==========
+        function setupDynamicControls() {
+            const presetDropdown = document.getElementById('controls-preset');
+            const dynamicControls = document.getElementById('dynamic-controls');
+            const outputDiv = document.getElementById('controls-output');
+
+            const presets = {
+                'System Control': {
+                    title: 'System Control',
+                    fields: [
+                        { id: 'refreshRateMs', type: 'number', label: 'Refresh Rate (ms)', min: 100, max: 5000, step: 100, default: 1000 },
+                        { id: 'logLevel', type: 'select', label: 'Log Level', options: ['debug', 'info', 'warn', 'error'], default: 'info' },
+                        { id: 'scanlines', type: 'boolean', label: 'Scanlines', default: true },
+                        { id: 'accent', type: 'color', label: 'Accent', default: '#00ff41' }
+                    ]
+                },
+                'Chart Settings': {
+                    title: 'Chart Settings',
+                    fields: [
+                        { id: 'chartType', type: 'select', label: 'Chart Type', options: ['line', 'bar', 'donut'], default: 'line' },
+                        { id: 'dataPoints', type: 'number', label: 'Data Points', min: 10, max: 100, default: 60 },
+                        { id: 'animated', type: 'boolean', label: 'Animated', default: true }
+                    ]
+                },
+                'Log Filters': {
+                    title: 'Log Filters',
+                    fields: [
+                        { id: 'showInfo', type: 'boolean', label: 'Show Info', default: true },
+                        { id: 'showWarn', type: 'boolean', label: 'Show Warnings', default: true },
+                        { id: 'showError', type: 'boolean', label: 'Show Errors', default: true },
+                        { id: 'maxEntries', type: 'number', label: 'Max Entries', min: 50, max: 1000, default: 500 }
+                    ]
+                }
+            };
+
+            if (presetDropdown?.loadData) {
+                const data = { files: Object.keys(presets), folders: {} };
+                presetDropdown.loadData(data);
+                setTimeout(() => presetDropdown.value = 'System Control', 100);
+            }
+
+            if (presetDropdown) {
+                presetDropdown.addEventListener('dropdown-change', (e) => {
+                    const preset = presets[e.detail?.value];
+                    if (preset && dynamicControls) {
+                        dynamicControls.schema = preset;
+                    }
+                });
+            }
+
+            if (dynamicControls) {
+                dynamicControls.addEventListener('controls-change', (e) => {
+                    if (outputDiv) {
+                        outputDiv.textContent = JSON.stringify(e.detail?.values || {}, null, 2);
+                    }
+                    eventBus.emit(EVENT_NAMES.CONTROLS_CHANGED, e.detail?.values);
+                });
+
+                // Set initial schema
+                dynamicControls.schema = presets['System Control'];
+            }
+        }
+
+        // ========== LOG WIDGET ==========
+        function setupLogWidget() {
+            const logList = document.getElementById('log-list');
+            const logSearch = document.getElementById('log-search');
+            const btnClear = document.getElementById('btn-clear-logs');
+            const btnSimulate = document.getElementById('btn-simulate-error');
+            const autoScroll = document.getElementById('log-autoscroll');
+
+            logGenerator.onLog = (log) => {
+                if (logList?.addLog) {
+                    logList.addLog(log);
+                }
+                updateTimeline(log);
+                updateLogStats();
+            };
+
+            if (btnClear) {
+                btnClear.addEventListener('click', () => {
+                    logGenerator.reset();
+                    if (logList?.clear) logList.clear();
+                    showToast('Logs cleared');
+                });
+            }
+
+            if (btnSimulate) {
+                btnSimulate.addEventListener('click', () => {
+                    const errorLog = generateLog({ level: 'error', source: 'system', message: 'Simulated error for testing' });
+                    logGenerator.addLog(errorLog);
+                });
+            }
+
+            if (autoScroll && logList) {
+                autoScroll.addEventListener('toggle-change', (e) => {
+                    logList.autoScroll = e.detail?.checked;
+                });
+            }
+        }
+
+        // ========== TIMELINE ==========
+        function updateTimeline(log) {
+            const timeline = document.getElementById('event-timeline');
+            if (!timeline?.addEvent) return;
+
+            const relativeTime = getRelativeTime(log.ts);
+            timeline.addEvent({
+                id: log.id,
+                label: log.message.substring(0, 40) + (log.message.length > 40 ? '...' : ''),
+                sublabel: `${log.source} • ${log.level}`,
+                time: relativeTime,
+                variant: log.level === 'error' ? 'error' : log.level === 'warn' ? 'warning' : 'default'
+            });
+        }
+
+        // ========== COMPONENT EXPLORER ==========
+        function setupComponentExplorer() {
+            const componentList = document.getElementById('component-list');
+            const explorerTabs = document.getElementById('explorer-tabs');
+            const preview = document.getElementById('component-preview');
+
+            const components = {
+                core: ['t-btn', 't-bdg', 't-chip', 't-pnl', 't-card', 't-mdl', 't-tip'],
+                forms: ['t-inp', 't-textarea', 't-drp', 't-sld', 't-tog', 't-clr', 't-cal'],
+                display: ['t-chart', 't-skel', 't-tmln', 't-avt', 't-ldr', 't-prg'],
+                layout: ['t-split', 't-list', 't-tree', 't-kanban', 't-grid']
+            };
+
+            function loadComponents(category) {
+                if (!componentList?.loadData) return;
+                const items = components[category] || [];
+                componentList.loadData({
+                    files: items,
+                    folders: {}
+                });
+            }
+
+            if (explorerTabs) {
+                explorerTabs.addEventListener('tab-change', (e) => {
+                    loadComponents(e.detail?.value || 'core');
+                });
+            }
+
+            if (componentList) {
+                componentList.addEventListener('list-select', (e) => {
+                    const component = e.detail?.value;
+                    if (preview && component) {
+                        preview.innerHTML = `<${component}></${component}>`;
+                    }
+                });
+            }
+
+            // Initial load
+            setTimeout(() => loadComponents('core'), 200);
+        }
+
+        // ========== LAYOUT DEMOS ==========
+        function setupLayoutDemos() {
+            const layoutTabs = document.getElementById('layout-tabs');
+            const content = document.getElementById('layout-demo-content');
+
+            const demos = {
+                splitter: `<t-split initial-ratio="0.3">
+                    <div slot="left" style="padding: 16px;"><strong>Nodes</strong><p style="color: var(--terminal-gray-light);">Drag divider</p></div>
+                    <div slot="right" style="padding: 16px;"><strong>Details</strong><t-card compact>Select a node</t-card></div>
+                </t-split>`,
+                tree: `<t-tree id="demo-tree"></t-tree>`,
+                kanban: `<t-kanban id="demo-kanban"></t-kanban>`,
+                list: `<t-list id="demo-vlist" virtualized style="height: 250px;"></t-list>`
+            };
+
+            if (layoutTabs) {
+                layoutTabs.addEventListener('tab-change', (e) => {
+                    const tab = e.detail?.value || 'splitter';
+                    if (content) {
+                        content.innerHTML = demos[tab] || '';
+                        initLayoutDemo(tab);
+                    }
+                });
+            }
+        }
+
+        function initLayoutDemo(tab) {
+            if (tab === 'tree') {
+                const tree = document.getElementById('demo-tree');
+                if (tree?.loadData) {
+                    tree.loadData({
+                        label: 'Root',
+                        children: [
+                            { label: 'Components', children: [{ label: 't-btn' }, { label: 't-pnl' }] },
+                            { label: 'Utils', children: [{ label: 'event-bus.js' }] }
+                        ]
+                    });
+                }
+            } else if (tab === 'kanban') {
+                const kanban = document.getElementById('demo-kanban');
+                if (kanban) {
+                    kanban.columns = [
+                        { id: 'backlog', title: 'Backlog', color: '#666' },
+                        { id: 'progress', title: 'In Progress', color: '#ffb000' },
+                        { id: 'done', title: 'Done', color: '#00ff41' }
+                    ];
+                    kanban.cards = [
+                        { id: '1', column: 'backlog', title: 'Feature A' },
+                        { id: '2', column: 'progress', title: 'Bug Fix' },
+                        { id: '3', column: 'done', title: 'Docs Update' }
+                    ];
+                }
+            } else if (tab === 'list') {
+                const list = document.getElementById('demo-vlist');
+                if (list?.loadData) {
+                    const items = Array.from({ length: 1000 }, (_, i) => ({
+                        id: `item-${i}`,
+                        label: `Item ${i + 1}`,
+                        sublabel: `Description for item ${i + 1}`
+                    }));
+                    list.loadData({ files: items.map(i => i.label), folders: {} });
+                }
+            }
+        }
+
+        // ========== CHAT ==========
+        function setupChat() {
+            const chat = document.getElementById('docs-chat');
+            if (!chat) return;
+
+            chat.addEventListener('chat-send', async (e) => {
+                const message = e.detail?.message;
+                if (!message) return;
+
+                eventBus.emit(EVENT_NAMES.CHAT_SEND, { message });
+
+                // Start streaming response
+                let response = '';
+                const startTime = Date.now();
+
+                for await (const chunk of state.chatAdapter.sendMessage(message)) {
+                    response += chunk;
+                    if (chat.streamResponse) {
+                        chat.streamResponse(chunk);
+                    }
+                }
+
+                const latencyMs = Date.now() - startTime;
+                eventBus.emit(EVENT_NAMES.CHAT_RECEIVE, {
+                    response,
+                    latencyMs,
+                    inputChars: message.length,
+                    outputChars: response.length
+                });
+
+                // Log the AI response
+                logGenerator.addLog(generateLog({
+                    level: 'info',
+                    source: 'ai',
+                    message: `Assistant response: ${response.substring(0, 50)}...`,
+                    kv: { latencyMs, inputChars: message.length, outputChars: response.length }
+                }));
+            });
+        }
+
+        // ========== DEMO CONTROLS ==========
+        function setupDemoControls() {
+            const btnRun = document.getElementById('btn-run');
+            const btnPause = document.getElementById('btn-pause');
+            const btnReset = document.getElementById('btn-reset');
+            const badge = document.getElementById('demo-status-badge');
+            const btnStartDemos = document.getElementById('btn-start-demos');
+
+            function startDemos() {
+                state.demosRunning = true;
+                state.startTime = Date.now();
+                logGenerator.start(1000);
+                chartGenerator.start(1000);
+
+                if (btnRun) btnRun.disabled = true;
+                if (btnPause) btnPause.disabled = false;
+                if (badge) {
+                    badge.label = 'Live';
+                    badge.variant = 'success';
+                }
+
+                eventBus.emit(EVENT_NAMES.DEMO_START);
+                showToast('Demos started');
+            }
+
+            function pauseDemos() {
+                state.demosRunning = false;
+                logGenerator.stop();
+                chartGenerator.stop();
+
+                if (btnRun) btnRun.disabled = false;
+                if (btnPause) btnPause.disabled = true;
+                if (badge) {
+                    badge.label = 'Paused';
+                    badge.variant = 'warning';
+                }
+
+                eventBus.emit(EVENT_NAMES.DEMO_PAUSE);
+                showToast('Demos paused');
+            }
+
+            function resetDemos() {
+                pauseDemos();
+                logGenerator.reset();
+                chartGenerator.reset();
+
+                if (badge) {
+                    badge.label = 'Idle';
+                    badge.variant = 'default';
+                }
+
+                eventBus.emit(EVENT_NAMES.DEMO_RESET);
+                showToast('Demos reset');
+            }
+
+            if (btnRun) btnRun.addEventListener('click', startDemos);
+            if (btnPause) btnPause.addEventListener('click', pauseDemos);
+            if (btnReset) btnReset.addEventListener('click', resetDemos);
+            if (btnStartDemos) btnStartDemos.addEventListener('click', startDemos);
+        }
+
+        // ========== AI MODAL ==========
+        function setupAIModal() {
+            const providerDropdown = document.getElementById('ai-provider');
+            const btnTest = document.getElementById('btn-test-ai');
+            const btnSave = document.getElementById('btn-save-ai');
+            const urlInput = document.getElementById('ai-url');
+            const modelInput = document.getElementById('ai-model');
+
+            if (providerDropdown?.loadData) {
+                providerDropdown.loadData({
+                    files: ['Offline Demo', 'Ollama Local', 'LM Studio', 'Cloudflare Workers AI'],
+                    folders: {}
+                });
+            }
+
+            if (btnTest) {
+                btnTest.addEventListener('click', async () => {
+                    const provider = getProviderFromDropdown();
+                    const url = urlInput?.value;
+                    const model = modelInput?.value;
+
+                    try {
+                        const adapter = createChatAdapter({ provider, baseUrl: url, model });
+                        let response = '';
+                        for await (const chunk of adapter.sendMessage('Hello')) {
+                            response += chunk;
+                            break; // Just test first chunk
+                        }
+                        showToast('Connection successful!', 'success');
+                    } catch (e) {
+                        showToast('Connection failed: ' + e.message, 'error');
+                    }
+                });
+            }
+
+            if (btnSave) {
+                btnSave.addEventListener('click', () => {
+                    const provider = getProviderFromDropdown();
+                    const url = urlInput?.value;
+                    const model = modelInput?.value;
+
+                    state.chatAdapter = createChatAdapter({ provider, baseUrl: url, model });
+                    document.getElementById('ai-modal')?.close?.();
+                    showToast('AI backend configured');
+                });
+            }
+        }
+
+        function getProviderFromDropdown() {
+            const value = document.getElementById('ai-provider')?.value || '';
+            if (value.includes('Ollama')) return 'ollama';
+            if (value.includes('LM Studio')) return 'lmstudio';
+            if (value.includes('Cloudflare')) return 'cloudflare';
+            return 'offline';
+        }
+
+        // ========== UTILITIES ==========
+        function showToast(message, variant = 'info') {
+            const container = document.getElementById('toast-container');
+            if (container?.show) {
+                container.show({ message, variant, duration: 3000 });
+            }
+        }
+
+        function updateEventStats() {
+            const stats = eventBus.getStats();
+            const statusEvents = document.getElementById('status-events');
+            if (statusEvents) {
+                statusEvents.value = String(stats.eventsPerSecond);
+            }
+        }
+
+        function updateLogStats() {
+            const stats = logGenerator.getStats();
+            const statEvents = document.getElementById('stat-events');
+            const statErrors = document.getElementById('stat-errors');
+
+            if (statEvents) statEvents.value = String(logGenerator.logs.length);
+            if (statErrors) statErrors.value = String(stats.error || 0);
+        }
+
+        function startUptimeCounter() {
+            const uptimeField = document.getElementById('stat-uptime');
+            setInterval(() => {
+                if (state.startTime && state.demosRunning && uptimeField) {
+                    const seconds = Math.floor((Date.now() - state.startTime) / 1000);
+                    uptimeField.value = `${seconds}s`;
+                }
+            }, 1000);
+        }
+
+        function getRelativeTime(ts) {
+            const diff = Math.floor((Date.now() - ts) / 1000);
+            if (diff < 60) return `${diff}s ago`;
+            if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+            return `${Math.floor(diff / 3600)}h ago`;
+        }
+
+        function adjustBrightness(hex, percent) {
+            const num = parseInt(hex.replace('#', ''), 16);
+            const r = Math.min(255, Math.max(0, (num >> 16) + percent));
+            const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + percent));
+            const b = Math.min(255, Math.max(0, (num & 0x0000FF) + percent));
+            return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+        }
+
+        // ========== START ==========
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
