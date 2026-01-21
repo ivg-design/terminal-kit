@@ -2,6 +2,29 @@
 
 A retro-futuristic web components library with terminal aesthetics. Built with **Pure Lit Architecture** for zero FOUC, complete Shadow DOM encapsulation, and maximum performance.
 
+## Customizable Terminal Color
+
+All components use a unified accent color system via CSS variables. Change the terminal color globally:
+
+```css
+:root {
+  --terminal-green: #00ffff;  /* Change to any color */
+}
+```
+
+The library automatically derives related shades (`-dim`, `-bright`, `-dark`, `-glow`) from your base color. Components read these variables dynamically, so color changes apply instantly across all components.
+
+For apps with user-selectable colors, include `accent-init.js` before your CSS to prevent flash of default color:
+
+```html
+<head>
+  <script src="path/to/accent-init.js"></script>
+  <link rel="stylesheet" href="your-styles.css">
+</head>
+```
+
+The script reads from `localStorage` key `terminal-kit-demo-accent` and sets all color variables before CSS loads.
+
 ## Installation
 
 ```bash
