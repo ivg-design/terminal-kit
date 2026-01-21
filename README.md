@@ -193,19 +193,19 @@ git clone https://github.com/ivg-design/terminal-kit.git
 cd terminal-kit
 
 # Install dependencies
-yarn install
+npm install
 
 # Start development server with hot reload
-yarn dev
+npm run dev
 
 # Build for production
-yarn build
+npm run build
 
 # Run tests
-yarn test
+npm test
 
 # Build documentation
-yarn docs:build
+npm run docs:build
 ```
 
 ## Documentation
@@ -224,7 +224,7 @@ Interactive demos available in the `/demos` directory:
 - [`demos/buttons.html`](./demos/buttons.html) - Button variants
 - [`demos/panels.html`](./demos/panels.html) - Panel component showcase
 
-Run `yarn dev` and open http://localhost:12359/demos/ to explore.
+Run `npm run dev` and open http://localhost:12359/demos/ to explore.
 
 ## Third-Party Notices
 
@@ -306,7 +306,7 @@ Contributions welcome! Please:
 1. Follow Pure Lit architecture
 2. Add tests for new components
 3. Update documentation
-4. Run `yarn test` before committing
+4. Run `npm test` before committing
 
 ## License
 
