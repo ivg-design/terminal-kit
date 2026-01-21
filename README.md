@@ -1,4 +1,4 @@
-# T-Kit
+# TERMINAL-Kit
 
 A retro-futuristic web components library with terminal aesthetics. Built with **Pure Lit Architecture** for zero FOUC, complete Shadow DOM encapsulation, and maximum performance.
 
