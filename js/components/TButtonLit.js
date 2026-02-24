@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TButtonLit - Terminal-style Button Component
+ * @module components/TButtonLit
+ * @version 3.0.0
+ *
+ * Terminal-styled button component with variants, loading states, and toggle functionality. Supports multiple button types (text, icon, icon-text), sizes, variants, and includes built-in loading indicators.
+ *
+ * @example
+ * <t-btn></t-btn>
+ */
+
 import { LitElement, html, css } from 'lit';
 import componentLogger from '../utils/ComponentLogger.js';
 import { generateManifest } from '../utils/manifest-generator.js';
@@ -7,7 +18,7 @@ import { generateManifest } from '../utils/manifest-generator.js';
  * @tagname t-btn
  * @description Terminal-styled button component with variants, loading states, and toggle functionality. Supports multiple button types (text, icon, icon-text), sizes, variants, and includes built-in loading indicators.
  * @category Form Controls
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <t-btn variant="primary">Click Me</t-btn>
  * @example
@@ -20,7 +31,7 @@ export class TButton extends LitElement {
   // BLOCK 1: STATIC METADATA
   // ============================================================
   static tagName = 't-btn';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Form Controls';
 
   // ============================================================
@@ -1284,13 +1295,15 @@ export class TButton extends LitElement {
   }
 }
 
-customElements.define('t-btn', TButton);
+if (!customElements.get('t-btn')) {
+  customElements.define('t-btn', TButton);
+}
 
 export const TButtonManifest = generateManifest(TButton, {
   tagName: 't-btn',
   displayName: 'Button',
   description: 'Terminal-styled button component with variants, loading states, and toggle functionality. Supports multiple button types (text, icon, icon-text), sizes, variants, and includes built-in loading indicators.',
-  version: '1.0.0',
+  version: '3.0.0',
   category: 'Form Controls',
   methods: {
     click: {

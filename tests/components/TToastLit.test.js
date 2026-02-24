@@ -36,7 +36,7 @@ describe('TToastLit', () => {
 
       expect(TToastManifest).toBeDefined();
       expect(TToastManifest.tagName).toBe('t-tst');
-      expect(TToastManifest.version).toBe('1.0.0');
+      expect(TToastManifest.version).toBe('3.0.0');
       expect(TToastManifest.category).toBe('Display');
     });
 

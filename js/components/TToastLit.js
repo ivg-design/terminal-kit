@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TToastLit - Terminal-style Toast Component
+ * @module components/TToastLit
+ * @version 3.0.0
+ *
+ * Toast notification component with auto-dismiss and animation support.
+ *
+ * @example
+ * <t-tst></t-tst>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
@@ -20,7 +31,7 @@ import {
  * @tagname t-tst
  * @description Toast notification component with auto-dismiss and animation support
  * @category Display
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <t-tst message="Operation successful!" type="success"></t-tst>
  */
@@ -30,7 +41,7 @@ export class TToastLit extends LitElement {
   // BLOCK 1: STATIC METADATA (REQUIRED)
   // ----------------------------------------------------------
   static tagName = 't-tst';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Display';
 
   // ----------------------------------------------------------

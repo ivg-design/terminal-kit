@@ -1,10 +1,29 @@
-# TChipLit
+# TChipLit Component Documentation
 
-A compact tag/chip component for displaying labels, filters, or selections with optional removal and selection states.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Tag/filter chip component with selection, removal, and variants.
 
 ## Tag Names
 
 - `t-chip`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Core
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 
@@ -27,6 +46,9 @@ A compact tag/chip component for displaying labels, filters, or selections with 
 | `disabled` | `Boolean` | `false` | Yes | Disable interactions |
 | `icon` | `String` | `''` | No | Icon SVG string (left side) |
 | `avatar` | `String` | `''` | No | Avatar image URL |
+| `bgColor` | `String` | `''` | No | Optional custom background color override |
+| `textColor` | `String` | `''` | No | Optional custom text color override |
+| `borderColor` | `String` | `''` | No | Optional custom border color override |
 | `autoRemove` | `Boolean` | `true` | Yes | Auto-remove from DOM when remove button clicked |
 | `shape` | `String` | `'pill'` | Yes | Shape variant: `'pill'` (rounded), `'tag'` (left accent), `'square'` |
 
@@ -222,7 +244,6 @@ chip.addEventListener('chip-remove', (e) => {
 ## Slots
 
 None.
-
 
 ## CSS Custom Properties
 

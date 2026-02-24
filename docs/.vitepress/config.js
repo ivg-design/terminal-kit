@@ -1,9 +1,13 @@
 import { defineConfig } from 'vitepress'
 
+const docsBase =
+  process.env.DOCS_BASE ||
+  (process.env.NODE_ENV === 'production' ? '/public/docs/' : '/')
+
 export default defineConfig({
   title: 'Terminal Kit',
   description: 'Terminal UI Web Components Documentation',
-  base: '/public/docs/',
+  base: docsBase,
 
   // Use clean URLs
   cleanUrls: true,
@@ -47,6 +51,8 @@ export default defineConfig({
           { text: 'TModalLit', link: '/components/TModalLit' },
           { text: 'TSplitterLit', link: '/components/TSplitterLit' },
           { text: 'TGridLit', link: '/components/TGridLit' },
+          { text: 'TBentoGridLit', link: '/components/TBentoGridLit' },
+          { text: 'TCarouselLit', link: '/components/TCarouselLit' },
           { text: 'TTabsLit', link: '/components/TTabsLit' },
           { text: 'TAccordionLit', link: '/components/TAccordionLit' },
           { text: 'TCardLit', link: '/components/TCardLit' }

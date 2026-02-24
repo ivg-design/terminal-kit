@@ -1,48 +1,27 @@
-# TUserMenuLit Component - Complete API Documentation
+# TUserMenuLit Component Documentation
+
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Dropdown menu triggered by user badge click with avatar, user info, and customizable menu items
 
 ## Tag Names
 
 - `t-usr`
 
+## Architecture
+
+- Extends: `LitElement`
+- Category: Navigation
+- Version: 3.0.0
+
 ## Table of Contents
-1. [Overview](#overview)
-2. [Installation & Import](#installation--import)
-3. [Basic Usage](#basic-usage)
-4. [Properties (Attributes)](#properties-attributes)
-5. [Methods](#methods)
-6. [Events](#events)
-7. [Menu Item Configuration](#menu-item-configuration)
-8. [Icon Support](#icon-support)
-9. [Styling & CSS Customization](#styling--css-customization)
-10. [Accessibility](#accessibility)
-11. [Advanced Examples](#advanced-examples)
-12. [Migration Guide](#migration-guide)
-13. [Browser Support](#browser-support)
-14. [API Reference Summary](#api-reference-summary)
-
----
-
-## Overview
-
-The `TUserMenuLit` component (`<t-usr>`) is a fully-featured dropdown user menu built with Lit Element. It provides a customizable user badge with avatar support, dropdown menu with configurable items, and comprehensive event handling for user interactions.
-
-**Component Tag:** `<t-usr>`
-**Version:** 1.0.0
-**Profile:** CORE
-**Category:** Navigation
-**Dependencies:** Lit 3.0+
-
-### Key Features
-- 🎨 Avatar image or initials display
-- 📱 Compact mode for mobile views
-- ⚡ Custom menu items with icon support
-- ♿ Full accessibility with ARIA attributes
-- 🎯 Click-outside and Escape key handling
-- 🔧 Fully customizable via properties and CSS
-- 📊 Built-in logging with ComponentLogger
-- 🚀 Shadow DOM encapsulation
-
----
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
 
 ## Installation & Import
 
@@ -92,13 +71,13 @@ import '../js/components/TUserMenuLit.js';
 
 | Property | Attribute | Type | Default | Reflects | Description |
 |----------|-----------|------|---------|----------|-------------|
-| `userName` | `user-name` | `String` | `'User'` | ✅ | User's display name. Shows in badge and dropdown header. |
-| `userEmail` | `user-email` | `String` | `''` | ✅ | User's email address. Displays below name in dropdown header when provided. |
-| `userAvatar` | `user-avatar` | `String` | `''` | ❌ | URL to user's avatar image. Falls back to initials if not provided or fails to load. |
-| `disabled` | `disabled` | `Boolean` | `false` | ✅ | Disables all interactions with the menu. Applies disabled styling. |
-| `open` | `open` | `Boolean` | `false` | ✅ | Controls dropdown visibility. Can be set programmatically or via attribute. |
-| `menuItems` | - | `Array` | `[]` | ❌ | Custom menu items. No attribute binding, set via JavaScript only. |
-| `compact` | `compact` | `Boolean` | `false` | ✅ | Enables compact mode showing initials only, ideal for mobile/small screens. |
+| `userName` | `user-name` | `String` | `'User'` | Yes | User's display name. Shows in badge and dropdown header. |
+| `userEmail` | `user-email` | `String` | `''` | Yes | User's email address. Displays below name in dropdown header when provided. |
+| `userAvatar` | `user-avatar` | `String` | `''` | No | URL to user's avatar image. Falls back to initials if not provided or fails to load. |
+| `disabled` | `disabled` | `Boolean` | `false` | Yes | Disables all interactions with the menu. Applies disabled styling. |
+| `open` | `open` | `Boolean` | `false` | Yes | Controls dropdown visibility. Can be set programmatically or via attribute. |
+| `menuItems` | - | `Array` | `[]` | No | Custom menu items. No attribute binding, set via JavaScript only. |
+| `compact` | `compact` | `Boolean` | `false` | Yes | Enables compact mode showing initials only, ideal for mobile/small screens. |
 
 ### Property Details
 
@@ -293,9 +272,9 @@ menu.setUserInfo({
 
 | Event | Detail | Bubbles | Composed | Cancelable | Description |
 |-------|--------|---------|----------|------------|-------------|
-| `menu-open` | None | ✅ | ✅ | ❌ | Fired when dropdown opens |
-| `menu-close` | None | ✅ | ✅ | ❌ | Fired when dropdown closes |
-| `menu-select` | `{itemId: string}` | ✅ | ✅ | ❌ | Fired when menu item is selected |
+| `menu-open` | None | Yes | Yes | No | Fired when dropdown opens |
+| `menu-close` | None | Yes | Yes | No | Fired when dropdown closes |
+| `menu-select` | `{itemId: string}` | Yes | Yes | No | Fired when menu item is selected |
 
 ### Event Handling Examples
 
@@ -818,37 +797,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ---
 
-## Migration Guide
-
-### From TerminalUserMenu to TUserMenuLit
-
-If migrating from the older component:
-
-```javascript
-// Old API
-<terminal-user-menu
-  user-name="John"
-  user-avatar="/avatar.jpg">
-</terminal-user-menu>
-
-// New API
-<t-usr
-  user-name="John"
-  user-avatar="/avatar.jpg">
-</t-usr>
-
-// Method changes
-oldMenu.open();    → newMenu.openMenu();
-oldMenu.close();   → newMenu.closeMenu();
-oldMenu.toggle();  → newMenu.toggleMenu();
-
-// Event changes
-'menu-item-click' → 'menu-select'
-e.detail.item     → e.detail.itemId
-```
-
----
-
 ## Browser Support
 
 | Browser | Minimum Version | Notes |
@@ -950,9 +898,8 @@ MIT License
 
 *Documentation Version: 2.0.0*
 *Last Updated: September 2024*
-*Component Version: 1.0.0*
+*Component Version: 3.0.0*
 
 ## Slots
 
 None.
-

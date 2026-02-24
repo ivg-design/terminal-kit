@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TBadgeLit - Terminal-style Badge Component
+ * @module components/TBadgeLit
+ * @version 3.0.0
+ *
+ * Count/status indicator badge component with variants, sizes, and positioning options.
+ *
+ * @example
+ * <t-bdg></t-bdg>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================

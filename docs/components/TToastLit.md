@@ -1,6 +1,10 @@
-# TToastLit (t-tst)
+# TToastLit Component Documentation
 
-A **LitElement-based** toast notification component for terminal-style user interfaces. Provides user feedback through temporary, non-intrusive messages with auto-dismiss functionality, smooth animations, and configurable positioning. Built with full Shadow DOM encapsulation following Terminal Kit component schema.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Toast notification component with auto-dismiss and animation support
 
 ## Tag Names
 
@@ -8,11 +12,17 @@ A **LitElement-based** toast notification component for terminal-style user inte
 
 ## Architecture
 
-**Tag Name:** `<t-tst>`
-**Extends:** `LitElement`
-**Category:** Display
-**Profile:** CORE
-**Version:** 1.0.0
+- Extends: `LitElement`
+- Category: Display
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [Related Components](#related-components)
 
 ## Properties
 
@@ -20,11 +30,11 @@ All properties are reactive Lit properties with attribute reflection:
 
 | Property | Type | Default | Reflects | Description |
 |----------|------|---------|----------|-------------|
-| `message` | `string` | `''` | ✅ | The notification message to display |
-| `type` | `'success' \| 'error' \| 'warning' \| 'info'` | `'info'` | ✅ | Visual style indicating notification severity |
-| `duration` | `number` | `3000` | ✅ | Auto-dismiss timeout in milliseconds. Set to `0` to disable auto-dismiss |
-| `visible` | `boolean` | `false` | ✅ | Controls toast visibility state |
-| `position` | `'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left'` | `'top-right'` | ✅ | Screen position for the toast notification |
+| `message` | `string` | `''` | Yes | The notification message to display |
+| `type` | `'success' \| 'error' \| 'warning' \| 'info'` | `'info'` | Yes | Visual style indicating notification severity |
+| `duration` | `number` | `3000` | Yes | Auto-dismiss timeout in milliseconds. Set to `0` to disable auto-dismiss |
+| `visible` | `boolean` | `false` | Yes | Controls toast visibility state |
+| `position` | `'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left'` | `'top-right'` | Yes | Screen position for the toast notification |
 
 ### Property Details
 
@@ -126,9 +136,9 @@ Fired when toast becomes visible.
 
 **Event Type:** `CustomEvent<{}>`
 
-**Bubbles:** ✅ Yes
+**Bubbles:** <DocIcon name="checkCircle" /> Yes
 
-**Composed:** ✅ Yes (crosses shadow DOM boundary)
+**Composed:** <DocIcon name="checkCircle" /> Yes (crosses shadow DOM boundary)
 
 **Detail:** Empty object `{}`
 
@@ -149,9 +159,9 @@ Fired when toast becomes hidden.
 
 **Event Type:** `CustomEvent<{}>`
 
-**Bubbles:** ✅ Yes
+**Bubbles:** <DocIcon name="checkCircle" /> Yes
 
-**Composed:** ✅ Yes
+**Composed:** <DocIcon name="checkCircle" /> Yes
 
 **Detail:** Empty object `{}`
 
@@ -170,9 +180,9 @@ Fired when toast body is clicked (excludes close button).
 
 **Event Type:** `CustomEvent<{}>`
 
-**Bubbles:** ✅ Yes
+**Bubbles:** <DocIcon name="checkCircle" /> Yes
 
-**Composed:** ✅ Yes
+**Composed:** <DocIcon name="checkCircle" /> Yes
 
 **Detail:** Empty object `{}`
 
@@ -192,9 +202,9 @@ Fired when toast is manually dismissed via close button or `dismiss()` method.
 
 **Event Type:** `CustomEvent<{}>`
 
-**Bubbles:** ✅ Yes
+**Bubbles:** <DocIcon name="checkCircle" /> Yes
 
-**Composed:** ✅ Yes
+**Composed:** <DocIcon name="checkCircle" /> Yes
 
 **Detail:** Empty object `{}`
 
@@ -511,7 +521,7 @@ type ToastType = 'success' | 'error' | 'warning' | 'info';
 interface ToastManifest {
   tagName: 't-tst';
   displayName: 'Toast';
-  version: '1.0.0';
+  version: '3.0.0';
   category: 'Display';
   description: 'Toast notification component with auto-dismiss and animation support';
   properties: {
@@ -570,38 +580,9 @@ npm run test:run -- TToastLit
 - The component focuses on single toast behavior, not queue management
 - Animations use CSS transforms for better performance
 
-## Migration from TToast
-
-If migrating from the older TToast component:
-
-### Before (Legacy)
-```javascript
-// Old (TComponent-based)
-const oldToast = new TToast();
-```
-
-### After (LitElement-based)
-```javascript
-// New (LitElement-based)
-const newToast = document.createElement('t-tst');
-```
-
-### Key Changes
-1. Replace `<terminal-toast>` with `<t-tst>`
-2. Update property names if needed (most are the same)
-3. Event names remain the same
-4. Remove any TToastManager usage (handle separately if needed)
-5. CSS classes are now encapsulated in shadow DOM
-6. Now extends LitElement instead of TComponent
-7. Uses Shadow DOM with complete encapsulation
-8. Better memory management and performance
-9. Reactive properties with automatic re-rendering
-10. CSS variable theming system
-
 ## Slots
 
 None.
-
 
 ## Related Components
 

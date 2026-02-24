@@ -1,10 +1,29 @@
-# TCardLit
+# TCardLit Component Documentation
 
-A versatile content card container with terminal styling, supporting expandable content, selection states, and loading indicators.
+<!-- STANDARD_DOC_INTRO -->
 
-## Tag Name
+## Overview
 
-`t-card`
+Standardized content card container with slots for header, media, content, and actions
+
+## Tag Names
+
+- `t-card`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Container
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 

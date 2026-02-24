@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TTabsLit - Terminal-style Tabs Component
+ * @module components/TTabsLit
+ * @version 3.0.0
+ *
+ * Tab navigation component with panel switching, variants, and keyboard navigation.
+ *
+ * @example
+ * <t-tabs></t-tabs>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================

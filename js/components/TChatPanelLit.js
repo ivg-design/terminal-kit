@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TChatPanelLit - Terminal-style Chat Panel Component
+ * @module components/TChatPanelLit
+ * @version 3.0.0
+ *
+ * Compact, terminal-styled chat panel with markdown rendering, attachments, queueing, and streaming support.
+ *
+ * @example
+ * <t-chat></t-chat>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
@@ -37,7 +48,7 @@ import './TDropdownLit.js';
  * @tagname t-chat
  * @description Compact, terminal-styled chat panel with markdown rendering, attachments, queueing, and streaming support.
  * @category Composite
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <t-chat></t-chat>
  */
@@ -47,7 +58,7 @@ export class TChatPanelLit extends LitElement {
   // BLOCK 1: STATIC METADATA (REQUIRED)
   // ----------------------------------------------------------
   static tagName = 't-chat';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Composite';
 
   // ----------------------------------------------------------
@@ -1345,7 +1356,9 @@ export class TChatPanelLit extends LitElement {
 // ============================================================
 // SECTION 3: CUSTOM ELEMENT REGISTRATION (REQUIRED)
 // ============================================================
-customElements.define('t-chat', TChatPanelLit);
+if (!customElements.get('t-chat')) {
+  customElements.define('t-chat', TChatPanelLit);
+}
 
 // ============================================================
 // SECTION 4: MANIFEST EXPORT (REQUIRED)
@@ -1354,7 +1367,7 @@ export const TChatPanelManifest = generateManifest(TChatPanelLit, {
   tagName: 't-chat',
   displayName: 'Chat Panel',
   description: 'Compact terminal-styled chat panel with markdown rendering, attachments, queueing, and streaming support.',
-  version: '1.0.0',
+  version: '3.0.0',
   category: 'Composite',
   methods: {
     clearChat: { description: 'Clears all messages and streaming content' },

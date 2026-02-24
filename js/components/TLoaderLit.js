@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TLoaderLit - Terminal-style Loader Component
+ * @module components/TLoaderLit
+ * @version 3.0.0
+ *
+ * Loading indicator with 50+ animation types from wc-spinners library, wrapped in terminal/cyberpunk styling.
+ *
+ * @example
+ * <t-ldr></t-ldr>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
@@ -122,25 +133,24 @@ export class TLoaderLit extends LitElement {
     'spring-spinner': { defaultSize: 60, innerMax: 60 },
     'swapping-squares-spinner': { defaultSize: 65, innerMax: 65 },
     'trinity-rings-spinner': { defaultSize: 60, innerMax: 120 },
-    'beat-spinner': { defaultSize: 15, innerMax: 76.3 },
+    'beat-spinner': { defaultSize: 15, innerMax: 57 },
     'bounce-spinner': { defaultSize: 60, innerMax: 60 },
     'circle-spinner': { defaultSize: 60, innerMax: 60 },
-    'climbing-box-spinner': { defaultSize: 113.6, innerMax: 113.6 },
+    'climbing-box-spinner': { defaultSize: 15, innerMax: 95 },
     'clip-spinner': { defaultSize: 35, innerMax: 34.4 },
     'dot-spinner': { defaultSize: 60, innerMax: 83.8 },
     'grid-spinner': { defaultSize: 15, innerMax: 57 },
     'hash-spinner': { defaultSize: 50, innerMax: 61.2 },
     'moon-spinner': { defaultSize: 60, innerMax: 105.4 },
     'pacman-spinner': { defaultSize: 25, innerMax: 50 },
-    'propagate-spinner': { defaultSize: 15, innerMax: 0 },
     'pulse-spinner': { defaultSize: 15, innerMax: 57 },
     'ring-spinner': { defaultSize: 60, innerMax: 60 },
-    'rise-spinner': { defaultSize: 15, innerMax: 133.5 },
+    'rise-spinner': { defaultSize: 15, innerMax: 95 },
     'rotate-spinner': { defaultSize: 15, innerMax: 76.9 },
     'skew-spinner': { defaultSize: 20, innerMax: 42.4 },
     'square-spinner': { defaultSize: 50, innerMax: 50 },
     'sync-spinner': { defaultSize: 15, innerMax: 57 },
-    'rsc-circle-spinner': { defaultSize: 64, innerMax: 64 },
+    'rsc-circle-spinner': { defaultSize: 64, innerMax: 80 },
     'default-spinner': { defaultSize: 80, innerMax: 80 },
     'dual-ring-spinner': { defaultSize: 80, innerMax: 80 },
     'ellipsis-spinner': { defaultSize: 80, innerMax: 80 },
@@ -153,8 +163,9 @@ export class TLoaderLit extends LitElement {
   });
 
   static sizeLessDefaults = Object.freeze({
+    'propagate-spinner': { innerMax: 160, defaultSize: 15 },
     'orbitals-spinner': { innerMax: 80 },
-    'ouroboro-spinner': { innerMax: 64 },
+    'ouroboro-spinner': { innerMax: 80 },
     'roller-spinner': { innerMax: 80 },
     'spinner-spinner': { innerMax: 80 }
   });
@@ -205,23 +216,45 @@ export class TLoaderLit extends LitElement {
       flex: 0 0 var(--loader-size);
       min-width: 0;
       min-height: 0;
+      overflow: visible;
     }
 
     /* Apply terminal styling to all spinner components */
-    .spinner-container > * {
+    .spinner-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      transform-origin: center center;
+      line-height: 0;
+    }
+
+    .spinner-stage > * {
       --color: var(--loader-color);
       --size: var(--loader-size);
       --duration: var(--loader-duration);
-      display: block;
+      display: inline-block;
+      flex: 0 0 auto;
       min-width: 0;
       min-height: 0;
       transform-origin: center center;
+      vertical-align: middle;
+      line-height: 0;
+      font-size: 0;
+      margin: 0;
+      position: relative;
+      top: auto;
+      left: auto;
+      transform: none;
     }
 
     /* Spinner sizing normalized at runtime based on wc-spinners defaults. */
 
     /* Glow effect (disabled by default) */
-    .spinner-container.glow > * {
+    .spinner-container.glow .spinner-stage > * {
       filter: drop-shadow(0 0 8px var(--loader-color));
     }
 
@@ -278,7 +311,7 @@ export class TLoaderLit extends LitElement {
 
     /* Accessibility - reduced motion */
     @media (prefers-reduced-motion: reduce) {
-      .spinner-container > *,
+      .spinner-stage > *,
       .loader-text {
         animation: none !important;
       }
@@ -419,74 +452,82 @@ export class TLoaderLit extends LitElement {
     // Get effective color (from prop or CSS variable)
     const effectiveColor = this._getEffectiveColor();
 
+    const targetSize = Math.max(1, Number(this.size) || 60);
+    const targetDuration = Math.max(0, Number(this.duration) || 1);
+
     // Update CSS custom properties
     this.style.setProperty('--loader-color', effectiveColor);
-    this.style.setProperty('--loader-size', `${this.size}px`);
-    this.style.setProperty('--loader-duration', `${this.duration}s`);
+    this.style.setProperty('--loader-size', `${targetSize}px`);
+    this.style.setProperty('--loader-duration', `${targetDuration}s`);
 
     const widthHeightConfig = TLoaderLit.widthHeightDefaults[this.type];
     const sizeConfig = TLoaderLit.sizeDefaults[this.type];
     const sizeLessConfig = TLoaderLit.sizeLessDefaults[this.type];
-    const targetSize = Math.max(1, Number(this.size) || 60);
     const formatNumber = (value) => {
       const rounded = Math.round(value * 10) / 10;
       return Number.isInteger(rounded) ? String(rounded) : String(rounded);
     };
     let spinnerHTML = '';
+    let stageScale = 1;
+    const baseHostStyles = [
+      'display:inline-block',
+      'overflow:visible',
+      'line-height:0'
+    ];
+    const spinnerAttrs = [`color="${effectiveColor}"`];
 
     if (widthHeightConfig) {
       const base = widthHeightConfig.base || Math.max(widthHeightConfig.width, widthHeightConfig.height, 1);
       const scale = base ? targetSize / base : 1;
       const width = Math.max(1, widthHeightConfig.width * scale);
       const height = Math.max(1, widthHeightConfig.height * scale);
-      const attrs = [
-        `color="${effectiveColor}"`,
-        `width="${formatNumber(width)}"`,
-        `height="${formatNumber(height)}"`
-      ];
+      spinnerAttrs.push(`width="${formatNumber(width)}"`);
+      spinnerAttrs.push(`height="${formatNumber(height)}"`);
 
       if (widthHeightConfig.radius !== undefined) {
         const radius = Math.max(1, widthHeightConfig.radius * scale);
-        attrs.push(`radius="${formatNumber(radius)}"`);
+        spinnerAttrs.push(`radius="${formatNumber(radius)}"`);
       }
 
       if (widthHeightConfig.margin !== undefined) {
         const margin = Math.max(0, widthHeightConfig.margin * scale);
-        attrs.push(`margin="${formatNumber(margin)}"`);
+        spinnerAttrs.push(`margin="${formatNumber(margin)}"`);
       }
-
-      spinnerHTML = `<${this.type} ${attrs.join(' ')}></${this.type}>`;
     } else if (sizeConfig) {
-      const innerMax = sizeConfig.innerMax > 0 ? sizeConfig.innerMax : sizeConfig.defaultSize;
-      const ratio = innerMax ? sizeConfig.defaultSize / innerMax : 1;
-      const normalizedSize = Math.max(1, targetSize * ratio);
-      spinnerHTML = `<${this.type}
-        color="${effectiveColor}"
-        size="${formatNumber(normalizedSize)}"
-        duration="${this.duration}">
-      </${this.type}>`;
+      const innerMax = sizeConfig.innerMax > 0
+        ? sizeConfig.innerMax
+        : (sizeConfig.defaultSize || targetSize);
+      const baseSize = sizeConfig.defaultSize || targetSize;
+      spinnerAttrs.push(`size="${formatNumber(baseSize)}"`);
+      spinnerAttrs.push(`duration="${targetDuration}"`);
+      stageScale = innerMax ? targetSize / innerMax : 1;
     } else if (sizeLessConfig) {
       const innerMax = sizeLessConfig.innerMax || targetSize;
-      const scale = innerMax ? targetSize / innerMax : 1;
-      spinnerHTML = `<${this.type}
-        color="${effectiveColor}"
-        duration="${this.duration}"
-        style="transform: scale(${formatNumber(scale)}); transform-origin: center;">
-      </${this.type}>`;
+      stageScale = innerMax ? targetSize / innerMax : 1;
+      if (sizeLessConfig.defaultSize !== undefined) {
+        spinnerAttrs.push(`size="${formatNumber(sizeLessConfig.defaultSize)}"`);
+      }
+      spinnerAttrs.push(`duration="${targetDuration}"`);
     } else {
-      spinnerHTML = `<${this.type}
-        color="${effectiveColor}"
-        size="${targetSize}"
-        duration="${this.duration}">
-      </${this.type}>`;
+      spinnerAttrs.push(`size="${targetSize}"`);
+      spinnerAttrs.push(`duration="${targetDuration}"`);
     }
 
+    const hostStyle = baseHostStyles.join('; ');
+    spinnerAttrs.push(`style="${hostStyle}"`);
+    spinnerHTML = `<${this.type} ${spinnerAttrs.join(' ')}></${this.type}>`;
+
     const typeClass = this.type ? `type-${this.type}` : '';
+    const stageStyle = stageScale !== 1
+      ? `transform: scale(${formatNumber(stageScale)});`
+      : '';
 
     return html`
       <div class="loader-wrapper" ?hidden="${this.hidden}">
         <div class="spinner-container ${this.glow ? 'glow' : ''} ${typeClass}">
-          ${unsafeHTML(spinnerHTML)}
+          <div class="spinner-stage" style="${stageStyle}">
+            ${unsafeHTML(spinnerHTML)}
+          </div>
         </div>
         ${this.text ? html`<div class="loader-text">${this.text}</div>` : ''}
       </div>
@@ -595,7 +636,9 @@ export class TLoaderLit extends LitElement {
   // ----------------------------------------------------------
   static {
     // Self-registration
-    customElements.define(this.tagName, this);
+    if (!customElements.get(this.tagName)) {
+      customElements.define(this.tagName, this);
+    }
   }
 
   // ----------------------------------------------------------

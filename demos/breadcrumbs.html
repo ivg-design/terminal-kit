@@ -8,6 +8,11 @@
     <!-- Demo Template Styles -->
     <script src="../js/utils/accent-init.js"></script>
     <link rel="stylesheet" href="../css/demo-template.css">
+    <style>
+        t-bread {
+            --bread-separator: color-mix(in srgb, var(--terminal-green) 85%, #ffffff);
+        }
+    </style>
 </head>
 <body>
     <!-- Fixed Header -->
@@ -138,6 +143,18 @@
                 <div class="demo-item">
                     <span class="demo-label">Pipe</span>
                     <t-bread separator="|" id="pipe-sep-bread" prevent-navigation></t-bread>
+                </div>
+            </div>
+
+            <h3>Separator Color Option</h3>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <span class="demo-label">Cyan Separators</span>
+                    <t-bread id="cyan-sep-color-bread" separator-color="#00ffff" prevent-navigation></t-bread>
+                </div>
+                <div class="demo-item">
+                    <span class="demo-label">Amber Separators</span>
+                    <t-bread id="amber-sep-color-bread" separator-color="#ffb000" prevent-navigation></t-bread>
                 </div>
             </div>
 
@@ -287,6 +304,8 @@
         document.getElementById('arrow-sep-bread').items = standardItems;
         document.getElementById('colon-sep-bread').items = pathItems;
         document.getElementById('pipe-sep-bread').items = standardItems;
+        document.getElementById('cyan-sep-color-bread').items = standardItems;
+        document.getElementById('amber-sep-color-bread').items = standardItems;
 
         // Add event listeners to all breadcrumbs
         document.querySelectorAll('t-bread').forEach(bread => {

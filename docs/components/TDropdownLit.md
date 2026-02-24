@@ -1,18 +1,28 @@
-# TDropdownLit Component API Documentation
+# TDropdownLit Component Documentation
 
-**Component:** TDropdownLit
-**Tag Name:** `<t-drp>`
-**Category:** Form Controls
-**Version:** 1.0.0
-**Profile:** FORM (with validation support)
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Advanced dropdown component with hierarchical tree structure, search functionality, and folder navigation. Supports nested folders, file metadata, and customizable icons.
 
 ## Tag Names
 
 - `t-drp`
 
-## Overview
+## Architecture
 
-TDropdownLit is a terminal-styled dropdown component featuring a hierarchical tree structure with folders and files, real-time search capabilities, metadata support, and comprehensive keyboard navigation. It supports both nested tree structures and simple flat lists.
+- Extends: `LitElement`
+- Category: Form Controls
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
 
 ## Installation & Import
 
@@ -38,17 +48,17 @@ import './js/components/TDropdownLit.js'; // Auto-registers as <t-drp>
 
 | Property | Type | Default | Reflects | Description |
 |----------|------|---------|----------|-------------|
-| `placeholder` | String | `'Select...'` | ✅ | Placeholder text displayed when no selection |
-| `disabled` | Boolean | `false` | ✅ | Disables the dropdown when true |
-| `value` | String | `''` | ❌ | Currently selected value (file path) |
-| `width` | String | `'300px'` | ❌ | CSS width of the dropdown |
-| `searchable` | Boolean | `true` | ✅ | Shows/hides the search input field |
-| `showIcons` | Boolean | `true` | ✅ | Shows/hides folder and file icons |
-| `compact` | Boolean | `false` | ✅ | Enables compact size variant |
-| `data` | Object | `null` | ❌ | Tree structure data object |
-| `metadata` | Object | `{}` | ❌ | Metadata for files |
-| `options` | Array | `[]` | ❌ | Simple options array (alternative to data) |
-| `isOpen` | Boolean | `false` | ✅ | Dropdown open state (read/write) |
+| `placeholder` | String | `'Select...'` | Yes | Placeholder text displayed when no selection |
+| `disabled` | Boolean | `false` | Yes | Disables the dropdown when true |
+| `value` | String | `''` | No | Currently selected value (file path) |
+| `width` | String | `'300px'` | No | CSS width of the dropdown |
+| `searchable` | Boolean | `true` | Yes | Shows/hides the search input field |
+| `showIcons` | Boolean | `true` | Yes | Shows/hides folder and file icons |
+| `compact` | Boolean | `false` | Yes | Enables compact size variant |
+| `data` | Object | `null` | No | Tree structure data object |
+| `metadata` | Object | `{}` | No | Metadata for files |
+| `options` | Array | `[]` | No | Simple options array (alternative to data) |
+| `isOpen` | Boolean | `false` | Yes | Dropdown open state (read/write) |
 
 ### HTML Attributes
 
@@ -350,7 +360,6 @@ These properties are managed internally but can be accessed if needed:
 
 None.
 
-
 ## CSS Custom Properties
 
 The component uses CSS custom properties for theming:
@@ -604,26 +613,6 @@ Requires support for:
 - **Memory Management**: Automatic cleanup of timers and listeners
 - **Render Optimization**: Only visible tree nodes are rendered
 
-## Migration from Legacy
-
-If migrating from the old `<terminal-dropdown>` component:
-
-1. Change tag name: `<terminal-dropdown>` → `<t-drp>`
-2. Update property names:
-   - `search` → `searchable`
-   - `icons` → `showIcons`
-3. Update event names:
-   - `dropdown-change` event detail structure changed
-4. Remove deprecated methods:
-   - `disable()` → set `disabled = true`
-   - `enable()` → set `disabled = false`
-   - `getMetadata()` → access via event detail
-   - `setWidth()` → set `width` property
-   - `setSearch()` → set `searchable` property
-   - `setIcons()` → set `showIcons` property
-   - `expandAll()` → not available
-   - `collapseAll()` → not available
-
 ## Component Logger
 
 The component uses ComponentLogger for debugging. Enable verbose logging:
@@ -662,7 +651,7 @@ TLog.enable('t-drp');
 
 ---
 
-**Component Version:** 1.0.0
+**Component Version:** 3.0.0
 **Documentation Updated:** 2024-09-28
 **Author:** Terminal Kit Team
 **License:** MIT

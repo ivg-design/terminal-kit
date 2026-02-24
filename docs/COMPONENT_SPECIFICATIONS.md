@@ -1,7 +1,7 @@
 # Terminal Kit Component Specifications
 
 **Status:** Component Migration Blueprint
-**Version:** 1.0.0
+**Version:** 3.0.0
 **Last Updated:** 2025-09-27
 
 > **Purpose:** This document provides structural skeletons for ALL Terminal Kit components to guide Lit migration. Each specification acts as a blueprint showing exactly which blocks, patterns, and features each component needs.
@@ -60,26 +60,26 @@
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ❌ BLOCK 10 (not a container)
-- ❌ BLOCK 11 (no validation needed)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (not a container)
+- BLOCK 11 (no validation needed)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| variant | enum | 'primary' | ❌ | ✅ | primary, secondary, danger, success, warning, toggle |
-| type | enum | 'text' | ❌ | ✅ | text, icon, icon-text |
-| size | string | '' | ❌ | ✅ | xs, small, medium, large, '' |
-| disabled | boolean | false | ❌ | ✅ | |
-| loading | boolean | false | ❌ | ✅ | Shows loader overlay |
-| icon | string | '' | ❌ | ❌ | Phosphor icon name |
-| toggleState | boolean | false | ❌ | ✅ | For toggle variant |
-| iconOn | string | '' | ❌ | ❌ | Toggle on icon |
-| iconOff | string | '' | ❌ | ❌ | Toggle off icon |
-| textOn | string | '' | ❌ | ❌ | Toggle on text |
-| textOff | string | '' | ❌ | ❌ | Toggle off text |
+| variant | enum | 'primary' | No | Yes | primary, secondary, danger, success, warning, toggle |
+| type | enum | 'text' | No | Yes | text, icon, icon-text |
+| size | string | '' | No | Yes | xs, small, medium, large, '' |
+| disabled | boolean | false | No | Yes | |
+| loading | boolean | false | No | Yes | Shows loader overlay |
+| icon | string | '' | No | No | Phosphor icon name |
+| toggleState | boolean | false | No | Yes | For toggle variant |
+| iconOn | string | '' | No | No | Toggle on icon |
+| iconOff | string | '' | No | No | Toggle off icon |
+| textOn | string | '' | No | No | Toggle on text |
+| textOff | string | '' | No | No | Toggle off text |
 
 #### Events
 
@@ -104,12 +104,12 @@
 
 #### Special Patterns
 
-- ❌ Timers
-- ❌ Document listeners
-- ❌ Animation state
-- ❌ Form participation
-- ❌ Bundled library
-- ✅ Width locking (for toggle with text)
+- Timers
+- Document listeners
+- Animation state
+- Form participation
+- Bundled library
+- Width locking (for toggle with text)
 
 #### Testing Profile
 
@@ -128,25 +128,25 @@
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ❌ BLOCK 10 (not a container)
-- ✅ BLOCK 11 (validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (not a container)
+- BLOCK 11 (validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| type | enum | 'text' | ❌ | ✅ | text, password, email, number, search, tel, url |
-| placeholder | string | '' | ❌ | ✅ | |
-| value | string | '' | ✅ | ❌ | Pattern/type validation |
-| disabled | boolean | false | ❌ | ✅ | |
-| readonly | boolean | false | ❌ | ✅ | |
-| required | boolean | false | ❌ | ✅ | |
-| min | number | null | ❌ | ✅ | For number type |
-| max | number | null | ❌ | ✅ | For number type |
-| pattern | string | null | ❌ | ✅ | RegEx validation |
-| autocomplete | string | 'off' | ❌ | ✅ | |
+| type | enum | 'text' | No | Yes | text, password, email, number, search, tel, url |
+| placeholder | string | '' | No | Yes | |
+| value | string | '' | Yes | No | Pattern/type validation |
+| disabled | boolean | false | No | Yes | |
+| readonly | boolean | false | No | Yes | |
+| required | boolean | false | No | Yes | |
+| min | number | null | No | Yes | For number type |
+| max | number | null | No | Yes | For number type |
+| pattern | string | null | No | Yes | RegEx validation |
+| autocomplete | string | 'off' | No | Yes | |
 
 #### Events
 
@@ -174,12 +174,12 @@ None
 
 #### Special Patterns
 
-- ❌ Timers
-- ❌ Document listeners
-- ❌ Animation state
-- ✅ Form participation (ElementInternals)
-- ❌ Bundled library
-- ✅ Validation (pattern, required, min/max)
+- Timers
+- Document listeners
+- Animation state
+- Form participation (ElementInternals)
+- Bundled library
+- Validation (pattern, required, min/max)
 
 #### Testing Profile
 
@@ -201,25 +201,25 @@ None
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ❌ BLOCK 10 (not a container)
-- ✅ BLOCK 11 (range validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (not a container)
+- BLOCK 11 (range validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| label | string | '' | ❌ | ✅ | |
-| min | number | 0 | ✅ | ✅ | Must be < max |
-| max | number | 100 | ✅ | ✅ | Must be > min |
-| value | number | 50 | ✅ | ❌ | Must be between min-max |
-| step | number | 1 | ❌ | ✅ | |
-| disabled | boolean | false | ❌ | ✅ | |
-| showTicks | boolean | false | ❌ | ✅ | |
-| showValue | boolean | true | ❌ | ✅ | |
-| vertical | boolean | false | ❌ | ✅ | |
-| smooth | boolean | false | ❌ | ✅ | Continuous updates |
+| label | string | '' | No | Yes | |
+| min | number | 0 | Yes | Yes | Must be < max |
+| max | number | 100 | Yes | Yes | Must be > min |
+| value | number | 50 | Yes | No | Must be between min-max |
+| step | number | 1 | No | Yes | |
+| disabled | boolean | false | No | Yes | |
+| showTicks | boolean | false | No | Yes | |
+| showValue | boolean | true | No | Yes | |
+| vertical | boolean | false | No | Yes | |
+| smooth | boolean | false | No | Yes | Continuous updates |
 
 #### Events
 
@@ -243,13 +243,13 @@ None
 
 #### Special Patterns
 
-- ❌ Timers
-- ✅ Document listeners (mouse/touch tracking during drag)
-- ❌ Animation state
-- ✅ Form participation (ElementInternals)
-- ❌ Bundled library
-- ✅ Drag state management
-- ✅ Debouncing (continuous vs final events)
+- Timers
+- Document listeners (mouse/touch tracking during drag)
+- Animation state
+- Form participation (ElementInternals)
+- Bundled library
+- Drag state management
+- Debouncing (continuous vs final events)
 
 #### Testing Profile
 
@@ -265,22 +265,22 @@ None
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ❌ BLOCK 10 (not a container)
-- ❌ BLOCK 11 (no validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (not a container)
+- BLOCK 11 (no validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| label | string | '' | ❌ | ✅ | |
-| checked | boolean | false | ❌ | ✅ | |
-| disabled | boolean | false | ❌ | ✅ | |
-| variant | enum | 'switch' | ❌ | ✅ | switch, checkbox |
-| labelPosition | enum | 'right' | ❌ | ✅ | left, right |
-| iconOn | string | '' | ❌ | ❌ | Custom on icon |
-| iconOff | string | '' | ❌ | ❌ | Custom off icon |
+| label | string | '' | No | Yes | |
+| checked | boolean | false | No | Yes | |
+| disabled | boolean | false | No | Yes | |
+| variant | enum | 'switch' | No | Yes | switch, checkbox |
+| labelPosition | enum | 'right' | No | Yes | left, right |
+| iconOn | string | '' | No | No | Custom on icon |
+| iconOff | string | '' | No | No | Custom off icon |
 
 #### Events
 
@@ -302,11 +302,11 @@ None
 
 #### Special Patterns
 
-- ❌ Timers
-- ❌ Document listeners
-- ✅ Animation state (switch slide transition)
-- ✅ Form participation (ElementInternals)
-- ❌ Bundled library
+- Timers
+- Document listeners
+- Animation state (switch slide transition)
+- Form participation (ElementInternals)
+- Bundled library
 
 #### Testing Profile
 
@@ -322,21 +322,21 @@ None
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ❌ BLOCK 10 (not a container)
-- ✅ BLOCK 11 (options validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (not a container)
+- BLOCK 11 (options validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| placeholder | string | 'Select...' | ❌ | ✅ | |
-| value | string | '' | ❌ | ❌ | Selected value |
-| options | array | [] | ✅ | ❌ | Array of {value, label, icon?, type?, metadata?} |
-| searchable | boolean | false | ❌ | ✅ | Enable search filter |
-| disabled | boolean | false | ❌ | ✅ | |
-| open | boolean | false | ❌ | ✅ | Dropdown open state |
+| placeholder | string | 'Select...' | No | Yes | |
+| value | string | '' | No | No | Selected value |
+| options | array | [] | Yes | No | Array of {value, label, icon?, type?, metadata?} |
+| searchable | boolean | false | No | Yes | Enable search filter |
+| disabled | boolean | false | No | Yes | |
+| open | boolean | false | No | Yes | Dropdown open state |
 
 #### Events
 
@@ -362,13 +362,13 @@ None
 
 #### Special Patterns
 
-- ❌ Timers
-- ✅ Document listeners (click outside to close)
-- ❌ Animation state
-- ✅ Form participation (ElementInternals)
-- ❌ Bundled library
-- ✅ Complex object validation (options array)
-- ✅ Marquee (long labels)
+- Timers
+- Document listeners (click outside to close)
+- Animation state
+- Form participation (ElementInternals)
+- Bundled library
+- Complex object validation (options array)
+- Marquee (long labels)
 
 #### Testing Profile
 
@@ -384,19 +384,19 @@ None
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ❌ BLOCK 10 (not a container)
-- ❌ BLOCK 11 (no validation - iro.js handles it)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (not a container)
+- BLOCK 11 (no validation - iro.js handles it)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| value | string | '#00ff41' | ❌ | ❌ | Hex color value |
-| variant | enum | 'default' | ❌ | ✅ | default, minimal |
-| disabled | boolean | false | ❌ | ✅ | |
-| swatches | array | [] | ❌ | ❌ | Predefined color swatches |
+| value | string | '#00ff41' | No | No | Hex color value |
+| variant | enum | 'default' | No | Yes | default, minimal |
+| disabled | boolean | false | No | Yes | |
+| swatches | array | [] | No | No | Predefined color swatches |
 
 #### Events
 
@@ -421,11 +421,11 @@ None
 
 #### Special Patterns
 
-- ❌ Timers
-- ❌ Document listeners
-- ❌ Animation state
-- ✅ Form participation (ElementInternals)
-- ✅ Bundled library (iro.js)
+- Timers
+- Document listeners
+- Animation state
+- Form participation (ElementInternals)
+- Bundled library (iro.js)
   - Init in firstUpdated()
   - Cleanup in disconnectedCallback()
   - Event bridging (iro events → Lit events)
@@ -490,24 +490,24 @@ _initializeColorPicker() {
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ❌ BLOCK 10 (not a container)
-- ✅ BLOCK 11 (validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (not a container)
+- BLOCK 11 (validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| placeholder | string | '' | ❌ | ✅ | |
-| value | string | '' | ✅ | ❌ | MaxLength validation |
-| rows | number | 4 | ❌ | ✅ | |
-| disabled | boolean | false | ❌ | ✅ | |
-| readonly | boolean | false | ❌ | ✅ | |
-| required | boolean | false | ❌ | ✅ | |
-| maxlength | number | null | ❌ | ✅ | |
-| codeMode | boolean | false | ❌ | ✅ | Enable IDE features |
-| showLineNumbers | boolean | false | ❌ | ✅ | For code mode |
+| placeholder | string | '' | No | Yes | |
+| value | string | '' | Yes | No | MaxLength validation |
+| rows | number | 4 | No | Yes | |
+| disabled | boolean | false | No | Yes | |
+| readonly | boolean | false | No | Yes | |
+| required | boolean | false | No | Yes | |
+| maxlength | number | null | No | Yes | |
+| codeMode | boolean | false | No | Yes | Enable IDE features |
+| showLineNumbers | boolean | false | No | Yes | For code mode |
 
 #### Events
 
@@ -533,12 +533,12 @@ None
 
 #### Special Patterns
 
-- ❌ Timers
-- ❌ Document listeners
-- ❌ Animation state
-- ✅ Form participation (ElementInternals)
-- ❌ Bundled library
-- ✅ Advanced keyboard handling (Tab, Enter, Ctrl+/, Ctrl+D for code mode)
+- Timers
+- Document listeners
+- Animation state
+- Form participation (ElementInternals)
+- Bundled library
+- Advanced keyboard handling (Tab, Enter, Ctrl+/, Ctrl+D for code mode)
 
 #### Testing Profile
 
@@ -556,26 +556,26 @@ None
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ✅ BLOCK 10 (container with nesting)
-- ✅ BLOCK 11 (validation for variant, slots)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (container with nesting)
+- BLOCK 11 (validation for variant, slots)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| title | string | '' | ❌ | ✅ | |
-| variant | enum | 'standard' | ✅ | ✅ | standard, headless |
-| collapsible | boolean | false | ❌ | ✅ | |
-| collapsed | boolean | false | ❌ | ✅ | |
-| compact | boolean | false | ❌ | ✅ | Smaller size |
-| large | boolean | false | ❌ | ✅ | Larger size |
-| loading | boolean | false | ❌ | ✅ | Shows loader |
-| resizable | boolean | false | ❌ | ✅ | |
-| draggable | boolean | false | ❌ | ✅ | |
-| icon | string | '' | ❌ | ❌ | Header icon |
-| footerCollapsed | boolean | false | ❌ | ✅ | |
+| title | string | '' | No | Yes | |
+| variant | enum | 'standard' | Yes | Yes | standard, headless |
+| collapsible | boolean | false | No | Yes | |
+| collapsed | boolean | false | No | Yes | |
+| compact | boolean | false | No | Yes | Smaller size |
+| large | boolean | false | No | Yes | Larger size |
+| loading | boolean | false | No | Yes | Shows loader |
+| resizable | boolean | false | No | Yes | |
+| draggable | boolean | false | No | Yes | |
+| icon | string | '' | No | No | Header icon |
+| footerCollapsed | boolean | false | No | Yes | |
 
 #### Events
 
@@ -607,14 +607,14 @@ None
 
 #### Special Patterns
 
-- ✅ Timers (loading auto-timeout)
-- ❌ Document listeners
-- ✅ Animation state (collapse transitions)
-- ❌ Form participation
-- ❌ Bundled library
-- ✅ Nesting (discovers and sizes child buttons)
-- ✅ Multi-slot validation
-- ✅ Context propagation (size, theme to children)
+- Timers (loading auto-timeout)
+- Document listeners
+- Animation state (collapse transitions)
+- Form participation
+- Bundled library
+- Nesting (discovers and sizes child buttons)
+- Multi-slot validation
+- Context propagation (size, theme to children)
 
 #### Testing Profile
 
@@ -637,20 +637,20 @@ None
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ✅ BLOCK 10 (container with complex layouts)
-- ✅ BLOCK 11 (layout/size validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (container with complex layouts)
+- BLOCK 11 (layout/size validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| visible | boolean | false | ❌ | ✅ | |
-| layout | enum | 'single' | ✅ | ✅ | single, 2-column, 2x2, 1-2-1, 2-1 |
-| size | enum | 'medium' | ✅ | ✅ | small, medium, large, xlarge, full |
-| escapeClose | boolean | true | ❌ | ✅ | Close on Escape key |
-| backdropClose | boolean | true | ❌ | ✅ | Close on backdrop click |
+| visible | boolean | false | No | Yes | |
+| layout | enum | 'single' | Yes | Yes | single, 2-column, 2x2, 1-2-1, 2-1 |
+| size | enum | 'medium' | Yes | Yes | small, medium, large, xlarge, full |
+| escapeClose | boolean | true | No | Yes | Close on Escape key |
+| backdropClose | boolean | true | No | Yes | Close on backdrop click |
 
 #### Events
 
@@ -680,13 +680,13 @@ Named slots depend on layout:
 
 #### Special Patterns
 
-- ❌ Timers
-- ✅ Document listeners (Escape key, backdrop click)
-- ✅ Animation state (backdrop fade, modal slide)
-- ❌ Form participation
-- ❌ Bundled library
-- ✅ Complex slot layouts (5 different layouts)
-- ✅ Body scroll lock (prevent scrolling when open)
+- Timers
+- Document listeners (Escape key, backdrop click)
+- Animation state (backdrop fade, modal slide)
+- Form participation
+- Bundled library
+- Complex slot layouts (5 different layouts)
+- Body scroll lock (prevent scrolling when open)
 
 #### Testing Profile
 
@@ -702,18 +702,18 @@ Named slots depend on layout:
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ✅ BLOCK 10 (advanced parent-child coordination)
-- ❌ BLOCK 11 (no validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (advanced parent-child coordination)
+- BLOCK 11 (no validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| multiSelect | boolean | false | ❌ | ✅ | |
-| expandOnSelect | boolean | false | ❌ | ✅ | |
-| collapsible | boolean | true | ❌ | ✅ | |
+| multiSelect | boolean | false | No | Yes | |
+| expandOnSelect | boolean | false | No | Yes | |
+| collapsible | boolean | true | No | Yes | |
 
 #### Events
 
@@ -742,15 +742,15 @@ Named slots depend on layout:
 
 #### Special Patterns
 
-- ❌ Timers
-- ❌ Document listeners
-- ❌ Animation state
-- ❌ Form participation
-- ❌ Bundled library
-- ✅ Bidirectional parent-child communication
-- ✅ Node registry (tracks all nodes)
-- ✅ Selection state management
-- ✅ Keyboard navigation
+- Timers
+- Document listeners
+- Animation state
+- Form participation
+- Bundled library
+- Bidirectional parent-child communication
+- Node registry (tracks all nodes)
+- Selection state management
+- Keyboard navigation
 
 #### Testing Profile
 
@@ -766,20 +766,20 @@ Named slots depend on layout:
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ✅ BLOCK 10 (child of tree view, parent of other nodes)
-- ❌ BLOCK 11 (no validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (child of tree view, parent of other nodes)
+- BLOCK 11 (no validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| label | string | '' | ❌ | ✅ | |
-| icon | string | '' | ❌ | ❌ | |
-| expanded | boolean | false | ❌ | ✅ | |
-| selected | boolean | false | ❌ | ✅ | |
-| hasChildren | boolean | false | ❌ | ✅ | Auto-detected |
+| label | string | '' | No | Yes | |
+| icon | string | '' | No | No | |
+| expanded | boolean | false | No | Yes | |
+| selected | boolean | false | No | Yes | |
+| hasChildren | boolean | false | No | Yes | Auto-detected |
 
 #### Events
 
@@ -808,13 +808,13 @@ Named slots depend on layout:
 
 #### Special Patterns
 
-- ❌ Timers
-- ❌ Document listeners
-- ✅ Animation state (expand/collapse transitions)
-- ❌ Form participation
-- ❌ Bundled library
-- ✅ Bidirectional communication with parent tree
-- ✅ Recursive nesting (nodes contain nodes)
+- Timers
+- Document listeners
+- Animation state (expand/collapse transitions)
+- Form participation
+- Bundled library
+- Bidirectional communication with parent tree
+- Recursive nesting (nodes contain nodes)
 
 #### Testing Profile
 
@@ -832,27 +832,31 @@ Named slots depend on layout:
 
 #### Blocks Required
 
-- ✅ BLOCK 1-7 (basic lifecycle)
-- ❌ BLOCK 8-9 (no public methods or events)
-- ❌ BLOCK 10 (not a container)
-- ❌ BLOCK 11 (no validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-7 (basic lifecycle)
+- BLOCK 8-9 (public methods + events)
+- BLOCK 10 (not a container)
+- BLOCK 11 (no validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| type | enum | 'spinner' | ❌ | ✅ | spinner, dots, bars, pulse |
-| size | enum | 'medium' | ❌ | ✅ | small, medium, large |
-| color | string | '' | ❌ | ✅ | CSS color value |
-| text | string | '' | ❌ | ✅ | Optional loading text |
+| type | string | 'atom-spinner' | No | Yes | 55+ spinner types from wc-spinners |
+| size | number | 60 | No | Yes | Pixel size (supports size attribute presets) |
+| color | string | '' | No | Yes | CSS color value; inherits `--terminal-green` when empty |
+| duration | number | 1 | No | Yes | Animation duration (seconds) |
+| text | string | '' | No | Yes | Optional loading text |
+| hidden | boolean | false | No | Yes | Visibility state |
+| glow | boolean | false | No | Yes | Glow effect toggle |
 
 #### Events
 
 | Name | Detail | Description |
 |------|--------|-------------|
-| loader-show | `{}` | Fires when shown |
-| loader-hide | `{}` | Fires when hidden |
+| loader-connected | `{ type }` | Fires when connected to DOM |
+| loader-show | `{ type }` | Fires when shown |
+| loader-hide | `{ type }` | Fires when hidden |
 
 #### Slots
 
@@ -864,14 +868,18 @@ None
 |------|--------|---------|-------------|
 | show() | - | void | Show loader |
 | hide() | - | void | Hide loader |
+| toggle() | - | void | Toggle visibility |
+| setType(type) | string | void | Change spinner type with validation |
+| getAvailableTypes() | - | string[] | Return all supported spinner types |
+| setText(text) | string | void | Update loading text |
 
 #### Special Patterns
 
-- ❌ Timers
-- ❌ Document listeners
-- ✅ Animation state (CSS animations for spinner/dots/bars)
-- ❌ Form participation
-- ❌ Bundled library
+- Timers
+- Document listeners
+- Animation state (spinner animation + size normalization)
+- Form participation
+- Bundled library (wc-spinners)
 
 #### Testing Profile
 
@@ -890,20 +898,20 @@ None
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ❌ BLOCK 10 (not a container)
-- ❌ BLOCK 11 (no validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (not a container)
+- BLOCK 11 (no validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| message | string | '' | ❌ | ✅ | |
-| type | enum | 'info' | ❌ | ✅ | success, error, warning, info |
-| duration | number | 3000 | ❌ | ✅ | Auto-dismiss time (0 = manual) |
-| visible | boolean | false | ❌ | ✅ | |
-| position | enum | 'top-right' | ❌ | ✅ | top-right, top-left, bottom-right, bottom-left |
+| message | string | '' | No | Yes | |
+| type | enum | 'info' | No | Yes | success, error, warning, info |
+| duration | number | 3000 | No | Yes | Auto-dismiss time (0 = manual) |
+| visible | boolean | false | No | Yes | |
+| position | enum | 'top-right' | No | Yes | top-right, top-left, bottom-right, bottom-left |
 
 #### Events
 
@@ -927,12 +935,12 @@ None
 
 #### Special Patterns
 
-- ✅ Timers (auto-dismiss after duration)
-- ❌ Document listeners
-- ✅ Animation state (entrance/exit animations)
-- ❌ Form participation
-- ❌ Bundled library
-- ✅ Timer cleanup (clear on dismiss/unmount)
+- Timers (auto-dismiss after duration)
+- Document listeners
+- Animation state (entrance/exit animations)
+- Form participation
+- Bundled library
+- Timer cleanup (clear on dismiss/unmount)
 
 #### Testing Profile
 
@@ -948,16 +956,16 @@ None
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ✅ BLOCK 10 (contains t-sta-field components)
-- ✅ BLOCK 11 (width validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (contains t-sta-field components)
+- BLOCK 11 (width validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| fields | array | [] | ✅ | ❌ | Array of {label, value, icon, width, align, marquee} |
+| fields | array | [] | Yes | No | Array of {label, value, icon, width, align, marquee} |
 
 #### Events
 
@@ -981,13 +989,13 @@ None
 
 #### Special Patterns
 
-- ✅ Timers (marquee animations)
-- ❌ Document listeners
-- ✅ Animation state (marquee for long text)
-- ❌ Form participation
-- ❌ Bundled library
-- ✅ Layout calculation (proportional width scaling)
-- ✅ Width validation (ensure total ≤ 95%)
+- Timers (marquee animations)
+- Document listeners
+- Animation state (marquee for long text)
+- Form participation
+- Bundled library
+- Layout calculation (proportional width scaling)
+- Width validation (ensure total ≤ 95%)
 
 #### Testing Profile
 
@@ -1003,21 +1011,21 @@ None
 
 #### Blocks Required
 
-- ✅ BLOCK 1-7 (basic lifecycle)
-- ❌ BLOCK 8-9 (no methods/events)
-- ❌ BLOCK 10 (not a container)
-- ❌ BLOCK 11 (no validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-7 (basic lifecycle)
+- BLOCK 8-9 (no methods/events)
+- BLOCK 10 (not a container)
+- BLOCK 11 (no validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| label | string | '' | ❌ | ✅ | |
-| value | string | '' | ❌ | ✅ | |
-| icon | string | '' | ❌ | ❌ | |
-| width | string | 'auto' | ❌ | ✅ | CSS width value |
-| align | enum | 'left' | ❌ | ✅ | left, center, right |
+| label | string | '' | No | Yes | |
+| value | string | '' | No | Yes | |
+| icon | string | '' | No | No | |
+| width | string | 'auto' | No | Yes | CSS width value |
+| align | enum | 'left' | No | Yes | left, center, right |
 
 #### Events
 
@@ -1033,7 +1041,7 @@ None
 
 #### Special Patterns
 
-- ❌ All special patterns
+- All special patterns
 
 #### Testing Profile
 
@@ -1051,21 +1059,21 @@ None
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ❌ BLOCK 10 (not really a container, but manages menu items)
-- ❌ BLOCK 11 (no validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (not really a container, but manages menu items)
+- BLOCK 11 (no validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| userName | string | 'User' | ❌ | ✅ | |
-| userEmail | string | '' | ❌ | ✅ | |
-| userAvatar | string | '' | ❌ | ❌ | Image URL |
-| disabled | boolean | false | ❌ | ✅ | |
-| open | boolean | false | ❌ | ✅ | Menu open state |
-| menuItems | array | [] | ❌ | ❌ | Custom menu items |
+| userName | string | 'User' | No | Yes | |
+| userEmail | string | '' | No | Yes | |
+| userAvatar | string | '' | No | No | Image URL |
+| disabled | boolean | false | No | Yes | |
+| open | boolean | false | No | Yes | Menu open state |
+| menuItems | array | [] | No | No | Custom menu items |
 
 #### Events
 
@@ -1091,12 +1099,12 @@ None
 
 #### Special Patterns
 
-- ❌ Timers
-- ✅ Document listeners (click outside, Escape key)
-- ❌ Animation state
-- ❌ Form participation
-- ❌ Bundled library
-- ✅ Click-outside pattern
+- Timers
+- Document listeners (click outside, Escape key)
+- Animation state
+- Form participation
+- Bundled library
+- Click-outside pattern
 
 #### Testing Profile
 
@@ -1114,16 +1122,16 @@ None
 
 #### Blocks Required
 
-- ✅ BLOCK 1-9 (ALL CORE)
-- ✅ BLOCK 10 (generates nested components)
-- ✅ BLOCK 11 (schema validation)
-- ✅ BLOCK 12-13 (render + helpers)
+- BLOCK 1-9 (ALL CORE)
+- BLOCK 10 (generates nested components)
+- BLOCK 11 (schema validation)
+- BLOCK 12-13 (render + helpers)
 
 #### Properties
 
 | Name | Type | Default | Validation | Reflects | Notes |
 |------|------|---------|------------|----------|-------|
-| schema | object | null | ✅ | ❌ | Component generation schema |
+| schema | object | null | Yes | No | Component generation schema |
 
 #### Events
 
@@ -1146,15 +1154,15 @@ None (fully dynamic)
 
 #### Special Patterns
 
-- ❌ Timers
-- ❌ Document listeners
-- ❌ Animation state
-- ❌ Form participation
-- ❌ Bundled library
-- ✅ Dynamic component generation (from config)
-- ✅ Recursive rendering (nested structures)
-- ✅ PanelBuilder integration
-- ✅ Schema validation
+- Timers
+- Document listeners
+- Animation state
+- Form participation
+- Bundled library
+- Dynamic component generation (from config)
+- Recursive rendering (nested structures)
+- PanelBuilder integration
+- Schema validation
 
 #### Testing Profile
 

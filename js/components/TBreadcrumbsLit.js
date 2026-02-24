@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TBreadcrumbsLit - Terminal-style Breadcrumbs Component
+ * @module components/TBreadcrumbsLit
+ * @version 3.0.0
+ *
+ * Navigation breadcrumb trail with multiple style variants and separator options.
+ *
+ * @example
+ * <t-bread></t-bread>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
@@ -12,7 +23,7 @@ import componentLogger from '../utils/ComponentLogger.js';
  * @tagname t-bread
  * @description Navigation breadcrumb trail with multiple style variants and separator options.
  * @category Navigation
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <t-bread .items=${[{label: 'Home', href: '/'}, {label: 'Products'}, {label: 'Item'}]}></t-bread>
  * <t-bread variant="arrows" .items=${items}></t-bread>
@@ -23,7 +34,7 @@ export class TBreadcrumbsLit extends LitElement {
 	// BLOCK 1: STATIC METADATA (REQUIRED)
 	// ----------------------------------------------------------
 	static tagName = 't-bread';
-	static version = '1.0.0';
+	static version = '3.0.0';
 	static category = 'Navigation';
 
 	// ----------------------------------------------------------
@@ -82,18 +93,21 @@ export class TBreadcrumbsLit extends LitElement {
 		}
 
 		/* Separator */
-		.separator {
-			color: var(--bread-separator);
-			display: inline-flex;
-			align-items: center;
-			user-select: none;
-		}
+			.separator {
+				color: var(--bread-separator);
+				display: inline-flex;
+				align-items: center;
+				user-select: none;
+				font-weight: 700;
+				opacity: 0.95;
+			}
 
-		.separator svg {
-			width: 12px;
-			height: 12px;
-			fill: currentColor;
-		}
+			.separator svg {
+				width: 12px;
+				height: 12px;
+				fill: currentColor;
+				stroke-width: 2.4;
+			}
 
 		/* Icon */
 		.breadcrumb-icon {
@@ -344,7 +358,16 @@ export class TBreadcrumbsLit extends LitElement {
 		 * @type {string}
 		 * @default ''
 		 */
-		separator: { type: String },
+			separator: { type: String },
+
+			/**
+			 * Explicit separator color override
+			 * @property separatorColor
+			 * @type {string}
+			 * @default ''
+			 * @attribute separator-color
+			 */
+			separatorColor: { type: String, attribute: 'separator-color', reflect: true },
 
 		/**
 		 * Maximum items to show before collapsing
@@ -396,8 +419,9 @@ export class TBreadcrumbsLit extends LitElement {
 		this.items = [];
 		this.variant = 'default';
 		this.size = 'md';
-		this.separator = '';
-		this.maxItems = 0;
+			this.separator = '';
+			this.separatorColor = '';
+			this.maxItems = 0;
 		this.disabled = false;
 		this.preventNavigation = false;
 
@@ -418,13 +442,17 @@ export class TBreadcrumbsLit extends LitElement {
 		this._logger.info('Disconnected from DOM');
 	}
 
-	firstUpdated() {
-		this._logger.debug('First update complete');
-	}
+		firstUpdated() {
+			this._syncSeparatorColor();
+			this._logger.debug('First update complete');
+		}
 
-	updated(changedProperties) {
-		this._logger.trace('Updated', { changedProperties: [...changedProperties.keys()] });
-	}
+		updated(changedProperties) {
+			if (changedProperties.has('separatorColor')) {
+				this._syncSeparatorColor();
+			}
+			this._logger.trace('Updated', { changedProperties: [...changedProperties.keys()] });
+		}
 
 	// ----------------------------------------------------------
 	// BLOCK 8: PUBLIC API METHODS
@@ -650,10 +678,19 @@ export class TBreadcrumbsLit extends LitElement {
 	 * Handle ellipsis click to expand
 	 * @private
 	 */
-	_handleEllipsisClick() {
-		this.expand();
-		this._emitEvent('breadcrumb-expand', {});
-	}
+		_handleEllipsisClick() {
+			this.expand();
+			this._emitEvent('breadcrumb-expand', {});
+		}
+
+		_syncSeparatorColor() {
+			const color = typeof this.separatorColor === 'string' ? this.separatorColor.trim() : '';
+			if (color) {
+				this.style.setProperty('--bread-separator', color);
+			} else {
+				this.style.removeProperty('--bread-separator');
+			}
+		}
 
 	// ----------------------------------------------------------
 	// MANIFEST GENERATION
@@ -684,9 +721,9 @@ export class TBreadcrumbsLit extends LitElement {
 				{ name: '--bread-bg', description: 'Background color', default: 'transparent' },
 				{ name: '--bread-color', description: 'Text color for non-active items', default: 'var(--terminal-gray-light)' },
 				{ name: '--bread-active', description: 'Color for active/current item', default: 'var(--terminal-green)' },
-				{ name: '--bread-hover', description: 'Hover color', default: 'var(--terminal-cyan)' },
-				{ name: '--bread-separator', description: 'Separator color', default: 'var(--terminal-gray)' }
-			]
+					{ name: '--bread-hover', description: 'Hover color', default: 'var(--terminal-cyan)' },
+					{ name: '--bread-separator', description: 'Separator color', default: 'var(--terminal-gray)' }
+				]
 		};
 	}
 }

@@ -1,6 +1,10 @@
-# TColorPickerLit (t-clr)
+# TColorPickerLit Component Documentation
 
-A modern color selection component built with **iro.js** and **Lit**, featuring terminal aesthetics, transparency support, multiple color formats, and persistent custom swatches. Supports HEXA, RGBA, and HSLA color modes with systematic element control and flexible ordering.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Advanced color picker component with iro.js integration, persistent custom swatches, and multiple color format support (HEXA, RGBA, HSLA). Features a horizontal popover layout with live color updates, bidirectional input, format switching, and modal confirmation for destructive actions. Supports flexible element ordering, three size variants, and custom icons.
 
 ## Tag Names
 
@@ -8,27 +12,16 @@ A modern color selection component built with **iro.js** and **Lit**, featuring 
 
 ## Architecture
 
-**Tag Name:** `<t-clr>`
-**Extends:** `LitElement`
-**Category:** Form Controls
-**Profile:** FORM-ADVANCED
-**Version:** 1.0.0
+- Extends: `LitElement`
+- Category: Form Controls
+- Version: 3.0.0
 
-## Features
-
-- **iro.js Integration**: Professional color picker with box + sliders layout
-- **Multiple Color Formats**: Switch between HEXA, RGBA, and HSLA modes
-- **Alpha/Opacity Support**: Full transparency control with dedicated slider
-- **Custom Swatches**: Persistent storage with CMD/Ctrl+Click removal
-- **Debounced Updates**: 250ms debounce for smooth performance during drag
-- **Three Variants**: Large (48px), Standard (32px), and Compact (minimal)
-- **Systematic Elements**: Universal element system - icon, label, swatch (mandatory), input (all optional except swatch)
-- **Flexible Ordering**: Elements render in exact order specified via `elements` attribute
-- **Custom Icons**: Set custom Phosphor icons via `setIcon()` method
-- **Clear Button**: Optional trash button with confirmation modal for clearing custom swatches
-- **Transparency Grid**: Visual checkerboard for transparent colors
-- **Keyboard Support**: CMD/Ctrl key detection for swatch removal
-- **LocalStorage**: Persistent swatch storage across sessions
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
 
 ## Attributes
 
@@ -41,6 +34,8 @@ A modern color selection component built with **iro.js** and **Lit**, featuring 
 | `variant` | string | `'large'` | Display variant: `'large'` (48px), `'standard'` (32px), or `'compact'` (minimal) |
 | `elements` | string | `'icon,label,swatch,input'` | Comma-separated list of elements in render order. Available: `icon`, `label`, `swatch`, `input`. Swatch is mandatory. |
 | `show-clear-button` | boolean | `false` | Show trash button in picker for clearing all custom swatches (with confirmation modal) |
+| `show-close-button` | boolean | `false` | Show explicit close button in the popover header |
+| `hide-presets` | boolean | `false` | Hide preset swatches and show only picker/input controls |
 
 ## Properties
 
@@ -53,6 +48,8 @@ A modern color selection component built with **iro.js** and **Lit**, featuring 
 | `variant` | string | `'large'` | Size variant: `'large'` (48px), `'standard'` (32px), or `'compact'` (minimal) |
 | `elements` | string | `'icon,label,swatch,input'` | Comma-separated list of elements to render in order |
 | `showClearButton` | boolean | `false` | Show trash button in picker for clearing all custom swatches |
+| `showCloseButton` | boolean | `false` | Show explicit close button in the picker popover |
+| `hidePresets` | boolean | `false` | Hide preset swatches while keeping custom swatches behavior |
 | `swatches` | array | `[]` | Predefined swatches (deprecated - not implemented, uses localStorage system instead) |
 
 ### Internal State (Read-only)

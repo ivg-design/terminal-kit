@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TChipLit - Terminal-style Chip Component
+ * @module components/TChipLit
+ * @version 3.0.0
+ *
+ * Tag/filter chip component with selection, removal, and variants.
+ *
+ * @example
+ * <t-chip></t-chip>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================

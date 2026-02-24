@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TAvatarLit - Terminal-style Avatar Component
+ * @module components/TAvatarLit
+ * @version 3.0.0
+ *
+ * User/entity avatar display component with image, initials, icon fallback, and status indicator.
+ *
+ * @example
+ * <t-avt></t-avt>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================

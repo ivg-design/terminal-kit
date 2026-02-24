@@ -1,19 +1,12 @@
 /**
- * @fileoverview TCardLit - Standardized content card container
+ * @fileoverview TCardLit - Terminal-style Card Component
  * @module components/TCardLit
  * @version 3.0.0
  *
- * A flexible card component with slots for header, media, content, and actions.
- * Supports clickable states, selection, loading, and expandable content.
+ * Standardized content card container with slots for header, media, content, and actions.
  *
  * @example
- * <t-card>
- *   <div slot="header">Card Title</div>
- *   <p>Card content goes here</p>
- *   <div slot="actions">
- *     <button>Action</button>
- *   </div>
- * </t-card>
+ * <t-card></t-card>
  */
 
 import { LitElement, html, css } from 'lit';

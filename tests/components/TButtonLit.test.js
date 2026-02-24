@@ -18,7 +18,7 @@ describe('TButtonLit', () => {
       expect(TButtonManifest).toBeDefined();
       expect(TButtonManifest.tagName).toBe('t-btn');
       expect(TButtonManifest.displayName).toBe('Button');
-      expect(TButtonManifest.version).toBe('1.0.0');
+      expect(TButtonManifest.version).toBe('3.0.0');
     });
 
     it('should document all 15 properties', () => {
@@ -71,7 +71,7 @@ describe('TButtonLit', () => {
     });
 
     it('should have version', () => {
-      expect(TButton.version).toBe('1.0.0');
+      expect(TButton.version).toBe('3.0.0');
     });
 
     it('should have category', () => {

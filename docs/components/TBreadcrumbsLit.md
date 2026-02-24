@@ -1,26 +1,35 @@
-# TBreadcrumbsLit (t-bread)
+# TBreadcrumbsLit Component Documentation
 
-A **Pure Lit** navigation breadcrumb component with multiple style variants and separator options. Built with Lit 3.x for terminal/cyberpunk styling.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Navigation breadcrumb trail with multiple style variants and separator options.
+
+## Tag Names
+
+- `t-bread`
 
 ## Architecture
 
-**CRITICAL:** This is a **Pure Lit Component**:
-- ✅ Extends `LitElement`
-- ✅ All styles in `static styles` CSS block
-- ✅ Zero FOUC (Flash of Unstyled Content)
-- ✅ Complete Shadow DOM encapsulation
+- Extends: `LitElement`
+- Category: Navigation
+- Version: 3.0.0
 
-## Tag Names
-```html
-<t-bread></t-bread>
-```
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [CSS Custom Properties](#css-custom-properties)
+6. [Related Components](#related-components)
 
 ## Static Metadata
 
 | Property | Value |
 |----------|-------|
 | tagName | `t-bread` |
-| version | `1.0.0` |
+| version | `3.0.0` |
 | category | `Navigation` |
 
 ## Properties
@@ -28,12 +37,13 @@ A **Pure Lit** navigation breadcrumb component with multiple style variants and 
 | Property | Type | Default | Attribute | Reflects | Description |
 |----------|------|---------|-----------|----------|-------------|
 | `items` | Array | `[]` | - | - | Array of breadcrumb items `{label: string, href?: string, icon?: string}` |
-| `variant` | String | `'default'` | `variant` | ✅ | Visual style variant (see Variants section) |
-| `size` | String | `'md'` | `size` | ✅ | Size: 'sm', 'md', 'lg' |
+| `variant` | String | `'default'` | `variant` | Yes | Visual style variant (see Variants section) |
+| `size` | String | `'md'` | `size` | Yes | Size: 'sm', 'md', 'lg' |
 | `separator` | String | `''` | `separator` | - | Custom separator character/string |
+| `separatorColor` | String | `''` | `separator-color` | Yes | Optional separator color override (improves contrast) |
 | `maxItems` | Number | `0` | `max-items` | - | Maximum items to show before collapsing (0 = no collapse) |
-| `preventNavigation` | Boolean | `false` | `prevent-navigation` | ✅ | Prevent default navigation on link clicks (emit events only) |
-| `disabled` | Boolean | `false` | `disabled` | ✅ | Disabled state |
+| `preventNavigation` | Boolean | `false` | `prevent-navigation` | Yes | Prevent default navigation on link clicks (emit events only) |
+| `disabled` | Boolean | `false` | `disabled` | Yes | Disabled state |
 
 ### Items Array Structure
 
@@ -288,6 +298,18 @@ Override the default separator with any character or string:
 ```
 
 **Note:** Custom `separator` takes precedence over variant-specific separators.
+
+### Separator Color Override
+
+Use `separator-color` to make separators more visible without changing text color:
+
+```html
+<t-bread
+  variant="arrows"
+  separator-color="#66ff99"
+  .items=${items}
+></t-bread>
+```
 
 ## Items with Icons
 

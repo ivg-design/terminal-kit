@@ -15,6 +15,9 @@ class ComponentLogger {
 			DEBUG: 4,
 		};
 
+		// Optional persistent storage backend (browser localStorage)
+		this.storage = this._getStorage();
+
 		// Set initial level based on environment
 		this.level = this.getInitialLevel();
 
@@ -23,6 +26,21 @@ class ComponentLogger {
 
 		// Load saved settings
 		this.loadSettings();
+	}
+
+	_getStorage() {
+		try {
+			const storage = globalThis.localStorage;
+			if (
+				storage &&
+				typeof storage.getItem === 'function' &&
+				typeof storage.setItem === 'function' &&
+				typeof storage.removeItem === 'function'
+			) {
+				return storage;
+			}
+		} catch {}
+		return null;
 	}
 
 	getInitialLevel() {
@@ -34,14 +52,18 @@ class ComponentLogger {
 		// Check URL param first
 		const params = new URLSearchParams(window.location.search);
 		const urlLevel = params.get('log');
-		if (urlLevel && this.LEVELS[urlLevel.toUpperCase()]) {
+		if (urlLevel && this.LEVELS[urlLevel.toUpperCase()] !== undefined) {
 			return this.LEVELS[urlLevel.toUpperCase()];
 		}
 
 		// Check localStorage
-		const saved = localStorage.getItem('t_log_level');
-		if (saved && this.LEVELS[saved]) {
-			return this.LEVELS[saved];
+		if (this.storage) {
+			try {
+				const saved = this.storage.getItem('t_log_level');
+				if (saved && this.LEVELS[saved] !== undefined) {
+					return this.LEVELS[saved];
+				}
+			} catch {}
 		}
 
 		// Default based on environment
@@ -51,23 +73,30 @@ class ComponentLogger {
 	}
 
 	loadSettings() {
-		// Skip if not in browser environment
-		if (typeof localStorage === 'undefined') return;
+		if (!this.storage) return;
 
 		// Load disabled components
-		const disabled = localStorage.getItem('t_log_disabled');
-		if (disabled) {
-			try {
+		try {
+			const disabled = this.storage.getItem('t_log_disabled');
+			if (disabled) {
 				this.disabled = new Set(JSON.parse(disabled));
-			} catch {}
-		}
+			}
+		} catch {}
 	}
 
 	saveSettings() {
-		// Skip if not in browser environment
-		if (typeof localStorage === 'undefined') return;
+		if (!this.storage) return;
 
-		localStorage.setItem('t_log_disabled', JSON.stringify([...this.disabled]));
+		try {
+			this.storage.setItem('t_log_disabled', JSON.stringify([...this.disabled]));
+		} catch {}
+	}
+
+	_now() {
+		if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+			return performance.now();
+		}
+		return Date.now();
 	}
 
 	/**
@@ -123,7 +152,7 @@ class ComponentLogger {
 	_time(component, label) {
 		if (this.level < this.LEVELS.DEBUG) return;
 		const key = `${component}:${label}`;
-		this._timers.set(key, performance.now());
+		this._timers.set(key, this._now());
 	}
 
 	_timeEnd(component, label) {
@@ -131,7 +160,7 @@ class ComponentLogger {
 		const key = `${component}:${label}`;
 		const start = this._timers.get(key);
 		if (start) {
-			const duration = performance.now() - start;
+			const duration = this._now() - start;
 			this._timers.delete(key);
 			this._log(component, 'DEBUG', `${label}: ${duration.toFixed(2)}ms`);
 		}
@@ -149,7 +178,11 @@ class ComponentLogger {
 			level = level.toUpperCase();
 			if (this.LEVELS[level] !== undefined) {
 				this.level = this.LEVELS[level];
-				localStorage.setItem('t_log_level', level);
+				if (this.storage) {
+					try {
+						this.storage.setItem('t_log_level', level);
+					} catch {}
+				}
 				console.info(`Log level set to ${level}`);
 			}
 		}
@@ -179,7 +212,7 @@ class ComponentLogger {
 const componentLogger = new ComponentLogger();
 
 // Expose for debugging in dev
-if (componentLogger.level >= componentLogger.LEVELS.INFO) {
+if (typeof window !== 'undefined' && componentLogger.level >= componentLogger.LEVELS.INFO) {
 	window.TLog = componentLogger;
 	console.info('Component logger ready. Use TLog.config() to view settings.');
 }

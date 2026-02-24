@@ -1,10 +1,29 @@
-# TTooltipLit
+# TTooltipLit Component Documentation
 
-A tooltip component with terminal styling, providing contextual information on hover or focus with customizable positioning and triggers.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Hover/focus information tooltip component with positioning and animation.
 
 ## Tag Names
 
 - `t-tip`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Core
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 
@@ -254,7 +273,6 @@ tooltip.addEventListener('tooltip-hide', () => {
 | Slot | Description |
 | --- | --- |
 | default | Trigger content the tooltip anchors to |
-
 
 ## CSS Custom Properties
 

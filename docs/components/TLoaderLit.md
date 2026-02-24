@@ -1,27 +1,27 @@
 # TLoaderLit Component Documentation
 
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Loading indicator with 50+ animation types from wc-spinners library, wrapped in terminal/cyberpunk styling.
+
 ## Tag Names
 
 - `t-ldr`
 
-## Overview
+## Architecture
 
-The TLoaderLit component (`<t-ldr>`) is an advanced loading indicator with 55+ animation types from the wc-spinners library, wrapped in terminal/cyberpunk styling. It provides a comprehensive collection of spinners from Epic Spinners, React Spinners, and CSS Spinners libraries, all unified under a single component interface.
-
-**Component Tag:** `<t-ldr>`
-**Category:** Display
-**Version:** 3.0.0
-**Profile:** DISPLAY
+- Extends: `LitElement`
+- Category: Display
+- Version: 3.0.0
 
 ## Table of Contents
-1. [Basic Usage](#basic-usage)
-2. [Properties](#properties)
-3. [Methods](#methods)
-4. [Events](#events)
-5. [Spinner Types](#spinner-types)
-6. [Styling](#styling)
-7. [Examples](#examples)
-8. [Advanced Usage](#advanced-usage)
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
 
 ## Basic Usage
 
@@ -48,8 +48,8 @@ The TLoaderLit component (`<t-ldr>`) is an advanced loading indicator with 55+ a
 | Property | Type | Default | Attribute | Reflects | Description |
 |----------|------|---------|-----------|----------|-------------|
 | `type` | `String` | `'atom-spinner'` | `type` | Yes | The spinner animation type. Must be one of the 55 available spinner types. |
-| `size` | `Number` | `60` | `size` | Yes | Size of the spinner in pixels. Can also accept string values: 'small' (30px), 'medium' (60px), 'large' (90px). |
-| `color` | `String` | `'#00ff41'` | `color` | Yes | Color of the spinner. Accepts any valid CSS color value (hex, rgb, hsl, color names). |
+| `size` | `Number` | `60` | `size` | Yes | Size in pixels. Attribute presets are also supported: `small` (30), `medium` (60), `large` (90). |
+| `color` | `String` | `''` | `color` | Yes | Spinner color. Empty value inherits `--terminal-green` (fallback `#00ff41`). |
 | `duration` | `Number` | `1` | `duration` | Yes | Animation duration in seconds. Controls the speed of the spinner animation. |
 | `text` | `String` | `''` | `text` | Yes | Optional loading text displayed below the spinner. |
 | `hidden` | `Boolean` | `false` | `hidden` | Yes | Controls visibility of the loader. When true, the loader is hidden. |
@@ -72,16 +72,16 @@ loader.type = 'pixel-spinner';
 ```
 
 #### `size` Property
-Controls the spinner size. Accepts numeric values in pixels or named sizes.
+Controls the spinner size. Use numbers for property assignment; use attribute presets for named sizes.
 
 ```javascript
 // Numeric size in pixels
 loader.size = 45;
 
-// Named sizes
-loader.size = 'small';  // 30px
-loader.size = 'medium'; // 60px
-loader.size = 'large';  // 90px
+// Named sizes via attribute
+loader.setAttribute('size', 'small');  // 30px
+loader.setAttribute('size', 'medium'); // 60px
+loader.setAttribute('size', 'large');  // 90px
 
 // Via attribute
 <t-ldr size="80"></t-ldr>
@@ -633,7 +633,7 @@ The component respects the `prefers-reduced-motion` media query:
 
 1. **Lazy Loading:** The wc-spinners library is loaded when the component is imported
 2. **GPU Acceleration:** Animations use CSS transforms for better performance
-3. **Scaling Adjustments:** Each spinner type has optimized scale factors for consistent sizing
+3. **Sizing Normalization:** Spinner families are normalized so a shared `size` value yields consistent visual footprint and centering
 4. **Event Delegation:** Use event delegation for multiple loaders
 
 ```javascript
@@ -656,36 +656,16 @@ The component uses:
 - Web Components (Custom Elements v1)
 - CSS Custom Properties
 - ES6 Modules
-- Lit 2.0+ framework
+- Lit 3.0+ framework
 
 ## Dependencies
 
-- **Lit:** ^2.0.0
+- **Lit:** ^3.0.0
 - **wc-spinners:** Bundled in `/public/js/libs/wc-spinners.js`
 
 ## Third-Party Credits
 
 - wc-spinners (includes Epic Spinners and React Spinners sets). See [`../third-party.md`](../third-party.md).
-
-## Migration Guide
-
-### From Previous Versions
-
-If migrating from an older loader component:
-
-```javascript
-// Old API
-loader.setSize(60);
-loader.setColor('#00ff41');
-loader.showLoader();
-loader.hideLoader();
-
-// New API (v3.0.0)
-loader.size = 60;
-loader.color = '#00ff41';
-loader.show();
-loader.hide();
-```
 
 ## Troubleshooting
 
@@ -737,8 +717,8 @@ loader.hide();
 ## Support
 
 For issues, feature requests, or questions:
-- GitHub Issues: [terminal-kit-loader/issues](https://github.com/terminal-kit/loader/issues)
-- Documentation: [Terminal Kit Docs](https://terminal-kit.dev/components/loader)
+- GitHub Issues: [ivg-design/terminal-kit issues](https://github.com/ivg-design/terminal-kit/issues)
+- Documentation: [Terminal Kit Docs](https://forge.mograph.life)
 
 ## Slots
 

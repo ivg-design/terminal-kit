@@ -1,16 +1,12 @@
 /**
- * @fileoverview TSplitterLit - Resizable panel divider component
+ * @fileoverview TSplitterLit - Terminal-style Splitter Component
  * @module components/TSplitterLit
  * @version 3.0.0
  *
- * A splitter component for creating resizable panels with drag-to-resize
- * and collapsible functionality.
+ * Resizable panel divider component with drag-to-resize and collapsible panes.
  *
  * @example
- * <t-split>
- *   <div slot="pane-0">Left Panel</div>
- *   <div slot="pane-1">Right Panel</div>
- * </t-split>
+ * <t-split></t-split>
  */
 
 import { LitElement, html, css } from 'lit';

@@ -1,13 +1,12 @@
 /**
- * @fileoverview TLogListLit - Container for log entries with filtering and virtualization
+ * @fileoverview TLogListLit - Terminal-style Log List Component
  * @module components/TLogListLit
  * @version 3.0.0
  *
- * A FULL profile component that manages a collection of TLogEntryLit items
- * with filtering, searching, auto-scroll, and virtual scrolling support.
+ * Log viewer with filtering, search, and virtualization.
  *
  * @example
- * <t-log-list auto-scroll></t-log-list>
+ * <t-loglist></t-loglist>
  */
 
 import { LitElement, html, css } from 'lit';

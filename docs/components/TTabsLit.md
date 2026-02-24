@@ -1,10 +1,29 @@
-# TTabsLit
+# TTabsLit Component Documentation
 
-A tab navigation component for organizing content into switchable panels with terminal styling.
+<!-- STANDARD_DOC_INTRO -->
 
-## Tag Name
+## Overview
 
-`t-tabs`
+Tab navigation component with panel switching, variants, and keyboard navigation.
+
+## Tag Names
+
+- `t-tabs`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Container
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 

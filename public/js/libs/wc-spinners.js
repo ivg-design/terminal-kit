@@ -238,7 +238,7 @@
         align-items: center;
         display: flex;
         height: ${this.size};
-        justify-content: center
+        justify-content: center;
         width: calc((${this.size} + ${this.size} * 1.125) * ${e});
       }
 
@@ -1520,6 +1520,16 @@
         <div class="short"></div>
       </div>
     `}}customElements.define(y.is,y);class A extends e{static get is(){return"beat-spinner"}static get defaults(){return{color:"#36d7b7",margin:2,size:15}}static get observedAttributes(){return["color","margin","size"]}get color(){return`var(--beat-spinner__color, ${this.props.color})`}get margin(){return`var(--beat-spinner__margin, ${this.props.margin}px)`}get size(){return`var(--beat-spinner__size, ${this.props.size}px)`}style(){return`
+      .beat-spinner {
+        align-items: center;
+        display: flex;
+        font-size: 0;
+        height: calc(${this.size} + ${this.margin} * 2);
+        justify-content: center;
+        line-height: 0;
+        width: calc(${this.size} * 3 + ${this.margin} * 6);
+      }
+
       .beat {
         animation-fill-mode: both;
         animation: beat 0.7s infinite linear;
@@ -1833,7 +1843,13 @@
       animation-delay: ${e-.2}s;
     `}style(){return`
       .grid-spinner {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
         font-size: 0;
+        height: calc(${this.size} * 3 + ${this.margin} * 6);
+        justify-content: center;
+        line-height: 0;
         width: calc(${this.size} * 3 + ${this.margin} * 6);
       }
 
@@ -2193,7 +2209,7 @@
         border: calc(${this.size} / 10) solid ${this.color};
         height: ${this.size};
         left: 0;
-        opacity: 0.4;
+        opacity: 0.65;
         perspective: 800px;
         position: absolute;
         top: 0;
@@ -2218,6 +2234,16 @@
         <div class="ring"></div>
       </div>
     `}}customElements.define(J.is,J);class K extends e{static get is(){return"rise-spinner"}static get defaults(){return{color:"#36d7b7",margin:2,size:15}}static get observedAttributes(){return["color","margin","size"]}get color(){return`var(--rise-spinner__color, ${this.props.color})`}get margin(){return`var(--rise-spinner__margin, ${this.props.margin}px)`}get size(){return`var(--rise-spinner__size, ${this.props.size}px)`}style(){return`
+      .rise-spinner {
+        align-items: center;
+        display: flex;
+        font-size: 0;
+        height: calc(${this.size} + ${this.margin} * 2 + 60px);
+        justify-content: center;
+        line-height: 0;
+        width: calc(${this.size} * 5 + ${this.margin} * 10);
+      }
+
       .ball {
         animation-fill-mode: both;
         animation: 1s 0s infinite cubic-bezier(0.15, 0.46, 0.9, 0.6);
@@ -2234,7 +2260,7 @@
 
       @keyframes even {
         0%   { transform: scale(1.1); }
-        25%  { translateY(-30px); }
+        25%  { transform: translateY(-30px); }
         50%  { transform: scale(0.4); }
         75%  { transform: translateY(30px); }
         100% { transform: translateY(0) scale(1.0); }
@@ -2242,7 +2268,7 @@
 
       @keyframes odd {
         0%   { transform: scale(0.4); }
-        25%  { translateY(30px); }
+        25%  { transform: translateY(30px); }
         50%  { transform: scale(1.1); }
         75%  { transform: translateY(-30px); }
         100% { transform: translateY(0) scale(0.75); }
@@ -2512,7 +2538,7 @@
         50% { transform: scale(1.5); }
       }
     `}template(){return`
-      <div class="lds-default"}>
+      <div class="lds-default">
         <div></div>
         <div></div>
         <div></div>
@@ -3007,7 +3033,7 @@
     `}}customElements.define(Y.is,Y);class Z extends e{static get is(){return"ouroboro-spinner"}static get defaults(){return{color:"#7f58af"}}static get observedAttributes(){return["color"]}get color(){return`var(--ouroboro-spinner__color, ${this.props.color})`}style(){return`
       .lds-ouroboro {
         border-radius: 50%;
-        box-shadow: 0 0 10px rgba(0,0,0,.1) inset, 0 0 25px rgba(0,0,255,0.075);
+        box-shadow: 0 0 10px rgba(0,0,0,.15) inset, 0 0 18px rgba(0,255,65,0.12);
         display: inline-block;
         height: 64px;
         margin: 0.5em;
@@ -3017,9 +3043,10 @@
       }
 
       .lds-ouroboro:after {
-        background: none repeat scroll 0 0 #f2f2f2;
+        background: rgba(10,10,10,0.96);
+        border: 1px solid color-mix(in srgb, ${this.color} 35%, #0a0a0a);
         border-radius: 50%;
-        box-shadow: 0 0 10px rgba(0,0,0,.1);
+        box-shadow: 0 0 10px rgba(0,0,0,.25);
         content: "";
         display: block;
         height: 70%; width:70%;
@@ -3071,11 +3098,11 @@
     `}template(){return`
       <div class="lds-ouroboro">
         <span class="left">
-          <span class="anim" style={{ background: color }}></span>
+          <span class="anim"></span>
         </span>
 
         <span class="right">
-          <span class="anim" style={{ background: color }}></span>
+          <span class="anim"></span>
         </span>
       </div>
     `}}customElements.define(Z.is,Z);class $ extends e{static get is(){return"rsc-ring-spinner"}static get defaults(){return{color:"#7f58af",size:80}}static get observedAttributes(){return["color","size"]}get color(){return`var(--rsc-ring-spinner__color, ${this.props.color})`}get size(){return`var(--rsc-ring-spinner__size, ${this.props.size}px)`}style(){return`
@@ -3308,6 +3335,7 @@
 
       .lds-spinner div .div-after {
         background: ${this.color};
+        box-shadow: 0 0 6px ${this.color};
         border-radius: 20%;
         content: " ";
         display: block;
@@ -3380,7 +3408,7 @@
 
       @keyframes lds-spinner {
         0%   { opacity: 1; }
-        100% { opacity: 0; }
+        100% { opacity: 0.15; }
       }
     `}template(){return`
       <div class="lds-spinner">

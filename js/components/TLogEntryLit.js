@@ -1,18 +1,12 @@
 /**
- * @fileoverview TLogEntryLit - Complex log entry list item component
+ * @fileoverview TLogEntryLit - Terminal-style Log Entry Component
  * @module components/TLogEntryLit
  * @version 3.0.0
  *
- * A FULL profile component for displaying structured log entries with
- * collapsible rows, icons, timestamps, tags, and expandable details.
+ * Structured log entry row with expandable details and tags.
  *
  * @example
- * <t-log-entry
- *   level="error"
- *   timestamp="2024-01-15T10:30:00Z"
- *   message="Connection failed"
- *   source="api-gateway"
- * ></t-log-entry>
+ * <t-logentry></t-logentry>
  */
 
 import { LitElement, html, css } from 'lit';

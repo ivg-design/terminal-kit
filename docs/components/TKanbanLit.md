@@ -1,12 +1,31 @@
-# TKanbanLit
+# TKanbanLit Component Documentation
 
-A Kanban board component with terminal styling, featuring draggable cards, customizable columns, and task management functionality.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Kanban board container with draggable cards, configurable columns, and expandable task cards.
 
 ## Tag Names
 
-- `t-kanban` - Board container
-- `t-kanban-column` - Individual column
-- `t-kanban-card` - Task card
+- `t-kanban`
+- `t-kanban-column`
+- `t-kanban-card`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Container
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 

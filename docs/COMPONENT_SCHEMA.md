@@ -1,7 +1,7 @@
 # Component Schema - Rigid Template for All Terminal Kit Components
 
 **Status:** Architecture Specification
-**Version:** 1.0.0
+**Version:** 3.0.0
 **Last Updated:** 2025-09-27
 
 ---
@@ -10,25 +10,23 @@
 
 1. [Schema Overview](#schema-overview) **START HERE**
 2. [Schema Profiles](#schema-profiles) **Choose Your Profile**
-3. [Plan Summary](#plan-summary)
-4. [Core Principles](#core-principles)
-5. [The Inviolate Schema](#the-inviolate-schema)
-6. [Cleanup Patterns](#cleanup-patterns) **Memory Leak Prevention**
-7. [Shared Validation Utilities](#shared-validation-utilities) **DRY Validation**
-8. [Nesting Architecture](#nesting-architecture)
-9. [Logging System](#logging-system)
-10. [Safety Mechanisms](#safety-mechanisms)
-11. [JSDoc Requirements](#jsdoc-requirements)
-12. [Unit Testing Requirements](#unit-testing-requirements)
-13. [Build-Time Generation](#build-time-generation)
-14. [CSS Migration Strategy](#css-migration-strategy) **Shared → Static Styles**
-15. [Complete Example](#complete-example)
+3. [Core Principles](#core-principles)
+4. [The Inviolate Schema](#the-inviolate-schema)
+5. [Cleanup Patterns](#cleanup-patterns) **Memory Leak Prevention**
+6. [Shared Validation Utilities](#shared-validation-utilities) **DRY Validation**
+7. [Nesting Architecture](#nesting-architecture)
+8. [Logging System](#logging-system)
+9. [Safety Mechanisms](#safety-mechanisms)
+10. [JSDoc Requirements](#jsdoc-requirements)
+11. [Unit Testing Requirements](#unit-testing-requirements)
+12. [Build-Time Generation](#build-time-generation)
+13. [Complete Example](#complete-example)
 
 ---
 
 ## Schema Overview
 
-> **⭐ This is the structure every component MUST follow. Point to this during component rewrites.**
+> **<DocIcon name="folderStar" /> This is the structure every component MUST follow. Point to this during component rewrites.**
 
 ### Component File Structure Map
 
@@ -162,17 +160,17 @@ ComponentName.test.js (co-located)
 |-------|------|--------------|-------|--------|
 | 1 | Static Metadata | ALL | No | No |
 | 2 | Static Styles | ALL | No | No |
-| 3 | Reactive Properties | ALL | ✅ static properties object, JSDoc comments | No |
-| 4 | Internal State | ALL | ✅ @private | No |
-| 5 | Logger Instance | ALL | ✅ @private | N/A (this IS the logger) |
-| 6 | Constructor | ALL | No | ✅ debug on construct |
-| 7 | Lifecycle Methods | ALL | ✅ @lifecycle, @param | ✅ info/debug/trace |
-| 8 | Public API Methods | MOST | ✅ @public, @param, @returns, @throws, @fires | ✅ debug calls + error logging |
-| 9 | Event Emitters | MOST | ✅ @event, @type, @description | ✅ debug on emit |
-| 10 | Nesting Support | **CONDITIONAL** (containers only) | ✅ @private/@public | ✅ debug on register/context |
-| 11 | Validation | **CONDITIONAL** (validation needed) | ✅ @private/@static | ✅ warn on validation failure |
-| 12 | Render Method | ALL | ✅ @returns, @slot | ✅ trace on render |
-| 13 | Private Helpers | ALL | ✅ @private, @param, @returns | ✅ contextual logging |
+| 3 | Reactive Properties | ALL | Yes static properties object, JSDoc comments | No |
+| 4 | Internal State | ALL | Yes @private | No |
+| 5 | Logger Instance | ALL | Yes @private | N/A (this IS the logger) |
+| 6 | Constructor | ALL | No | Yes debug on construct |
+| 7 | Lifecycle Methods | ALL | Yes @lifecycle, @param | Yes info/debug/trace |
+| 8 | Public API Methods | MOST | Yes @public, @param, @returns, @throws, @fires | Yes debug calls + error logging |
+| 9 | Event Emitters | MOST | Yes @event, @type, @description | Yes debug on emit |
+| 10 | Nesting Support | **CONDITIONAL** (containers only) | Yes @private/@public | Yes debug on register/context |
+| 11 | Validation | **CONDITIONAL** (validation needed) | Yes @private/@static | Yes warn on validation failure |
+| 12 | Render Method | ALL | Yes @returns, @slot | Yes trace on render |
+| 13 | Private Helpers | ALL | Yes @private, @param, @returns | Yes contextual logging |
 
 ### Essential Rules
 
@@ -203,7 +201,7 @@ When rewriting a component, verify:
 
 ## Schema Profiles
 
-> **🎯 Choose the right profile for your component to avoid unnecessary boilerplate**
+> **<DocIcon name="selection" /> Choose the right profile for your component to avoid unnecessary boilerplate**
 
 Not all components need all blocks! Use these profiles to determine which blocks your component requires.
 
@@ -224,10 +222,10 @@ Not all components need all blocks! Use these profiles to determine which blocks
 **For:** Buttons, toasts, simple interactive components
 
 **Blocks:**
-- ✅ 1-9 (metadata, styles, properties, state, logger, constructor, lifecycle, methods, events)
-- ❌ 10 (skip nesting)
-- ❌ 11 (skip validation)
-- ✅ 12-13 (render, helpers)
+- 1-9 (metadata, styles, properties, state, logger, constructor, lifecycle, methods, events)
+- 10 (skip nesting)
+- 11 (skip validation)
+- 12-13 (render, helpers)
 
 **Test Suites:** 3
 1. Properties
@@ -243,10 +241,10 @@ Not all components need all blocks! Use these profiles to determine which blocks
 **For:** Input controls with validation needs
 
 **Blocks:**
-- ✅ 1-9 (all core)
-- ❌ 10 (skip nesting)
-- ✅ 11 (validation)
-- ✅ 12-13 (render, helpers)
+- 1-9 (all core)
+- 10 (skip nesting)
+- 11 (validation)
+- 12-13 (render, helpers)
 
 **Test Suites:** 6
 1. Properties
@@ -286,10 +284,10 @@ setValue(value) {
 **For:** Panels, modals, trees - components that contain/coordinate children
 
 **Blocks:**
-- ✅ 1-9 (all core)
-- ✅ 10 (nesting)
-- ✅/❌ 11 (validation if needed)
-- ✅ 12-13 (render, helpers)
+- 1-9 (all core)
+- 10 (nesting)
+- 11 (validation if needed)
+- 12-13 (render, helpers)
 
 **Test Suites:** 5
 1. Properties
@@ -307,12 +305,12 @@ setValue(value) {
 **For:** Simple display-only components with minimal interactivity
 
 **Blocks:**
-- ✅ 1-7 (metadata through lifecycle)
-- ❌ 8 (often no public methods)
-- ❌ 9 (often no events)
-- ❌ 10 (no nesting)
-- ❌ 11 (no validation)
-- ✅ 12-13 (render, helpers)
+- 1-7 (metadata through lifecycle)
+- 8 (often no public methods)
+- 9 (often no events)
+- 10 (no nesting)
+- 11 (no validation)
+- 12-13 (render, helpers)
 
 **Test Suites:** 3
 1. Properties
@@ -328,11 +326,11 @@ setValue(value) {
 **For:** Components using bundled libraries (iro.js color picker)
 
 **Blocks:**
-- ✅ 1-9 (all core)
-- ❌ 10 (no nesting)
-- ❌ 11 (library handles validation)
-- ✅ 12-13 (render, helpers)
-- ✅ **Special:** Library lifecycle management
+- 1-9 (all core)
+- 10 (no nesting)
+- 11 (library handles validation)
+- 12-13 (render, helpers)
+- **Special:** Library lifecycle management
 
 **Test Suites:** 7
 1. Properties
@@ -390,7 +388,7 @@ _initializeColorPicker() {
 **For:** Complex components needing all features
 
 **Blocks:**
-- ✅ ALL (1-13)
+- ALL (1-13)
 
 **Test Suites:** 7 (all)
 
@@ -418,32 +416,6 @@ Does component have nested children (slots)?
       ├─ YES: CORE profile
       └─ NO: DISPLAY profile
 ```
-
----
-
-## Plan Summary
-
-### Current Problems
-1. ❌ Runtime manifest generation is fragile
-2. ❌ Manual manifest writing is error-prone
-3. ❌ Import order matters
-4. ❌ No validation until runtime
-5. ❌ Single point of failure
-
-### New Architecture: JSDoc → Build-Time → JSON
-
-**Phase 1:** Add comprehensive JSDoc to all components
-**Phase 2:** Build script parses JSDoc + extracts properties
-**Phase 3:** Generate single `manifests.json` at build time
-**Phase 4:** Runtime loads JSON (zero reflection, zero fragility)
-
-### Benefits
-✅ Single source of truth (JSDoc in component)
-✅ Build-time validation (catch errors early)
-✅ Zero runtime cost (just load JSON)
-✅ TypeScript/IDE support (JSDoc is standard)
-✅ No fragile runtime reflection
-✅ Works perfectly with Pure Lit architecture
 
 ---
 
@@ -497,7 +469,7 @@ import { ValidationMixin } from '../utils/validation-mixin.js';
  * @tagname tag-name
  * @description Brief one-line description
  * @category UI Components | Form Controls | Layout | etc.
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <tag-name prop="value">Content</tag-name>
  */
@@ -507,7 +479,7 @@ export class ComponentName extends LitElement {
   // BLOCK 1: STATIC METADATA (REQUIRED)
   // ----------------------------------------------------------
   static tagName = 'tag-name';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'UI Components';
 
   // ----------------------------------------------------------
@@ -931,7 +903,7 @@ if (!customElements.get(ComponentName.tagName)) {
 
 ## Cleanup Patterns
 
-> **🧹 Critical patterns to prevent memory leaks in components**
+> **<DocIcon name="trash" /> Critical patterns to prevent memory leaks in components**
 
 All components must properly clean up resources in `disconnectedCallback()`. Follow these patterns based on what your component uses.
 
@@ -1247,7 +1219,7 @@ When implementing `disconnectedCallback()`, verify you're cleaning up:
 
 ## Shared Validation Utilities
 
-> **♻️ DRY validation - reusable validators for common patterns**
+> **<DocIcon name="recycle" /> DRY validation - reusable validators for common patterns**
 
 Create `js/utils/validation-helpers.js` to share validation logic across components.
 
@@ -2278,529 +2250,36 @@ npm run test:coverage
 
 ---
 
-## CSS Migration Strategy
-
-> **🎨 Migrating from shared external CSS to Lit static styles**
-
-All components must use Lit's `static styles` with `css``template` for encapsulated, FOUC-free styling.
-
-### Current Architecture (TComponent/DSD)
-
-```javascript
-// ❌ OLD: External CSS loaded in HTML
-<link rel="stylesheet" href="css/terminal-kit.css">
-
-// Component depends on external stylesheet being loaded
-```
-
-**Problems:**
-- FOUC (Flash of Unstyled Content) on load
-- CSS must load before components render
-- Global namespace collisions
-- Can't distribute as standalone components
-
----
-
-### Target Architecture (Lit)
-
-```javascript
-// ✅ NEW: Static styles in component
-import { LitElement, html, css } from 'lit';
-
-export class TButtonLit extends LitElement {
-  static styles = css`
-    /* All component-specific styles */
-    :host {
-      display: inline-block;
-      --t-btn-bg: var(--terminal-bg, #000);
-      --t-btn-border: var(--terminal-green, #00ff41);
-    }
-
-    .btn {
-      background: var(--t-btn-bg);
-      border: 1px solid var(--t-btn-border);
-      color: var(--t-btn-border);
-      padding: 8px 16px;
-    }
-  `;
-
-  render() {
-    return html`<button class="btn">${this.textContent}</button>`;
-  }
-}
-```
-
-**Benefits:**
-- ✅ Zero FOUC - styles bundled with component
-- ✅ Shadow DOM encapsulation
-- ✅ Component is self-contained
-- ✅ Can distribute as single file
-
----
-
-### Migration Steps
-
-#### Step 1: Extract Component-Specific Styles
-
-Find all CSS rules for your component in shared `css/terminal-kit.css`:
-
-```css
-/* css/terminal-kit.css */
-
-/* Button styles - EXTRACT THESE */
-.terminal-button {
-  background: #000;
-  border: 1px solid #00ff41;
-  /* ... */
-}
-
-.terminal-button:hover {
-  background: #00ff4120;
-}
-
-.terminal-button.primary {
-  background: #00ff41;
-  color: #000;
-}
-```
-
-#### Step 2: Convert to Lit css`` Template
-
-```javascript
-// js/components/TButtonLit.js
-
-static styles = css`
-  /* Convert class selectors to :host and internal classes */
-  :host {
-    display: inline-block;
-  }
-
-  .btn {
-    background: #000;
-    border: 1px solid #00ff41;
-  }
-
-  .btn:hover {
-    background: #00ff4120;
-  }
-
-  .btn.primary {
-    background: #00ff41;
-    color: #000;
-  }
-`;
-```
-
-#### Step 3: Replace Hardcoded Colors with CSS Variables
-
-```javascript
-static styles = css`
-  :host {
-    display: inline-block;
-
-    /* Define component-specific CSS variables */
-    --t-btn-bg: var(--terminal-bg, #000);
-    --t-btn-border: var(--terminal-green, #00ff41);
-    --t-btn-hover: var(--terminal-green-dim, #00ff4120);
-  }
-
-  .btn {
-    background: var(--t-btn-bg);
-    border: 1px solid var(--t-btn-border);
-  }
-
-  .btn:hover {
-    background: var(--t-btn-hover);
-  }
-`;
-```
-
-#### Step 4: Test in Isolation
-
-```bash
-# Run dev server
-npm run dev
-
-# Test component loads without external CSS
-# Component should render correctly standalone
-```
-
-#### Step 5: Remove from Shared CSS
-
-Once component works standalone, remove the rules from `css/terminal-kit.css`:
-
-```css
-/* css/terminal-kit.css */
-
-/* ❌ DELETE - Now in TButtonLit.js static styles */
-/* .terminal-button { ... } */
-```
-
----
-
-### CSS Variable Strategy
-
-#### Global Theme Variables (stay in global CSS)
-
-```css
-/* css/terminal-kit.css - KEEP THESE */
-:root {
-  /* Colors */
-  --terminal-bg: #000;
-  --terminal-green: #00ff41;
-  --terminal-green-dim: #00ff4180;
-  --terminal-red: #ff4136;
-  --terminal-blue: #0074d9;
-
-  /* Typography */
-  --terminal-font: 'IBM Plex Mono', monospace;
-  --terminal-font-size: 14px;
-
-  /* Spacing */
-  --terminal-spacing-xs: 4px;
-  --terminal-spacing-sm: 8px;
-  --terminal-spacing-md: 16px;
-  --terminal-spacing-lg: 24px;
-
-  /* Borders */
-  --terminal-border-width: 1px;
-  --terminal-border-radius: 4px;
-
-  /* Transitions */
-  --terminal-transition: all 0.2s ease;
-}
-```
-
-#### Component-Specific Variables (in static styles)
-
-```javascript
-static styles = css`
-  :host {
-    /* Component defaults that reference global variables */
-    --t-btn-bg: var(--terminal-bg);
-    --t-btn-border: var(--terminal-green);
-    --t-btn-padding: var(--terminal-spacing-sm) var(--terminal-spacing-md);
-    --t-btn-transition: var(--terminal-transition);
-  }
-
-  .btn {
-    background: var(--t-btn-bg);
-    border: var(--terminal-border-width) solid var(--t-btn-border);
-    padding: var(--t-btn-padding);
-    transition: var(--t-btn-transition);
-  }
-`;
-```
-
-**Users can override component variables:**
-```html
-<style>
-  t-btn {
-    --t-btn-bg: #111;
-    --t-btn-border: #ff0000;
-  }
-</style>
-
-<t-btn>Custom Styled Button</t-btn>
-```
-
----
-
-### Bundled Assets Strategy
-
-#### Fonts
-
-**Fonts stay in global CSS** (not component-specific):
-
-```css
-/* css/terminal-kit.css */
-@font-face {
-  font-family: 'IBM Plex Mono';
-  src: url('/fonts/IBMPlexMono-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-```
-
-Components reference via CSS variable:
-
-```javascript
-static styles = css`
-  .btn {
-    font-family: var(--terminal-font, 'IBM Plex Mono', monospace);
-  }
-`;
-```
-
-#### Icons
-
-**Icons already bundled** in `js/utils/phosphor-icons.js`:
-
-```javascript
-// js/utils/phosphor-icons.js
-export const caretDownIcon = '<svg>...</svg>';
-export const caretRightIcon = '<svg>...</svg>';
-
-// Usage in component
-import { caretDownIcon } from '../utils/phosphor-icons.js';
-
-render() {
-  return html`
-    <button>
-      <span .innerHTML=${caretDownIcon}></span>
-    </button>
-  `;
-}
-```
-
-#### iro.js Color Picker
-
-**Bundled locally** (not CDN):
-
-```javascript
-// Import from node_modules (bundled by Vite)
-import iro from '@jaames/iro';
-
-export class TColorPickerLit extends LitElement {
-  firstUpdated() {
-    this._colorPicker = iro.ColorPicker(container, {
-      width: 200,
-      color: this.value
-    });
-  }
-}
-```
-
-**package.json:**
-```json
-{
-  "dependencies": {
-    "lit": "^3.3.1",
-    "@jaames/iro": "^5.5.2"
-  }
-}
-```
-
----
-
-### Migration Checklist
-
-For each component being migrated:
-
-- [ ] Extract all component CSS rules from `css/terminal-kit.css`
-- [ ] Convert to Lit `css`` template` in `static styles`
-- [ ] Replace hardcoded colors with CSS variables
-- [ ] Use `:host` for component-level styles
-- [ ] Reference global theme variables (`--terminal-*`)
-- [ ] Test component renders without external CSS
-- [ ] Verify no FOUC on page load
-- [ ] Remove old CSS rules from `css/terminal-kit.css`
-- [ ] Update documentation with new CSS variable API
-
----
-
-### Common Patterns
-
-#### Pattern: Conditional Styles Based on Properties
-
-```javascript
-static styles = css`
-  :host {
-    display: block;
-  }
-
-  /* Base styles */
-  .panel {
-    background: var(--terminal-bg);
-    border: 1px solid var(--terminal-green);
-  }
-
-  /* Variant styles */
-  :host([variant="headless"]) .panel {
-    border: none;
-  }
-
-  /* State styles */
-  :host([collapsed]) .panel__body {
-    display: none;
-  }
-
-  :host([disabled]) .panel {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-`;
-```
-
-#### Pattern: Size Variations
-
-```javascript
-static styles = css`
-  :host {
-    display: block;
-  }
-
-  /* Base size */
-  .panel {
-    padding: var(--terminal-spacing-md);
-  }
-
-  /* Compact size */
-  :host([compact]) .panel {
-    padding: var(--terminal-spacing-sm);
-  }
-
-  /* Large size */
-  :host([large]) .panel {
-    padding: var(--terminal-spacing-lg);
-    font-size: 16px;
-  }
-`;
-```
-
-#### Pattern: Theming Support
-
-```javascript
-static styles = css`
-  :host {
-    /* Light theme defaults */
-    --component-bg: var(--terminal-bg, #000);
-    --component-fg: var(--terminal-green, #00ff41);
-  }
-
-  /* Dark theme override */
-  :host([theme="dark"]) {
-    --component-bg: #111;
-    --component-fg: #0f0;
-  }
-
-  /* User can override any variable */
-  .content {
-    background: var(--component-bg);
-    color: var(--component-fg);
-  }
-`;
-```
-
----
-
-### Distribution Strategy
-
-Once all components use static styles:
-
-**Library can be distributed as:**
-1. **ES Modules** (individual component files)
-2. **Single Bundle** (all components in one file)
-3. **NPM Package** (published to npm)
-
-**Users install and import:**
-```bash
-npm install @terminal-kit/components
-```
-
-```javascript
-import '@terminal-kit/components/t-btn.js';
-import '@terminal-kit/components/t-pnl.js';
-
-// Components work standalone - no external CSS needed!
-```
-
-**Theme customization via CSS variables:**
-```html
-<style>
-  :root {
-    --terminal-bg: #0a0e27;
-    --terminal-green: #00d9ff;
-    --terminal-font: 'Fira Code', monospace;
-  }
-</style>
-```
-
----
-
 ## Build-Time Generation
 
-### Manifest Generator Script
+Component manifests must be generated at build-time from source metadata (JSDoc + static component metadata), not at runtime.
 
-```javascript
-// scripts/generate-manifests.js
-import { parse } from '@typescript-eslint/typescript-estree';
-import { readFileSync, writeFileSync, readdirSync } from 'fs';
-import { join } from 'path';
+### Requirements
 
-/**
- * Extract manifest from component file
- */
-function extractManifest(filePath) {
-  const source = readFileSync(filePath, 'utf-8');
-  const ast = parse(source, {
-    loc: true,
-    comment: true,
-    jsx: false
-  });
+1. Use component source as the single source of truth (`tagName`, `version`, `category`, `static properties`, JSDoc).
+2. Validate extracted metadata during generation and fail the build on schema violations.
+3. Emit deterministic JSON output (`public/manifests.json`) for runtime consumption.
+4. Do not depend on import order or runtime reflection to build manifests.
 
-  const manifest = {
-    tagName: null,
-    displayName: null,
-    description: null,
-    properties: {},
-    methods: {},
-    events: {},
-    slots: {}
-  };
+### Recommended Build Flow
 
-  // Parse AST and extract JSDoc
-  // ... parsing logic
+```bash
+# 1) Parse component source
+node scripts/generate-manifests.js
 
-  return manifest;
-}
+# 2) Validate generated schema
+node scripts/validate-manifests.js
 
-/**
- * Generate manifests for all components
- */
-function generateManifests() {
-  const componentsDir = './js/components';
-  const files = readdirSync(componentsDir)
-    .filter(f => f.endsWith('Lit.js'));
-
-  const manifests = {};
-
-  files.forEach(file => {
-    const filePath = join(componentsDir, file);
-    const manifest = extractManifest(filePath);
-
-    if (manifest.tagName) {
-      manifests[manifest.tagName] = manifest;
-      console.log(`✓ Generated manifest for ${manifest.tagName}`);
-    }
-  });
-
-  // Write to JSON
-  writeFileSync(
-    './js/manifests.json',
-    JSON.stringify(manifests, null, 2)
-  );
-
-  console.log(`\n✓ Generated ${Object.keys(manifests).length} manifests`);
-}
-
-generateManifests();
+# 3) Use JSON at runtime
+# fetch('/public/manifests.json')
 ```
 
-### Package.json Scripts
+### Validation Checklist
 
-```json
-{
-  "scripts": {
-    "manifests": "node scripts/generate-manifests.js",
-    "manifests:watch": "nodemon --watch js/components --ext js --exec npm run manifests",
-    "prebuild": "npm run manifests",
-    "predev": "npm run manifests",
-    "dev": "npm run manifests:watch & vite"
-  }
-}
-```
+1. Every component has `tagName`, `version`, `category`.
+2. Every public property appears in generated manifest with type/default/attribute metadata.
+3. Every event listed in docs is represented in manifest (if event manifesting is enabled).
+4. Generated output is stable across runs (same input => same JSON).
 
 ---
 
@@ -2819,7 +2298,7 @@ import { caretRightIcon, caretDownIcon } from '../utils/phosphor-icons.js';
  * @tagname t-pnl
  * @description Collapsible panel with header, footer, and nested content support. Automatically sizes nested action buttons and propagates context to nested components.
  * @category Layout
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <t-pnl title="My Panel" collapsible>
  *   <div slot="actions">
@@ -2833,7 +2312,7 @@ export class TPanelLit extends LitElement {
 
   // BLOCK 1: STATIC METADATA
   static tagName = 't-pnl';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Layout';
 
   // BLOCK 2: STATIC STYLES
@@ -3198,21 +2677,3 @@ if (!customElements.get(TPanelLit.tagName)) {
 // SECTION 4: EXPORT
 export default TPanelLit;
 ```
-
----
-
-## Summary
-
-This schema provides:
-
-1. ✅ **Rigid Structure** - Every component follows exact same blocks
-2. ✅ **Flexibility** - Components vary in behavior, not structure
-3. ✅ **Nesting Support** - Parent-child communication built-in
-4. ✅ **Logging System** - Granular per-component debugging
-5. ✅ **Safety Mechanisms** - Validation at every level
-6. ✅ **Self-Documenting** - JSDoc generates manifest
-7. ✅ **Unit Testing** - Required co-located tests for all components
-8. ✅ **Build-Time Generation** - No runtime fragility
-9. ✅ **Pure Lit Compatible** - Works perfectly with Lit architecture
-
-Every component built with this schema will be robust, maintainable, testable, and interoperable.

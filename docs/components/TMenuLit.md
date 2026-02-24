@@ -1,10 +1,29 @@
-# TMenuLit
+# TMenuLit Component Documentation
 
-A dropdown/context menu component with terminal styling, supporting nested items, search filtering, and keyboard navigation.
+<!-- STANDARD_DOC_INTRO -->
 
-## Tag Name
+## Overview
 
-`t-menu`
+Dropdown/context menu component with selection, keyboard navigation, and submenu support
+
+## Tag Names
+
+- `t-menu`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Core
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 
@@ -24,6 +43,7 @@ A dropdown/context menu component with terminal styling, supporting nested items
 | `open` | `Boolean` | `false` | Yes | Whether menu is open |
 | `searchable` | `Boolean` | `false` | Yes | Enable search filtering |
 | `maxHeight` | `String` | `'300px'` | No | Maximum menu height (CSS value) |
+| `size` | `String` | `'md'` | Yes | Menu item density: `'sm'`, `'md'`, `'lg'` |
 
 ### Item Object Structure
 
@@ -156,8 +176,24 @@ Fired when menu closes.
 ### Hover Trigger
 
 ```html
-<t-menu trigger="hover" position="right-start" .items=${items}>
+<t-menu trigger="hover" position="bottom-end" .items=${items}>
   <span slot="trigger">Hover me</span>
+</t-menu>
+```
+
+### Size Variants
+
+```html
+<t-menu size="sm" .items=${items}>
+  <t-button slot="trigger">Small</t-button>
+</t-menu>
+
+<t-menu size="md" .items=${items}>
+  <t-button slot="trigger">Medium</t-button>
+</t-menu>
+
+<t-menu size="lg" .items=${items}>
+  <t-button slot="trigger">Large</t-button>
 </t-menu>
 ```
 

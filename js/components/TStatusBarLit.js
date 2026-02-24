@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TStatusBarLit - Terminal-style Status Bar Component
+ * @module components/TStatusBarLit
+ * @version 3.0.0
+ *
+ * Flexible status bar with dynamic fields, alignment zones, and marquee support.
+ *
+ * @example
+ * <t-sta></t-sta>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
@@ -13,7 +24,7 @@ import { generateManifest } from '../utils/manifest-generator.js';
  * @tagname t-sta
  * @description Flexible status bar with dynamic fields, alignment zones, and marquee support
  * @category Display
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <t-sta id="statusBar"></t-sta>
  * <script>
@@ -30,7 +41,7 @@ export class TStatusBarLit extends LitElement {
   // BLOCK 1: STATIC METADATA (REQUIRED)
   // ----------------------------------------------------------
   static tagName = 't-sta';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Display';
   static profile = 'CONTAINER';
 

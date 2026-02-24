@@ -1,6 +1,10 @@
-# TBadgeLit (t-bdg)
+# TBadgeLit Component Documentation
 
-A **Pure Lit** badge component for displaying counts, status indicators, and notifications. Built with Lit 3.x for terminal/cyberpunk styling.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Count/status indicator badge component with variants, sizes, and positioning options.
 
 ## Tag Names
 
@@ -8,11 +12,21 @@ A **Pure Lit** badge component for displaying counts, status indicators, and not
 
 ## Architecture
 
-**CRITICAL:** This is a **Pure Lit Component**:
-- ✅ Extends `LitElement`
-- ✅ All styles in `static styles` CSS block
-- ✅ Zero FOUC (Flash of Unstyled Content)
-- ✅ Complete Shadow DOM encapsulation
+- Extends: `LitElement`
+- Category: Core
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
+
+Zero FOUC (Flash of Unstyled Content)
+- Complete Shadow DOM encapsulation
 
 ## Static Metadata
 

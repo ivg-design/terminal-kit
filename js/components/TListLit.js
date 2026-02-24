@@ -1,10 +1,12 @@
 /**
- * @fileoverview TListLit - Virtualized scrollable list component
+ * @fileoverview TListLit - Terminal-style List Component
  * @module components/TListLit
  * @version 3.0.0
  *
- * A FULL profile list component with virtual scrolling for large datasets,
- * selection modes, grouping, and drag-and-drop reordering.
+ * Virtualized scrollable list component with selection and grouping.
+ *
+ * @example
+ * <t-list></t-list>
  */
 
 import { LitElement, html, css } from 'lit';

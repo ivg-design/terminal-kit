@@ -35,7 +35,7 @@ describe('TTimelineLit', () => {
 		});
 
 		it('should have correct version', () => {
-			expect(timeline.constructor.version).toBe('3.1.0');
+			expect(timeline.constructor.version).toBe('3.0.0');
 		});
 
 		it('should have correct category', () => {
@@ -270,13 +270,38 @@ describe('TTimelineLit', () => {
 			expect(descriptions.length).toBeGreaterThan(0);
 		});
 
-		it('should apply line-right class', async () => {
-			timeline.linePosition = 'right';
-			await timeline.updateComplete;
+			it('should apply line-right class', async () => {
+				timeline.linePosition = 'right';
+				await timeline.updateComplete;
 
-			const container = timeline.shadowRoot.querySelector('.timeline-vertical');
-			expect(container.classList.contains('line-right')).toBe(true);
-		});
+				const container = timeline.shadowRoot.querySelector('.timeline-vertical');
+				expect(container.classList.contains('line-right')).toBe(true);
+			});
+
+			it('should calculate vertical line position from dot centers', async () => {
+				timeline.linePosition = 'right';
+				await timeline.updateComplete;
+
+				const container = timeline.shadowRoot.querySelector('.timeline-vertical');
+				const dots = timeline.shadowRoot.querySelectorAll('.tl-dot');
+				const line = timeline.shadowRoot.querySelector('.tl-line');
+
+				vi.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+					top: 0, left: 0, right: 420, bottom: 260, width: 420, height: 260, x: 0, y: 0, toJSON() { return {}; }
+				});
+				vi.spyOn(dots[0], 'getBoundingClientRect').mockReturnValue({
+					top: 34, left: 350, right: 362, bottom: 46, width: 12, height: 12, x: 350, y: 34, toJSON() { return {}; }
+				});
+				vi.spyOn(dots[dots.length - 1], 'getBoundingClientRect').mockReturnValue({
+					top: 174, left: 350, right: 362, bottom: 186, width: 12, height: 12, x: 350, y: 174, toJSON() { return {}; }
+				});
+
+				timeline._updateLinePosition();
+
+				expect(line.style.top).toBe('40px');
+				expect(line.style.height).toBe('140px');
+				expect(line.style.left).toBe('355px');
+			});
 
 		it('should apply timeline-loading class', async () => {
 			timeline.loading = true;

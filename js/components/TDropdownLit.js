@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TDropdownLit - Terminal-style Dropdown Component
+ * @module components/TDropdownLit
+ * @version 3.0.0
+ *
+ * Advanced dropdown component with hierarchical tree structure, search functionality, and folder navigation. Supports nested folders, file metadata, and customizable icons.
+ *
+ * @example
+ * <t-drp></t-drp>
+ */
+
 // ============================================
 // SECTION 1: IMPORTS
 // ============================================
@@ -24,7 +35,7 @@ import {
  * @tagname t-drp
  * @description Advanced dropdown component with hierarchical tree structure, search functionality, and folder navigation. Supports nested folders, file metadata, and customizable icons.
  * @category Form Controls
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * // Basic usage
  * <t-drp
@@ -49,7 +60,7 @@ export class TDropdownLit extends LitElement {
   // BLOCK 1: Static Metadata
   // ============================================
   static tagName = 't-drp';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Form Controls';
 
   // ============================================
@@ -1479,7 +1490,7 @@ export const TDropdownManifest = generateManifest(TDropdownLit, {
   tagName: 't-drp',
   displayName: 'Dropdown',
   description: 'Nested dropdown with tree structure, search, and folder navigation',
-  version: '1.0.0',
+  version: '3.0.0',
   properties: {
     placeholder: { description: 'Placeholder text' },
     disabled: { description: 'Disabled state' },

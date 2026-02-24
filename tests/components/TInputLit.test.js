@@ -21,7 +21,7 @@ describe('TInputLit', () => {
       expect(TInputManifest).toBeDefined();
       expect(TInputManifest.tagName).toBe('t-inp');
       expect(TInputManifest.displayName).toBe('Input');
-      expect(TInputManifest.version).toBe('1.0.0');
+      expect(TInputManifest.version).toBe('3.0.0');
     });
 
     it('should document all 15 properties', () => {

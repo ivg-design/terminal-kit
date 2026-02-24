@@ -34,7 +34,7 @@ export function generateManifest(componentClass, manual = {}) {
   }
 
   // Extract static metadata (if present)
-  const version = componentClass.version || manual.version || '1.0.0';
+  const version = componentClass.version || manual.version || '3.0.0';
   const category = componentClass.category || manual.category || '';
 
   // Merge auto-generated with manual overrides

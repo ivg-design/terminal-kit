@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TToggleLit - Terminal-style Toggle Component
+ * @module components/TToggleLit
+ * @version 3.0.0
+ *
+ * Terminal-themed toggle switch/checkbox with label and icon support. Supports both switch and checkbox variants with form participation.
+ *
+ * @example
+ * <t-tog></t-tog>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
@@ -13,7 +24,7 @@ import { generateManifest } from '../utils/manifest-generator.js';
  * @tagname t-tog
  * @description Terminal-themed toggle switch/checkbox with label and icon support. Supports both switch and checkbox variants with form participation.
  * @category Form Controls
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <t-tog label="Enable notifications" checked></t-tog>
  * <t-tog variant="checkbox" label="I agree to terms"></t-tog>
@@ -23,7 +34,7 @@ export class TToggleLit extends LitElement {
   // BLOCK 1: STATIC METADATA (REQUIRED)
   // ----------------------------------------------------------
   static tagName = 't-tog';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Form Controls';
 
   // ----------------------------------------------------------

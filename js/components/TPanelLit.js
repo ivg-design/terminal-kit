@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TPanelLit - Terminal-style Panel Component
+ * @module components/TPanelLit
+ * @version 3.0.0
+ *
+ * Collapsible panel with header, footer, and nested content support. Follows FULL profile with all 13 blocks.
+ *
+ * @example
+ * <t-pnl></t-pnl>
+ */
+
 // ============================================
 // SECTION 1: IMPORTS
 // ============================================
@@ -18,7 +29,7 @@ import { debounce } from '../utils/debounce.js';
  * @tagname t-pnl
  * @description Collapsible panel with header, footer, and nested content support. Follows FULL profile with all 13 blocks.
  * @category Layout
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <t-pnl title="Settings" collapsible>
  *   <t-inp slot="default" label="Name"></t-inp>
@@ -32,7 +43,7 @@ export class TPanelLit extends LitElement {
   // BLOCK 1: Static Metadata
   // ============================================
   static tagName = 't-pnl';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Layout';
   static LOADING_TIMEOUT_MS = 30000;  // 30 seconds auto-timeout for loading state
 
@@ -1472,7 +1483,7 @@ export const TPanelManifest = generateManifest(TPanelLit, {
   tagName: 't-pnl',
   displayName: 'Terminal Panel',
   description: 'Collapsible panel with header, footer, and nested content support',
-  version: '1.0.0',
+  version: '3.0.0',
 
   properties: {
     title: { description: 'Panel title displayed in header' },

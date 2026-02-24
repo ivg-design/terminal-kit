@@ -1,16 +1,12 @@
 /**
- * @fileoverview TGridLit - Dashboard grid layout component
+ * @fileoverview TGridLit - Terminal-style Grid Component
  * @module components/TGridLit
- * @version 1.0.2
+ * @version 3.0.0
  *
- * A CONTAINER profile grid component wrapping gridstack.js for
- * drag-and-drop, resizable dashboard layouts.
+ * Dashboard grid layout component with drag/resize widgets, persistence, and runtime controls.
  *
  * @example
- * <t-grid columns="12" cell-height="80">
- *   <t-grid-item x="0" y="0" w="4" h="2">Widget 1</t-grid-item>
- *   <t-grid-item x="4" y="0" w="8" h="2">Widget 2</t-grid-item>
- * </t-grid>
+ * <t-grid></t-grid>
  */
 
 import { LitElement, html, css } from 'lit';
@@ -21,7 +17,7 @@ import { pushPinIcon, lockSimpleIcon, lockSimpleOpenIcon, xIcon } from '../utils
 // Block 1: Static Metadata
 // ============================================================
 const tagName = 't-grid';
-const version = '1.0.2';
+const version = '3.0.0';
 const category = 'Container';
 
 // ============================================================
@@ -355,9 +351,12 @@ function injectGridStyles() {
 // (createRenderRoot returns this). All styles are injected via injectGridStyles().
 
 /**
- * TGridLit - Dashboard grid layout component
+ * @component TGridLit
+ * @tagname t-grid
+ * @description Dashboard grid layout component with drag/resize widgets, persistence, and runtime controls.
+ * @category Container
+ * @since 3.0.0
  *
- * @element t-grid
  * @slot - Grid items (t-grid-item elements)
  *
  * @fires grid-change - Fired when grid layout changes

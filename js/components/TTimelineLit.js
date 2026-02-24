@@ -1,20 +1,12 @@
 /**
- * @fileoverview TTimelineLit - Timeline display component (vertical & horizontal)
+ * @fileoverview TTimelineLit - Terminal-style Timeline Component
  * @module components/TTimelineLit
- * @version 3.1.0
+ * @version 3.0.0
  *
- * A timeline component for displaying chronological events with configurable
- * orientation, dot styling, and line positioning.
- *
- * ARCHITECTURE:
- * - Vertical: Uses CSS Grid with a dedicated track column for dots/line
- * - Horizontal: Uses CSS Grid with a dedicated row for dots/line
- * - Line is pure CSS, positioned in the gutter track
- * - No JS positioning required - all CSS-based for reliability
+ * Timeline display with chronological events (vertical & horizontal).
  *
  * @example
  * <t-tmln></t-tmln>
- * <t-tmln orientation="horizontal"></t-tmln>
  */
 
 import { LitElement, html, css } from 'lit';
@@ -26,7 +18,7 @@ import componentLogger from '../utils/ComponentLogger.js';
 // BLOCK 1: Static Metadata
 // ============================================================
 const tagName = 't-tmln';
-const version = '3.1.0';
+const version = '3.0.0';
 const category = 'Container';
 
 // ============================================================
@@ -480,7 +472,7 @@ const styles = css`
  * @tagname t-tmln
  * @description Timeline display with chronological events (vertical & horizontal)
  * @category Container
- * @since 3.1.0
+ * @since 3.0.0
  *
  * @slot item-{id} - Custom content for specific timeline items
  * @slot icon-{id} - Custom icon for specific timeline items
@@ -659,14 +651,15 @@ class TTimelineLit extends LitElement {
 		this._updateLinePosition();
 	}
 
-	updated(changedProperties) {
-		super.updated(changedProperties);
-		if (changedProperties.has('items') || changedProperties.has('orientation') ||
-			changedProperties.has('dense') || changedProperties.has('dotSize')) {
-			// Use requestAnimationFrame to ensure DOM is fully rendered
-			requestAnimationFrame(() => this._updateLinePosition());
+		updated(changedProperties) {
+			super.updated(changedProperties);
+			if (changedProperties.has('items') || changedProperties.has('orientation') ||
+				changedProperties.has('dense') || changedProperties.has('dotSize') ||
+				changedProperties.has('linePosition')) {
+				// Use requestAnimationFrame to ensure DOM is fully rendered
+				requestAnimationFrame(() => this._updateLinePosition());
+			}
 		}
-	}
 
 	/**
 	 * Update vertical line position based on actual dot positions
@@ -679,7 +672,7 @@ class TTimelineLit extends LitElement {
 		}
 
 		const line = this.shadowRoot?.querySelector('.tl-line');
-		const dots = this.shadowRoot?.querySelectorAll('.tl-dot-container');
+		const dots = this.shadowRoot?.querySelectorAll('.tl-dot');
 
 		if (!line || !dots || dots.length < 2) return;
 
@@ -687,21 +680,22 @@ class TTimelineLit extends LitElement {
 		if (!container) return;
 
 		const containerRect = container.getBoundingClientRect();
-		const firstDot = dots[0];
-		const lastDot = dots[dots.length - 1];
-
-		const firstDotRect = firstDot.getBoundingClientRect();
-		const lastDotRect = lastDot.getBoundingClientRect();
+		const firstDotRect = dots[0].getBoundingClientRect();
+		const lastDotRect = dots[dots.length - 1].getBoundingClientRect();
 
 		// Line goes from center of first dot to center of last dot
-		const firstCenter = firstDotRect.top - containerRect.top + firstDotRect.height / 2;
-		const lastCenter = lastDotRect.top - containerRect.top + lastDotRect.height / 2;
-		const height = Math.max(0, lastCenter - firstCenter);
+			const firstCenter = firstDotRect.top - containerRect.top + firstDotRect.height / 2;
+			const lastCenter = lastDotRect.top - containerRect.top + lastDotRect.height / 2;
+			const height = Math.max(0, lastCenter - firstCenter);
+			const centerX = firstDotRect.left - containerRect.left + firstDotRect.width / 2;
+			const lineWidth = parseFloat(getComputedStyle(line).width) || 2;
 
-		line.style.top = `${firstCenter}px`;
-		line.style.height = `${height}px`;
-		line.style.bottom = 'auto';
-	}
+			line.style.top = `${firstCenter}px`;
+			line.style.height = `${height}px`;
+			line.style.bottom = 'auto';
+			line.style.left = `${Math.max(0, centerX - lineWidth / 2)}px`;
+			line.style.right = 'auto';
+		}
 
 	/**
 	 * Update horizontal line position based on actual dot positions
@@ -709,19 +703,16 @@ class TTimelineLit extends LitElement {
 	 */
 	_updateHorizontalLinePosition() {
 		const line = this.shadowRoot?.querySelector('.tl-line');
-		const dotWrappers = this.shadowRoot?.querySelectorAll('.tl-dot-wrapper');
+		const dots = this.shadowRoot?.querySelectorAll('.tl-dot');
 
-		if (!line || !dotWrappers || dotWrappers.length < 2) return;
+		if (!line || !dots || dots.length < 2) return;
 
 		const grid = this.shadowRoot.querySelector('.tl-horizontal-grid');
 		if (!grid) return;
 
 		const gridRect = grid.getBoundingClientRect();
-		const firstWrapper = dotWrappers[0];
-		const lastWrapper = dotWrappers[dotWrappers.length - 1];
-
-		const firstRect = firstWrapper.getBoundingClientRect();
-		const lastRect = lastWrapper.getBoundingClientRect();
+		const firstRect = dots[0].getBoundingClientRect();
+		const lastRect = dots[dots.length - 1].getBoundingClientRect();
 
 		// Line goes from center of first dot to center of last dot horizontally
 		const firstCenter = firstRect.left - gridRect.left + firstRect.width / 2;

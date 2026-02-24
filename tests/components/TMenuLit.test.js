@@ -58,10 +58,11 @@ describe('TMenuLit', () => {
 			expect(emptyMenu.items).toEqual([]);
 			expect(emptyMenu.trigger).toBe('click');
 			expect(emptyMenu.position).toBe('bottom-start');
-			expect(emptyMenu.open).toBe(false);
-			expect(emptyMenu.searchable).toBe(false);
-			expect(emptyMenu.maxHeight).toBe('300px');
-		});
+				expect(emptyMenu.open).toBe(false);
+				expect(emptyMenu.searchable).toBe(false);
+				expect(emptyMenu.maxHeight).toBe('300px');
+				expect(emptyMenu.size).toBe('md');
+			});
 
 		it('should update items property', async () => {
 			const newItems = [{ id: 'new', label: 'New Item' }];
@@ -91,27 +92,36 @@ describe('TMenuLit', () => {
 			expect(menu.hasAttribute('open')).toBe(true);
 		});
 
-		it('should update searchable property', async () => {
-			menu.searchable = true;
-			await menu.updateComplete;
-			expect(menu.searchable).toBe(true);
-			expect(menu.hasAttribute('searchable')).toBe(true);
-		});
+			it('should update searchable property', async () => {
+				menu.searchable = true;
+				await menu.updateComplete;
+				expect(menu.searchable).toBe(true);
+				expect(menu.hasAttribute('searchable')).toBe(true);
+			});
+
+			it('should update size property', async () => {
+				menu.size = 'lg';
+				await menu.updateComplete;
+				expect(menu.size).toBe('lg');
+				expect(menu.getAttribute('size')).toBe('lg');
+			});
 
 		it('should set properties from attributes', async () => {
 			const withAttrs = await fixture(html`
 				<t-menu
-					trigger="hover"
-					position="top-start"
-					searchable
-				>
-					<button slot="trigger">Menu</button>
-				</t-menu>
-			`);
+						trigger="hover"
+						position="top-start"
+						searchable
+						size="sm"
+					>
+						<button slot="trigger">Menu</button>
+					</t-menu>
+				`);
 
-			expect(withAttrs.trigger).toBe('hover');
-			expect(withAttrs.position).toBe('top-start');
-			expect(withAttrs.searchable).toBe(true);
+				expect(withAttrs.trigger).toBe('hover');
+				expect(withAttrs.position).toBe('top-start');
+				expect(withAttrs.searchable).toBe(true);
+				expect(withAttrs.size).toBe('sm');
 
 			withAttrs.remove();
 		});

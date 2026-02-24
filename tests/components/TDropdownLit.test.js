@@ -18,7 +18,7 @@ describe('TDropdownLit', () => {
       expect(TDropdownManifest).toBeDefined();
       expect(TDropdownManifest.tagName).toBe('t-drp');
       expect(TDropdownManifest.displayName).toBe('Dropdown');
-      expect(TDropdownManifest.version).toBe('1.0.0');
+      expect(TDropdownManifest.version).toBe('3.0.0');
     });
 
     it('should document all properties', () => {

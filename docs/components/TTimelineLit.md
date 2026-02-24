@@ -1,232 +1,150 @@
-# TTimelineLit
+# TTimelineLit Component Documentation
 
-A vertical timeline component for displaying chronological events with terminal styling, expandable details, and infinite scroll support.
+<!-- STANDARD_DOC_INTRO -->
 
-## Tag Name
+## Overview
 
-`t-tmln`
+Timeline display with chronological events (vertical & horizontal)
+
+## Tag Names
+
+- `t-tmln`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Container
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 
 | Property | Value |
-|----------|-------|
-| tagName | `t-tmln` |
-| version | `3.0.0` |
-| category | `Container` |
+| --- | --- |
+| `tagName` | `t-tmln` |
+| `version` | `3.0.0` |
+| `category` | `Container` |
 
 ## Properties
 
-| Property | Type | Default | Reflects | Description |
-|----------|------|---------|----------|-------------|
-| `items` | `Array` | `[]` | No | Array of timeline items |
-| `align` | `String` | `'left'` | Yes | Timeline alignment: `'left'`, `'right'`, `'alternate'` |
-| `dense` | `Boolean` | `false` | Yes | Compact spacing mode |
-| `loading` | `Boolean` | `false` | Yes | Show loading indicator |
-| `loadingMore` | `Boolean` | `false` | Yes | Show loading at bottom (infinite scroll) |
+| Property | Type | Default | Reflects | Attribute | Description |
+| --- | --- | --- | --- | --- | --- |
+| `items` | `Array` | `[]` | No | - | Timeline item objects. |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Yes | `orientation` | Layout direction. |
+| `dense` | `Boolean` | `false` | Yes | `dense` | Compact spacing and typography. |
+| `loading` | `Boolean` | `false` | Yes | `loading` | Loading state style for items. |
+| `loadingMore` | `Boolean` | `false` | Yes | `loading-more` | Displays “Loading more…” footer. |
+| `linePosition` | `String` | `null` | Yes | `line-position` | Vertical: `left`/`right`; Horizontal: `top`/`bottom`. Defaults by orientation. |
+| `contentAlign` | `'left' \| 'center' \| 'right'` | `'center'` | Yes | `content-align` | Horizontal item text alignment. |
+| `dotSize` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Yes | `dot-size` | Dot size preset. |
+| `dotShape` | `'circle' \| 'square' \| 'diamond'` | `'circle'` | Yes | `dot-shape` | Dot shape variant. |
+| `dotColorMode` | `'variant' \| 'uniform' \| 'gradient'` | `'variant'` | Yes | `dot-color-mode` | Dot color strategy. |
+| `dotColor` | `String` | `'#00ff41'` | No | `dot-color` | Uniform dot color. |
+| `dotColorStart` | `String` | `'#00ff41'` | No | `dot-color-start` | Gradient start color. |
+| `dotColorEnd` | `String` | `'#00ffff'` | No | `dot-color-end` | Gradient end color. |
 
-### Item Object Structure
+### Item Object Shape
 
-```javascript
+```js
 {
-  id: 'event-1',           // Unique identifier (required)
-  title: 'Event Title',    // Primary text (required)
-  description: 'Details',  // Event details (optional)
-  date: '2024-01-15',      // Date/time string (optional)
-  variant: 'success',      // Dot color variant: 'default', 'success', 'warning', 'error', 'info', 'pending'
-  expandable: true,        // Can be expanded (optional)
-  clickable: true          // Fires click event (optional)
+  id: 'deploy-1',          // required
+  title: 'Deploy complete',// required
+  date: '3:00 PM',         // optional
+  description: '...',      // optional
+  variant: 'success',      // optional: default|success|warning|error|info|pending
+  expandable: true,        // optional
+  clickable: true          // optional
 }
 ```
 
 ## Methods
 
-### expandItem(itemId)
-Expand a timeline item.
-
-**Parameters:**
-- `itemId` (String): ID of item to expand
-
-**Fires:** `item-expand`
-
-### collapseItem(itemId)
-Collapse a timeline item.
-
-**Parameters:**
-- `itemId` (String): ID of item to collapse
-
-**Fires:** `item-expand`
-
-### toggleItem(itemId)
-Toggle item expanded state.
-
-**Parameters:**
-- `itemId` (String): ID of item to toggle
-
-**Fires:** `item-expand`
-
-### isExpanded(itemId)
-Check if an item is expanded.
-
-**Parameters:**
-- `itemId` (String): ID of item to check
-
-**Returns:** `Boolean` - Whether item is expanded
-
-### loadMore()
-Trigger loading more items.
-
-**Fires:** `load-more`
+| Method | Parameters | Returns | Description |
+| --- | --- | --- | --- |
+| `expandItem(id)` | `id: string` | `void` | Expands an expandable item. |
+| `collapseItem(id)` | `id: string` | `void` | Collapses an item. |
+| `toggleItem(id)` | `id: string` | `void` | Toggles expanded state. |
+| `isExpanded(id)` | `id: string` | `boolean` | Returns expanded state. |
+| `loadMore()` | - | `void` | Emits `load-more` if `loadingMore` is false. |
 
 ## Events
 
-### item-click
-Fired when an item with `clickable: true` is clicked.
-
-```javascript
-{
-  detail: {
-    id: 'event-1',
-    title: 'Event Title',
-    item: { id: 'event-1', title: '...', ... }
-  }
-}
-```
-
-### item-expand
-Fired when an item is expanded/collapsed.
-
-```javascript
-{
-  detail: {
-    id: 'event-1',
-    expanded: true
-  }
-}
-```
-
-### load-more
-Fired when scrolled near bottom (infinite scroll).
-
-```javascript
-{
-  detail: {}
-}
-```
-
-## Examples
-
-### Basic Timeline
-
-```html
-<t-tmln .items=${[
-  { id: '1', title: 'Project Started', date: '2024-01-01', description: 'Initial commit' },
-  { id: '2', title: 'Beta Release', date: '2024-03-15', description: 'First public beta' },
-  { id: '3', title: 'Version 1.0', date: '2024-06-01', description: 'Stable release' }
-]}></t-tmln>
-```
-
-### Alternating Alignment
-
-```html
-<t-tmln align="alternate" .items=${[
-  { id: '1', title: 'Morning', date: '08:00', description: 'Start work' },
-  { id: '2', title: 'Noon', date: '12:00', description: 'Lunch break' },
-  { id: '3', title: 'Evening', date: '18:00', description: 'End work' }
-]}></t-tmln>
-```
-
-### With Variants
-
-```html
-<t-tmln .items=${[
-  { id: '1', title: 'Success', variant: 'success', description: 'Task completed' },
-  { id: '2', title: 'Warning', variant: 'warning', description: 'Review needed' },
-  { id: '3', title: 'Error', variant: 'error', description: 'Build failed' },
-  { id: '4', title: 'Info', variant: 'info', description: 'New update available' },
-  { id: '5', title: 'Pending', variant: 'pending', description: 'Waiting for approval' }
-]}></t-tmln>
-```
-
-### Expandable Items
-
-```html
-<t-tmln .items=${[
-  {
-    id: '1',
-    title: 'Deployment',
-    date: '2024-01-15 14:30',
-    description: 'Click to see details',
-    expandable: true
-  }
-]} @item-expand=${handleExpand}>
-  <div slot="expand-1">Full deployment log...</div>
-</t-tmln>
-```
-
-### Dense Mode
-
-```html
-<t-tmln dense .items=${manyItems}></t-tmln>
-```
-
-### Infinite Scroll
-
-```html
-<t-tmln
-  .items=${items}
-  ?loading-more=${isLoadingMore}
-  @load-more=${loadMoreItems}>
-</t-tmln>
-```
-
-### Programmatic Control
-
-```javascript
-const timeline = document.querySelector('t-tmln');
-
-// Expand/collapse
-timeline.expandItem('event-1');
-timeline.collapseItem('event-1');
-timeline.toggleItem('event-1');
-
-// Check state
-const isOpen = timeline.isExpanded('event-1');
-
-// Listen for events
-timeline.addEventListener('item-click', (e) => {
-  console.log('Clicked:', e.detail.item.title);
-});
-
-timeline.addEventListener('item-expand', (e) => {
-  console.log('Expanded:', e.detail.id, e.detail.expanded);
-});
-```
+| Event | Detail | Description |
+| --- | --- | --- |
+| `item-click` | `{ id, title, item }` | Fired when a `clickable` item is clicked. |
+| `item-expand` | `{ id, expanded }` | Fired when item expansion state changes. |
+| `load-more` | `{}` | Fired when more data should be loaded. |
 
 ## Slots
 
 | Slot | Description |
 | --- | --- |
-| `icon-{id}` | Custom icon for a specific timeline item |
-| `item-{id}` | Custom content for a specific timeline item |
-| `expand-{id}` | Expanded content area for a specific timeline item (used with `expandable: true`) |
-
+| `icon-{id}` | Custom dot/icon content for a specific item. |
+| `item-{id}` | Extra content rendered in item body. |
+| `expand-{id}` | Expandable content region for an item. |
 
 ## CSS Custom Properties
 
-| Property | Default | Description |
-|----------|---------|-------------|
-| `--timeline-bg` | `var(--terminal-gray-darkest)` | Background color |
-| `--timeline-border` | `var(--terminal-gray-dark)` | Vertical line and border color |
-| `--timeline-green` | `var(--terminal-green)` | Primary accent color |
-| `--timeline-green-dim` | `var(--terminal-green-dim)` | Secondary/description text color |
-| `--timeline-amber` | `var(--terminal-amber)` | Warning variant color |
-| `--timeline-red` | `var(--terminal-red)` | Error variant color |
-| `--timeline-cyan` | `var(--terminal-cyan)` | Info variant color |
-| `--timeline-gray` | `var(--terminal-gray)` | Pending variant and date color |
-| `--timeline-line-width` | `2px` | Width of the timeline line |
-| `--timeline-dot-size` | `12px` | Size of the timeline dots |
+| Variable | Default | Description |
+| --- | --- | --- |
+| `--tl-bg` | `var(--terminal-gray-darkest)` | Item background. |
+| `--tl-border` | `var(--terminal-gray-dark)` | Item border color. |
+| `--tl-green` | `var(--terminal-green)` | Primary accent. |
+| `--tl-green-dim` | `var(--terminal-green-dim)` | Secondary accent. |
+| `--tl-amber` | `var(--terminal-amber)` | Warning color. |
+| `--tl-red` | `var(--terminal-red)` | Error color. |
+| `--tl-cyan` | `var(--terminal-cyan)` | Info color. |
+| `--tl-gray` | `var(--terminal-gray)` | Neutral/pending color. |
+| `--tl-line-width` | `2px` | Timeline line thickness. |
+| `--tl-dot-size` | `12px` | Dot size. |
+| `--tl-gap` | `16px` | Gap between dot track and content. |
+| `--tl-item-gap` | `24px` | Gap between timeline items. |
+
+## Examples
+
+```html
+<!-- Vertical (default), line on left -->
+<t-tmln id="timeline"></t-tmln>
+
+<!-- Vertical with right line -->
+<t-tmln line-position="right"></t-tmln>
+
+<!-- Horizontal with bottom line -->
+<t-tmln orientation="horizontal" line-position="bottom"></t-tmln>
+
+<!-- Uniform dot color -->
+<t-tmln dot-color-mode="uniform" dot-color="#00ff41"></t-tmln>
+
+<!-- Gradient dot colors -->
+<t-tmln
+  dot-color-mode="gradient"
+  dot-color-start="#00ff41"
+  dot-color-end="#00ffff">
+</t-tmln>
+```
+
+```js
+const timeline = document.querySelector('#timeline');
+timeline.items = [
+  { id: '1', title: 'Event One', date: '1:00 PM', description: 'Started', variant: 'success' },
+  { id: '2', title: 'Event Two', date: '2:00 PM', description: 'In progress', expandable: true },
+  { id: '3', title: 'Event Three', date: '3:00 PM', description: 'Complete', clickable: true }
+];
+
+timeline.addEventListener('item-click', (e) => console.log(e.detail));
+timeline.addEventListener('item-expand', (e) => console.log(e.detail));
+timeline.addEventListener('load-more', () => console.log('Load next page'));
+```
 
 ## Related Components
 
-- [TListLit](./TListLit.md) - Simple list
-- [TLogListLit](./TLogListLit.md) - Log entries
+- [TListLit](./TListLit.md)
+- [TLogListLit](./TLogListLit.md)

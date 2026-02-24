@@ -1,33 +1,27 @@
-# TTextareaLit Component
+# TTextareaLit Component Documentation
 
-**Tag:** `<t-textarea>`
-**Category:** Form Controls
-**Profile:** FORM-ADVANCED
-**Version:** 1.0.0
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Multiline text input with code editor features including line numbers, IDE keyboard shortcuts, syntax highlighting, and advanced text manipulation
 
 ## Tag Names
 
 - `t-textarea`
 
-## Description
+## Architecture
 
-Multiline text input component with advanced code editor features including line numbers, IDE keyboard shortcuts, and text manipulation capabilities. Follows the FORM-ADVANCED profile with full form participation via ElementInternals API.
+- Extends: `LitElement`
+- Category: Form Controls
+- Version: 3.0.0
 
-## Features
-
-- ✅ Basic multiline text input with all standard attributes
-- ✅ Form participation with ElementInternals API
-- ✅ Code editor mode with IDE keyboard shortcuts
-- ✅ Optional line numbers display
-- ✅ Auto-indent on Enter key
-- ✅ Tab/Shift+Tab for indent/outdent
-- ✅ Ctrl/Cmd+D for duplicate line
-- ✅ Syntax highlighting via Prism.js (when `language` attribute is set)
-- ✅ Resizable textarea (configurable via `resize` attribute)
-- ✅ Maxlength validation
-- ✅ Disabled and readonly states
-- ✅ Custom scrollbar styling
-- ✅ Full event system (input, change, focus, blur)
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
 
 ## Usage
 
@@ -529,19 +523,19 @@ The textarea includes custom scrollbar styling:
 
 The component follows accessibility best practices:
 
-- ✅ Native `<textarea>` element with proper semantics
-- ✅ Supports `required` attribute for form validation
-- ✅ Supports `disabled` and `readonly` states
-- ✅ Proper focus management
-- ✅ Keyboard shortcuts don't interfere with screen readers
-- ✅ Line numbers are decorative (not read by screen readers)
+- Native `<textarea>` element with proper semantics
+- Supports `required` attribute for form validation
+- Supports `disabled` and `readonly` states
+- Proper focus management
+- Keyboard shortcuts don't interfere with screen readers
+- Line numbers are decorative (not read by screen readers)
 
 ## Browser Support
 
-- ✅ Chrome/Edge 119+
-- ✅ Firefox 120+
-- ✅ Safari 17+
-- ⚠️ ElementInternals requires modern browsers
+- Chrome/Edge 119+
+- Firefox 120+
+- Safari 17+
+- ElementInternals requires modern browsers
 
 ### Polyfills
 
@@ -550,54 +544,6 @@ For older browsers, include:
 ```html
 <script src="https://unpkg.com/@webcomponents/webcomponentsjs"></script>
 ```
-
-## Migration from Old TTextarea
-
-### Old (DSD Architecture)
-
-```html
-<terminal-textarea
-  line-numbers
-  code-editor
-  rows="10">
-</terminal-textarea>
-
-<script>
-  const textarea = document.querySelector('terminal-textarea');
-  textarea.getValue();
-  textarea.setValue('New value');
-  textarea.toggleLineNumbers();
-</script>
-```
-
-### New (Lit Architecture)
-
-```html
-<t-textarea
-  show-line-numbers
-  code-mode
-  rows="10">
-</t-textarea>
-
-<script>
-  const textarea = document.querySelector('t-textarea');
-  textarea.getValue();
-  textarea.setValue('New value');
-
-  // Toggle line numbers
-  textarea.showLineNumbers = !textarea.showLineNumbers;
-</script>
-```
-
-### Key Changes
-
-| Old | New | Notes |
-|-----|-----|-------|
-| `line-numbers` | `show-line-numbers` | Boolean attribute |
-| `code-editor` | `code-mode` | Boolean attribute |
-| `toggleLineNumbers()` | `showLineNumbers = !showLineNumbers` | Use property |
-| `setRows()` | `rows = n` | Use property |
-| `terminal-textarea` | `t-textarea` | Shorter tag name |
 
 ## Testing
 
@@ -625,11 +571,11 @@ npm run test:coverage
 
 ## Performance
 
-- ✅ Minimal re-renders (only on property changes)
-- ✅ Efficient line number updates (only when line count changes)
-- ✅ Debounced input events
-- ✅ Shadow DOM encapsulation prevents style leaks
-- ✅ No memory leaks (proper cleanup)
+- Minimal re-renders (only on property changes)
+- Efficient line number updates (only when line count changes)
+- Debounced input events
+- Shadow DOM encapsulation prevents style leaks
+- No memory leaks (proper cleanup)
 
 ## Known Limitations
 
@@ -670,10 +616,10 @@ npm run test:coverage
 **Solution:** Use `setValue()` method, not direct attribute:
 
 ```javascript
-// ❌ Don't do this
+// <DocIcon name="xCircle" /> Don't do this
 textarea.setAttribute('value', 'New value');
 
-// ✅ Do this instead
+// <DocIcon name="checkCircle" /> Do this instead
 textarea.setValue('New value');
 ```
 
@@ -685,11 +631,10 @@ textarea.setValue('New value');
 
 ---
 
-**Component Status:** ✅ Production Ready
+**Component Status:** <DocIcon name="checkCircle" /> Production Ready
 **Last Updated:** 2025-09-28
 **Follows:** COMPONENT_SCHEMA.md FORM-ADVANCED profile
 
 ## Slots
 
 None.
-

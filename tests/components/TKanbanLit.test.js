@@ -539,9 +539,15 @@ describe('TKanbanColumnLit', () => {
 			emptyColumn.remove();
 		});
 
-		it('should render drop placeholder', async () => {
+		it('should create a drop placeholder during drag over', async () => {
 			await column.updateComplete;
-			const placeholder = column.shadowRoot.querySelector('.drop-placeholder');
+			column._handleDragOver({
+				preventDefault: vi.fn(),
+				dataTransfer: { dropEffect: '' },
+				clientY: 0
+			});
+			await column.updateComplete;
+			const placeholder = column.querySelector('.drop-placeholder');
 			expect(placeholder).toBeTruthy();
 		});
 

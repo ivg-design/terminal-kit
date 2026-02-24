@@ -8,9 +8,9 @@
 
 1. **Zero FOUC** - All styles defined in `static styles` block, no external CSS loading
 2. **Shadow DOM** - Complete style encapsulation using Lit's reactive properties
-3. **Lit Elements** - All components extend `LitElement`, use `@property` decorators
+3. **Lit Elements** - All components extend `LitElement` and use static `properties` definitions
 4. **No adoptedStyleSheets** - Styles compiled into component definition
-5. **Reactive Properties** - Data binding with `@property()` decorator
+5. **Reactive Properties** - Data binding through Lit reactive properties
 6. **Lifecycle Methods** - Use Lit lifecycle: `firstUpdated()`, `updated()`, `connectedCallback()`
 
 ## Table of Contents
@@ -31,6 +31,8 @@
 - [TAccordionLit](./components/TAccordionLit.md) - Collapsible accordion sections (`t-accordion`)
 - [TSplitterLit](./components/TSplitterLit.md) - Resizable split panes (`t-split`)
 - [TGridLit](./components/TGridLit.md) - Dashboard grid layout (`t-grid`)
+- [TBentoGridLit](./components/TBentoGridLit.md) - Responsive mixed-size bento grid (`t-bento`)
+- [TCarouselLit](./components/TCarouselLit.md) - Nested component carousel (`t-carousel`)
 - [TTabsLit](./components/TTabsLit.md) - Tab navigation with panels (`t-tabs`)
 
 ### Data Display Components
@@ -60,7 +62,7 @@
 - [TStatusBarLit](./components/TStatusBarLit.md) - Status bar with dynamic fields (`t-sta`)
 - [TStatusFieldLit](./components/TStatusFieldLit.md) - Individual status field (`t-sta-field`)
 - [TUserMenuLit](./components/TUserMenuLit.md) - User menu dropdown (`t-usr`)
-- [TBreadcrumbsLit](./components/TBreadcrumbsLit.md) - Navigation breadcrumbs (`t-breadcrumbs`)
+- [TBreadcrumbsLit](./components/TBreadcrumbsLit.md) - Navigation breadcrumbs (`t-bread`)
 
 ### Specialized Components
 - [TDynamicControlsLit](./components/TDynamicControlsLit.md) - Schema-driven form controls (`t-dynamic-controls`)

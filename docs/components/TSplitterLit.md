@@ -1,10 +1,29 @@
-# TSplitterLit
+# TSplitterLit Component Documentation
 
-A resizable panel divider component that allows users to adjust the size of adjacent panels by dragging a gutter.
+<!-- STANDARD_DOC_INTRO -->
 
-## Tag Name
+## Overview
 
-`t-split`
+Resizable panel divider component with drag-to-resize and collapsible panes
+
+## Tag Names
+
+- `t-split`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Container
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 

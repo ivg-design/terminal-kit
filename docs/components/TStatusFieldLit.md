@@ -1,42 +1,37 @@
-# TStatusFieldLit API Reference
+# TStatusFieldLit Component Documentation
+
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Simple status field component for use within status bars
 
 ## Tag Names
 
 - `t-sta-field`
 
-## Component Definition
+## Architecture
 
-```javascript
-import { TStatusFieldLit } from './js/components/TStatusFieldLit.js';
-```
+- Extends: `LitElement`
+- Category: Display
+- Version: 3.0.0
 
-**Tag Name:** `<t-sta-field>`
-**Class:** `TStatusFieldLit`
-**Extends:** `LitElement`
-**Version:** 1.0.0
-**Category:** Display
-**Profile:** CORE
-
-## Overview
-
-TStatusFieldLit is a reusable atomic component for displaying status information with a label and value. While originally designed for use within TStatusBarLit, it's a standalone component that can be composed into any container or UI element that needs to display status information.
-
-### Key Design Principles
-
-1. **Atomic Component** - Self-contained with its own styling and behavior
-2. **Composable** - Can be used in various contexts, not limited to status bars
-3. **Lightweight** - Minimal overhead, primarily for display purposes
-4. **Consistent** - Ensures uniform status display across the application
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
 
 ## Properties
 
 | Property | Attribute | Type | Default | Reflects | Description |
 |----------|-----------|------|---------|----------|-------------|
-| `label` | `label` | `string` | `''` | ✅ | Field label text |
-| `value` | `value` | `string` | `''` | ✅ | Field value (always displayed) |
-| `icon` | `icon` | `string` | `''` | ❌ | SVG string for icon display |
-| `width` | `width` | `string` | `'auto'` | ✅ | Field width (auto, percentage, or pixels) |
-| `align` | `align` | `'left' \| 'center' \| 'right'` | `'left'` | ✅ | Text alignment within the field |
+| `label` | `label` | `string` | `''` | Yes | Field label text |
+| `value` | `value` | `string` | `''` | Yes | Field value (always displayed) |
+| `icon` | `icon` | `string` | `''` | No | SVG string for icon display |
+| `width` | `width` | `string` | `'auto'` | Yes | Field width (auto, percentage, or pixels) |
+| `align` | `align` | `'left' \| 'center' \| 'right'` | `'left'` | Yes | Text alignment within the field |
 
 **Note:** The `displayMode` property is available when using fields programmatically via `TStatusBarLit.setFields()`. The standalone `TStatusFieldLit` component always renders: icon (if set) + label (if set) + value.
 
@@ -380,34 +375,6 @@ field.icon = statusIcons[status] || defaultIcon;
 2. **No State Management** - Simple property binding
 3. **Efficient Rendering** - Only re-renders on property changes
 4. **Small Bundle Size** - Minimal dependencies
-
-## Migration Guide
-
-### From Plain HTML/CSS
-
-Before:
-```html
-<div class="status-field">
-  <span class="label">CPU:</span>
-  <span class="value">42%</span>
-</div>
-```
-
-After:
-```html
-<t-sta-field label="CPU" value="42%"></t-sta-field>
-```
-
-### From Other Status Components
-
-```javascript
-// Replace custom status displays
-const oldStatus = document.querySelector('.custom-status');
-const newField = document.createElement('t-sta-field');
-newField.label = oldStatus.querySelector('.label').textContent;
-newField.value = oldStatus.querySelector('.value').textContent;
-oldStatus.replaceWith(newField);
-```
 
 ## TypeScript Definitions
 

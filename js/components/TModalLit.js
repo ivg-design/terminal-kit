@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TModalLit - Terminal-style Modal Component
+ * @module components/TModalLit
+ * @version 3.0.0
+ *
+ * Modal dialog with multiple layout modes and customizable size. Supports Escape key and backdrop closing. Follows FULL profile with all 13 blocks.
+ *
+ * @example
+ * <t-mdl></t-mdl>
+ */
+
 // ============================================
 // SECTION 1: IMPORTS
 // ============================================
@@ -16,7 +27,7 @@ import { generateManifest } from '../utils/manifest-generator.js';
  * @tagname t-mdl
  * @description Modal dialog with multiple layout modes and customizable size. Supports Escape key and backdrop closing. Follows FULL profile with all 13 blocks.
  * @category Layout
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <t-mdl visible layout="single" size="medium" title="Settings">
  *   <t-pnl slot="default">Main Content</t-pnl>
@@ -28,7 +39,7 @@ export class TModalLit extends LitElement {
   // BLOCK 1: Static Metadata
   // ============================================
   static tagName = 't-mdl';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Layout';
 
   // ============================================
@@ -1228,7 +1239,7 @@ export const TModalManifest = generateManifest(TModalLit, {
   tagName: 't-mdl',
   displayName: 'Terminal Modal',
   description: 'Modal dialog with multiple layout modes and customizable size',
-  version: '1.0.0',
+  version: '3.0.0',
   properties: {
     layout: {
       description: 'Modal layout mode',

@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TColorPickerLit - Terminal-style Color Picker Component
+ * @module components/TColorPickerLit
+ * @version 3.0.0
+ *
+ * Advanced color picker component with iro.js integration, persistent custom swatches, and multiple color format support (HEXA, RGBA, HSLA). Features a horizontal popover layout with live color updates, bidirectional input, format switching, and modal confirmation for destructive actions. Supports flexible element ordering, three size variants, and custom icons.
+ *
+ * @example
+ * <t-clr></t-clr>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
@@ -16,7 +27,7 @@ import iro from '@jaames/iro';
  * @tagname t-clr
  * @description Advanced color picker component with iro.js integration, persistent custom swatches, and multiple color format support (HEXA, RGBA, HSLA). Features a horizontal popover layout with live color updates, bidirectional input, format switching, and modal confirmation for destructive actions. Supports flexible element ordering, three size variants, and custom icons.
  * @category Form Controls
- * @since 1.0.0
+ * @since 3.0.0
  *
  * @features
  * - **iro.js Integration**: Professional color picker with square gradient box, hue slider, and alpha slider
@@ -140,7 +151,7 @@ export class TColorPicker extends LitElement {
 	// BLOCK 1: STATIC METADATA (REQUIRED)
 	// ----------------------------------------------------------
 	static tagName = 't-clr';
-	static version = '1.0.0';
+	static version = '3.0.0';
 	static category = 'Form Controls';
 
 	// ----------------------------------------------------------
@@ -2194,7 +2205,7 @@ export const TColorPickerManifest = generateManifest(TColorPicker, {
 	tagName: 't-clr',
 	displayName: 'Color Picker',
 	description: 'Advanced color picker component with iro.js integration, persistent custom swatches, and multiple color format support (HEXA, RGBA, HSLA)',
-	version: '1.0.0',
+	version: '3.0.0',
 	category: 'Form Controls',
 	profile: 'FORM-ADVANCED',
 	properties: {

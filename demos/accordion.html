@@ -207,14 +207,14 @@
             <h3>Animated Transitions</h3>
             <div class="demo-grid wide">
                 <div class="demo-item">
-                    <span class="demo-label">Smooth expand/collapse</span>
-                    <t-accordion>
-                        <t-accordion-item item-id="a1" title="Smooth Animation" animated>
+                    <span class="demo-label">Configurable duration/easing</span>
+                    <t-accordion animation-duration="450" animation-easing="cubic-bezier(0.22, 1, 0.36, 1)">
+                        <t-accordion-item item-id="a1" title="Container Timing (450ms)" animated>
                             <p>This panel animates smoothly when expanding and collapsing.</p>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                         </t-accordion-item>
-                        <t-accordion-item item-id="a2" title="Another Animated Panel" animated>
-                            <p>Watch the smooth height transition.</p>
+                        <t-accordion-item item-id="a2" title="Item Override (220ms linear)" animated animation-duration="220" animation-easing="linear">
+                            <p>This panel overrides the container animation settings.</p>
                         </t-accordion-item>
                     </t-accordion>
                 </div>

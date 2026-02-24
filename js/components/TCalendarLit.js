@@ -1,10 +1,12 @@
 /**
- * @fileoverview TCalendarLit - Date picker/calendar component
+ * @fileoverview TCalendarLit - Terminal-style Calendar Component
  * @module components/TCalendarLit
  * @version 3.0.0
  *
- * A FULL profile calendar component with date selection, range selection,
- * multiple views (days/months/years), and date constraints.
+ * Date picker/calendar component with single/multiple/range selection.
+ *
+ * @example
+ * <t-calendar></t-calendar>
  */
 
 import { LitElement, html, css } from 'lit';

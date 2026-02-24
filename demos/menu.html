@@ -36,7 +36,7 @@
         }
 
         /* Button variants */
-        .btn-icon-only {
+        t-menu [slot="trigger"].btn-icon-only {
             width: 36px;
             height: 36px;
             padding: 0;
@@ -44,48 +44,56 @@
             align-items: center;
             justify-content: center;
         }
-        .btn-icon-only svg {
+        t-menu [slot="trigger"].btn-icon-only svg {
             width: 18px;
             height: 18px;
             fill: currentColor;
             stroke: currentColor;
         }
-        .btn-text-only {
+        t-menu [slot="trigger"].btn-text-only {
             border: none;
             padding: 8px 12px;
             text-transform: none;
+            letter-spacing: 0;
+            background: color-mix(in srgb, var(--terminal-green) 10%, transparent);
         }
-        .btn-text-only:hover {
-            background: rgba(0, 255, 65, 0.1);
+        t-menu [slot="trigger"].btn-text-only:hover {
+            background: color-mix(in srgb, var(--terminal-green) 20%, transparent);
+            color: var(--terminal-green);
             box-shadow: none;
         }
-        .btn-ghost {
+        t-menu [slot="trigger"].btn-ghost {
             border-color: var(--terminal-green-dim, #00cc33);
             color: var(--terminal-green-dim, #00cc33);
             background: transparent;
+            border-style: dashed;
         }
-        .btn-ghost:hover {
+        t-menu [slot="trigger"].btn-ghost:hover {
             border-color: var(--terminal-green);
             color: var(--terminal-green);
+            background: color-mix(in srgb, var(--terminal-green) 6%, transparent);
         }
-        .btn-small {
+        t-menu [slot="trigger"].btn-small {
             padding: 4px 10px;
             font-size: 11px;
+            min-height: 28px;
         }
-        .btn-medium {
+        t-menu [slot="trigger"].btn-medium {
             padding: 8px 16px;
             font-size: 12px;
+            min-height: 36px;
         }
-        .btn-large {
+        t-menu [slot="trigger"].btn-large {
             padding: 12px 24px;
             font-size: 14px;
+            min-height: 44px;
         }
-        .btn-icon-text {
+        t-menu [slot="trigger"].btn-icon-text {
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        .btn-icon-text svg {
+        t-menu [slot="trigger"].btn-icon-text svg {
             width: 14px;
             height: 14px;
             fill: currentColor;
@@ -202,8 +210,8 @@
             <div class="demo-grid">
                 <div class="demo-item">
                     <t-menu id="menu-icon">
-                        <button slot="trigger" class="btn-icon-only">
-                            <svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                        <button slot="trigger" class="btn-icon-only" aria-label="Open actions menu">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
                         </button>
                     </t-menu>
                     <span class="demo-label">Icon Only</span>
@@ -234,19 +242,19 @@
             <h3>Sizes</h3>
             <div class="demo-grid">
                 <div class="demo-item">
-                    <t-menu id="menu-small">
+                    <t-menu id="menu-small" size="sm">
                         <button slot="trigger" class="btn-small">Small</button>
                     </t-menu>
                     <span class="demo-label">Small</span>
                 </div>
                 <div class="demo-item">
-                    <t-menu id="menu-medium">
+                    <t-menu id="menu-medium" size="md">
                         <button slot="trigger" class="btn-medium">Medium</button>
                     </t-menu>
                     <span class="demo-label">Medium</span>
                 </div>
                 <div class="demo-item">
-                    <t-menu id="menu-large">
+                    <t-menu id="menu-large" size="lg">
                         <button slot="trigger" class="btn-large">Large</button>
                     </t-menu>
                     <span class="demo-label">Large</span>

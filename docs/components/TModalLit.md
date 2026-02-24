@@ -1,50 +1,39 @@
-# TModalLit - Pure Lit Modal Component
+# TModalLit Component Documentation
 
-**IMPORTANT: This is a Pure Lit component following strict architectural principles. Do NOT violate these rules.**
+<!-- STANDARD_DOC_INTRO -->
 
-## Architecture: Pure Lit (Zero FOUC, Fully Encapsulated)
+## Overview
 
-### Critical Architecture Rules
+Modal dialog with multiple layout modes and customizable size. Supports Escape key and backdrop closing. Follows FULL profile with all 13 blocks.
 
-1. **ALL styles MUST be in the `static styles` CSS block** - NO external stylesheets
-2. **Shadow DOM only** - All styles are encapsulated, no style leakage
-3. **Reactive properties** - Use Lit's `static properties` for all component state
-4. **No manual style adoption** - Lit handles everything automatically
-5. **Zero FOUC** - Styles are adopted before first render by Lit's internal mechanisms
-6. **No `:not(:defined)` hacks needed** - Lit manages component registration
-7. **Slots for content distribution** - Light DOM content projected via named slots
+## Tag Names
 
-### Why These Rules Matter
+- `t-mdl`
 
-This component was built from the ground up as Pure Lit because:
-- **Zero FOUC guarantee** - Lit adopts styles before first paint
-- **True encapsulation** - Shadow DOM isolation prevents style conflicts
-- **Reactive by design** - Property changes automatically trigger re-renders
-- **Maintainable** - Single source of truth (component file)
-- **Performant** - Lit optimizes rendering and style adoption
-- **FULL Profile Compliance** - Implements all 13 blocks from COMPONENT_SCHEMA.md
+## Architecture
 
-**DO NOT** try to add external stylesheets, manipulate Shadow DOM manually, or bypass Lit's reactivity system.
+- Extends: `LitElement`
+- Category: Layout
+- Version: 3.0.0
 
----
-
-## Tag Name
-
-```html
-<t-mdl></t-mdl>
-```
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
 
 ## Properties
 
 | Property | Type | Default | Reflects | Description |
 |----------|------|---------|----------|-------------|
-| `visible` | boolean | `false` | ✅ | Modal visibility state |
-| `layout` | string | `'single'` | ✅ | Layout mode: single, 2-column, 2x2, 1-2-1, 2-1 |
-| `size` | string | `'medium'` | ✅ | Modal size: small, medium, large, xlarge, full |
-| `title` | string | `''` | ✅ | Modal title displayed in header |
-| `escapeClose` | boolean | `true` | ✅ | Enable closing modal with Escape key |
-| `backdropClose` | boolean | `true` | ✅ | Enable closing modal by clicking backdrop |
-| `loading` | boolean | `false` | ✅ | Loading state overlay |
+| `visible` | boolean | `false` | Yes | Modal visibility state |
+| `layout` | string | `'single'` | Yes | Layout mode: single, 2-column, 2x2, 1-2-1, 2-1 |
+| `size` | string | `'medium'` | Yes | Modal size: small, medium, large, xlarge, full |
+| `title` | string | `''` | Yes | Modal title displayed in header |
+| `escapeClose` | boolean | `true` | Yes | Enable closing modal with Escape key |
+| `backdropClose` | boolean | `true` | Yes | Enable closing modal by clicking backdrop |
+| `loading` | boolean | `false` | Yes | Loading state overlay |
 
 ### Property Details
 
@@ -258,7 +247,7 @@ modal.addEventListener('modal-hide', (e) => {
 Fired before modal closes. **Cancelable** - call `e.preventDefault()` to prevent closing.
 
 **Detail:** `{}`
-**Cancelable:** ✅ Yes
+**Cancelable:** <DocIcon name="checkCircle" /> Yes
 
 ```javascript
 modal.addEventListener('modal-before-close', (e) => {
@@ -688,7 +677,7 @@ t-mdl {
 
 ```html
 <!-- Red Error Theme -->
-<t-mdl id="error" title="⚠ Error" size="small"
+<t-mdl id="error" title="<DocIcon name="warningCircle" /> Error" size="small"
        style="--terminal-green: #ff3333;
               --terminal-green-dim: #cc2222;
               --terminal-green-dark: #992222;">
@@ -699,7 +688,7 @@ t-mdl {
 </t-mdl>
 
 <!-- Yellow Warning Theme -->
-<t-mdl id="warning" title="⚠ Warning" size="medium"
+<t-mdl id="warning" title="<DocIcon name="warningCircle" /> Warning" size="medium"
        style="--terminal-green: #ffd700;
               --terminal-green-dim: #ccaa00;
               --terminal-gray-dark: #2a2a1a;">
@@ -743,10 +732,10 @@ t-mdl {
 
 TModalLit properly cleans up all resources in `disconnectedCallback()`:
 
-✅ **Document Event Listeners** - Escape key listener removed
-✅ **Body Scroll Lock** - `overflow` style restored
-✅ **Nested Components** - Registry cleared
-✅ **Internal State** - All Maps/Sets cleared
+<DocIcon name="checkCircle" /> **Document Event Listeners** - Escape key listener removed
+<DocIcon name="checkCircle" /> **Body Scroll Lock** - `overflow` style restored
+<DocIcon name="checkCircle" /> **Nested Components** - Registry cleared
+<DocIcon name="checkCircle" /> **Internal State** - All Maps/Sets cleared
 
 **No memory leaks!** Component is safe for dynamic creation/destruction.
 
@@ -792,16 +781,16 @@ Requires:
 
 Component has **57 tests** with **100% passing rate**:
 
-- ✅ 6 tests: Manifest completeness
-- ✅ 7 tests: Property functionality
-- ✅ 6 tests: Method functionality
-- ✅ 17 tests: Event functionality
-- ✅ 6 tests: Slot functionality
-- ✅ 3 tests: Validation
-- ✅ 10 tests: Rendering
-- ✅ 4 tests: Cleanup patterns
-- ✅ 1 test: Logging
-- ✅ 3 tests: Nesting support
+- 6 tests: Manifest completeness
+- 7 tests: Property functionality
+- 6 tests: Method functionality
+- 17 tests: Event functionality
+- 6 tests: Slot functionality
+- 3 tests: Validation
+- 10 tests: Rendering
+- 4 tests: Cleanup patterns
+- 1 test: Logging
+- 3 tests: Nesting support
 
 Run tests:
 ```bash
@@ -813,46 +802,24 @@ npm run test:run -- tests/components/TModalLit.test.js
 ## Compliance
 
 **Profile:** FULL (All 13 blocks)
-**Schema Version:** 1.0.0
+**Schema Version:** 3.0.0
 **Compliance Score:** 100/100
 
 Implements:
-- ✅ All 13 blocks from COMPONENT_SCHEMA.md
-- ✅ Document listener cleanup patterns
-- ✅ Body scroll lock management
-- ✅ Nesting support with context propagation
-- ✅ Property validation with auto-revert
-- ✅ Complete logging system
-- ✅ Comprehensive JSDoc documentation
-- ✅ Full test coverage
-
----
-
-## Migration from TerminalModal
-
-If migrating from old `<terminal-modal>`:
-
-| Old | New | Notes |
-|-----|-----|-------|
-| `<terminal-modal>` | `<t-mdl>` | New tag name |
-| `size="lg"` | `size="large"` | Expanded names |
-| `size="sm"` | `size="small"` | Expanded names |
-| `size="xl"` | `size="xlarge"` | Expanded names |
-| `slot="main"` | `slot="default"` | Renamed for single layout |
-| `setLayout()` | `layout` property | Direct property assignment |
-| `setTitle()` | `title` property | Direct property assignment |
-| No return value | Returns void | Methods don't chain anymore |
-
-**Breaking Changes:**
-- Methods no longer return `this` (not chainable)
-- Property setters replaced with direct property assignment
-- Slot names changed for consistency
+- All 13 blocks from COMPONENT_SCHEMA.md
+- Document listener cleanup patterns
+- Body scroll lock management
+- Nesting support with context propagation
+- Property validation with auto-revert
+- Complete logging system
+- Comprehensive JSDoc documentation
+- Full test coverage
 
 ---
 
 ## Best Practices
 
-### ✅ Do
+### <DocIcon name="checkCircle" /> Do
 
 ```javascript
 // Use property assignment
@@ -872,7 +839,7 @@ await fetchData();
 modal.hideLoading();
 ```
 
-### ❌ Don't
+### <DocIcon name="xCircle" /> Don't
 
 ```javascript
 // Don't manipulate shadow DOM directly
@@ -925,5 +892,5 @@ modal.setLayout('2-column').setTitle('Title').show(); // WON'T WORK
 **Tests:** 57 tests (100% passing)
 **Compliance:** 100/100
 
-**Component Version:** 1.0.0
+**Component Version:** 3.0.0
 **Last Updated:** 2025-09-28

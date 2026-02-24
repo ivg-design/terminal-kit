@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TProgressLit - Terminal-style Progress Component
+ * @module components/TProgressLit
+ * @version 3.0.0
+ *
+ * Progress indicator component with bar and ring types, variants, and animations.
+ *
+ * @example
+ * <t-prg></t-prg>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================

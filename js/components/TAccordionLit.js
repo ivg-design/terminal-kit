@@ -3,14 +3,10 @@
  * @module components/TAccordionLit
  * @version 3.0.0
  *
- * An accordion component with collapsible sections, terminal styling,
- * and support for single or multiple open panels.
+ * Accordion component with collapsible sections, terminal styling, and support for single or multiple open panels.
  *
  * @example
- * <t-accordion>
- *   <t-accordion-item title="Section 1">Content 1</t-accordion-item>
- *   <t-accordion-item title="Section 2">Content 2</t-accordion-item>
- * </t-accordion>
+ * <t-accordion></t-accordion>
  */
 
 import { LitElement, html, css } from 'lit';
@@ -47,6 +43,8 @@ export class TAccordionItemLit extends LitElement {
 			--item-color: var(--terminal-green, #00ff41);
 			--item-text: var(--terminal-green-dim, #00cc33);
 			--item-header-bg: var(--terminal-gray-darkest, #1a1a1a);
+			--accordion-content-max-height: 0px;
+			--accordion-content-inline-size: 0px;
 		}
 
 		:host([disabled]) {
@@ -70,7 +68,7 @@ export class TAccordionItemLit extends LitElement {
 			padding: 10px 12px;
 			background: var(--item-header-bg);
 			cursor: pointer;
-			transition: all 0.2s ease;
+			transition: all var(--accordion-animation-duration, 300ms) var(--accordion-animation-easing, ease-out);
 			font-family: var(--font-mono, 'SF Mono', monospace);
 			user-select: none;
 		}
@@ -97,7 +95,7 @@ export class TAccordionItemLit extends LitElement {
 			align-items: center;
 			justify-content: center;
 			color: var(--item-color);
-			transition: transform 0.2s ease;
+			transition: transform var(--accordion-animation-duration, 300ms) var(--accordion-animation-easing, ease-out);
 		}
 
 		.icon svg {
@@ -149,11 +147,13 @@ export class TAccordionItemLit extends LitElement {
 			display: block;
 			max-height: 0;
 			padding: 0 12px;
-			transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+			transition:
+				max-height var(--accordion-animation-duration, 300ms) var(--accordion-animation-easing, ease-out),
+				padding var(--accordion-animation-duration, 300ms) var(--accordion-animation-easing, ease-out);
 		}
 
 		:host([animated][expanded]) .content {
-			max-height: 500px;
+			max-height: var(--accordion-content-max-height, 500px);
 			padding: 12px;
 		}
 
@@ -295,14 +295,18 @@ export class TAccordionItemLit extends LitElement {
 
 		:host([orientation="horizontal"][animated]) .content {
 			width: 0;
+			flex: 0 0 0;
 			max-height: none;
 			padding: 0;
-			transition: width 0.3s ease-out, padding 0.3s ease-out;
+			transition:
+				width var(--accordion-animation-duration, 300ms) var(--accordion-animation-easing, ease-out),
+				flex-basis var(--accordion-animation-duration, 300ms) var(--accordion-animation-easing, ease-out),
+				padding var(--accordion-animation-duration, 300ms) var(--accordion-animation-easing, ease-out);
 		}
 
 		:host([orientation="horizontal"][animated][expanded]) .content {
-			width: auto;
-			flex: 1;
+			width: var(--accordion-content-inline-size, 0px);
+			flex: 0 0 var(--accordion-content-inline-size, 0px);
 			padding: 12px;
 		}
 	`;
@@ -321,7 +325,9 @@ export class TAccordionItemLit extends LitElement {
 		variant: { type: String, reflect: true },
 		size: { type: String, reflect: true },
 		iconPosition: { type: String, attribute: 'icon-position', reflect: true },
-		orientation: { type: String, reflect: true }
+		orientation: { type: String, reflect: true },
+		animationDuration: { type: Number, attribute: 'animation-duration', reflect: true },
+		animationEasing: { type: String, attribute: 'animation-easing', reflect: true }
 	};
 
 	// ----------------------------------------------------------
@@ -350,6 +356,10 @@ export class TAccordionItemLit extends LitElement {
 		this.size = 'md';
 		this.iconPosition = 'left';
 		this.orientation = 'vertical';
+		this.animationDuration = null;
+		this.animationEasing = '';
+		this._contentResizeObserver = null;
+		this._observedContentNodes = new Set();
 		this._logger.debug('Item constructed');
 	}
 
@@ -358,12 +368,45 @@ export class TAccordionItemLit extends LitElement {
 	// ----------------------------------------------------------
 	connectedCallback() {
 		super.connectedCallback();
+		this._syncAnimationStyles();
 		this._logger.info('Item connected');
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
+		const slot = this.shadowRoot?.querySelector('slot');
+		slot?.removeEventListener('slotchange', this._handleSlotChange);
+		if (this._contentResizeObserver) {
+			this._contentResizeObserver.disconnect();
+			this._contentResizeObserver = null;
+		}
+		this._observedContentNodes.clear();
 		this._logger.info('Item disconnected');
+	}
+
+	firstUpdated() {
+		const slot = this.shadowRoot?.querySelector('slot');
+		slot?.addEventListener('slotchange', this._handleSlotChange);
+		if (typeof ResizeObserver !== 'undefined') {
+			this._contentResizeObserver = new ResizeObserver(() => this._measureContentDimensions());
+			this._contentResizeObserver.observe(this);
+		}
+		this._observeAssignedContentNodes();
+		this._measureContentDimensions();
+	}
+
+	updated(changedProps) {
+		if (changedProps.has('animationDuration') || changedProps.has('animationEasing')) {
+			this._syncAnimationStyles();
+		}
+		if (
+			changedProps.has('expanded') ||
+			changedProps.has('animated') ||
+			changedProps.has('orientation') ||
+			changedProps.has('size')
+		) {
+			requestAnimationFrame(() => this._measureContentDimensions());
+		}
 	}
 
 	// ----------------------------------------------------------
@@ -475,6 +518,78 @@ export class TAccordionItemLit extends LitElement {
 		}
 	}
 
+	_handleSlotChange = () => {
+		this._observeAssignedContentNodes();
+		this._measureContentDimensions();
+	}
+
+	_observeAssignedContentNodes() {
+		if (!this._contentResizeObserver) return;
+		const slot = this.shadowRoot?.querySelector('slot');
+		if (!slot) return;
+
+		const nextNodes = new Set(slot.assignedElements({ flatten: true }));
+		this._observedContentNodes.forEach(node => {
+			if (!nextNodes.has(node)) {
+				this._contentResizeObserver.unobserve(node);
+			}
+		});
+		nextNodes.forEach(node => {
+			if (!this._observedContentNodes.has(node)) {
+				this._contentResizeObserver.observe(node);
+			}
+		});
+		this._observedContentNodes = nextNodes;
+	}
+
+	_getExpandedContentPadding() {
+		switch (this.size) {
+			case 'sm':
+				return { block: 8, inline: 10 };
+			case 'lg':
+				return { block: 16, inline: 16 };
+			default:
+				return { block: 12, inline: 12 };
+		}
+	}
+
+	_measureContentDimensions() {
+		const content = this.shadowRoot?.querySelector('.content');
+		if (!content) return;
+
+		const { block, inline } = this._getExpandedContentPadding();
+		const measuredHeight = Math.max(0, content.scrollHeight) + block * 2;
+		this.style.setProperty('--accordion-content-max-height', `${Math.ceil(measuredHeight)}px`);
+
+		const slot = this.shadowRoot?.querySelector('slot');
+		const assigned = slot ? slot.assignedElements({ flatten: true }) : [];
+		let measuredWidth = 0;
+		assigned.forEach(node => {
+			const rect = node.getBoundingClientRect();
+			measuredWidth = Math.max(measuredWidth, node.scrollWidth || 0, rect.width || 0);
+		});
+		if (measuredWidth === 0) {
+			measuredWidth = content.scrollWidth || 0;
+		}
+		const expandedWidth = Math.max(0, measuredWidth) + inline * 2;
+		this.style.setProperty('--accordion-content-inline-size', `${Math.ceil(expandedWidth)}px`);
+	}
+
+	_syncAnimationStyles() {
+		const durationValue = Number(this.animationDuration);
+		if (Number.isFinite(durationValue)) {
+			this.style.setProperty('--accordion-animation-duration', `${Math.max(0, durationValue)}ms`);
+		} else {
+			this.style.removeProperty('--accordion-animation-duration');
+		}
+
+		if (this.animationEasing) {
+			this.style.setProperty('--accordion-animation-easing', this.animationEasing);
+		} else {
+			this.style.removeProperty('--accordion-animation-easing');
+		}
+	}
+
 	static {
 		if (!customElements.get(this.tagName)) {
 			customElements.define(this.tagName, this);
@@ -507,6 +622,8 @@ export class TAccordionLit extends LitElement {
 			display: flex;
 			flex-direction: column;
 			--accordion-border: var(--terminal-gray-dark, #333);
+			--accordion-animation-duration: 300ms;
+			--accordion-animation-easing: ease-out;
 			--scrollbar-width: 8px;
 			--scrollbar-track: var(--terminal-gray-darkest, #1a1a1a);
 			--scrollbar-thumb: var(--terminal-gray-dark, #333);
@@ -576,7 +693,9 @@ export class TAccordionLit extends LitElement {
 		multiple: { type: Boolean, reflect: true },
 		bordered: { type: Boolean, reflect: true },
 		expandedItems: { type: Array, attribute: 'expanded-items' },
-		orientation: { type: String, reflect: true }
+		orientation: { type: String, reflect: true },
+		animationDuration: { type: Number, attribute: 'animation-duration', reflect: true },
+		animationEasing: { type: String, attribute: 'animation-easing', reflect: true }
 	};
 
 	// ----------------------------------------------------------
@@ -598,6 +717,8 @@ export class TAccordionLit extends LitElement {
 		this.bordered = false;
 		this.expandedItems = [];
 		this.orientation = 'vertical';
+		this.animationDuration = 300;
+		this.animationEasing = 'ease-out';
 		this._logger.debug('Accordion constructed');
 	}
 
@@ -621,6 +742,7 @@ export class TAccordionLit extends LitElement {
 		if (this.expandedItems.length > 0) {
 			this._syncExpandedItems();
 		}
+		this._syncAnimationStyles();
 		// Propagate orientation to child items
 		this._propagateOrientation();
 		this._logger.debug('First update complete');
@@ -629,6 +751,9 @@ export class TAccordionLit extends LitElement {
 	updated(changedProps) {
 		if (changedProps.has('orientation')) {
 			this._propagateOrientation();
+		}
+		if (changedProps.has('animationDuration') || changedProps.has('animationEasing')) {
+			this._syncAnimationStyles();
 		}
 	}
 
@@ -759,12 +884,22 @@ export class TAccordionLit extends LitElement {
 	_syncExpandedItems() {
 		const items = this.querySelectorAll('t-accordion-item');
 		items.forEach(item => {
-			if (this.expandedItems.includes(item.itemId)) {
-				item.expanded = true;
-			} else {
-				item.expanded = false;
-			}
+			item.expanded = this.expandedItems.includes(item.itemId);
 		});
+	}
+
+	_syncAnimationStyles() {
+		const durationValue = Number(this.animationDuration);
+		if (Number.isFinite(durationValue)) {
+			this.style.setProperty('--accordion-animation-duration', `${Math.max(0, durationValue)}ms`);
+		} else {
+			this.style.removeProperty('--accordion-animation-duration');
+		}
+		if (this.animationEasing) {
+			this.style.setProperty('--accordion-animation-easing', this.animationEasing);
+		} else {
+			this.style.removeProperty('--accordion-animation-easing');
+		}
 	}
 
 	static {

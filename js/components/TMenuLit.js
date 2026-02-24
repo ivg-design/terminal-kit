@@ -1,15 +1,12 @@
 /**
- * @fileoverview TMenuLit - Dropdown/context menu component
+ * @fileoverview TMenuLit - Terminal-style Menu Component
  * @module components/TMenuLit
  * @version 3.0.0
  *
- * A dropdown menu component with item selection, keyboard navigation,
- * dividers, icons, and sub-menus support.
+ * Dropdown/context menu component with selection, keyboard navigation, and submenu support.
  *
  * @example
- * <t-menu>
- *   <button slot="trigger">Open Menu</button>
- * </t-menu>
+ * <t-menu></t-menu>
  */
 
 import { LitElement, html, css } from 'lit';
@@ -126,16 +123,51 @@ const styles = css`
 		padding: 4px 0;
 	}
 
-	.menu-item {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		padding: 8px 12px;
-		color: var(--menu-green-dim);
-		font-size: 13px;
-		cursor: pointer;
-		transition: all 0.1s ease;
-	}
+		.menu-item {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 8px 12px;
+			color: var(--menu-green-dim);
+			font-size: 13px;
+			cursor: pointer;
+			transition: all 0.1s ease;
+		}
+
+		:host([size="sm"]) .menu-item {
+			padding: 6px 10px;
+			gap: 8px;
+			font-size: 12px;
+		}
+
+		:host([size="sm"]) .menu-item-icon {
+			width: 14px;
+			height: 14px;
+		}
+
+		:host([size="sm"]) .menu-item-shortcut {
+			font-size: 10px;
+		}
+
+		:host([size="lg"]) .menu-item {
+			padding: 10px 14px;
+			gap: 12px;
+			font-size: 14px;
+		}
+
+		:host([size="lg"]) .menu-item-icon {
+			width: 18px;
+			height: 18px;
+		}
+
+		:host([size="lg"]) .menu-item-icon svg {
+			width: 16px;
+			height: 16px;
+		}
+
+		:host([size="lg"]) .menu-item-shortcut {
+			font-size: 12px;
+		}
 
 	.menu-item:hover,
 	.menu-item.focused {
@@ -356,11 +388,24 @@ class TMenuLit extends LitElement {
 		 * @default '300px'
 		 * @attribute max-height
 		 */
-		maxHeight: {
-			type: String,
-			attribute: 'max-height'
-		}
-	};
+			maxHeight: {
+				type: String,
+				attribute: 'max-height'
+			},
+
+			/**
+			 * Menu item size variant
+			 * @property size
+			 * @type {'sm'|'md'|'lg'}
+			 * @default 'md'
+			 * @attribute size
+			 * @reflects true
+			 */
+			size: {
+				type: String,
+				reflect: true
+			}
+		};
 
 	// ============================================================
 	// BLOCK 4: Internal State
@@ -423,9 +468,10 @@ class TMenuLit extends LitElement {
 		this.items = [];
 		this.trigger = 'click';
 		this.position = 'bottom-start';
-		this.open = false;
-		this.searchable = false;
-		this.maxHeight = '300px';
+			this.open = false;
+			this.searchable = false;
+			this.maxHeight = '300px';
+			this.size = 'md';
 
 		this._logger = componentLogger.for('TMenuLit');
 		this._logger.debug('Component constructed');

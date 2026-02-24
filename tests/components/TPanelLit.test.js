@@ -18,7 +18,7 @@ describe('TPanelLit', () => {
       expect(TPanelManifest).toBeDefined();
       expect(TPanelManifest.tagName).toBe('t-pnl');
       expect(TPanelManifest.displayName).toBe('Terminal Panel');
-      expect(TPanelManifest.version).toBe('1.0.0');
+      expect(TPanelManifest.version).toBe('3.0.0');
     });
 
     it('should document all properties', () => {
@@ -427,6 +427,34 @@ describe('TPanelLit', () => {
       });
     });
 
+    describe('panel-size-changed event', () => {
+      it('should fire when size is changed', async () => {
+        const handler = vi.fn();
+        panel.addEventListener('panel-size-changed', handler);
+
+        panel._handleSizeChange('compact');
+        await panel.updateComplete;
+
+        expect(handler).toHaveBeenCalledOnce();
+        expect(handler.mock.calls[0][0].detail).toEqual({ size: 'compact' });
+      });
+
+      it('should bubble and be composed', async () => {
+        const handler = vi.fn();
+        document.body.addEventListener('panel-size-changed', handler);
+
+        panel._handleSizeChange('large');
+        await panel.updateComplete;
+
+        expect(handler).toHaveBeenCalledOnce();
+        const event = handler.mock.calls[0][0];
+        expect(event.bubbles).toBe(true);
+        expect(event.composed).toBe(true);
+
+        document.body.removeEventListener('panel-size-changed', handler);
+      });
+    });
+
     describe('Event manifest completeness', () => {
       it('all manifest events should be testable', () => {
         const manifestEvents = Object.keys(TPanelManifest.events);
@@ -434,7 +462,8 @@ describe('TPanelLit', () => {
           'panel-collapsed',
           'panel-footer-collapsed',
           'panel-loading-start',
-          'panel-loading-end'
+          'panel-loading-end',
+          'panel-size-changed'
         ];
 
         manifestEvents.forEach(eventName => {

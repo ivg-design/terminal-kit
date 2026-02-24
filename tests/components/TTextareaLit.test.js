@@ -21,7 +21,7 @@ describe('TTextareaLit', () => {
       expect(TTextareaManifest).toBeDefined();
       expect(TTextareaManifest.tagName).toBe('t-textarea');
       expect(TTextareaManifest.displayName).toBe('Textarea');
-      expect(TTextareaManifest.version).toBe('1.0.0');
+      expect(TTextareaManifest.version).toBe('3.0.0');
     });
 
     it('should document all 9 properties', () => {

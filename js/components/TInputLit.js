@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TInputLit - Terminal-style Input Component
+ * @module components/TInputLit
+ * @version 3.0.0
+ *
+ * Form input control with validation, type-specific features (password toggle, number controls, search clear), and native form participation via ElementInternals API.
+ *
+ * @example
+ * <t-inp></t-inp>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
@@ -24,7 +35,7 @@ import {
  * @tagname t-inp
  * @description Form input control with validation, type-specific features (password toggle, number controls, search clear), and native form participation via ElementInternals API
  * @category Form Controls
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <t-inp type="text" placeholder="Enter text" label="Username"></t-inp>
  * <t-inp type="password" required minlength="8"></t-inp>
@@ -36,7 +47,7 @@ export class TInputLit extends LitElement {
   // BLOCK 1: STATIC METADATA (REQUIRED)
   // ----------------------------------------------------------
   static tagName = 't-inp';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Form Controls';
   static formAssociated = true; // Enable ElementInternals API
 
@@ -1281,7 +1292,7 @@ export const TInputManifest = generateManifest(TInputLit, {
   tagName: 't-inp',
   displayName: 'Input',
   description: 'Form input control with validation, type-specific features, and native form participation',
-  version: '1.0.0',
+  version: '3.0.0',
   category: 'Form Controls',
   profile: 'FORM-ADVANCED',
   methods: {

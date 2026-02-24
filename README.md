@@ -1,4 +1,4 @@
-# TERMINAL-Kit
+# TERMINAL-Kit (v3.0.0)
 
 A retro-futuristic web components library with terminal aesthetics. Built with **Pure Lit Architecture** for zero FOUC, complete Shadow DOM encapsulation, and maximum performance.
 
@@ -99,6 +99,8 @@ npm install @ivg-design/tkit
 - **TTree** (`<t-tree>`) - Hierarchical tree structure
 - **TKanban** (`<t-kanban>`) - Kanban board layout
 - **TGrid** (`<t-grid>`) - Dashboard grid layout (`<t-grid-item>`)
+- **TBentoGrid** (`<t-bento>`) - Responsive mixed-size bento dashboard layout
+- **TCarousel** (`<t-carousel>`) - Nested-component carousel with drag/keyboard/controls/autoplay
 
 ### Composite Components
 - **TChatPanel** (`<t-chat>`) - Chat UI with markdown, streaming, attachments
@@ -115,7 +117,7 @@ npm install @ivg-design/tkit
 <body>
   <!-- Import components -->
   <script type="module">
-    import { TPanelLit, TButtonLit } from '@ivg-design/tkit';
+    import { TPanelLit, TButton } from '@ivg-design/tkit';
   </script>
 
   <!-- Use components -->
@@ -239,7 +241,7 @@ npm run docs:build
 ## Documentation
 
 - **API Documentation**: [`docs/API.md`](./docs/API.md)
-- **Component Docs**: [`docs/components/`](./docs/components/) (full coverage for all 37 components)
+- **Component Docs**: [`docs/components/`](./docs/components/) (full coverage for all 39 components)
 - **Component Schema**: [`docs/COMPONENT_SCHEMA.md`](./docs/COMPONENT_SCHEMA.md)
 - **Component Specs**: [`docs/COMPONENT_SPECIFICATIONS.md`](./docs/COMPONENT_SPECIFICATIONS.md)
 

@@ -44,7 +44,7 @@ describe('TColorPicker - BUNDLED-LIB Tests', () => {
       expect(TColorPickerManifest).toBeDefined();
       expect(TColorPickerManifest.tagName).toBe('t-clr');
       expect(TColorPickerManifest.displayName).toBe('Color Picker');
-      expect(TColorPickerManifest.version).toBe('1.0.0');
+      expect(TColorPickerManifest.version).toBe('3.0.0');
     });
 
     it('should document all 8 properties', () => {

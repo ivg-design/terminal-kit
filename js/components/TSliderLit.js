@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TSliderLit - Terminal-style Slider Component
+ * @module components/TSliderLit
+ * @version 3.0.0
+ *
+ * Terminal-themed range slider with drag support, validation, and form participation.
+ *
+ * @example
+ * <t-sld></t-sld>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
@@ -15,7 +26,7 @@ import * as phosphorIcons from '../utils/phosphor-icons.js';
  * @tagname t-sld
  * @description Terminal-themed range slider with drag support, validation, and form participation
  * @category Form Controls
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <t-sld min="0" max="100" value="50" label="Volume"></t-sld>
  */
@@ -24,7 +35,7 @@ export class TSliderLit extends LitElement {
   // BLOCK 1: STATIC METADATA (REQUIRED)
   // ----------------------------------------------------------
   static tagName = 't-sld';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Form Controls';
 
   // ----------------------------------------------------------
@@ -1572,7 +1583,7 @@ export const TSliderManifest = generateManifest(TSliderLit, {
   tagName: 't-sld',
   displayName: 'Slider',
   description: 'Terminal-themed range slider with drag support, validation, and form participation',
-  version: '1.0.0',
+  version: '3.0.0',
   properties: {
     label: {
       description: 'Label text displayed next to the slider'

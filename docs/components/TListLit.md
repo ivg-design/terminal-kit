@@ -1,10 +1,29 @@
-# TListLit
+# TListLit Component Documentation
 
-A high-performance virtualized list component with selection, grouping, drag-and-drop reordering, and infinite scroll support.
+<!-- STANDARD_DOC_INTRO -->
 
-## Tag Name
+## Overview
 
-`t-list`
+Virtualized scrollable list component with selection and grouping.
+
+## Tag Names
+
+- `t-list`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Container
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 

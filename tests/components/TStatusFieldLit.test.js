@@ -30,7 +30,7 @@ describe('TStatusFieldLit', () => {
 		});
 
 		it('should have correct version', () => {
-			expect(field.constructor.version).toBe('1.0.0');
+			expect(field.constructor.version).toBe('3.0.0');
 		});
 
 		it('should have correct category', () => {

@@ -1,15 +1,12 @@
 /**
- * @fileoverview TDynamicControlsLit - Dynamic Control Generator Component
+ * @fileoverview TDynamicControlsLit - Terminal-style Dynamic Controls Component
  * @module components/TDynamicControlsLit
- * @version 3.1.0
+ * @version 3.0.0
  *
- * Generates form controls dynamically from a schema. General-purpose control
- * panel that can integrate most terminal-kit components. Originally designed
- * for Rive ViewModels, now supports any structured data.
+ * Dynamic control generator from schema definitions.
  *
  * @example
  * <t-dynamic-controls></t-dynamic-controls>
- * // Then: element.setSchema(schemaObject)
  */
 
 import { LitElement, html, css } from 'lit';
@@ -38,7 +35,7 @@ export class TDynamicControlsLit extends LitElement {
 	// BLOCK 1: Static Metadata
 	// ============================================================
 
-	static tagName = tagName;
+	static tagName = 't-dynamic-controls';
 	static version = '3.0.0';
 	static category = 'Container';
 

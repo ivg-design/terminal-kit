@@ -36,7 +36,7 @@ describe('TStatusBarLit', () => {
   describe('Manifest Completeness', () => {
     it('should have complete manifest structure', () => {
       expect(component.constructor.tagName).toBe('t-sta');
-      expect(component.constructor.version).toBe('1.0.0');
+      expect(component.constructor.version).toBe('3.0.0');
       expect(component.constructor.category).toBe('Display');
     });
 

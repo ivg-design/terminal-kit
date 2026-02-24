@@ -1,24 +1,28 @@
 # TToggleLit Component Documentation
 
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Terminal-themed toggle switch/checkbox with label and icon support. Supports both switch and checkbox variants with form participation.
+
 ## Tag Names
 
 - `t-tog`
 
-## Overview
+## Architecture
 
-`TToggleLit` is a fully-featured toggle/checkbox component built with LitElement that provides switch and checkbox variants with extensive customization options. It follows the Terminal Kit design system and implements the FORM-ADVANCED profile specification.
+- Extends: `LitElement`
+- Category: Form Controls
+- Version: 3.0.0
 
 ## Table of Contents
-- [Installation](#installation)
-- [Basic Usage](#basic-usage)
-- [Properties](#properties)
-- [Methods](#methods)
-- [Events](#events)
-- [CSS Custom Properties](#css-custom-properties)
-- [Variants](#variants)
-- [Examples](#examples)
-- [Form Integration](#form-integration)
-- [Accessibility](#accessibility)
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
 
 ## Installation
 
@@ -151,7 +155,6 @@ toggle.addEventListener('toggle-change', (e) => {
 
 None.
 
-
 ## CSS Custom Properties
 
 ### Color Variables
@@ -214,7 +217,7 @@ Both states appear as "on" - useful for mode selection.
 
 ```html
 <!-- Icon only -->
-<t-tog icon-on="♥" icon-off="♡"></t-tog>
+<t-tog icon-on="<DocIcon name="circle" />" icon-off="♡"></t-tog>
 
 <!-- Icon with label -->
 <t-tog icon-on="●" icon-off="○" label="Notifications"></t-tog>
@@ -295,7 +298,7 @@ Both states appear as "on" - useful for mode selection.
 <t-tog equal-states label-on="GRID" label-off="LIST"></t-tog>
 
 <!-- With icons -->
-<t-tog equal-states icon-on="▶" icon-off="||" label-on="PLAY" label-off="PAUSE"></t-tog>
+<t-tog equal-states icon-on="<DocIcon name="play" />" icon-off="||" label-on="PLAY" label-off="PAUSE"></t-tog>
 ```
 
 ## Form Integration
@@ -428,24 +431,6 @@ The component uses modern web APIs including:
 - CSS Custom Properties
 - ElementInternals API
 
-## Migration Guide
-
-### From Old TerminalToggle Component
-
-```html
-<!-- Old -->
-<terminal-toggle label="Feature"></terminal-toggle>
-
-<!-- New -->
-<t-tog label="Feature"></t-tog>
-
-<!-- Old with icons -->
-<terminal-toggle on-icon="✓" off-icon="✗"></terminal-toggle>
-
-<!-- New with icons -->
-<t-tog icon-on="✓" icon-off="✗"></t-tog>
-```
-
 ## Best Practices
 
 1. **Always provide labels** for accessibility
@@ -477,7 +462,7 @@ The component uses modern web APIs including:
 
 This component follows the Terminal Kit COMPONENT_SCHEMA.md specification:
 - **Profile**: FORM-ADVANCED
-- **Schema Version**: 1.0.0
+- **Schema Version**: 3.0.0
 - **Blocks**: All 13 required blocks implemented
 - **Testing**: 95.74% code coverage
 - **Documentation**: Comprehensive with examples

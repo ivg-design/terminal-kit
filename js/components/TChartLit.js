@@ -1,10 +1,12 @@
 /**
- * @fileoverview TChartLit - Simple data visualization component
+ * @fileoverview TChartLit - Terminal-style Chart Component
  * @module components/TChartLit
  * @version 3.0.0
  *
- * A DISPLAY profile chart component with bar, line, pie, and donut chart types.
- * Uses SVG for rendering with terminal-themed colors.
+ * Simple data visualization component (bar, line, pie, donut).
+ *
+ * @example
+ * <t-chart></t-chart>
  */
 
 import { LitElement, html, css, svg } from 'lit';
@@ -224,12 +226,15 @@ class TChartLit extends LitElement {
 			text-anchor: middle;
 		}
 
-		/* Data labels on pie/donut - need contrast (dark on light slices) */
-		.data-label.on-slice {
-			fill: var(--terminal-gray-darkest, #1a1a1a);
-			font-weight: 600;
-			font-size: 11px;
-		}
+			/* Data labels on pie/donut - need contrast (dark on light slices) */
+			.data-label.on-slice {
+				fill: #f0fff4;
+				stroke: rgba(0, 0, 0, 0.78);
+				stroke-width: 2px;
+				paint-order: stroke;
+				font-weight: 700;
+				font-size: 11px;
+			}
 
 		/* Empty state */
 		.empty-state {
@@ -564,22 +569,146 @@ class TChartLit extends LitElement {
 		return schemeColors[index % schemeColors.length];
 	}
 
-	/**
-	 * Generate monochrome color - returns same base color for all items
-	 * @private
-	 * @param {number} index - Data point index (unused - all same color)
-	 * @returns {string} Color value
-	 */
+		/**
+		 * Generate monochrome color from a base color palette
+		 * @private
+		 * @param {number} index - Data point index
+		 * @returns {string} Color value
+		 */
 	_getMonochromeColor(index) {
-		// True monochrome: ALL items use the SAME base color
-		// If no explicit baseColor, read from CSS variable for global accent support
-		if (this.baseColor && this.baseColor !== '#00ff41') {
-			return this.baseColor;
+			const palette = this._getMonochromePalette();
+			return palette[index % palette.length];
 		}
-		// Read from CSS variable to follow global accent
-		const computedColor = getComputedStyle(this).getPropertyValue('--terminal-green').trim();
-		return computedColor || this.baseColor || '#00ff41';
-	}
+
+		_getMonochromePalette() {
+			const steps = Math.max(this.data?.length || 0, 5);
+			const fallback = TChartLit._colorSchemes['mono-green'].slice(0, steps);
+			const rgb = this._parseColorToRgb(this._resolveMonochromeBaseColor());
+			if (!rgb) return fallback;
+
+			const { h, s } = this._rgbToHsl(rgb.r, rgb.g, rgb.b);
+			const clampedSaturation = Math.max(0.45, Math.min(1, s));
+			const maxLightness = 0.58;
+			const minLightness = 0.18;
+
+			return Array.from({ length: steps }, (_, i) => {
+				const t = steps === 1 ? 0 : i / (steps - 1);
+				const lightness = maxLightness - ((maxLightness - minLightness) * t);
+				return this._hslToHex(h, clampedSaturation, lightness);
+			});
+		}
+
+		_resolveMonochromeBaseColor() {
+			if (typeof this.baseColor === 'string' && this.baseColor.trim()) {
+				return this.baseColor.trim();
+			}
+			const computed = getComputedStyle(this).getPropertyValue('--terminal-green').trim();
+			return computed || '#00ff41';
+		}
+
+		_parseColorToRgb(color) {
+			if (!color) return null;
+			const normalized = color.trim();
+			const hexMatch = normalized.match(/^#([0-9a-f]{3,8})$/i);
+			if (hexMatch) {
+				let hex = hexMatch[1];
+				if (hex.length === 3 || hex.length === 4) {
+					hex = hex
+						.slice(0, 3)
+						.split('')
+						.map(ch => ch + ch)
+						.join('');
+				}
+				if (hex.length === 6 || hex.length === 8) {
+					return {
+						r: parseInt(hex.slice(0, 2), 16),
+						g: parseInt(hex.slice(2, 4), 16),
+						b: parseInt(hex.slice(4, 6), 16)
+					};
+				}
+			}
+
+			const rgbMatch = normalized.match(/^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)/i);
+			if (rgbMatch) {
+				return {
+					r: Math.max(0, Math.min(255, Number(rgbMatch[1]))),
+					g: Math.max(0, Math.min(255, Number(rgbMatch[2]))),
+					b: Math.max(0, Math.min(255, Number(rgbMatch[3])))
+				};
+			}
+
+			return null;
+		}
+
+		_rgbToHsl(r, g, b) {
+			const rn = r / 255;
+			const gn = g / 255;
+			const bn = b / 255;
+			const max = Math.max(rn, gn, bn);
+			const min = Math.min(rn, gn, bn);
+			const delta = max - min;
+			let h = 0;
+			let s = 0;
+			const l = (max + min) / 2;
+
+			if (delta !== 0) {
+				switch (max) {
+					case rn:
+						h = ((gn - bn) / delta + (gn < bn ? 6 : 0)) / 6;
+						break;
+					case gn:
+						h = ((bn - rn) / delta + 2) / 6;
+						break;
+					default:
+						h = ((rn - gn) / delta + 4) / 6;
+						break;
+				}
+				s = delta / (1 - Math.abs(2 * l - 1));
+			}
+
+			return { h, s, l };
+		}
+
+		_hslToHex(h, s, l) {
+			const hueToRgb = (p, q, t) => {
+				let tt = t;
+				if (tt < 0) tt += 1;
+				if (tt > 1) tt -= 1;
+				if (tt < 1 / 6) return p + (q - p) * 6 * tt;
+				if (tt < 1 / 2) return q;
+				if (tt < 2 / 3) return p + (q - p) * (2 / 3 - tt) * 6;
+				return p;
+			};
+
+			const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+			const p = 2 * l - q;
+			const r = Math.round(hueToRgb(p, q, h + 1 / 3) * 255);
+			const g = Math.round(hueToRgb(p, q, h) * 255);
+			const b = Math.round(hueToRgb(p, q, h - 1 / 3) * 255);
+
+			return `#${[r, g, b]
+				.map(value => value.toString(16).padStart(2, '0'))
+				.join('')}`;
+		}
+
+		_getLabelStyleForColor(color) {
+			const rgb = this._parseColorToRgb(color);
+			if (!rgb) {
+				return 'fill: #f0fff4; stroke: rgba(0, 0, 0, 0.78); stroke-width: 2px; paint-order: stroke;';
+			}
+
+			const toLinear = channel => {
+				const normalized = channel / 255;
+				return normalized <= 0.03928
+					? normalized / 12.92
+					: ((normalized + 0.055) / 1.055) ** 2.4;
+			};
+			const luminance = 0.2126 * toLinear(rgb.r) + 0.7152 * toLinear(rgb.g) + 0.0722 * toLinear(rgb.b);
+			const textColor = luminance > 0.52 ? '#0a0a0a' : '#f0fff4';
+			const strokeColor = luminance > 0.52 ? 'rgba(240, 255, 244, 0.92)' : 'rgba(0, 0, 0, 0.78)';
+
+			return `fill: ${textColor}; stroke: ${strokeColor}; stroke-width: 2px; paint-order: stroke;`;
+		}
 
 	// ============================================================
 	// BLOCK 9: Event Emitters
@@ -982,12 +1111,14 @@ class TChartLit extends LitElement {
 
 			// Label position
 			const midAngle = startAngle + angle / 2;
-			const labelRadius = radius * 0.7;
-			const labelX = centerX + labelRadius * Math.cos(midAngle);
-			const labelY = centerY + labelRadius * Math.sin(midAngle);
+				const labelRadius = isDonut
+					? innerRadius + (radius - innerRadius) * 0.45
+					: radius * 0.68;
+				const labelX = centerX + labelRadius * Math.cos(midAngle);
+				const labelY = centerY + labelRadius * Math.sin(midAngle);
 
-			return { path, item, index: i, labelX, labelY, percentage: ((item.value / total) * 100).toFixed(1) };
-		});
+				return { path, item, index: i, labelX, labelY, percentage: ((item.value / total) * 100).toFixed(1) };
+			});
 
 		return html`
 			<svg viewBox="0 0 ${size} ${size}" style="${this._getHeightStyle()}" part="svg">
@@ -1001,17 +1132,18 @@ class TChartLit extends LitElement {
 						@mouseenter=${(e) => this._handleSegmentHover(e, slice.item, slice.index, true)}
 						@mouseleave=${(e) => this._handleSegmentHover(e, slice.item, slice.index, false)}
 					/>
-					${this.showLabels && parseFloat(slice.percentage) > 5 ? svg`
-						<text
-							class="data-label on-slice"
-							x=${slice.labelX}
-							y=${slice.labelY}
-							dominant-baseline="middle"
-						>
-							${slice.percentage}%
-						</text>
-					` : ''}
-				`)}
+						${this.showLabels && parseFloat(slice.percentage) > 5 ? svg`
+							<text
+								class="data-label on-slice"
+								x=${slice.labelX}
+								y=${slice.labelY}
+								dominant-baseline="middle"
+								style=${this._getLabelStyleForColor(slice.item.color || this.getColor(slice.index))}
+							>
+								${slice.percentage}%
+							</text>
+						` : ''}
+					`)}
 			</svg>
 		`;
 	}

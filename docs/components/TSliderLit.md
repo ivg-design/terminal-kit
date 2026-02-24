@@ -1,27 +1,27 @@
-# TSliderLit Component
+# TSliderLit Component Documentation
+
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Terminal-themed range slider with drag support, validation, and form participation
 
 ## Tag Names
 
 - `t-sld`
 
-## Overview
+## Architecture
 
-The `TSliderLit` component (`<t-sld>`) is a terminal-themed range slider with comprehensive features including drag support, form integration, icons, multiple display modes, and extensive customization options. Built with Lit Element following the FORM-ADVANCED profile.
+- Extends: `LitElement`
+- Category: Form Controls
+- Version: 3.0.0
 
-## Features
-
-- **Drag Support**: Mouse and touch dragging with smooth or stepped movement
-- **Form Integration**: Native HTML form participation via ElementInternals API
-- **Display Options**: Multiple ways to show values (output, input field, in-thumb)
-- **Icons**: Support for any Phosphor icon from the library
-- **Tick Marks**: Optional major and minor tick marks for visual reference
-- **Fill Colors**: Multiple color variants (default, bright, dim, dark)
-- **Sizes**: Compact, default, and large size options
-- **Orientations**: Both horizontal (default) and vertical layouts
-- **Keyboard Navigation**: Full keyboard support (arrows, page up/down, home/end)
-- **Accessibility**: ARIA attributes and screen reader support
-- **Theming**: CSS custom properties for complete visual control
-- **Memory Safe**: Proper cleanup of all event listeners
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
 
 ## Quick Start
 
@@ -77,6 +77,7 @@ The `TSliderLit` component (`<t-sld>`) is a terminal-themed range slider with co
 | `showInput` | boolean | false | `show-input` | Show editable input field for direct value entry |
 | `showOutput` | boolean | false | `show-output` | Show read-only output field displaying current value |
 | `showValueInThumb` | boolean | false | `show-value-in-thumb` | Display the current value inside the slider thumb |
+| `hideMinMax` | boolean | false | `hide-min-max` | Hide min/max endpoint labels while keeping slider range behavior |
 | `stepperStyle` | string | 'plusminus' | `stepper-style` | Input stepper icon style: plusminus, chevron, arrows |
 | `stepperSize` | string | 'md' | `stepper-size` | Input stepper size preset: sm, md, lg |
 
@@ -1102,7 +1103,7 @@ slider.addEventListener('slider-change', handler); // After drag
 
 ## Version History
 
-- **1.0.0** - Initial release
+- **3.0.0** - Initial release
   - Full FORM-ADVANCED profile compliance
   - Complete Phosphor icons integration
   - Multiple display modes (input, output, in-thumb)

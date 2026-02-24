@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TTooltipLit - Terminal-style Tooltip Component
+ * @module components/TTooltipLit
+ * @version 3.0.0
+ *
+ * Hover/focus information tooltip component with positioning and animation.
+ *
+ * @example
+ * <t-tip></t-tip>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================

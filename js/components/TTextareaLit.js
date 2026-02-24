@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TTextareaLit - Terminal-style Textarea Component
+ * @module components/TTextareaLit
+ * @version 3.0.0
+ *
+ * Multiline text input with code editor features including line numbers, IDE keyboard shortcuts, syntax highlighting, and advanced text manipulation.
+ *
+ * @example
+ * <t-textarea></t-textarea>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
@@ -18,7 +29,7 @@ import { generateManifest } from '../utils/manifest-generator.js';
  * @tagname t-textarea
  * @description Multiline text input with code editor features including line numbers, IDE keyboard shortcuts, syntax highlighting, and advanced text manipulation
  * @category Form Controls
- * @since 1.0.0
+ * @since 3.0.0
  * @profile FORM-ADVANCED
  * @example
  * <t-textarea placeholder="Enter text..." rows="5"></t-textarea>
@@ -33,7 +44,7 @@ export class TTextareaLit extends LitElement {
   // BLOCK 1: Static Metadata
   // ============================================
   static tagName = 't-textarea';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Form Controls';
   static formAssociated = true;
 
@@ -1143,7 +1154,7 @@ export const TTextareaManifest = generateManifest(TTextareaLit, {
   tagName: 't-textarea',
   displayName: 'Textarea',
   description: 'Multiline text input with code editor features',
-  version: '1.0.0',
+  version: '3.0.0',
   properties: {
     placeholder: { description: 'Placeholder text' },
     value: { description: 'Current value' },

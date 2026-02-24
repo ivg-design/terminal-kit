@@ -136,6 +136,8 @@ describe('TLoaderLit', () => {
 
       const spinnerContainer = component.shadowRoot.querySelector('.spinner-container');
       expect(spinnerContainer).toBeDefined();
+      const spinnerStage = component.shadowRoot.querySelector('.spinner-stage');
+      expect(spinnerStage).toBeDefined();
     });
 
     it('should render different spinner types', async () => {
@@ -169,6 +171,40 @@ describe('TLoaderLit', () => {
       component.size = 100;
       await component.updateComplete;
       expect(component.style.getPropertyValue('--loader-size')).toBe('100px');
+    });
+
+    it('should normalize climbing-box spinner to target size', async () => {
+      component.type = 'climbing-box-spinner';
+      component.size = 60;
+      await component.updateComplete;
+
+      const container = component.shadowRoot.querySelector('.spinner-container');
+      const stage = component.shadowRoot.querySelector('.spinner-stage');
+      expect(container.innerHTML).toContain('climbing-box-spinner');
+      expect(container.innerHTML).toContain('size="15"');
+      expect(stage.getAttribute('style')).toContain('scale(0.6)');
+    });
+
+    it('should scale sizeless spinner families with stage transform', async () => {
+      component.type = 'orbitals-spinner';
+      component.size = 40;
+      await component.updateComplete;
+
+      const stage = component.shadowRoot.querySelector('.spinner-stage');
+      expect(stage).toBeDefined();
+      expect(stage.getAttribute('style')).toContain('scale(0.5)');
+    });
+
+    it('should render propagate spinner with normalization metadata', async () => {
+      component.type = 'propagate-spinner';
+      component.size = 64;
+      await component.updateComplete;
+
+      const container = component.shadowRoot.querySelector('.spinner-container');
+      const stage = component.shadowRoot.querySelector('.spinner-stage');
+      expect(container.innerHTML).toContain('propagate-spinner');
+      expect(container.innerHTML).toContain('size="15"');
+      expect(stage.getAttribute('style')).toContain('scale(0.4)');
     });
 
     it('should apply custom color CSS variable', async () => {

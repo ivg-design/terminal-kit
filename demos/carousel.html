@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TCarouselLit Demo</title>
+  <script src="../js/utils/accent-init.js"></script>
+  <link rel="stylesheet" href="../css/theme/terminal.css">
+  <style>
+    :root { --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace; }
+    body {
+      margin: 0;
+      background: var(--terminal-black, #0a0a0a);
+      color: var(--terminal-green, #00ff41);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+    }
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    h1 {
+      font-size: 32px;
+      letter-spacing: 0.08em;
+      margin: 0 0 6px;
+      text-transform: uppercase;
+    }
+    .crumb { color: var(--terminal-green-dim, #00cc33); font-size: 12px; margin-bottom: 18px; }
+    .panel {
+      border: 1px solid var(--terminal-gray-dark, #333);
+      background: var(--terminal-gray-darkest, #1a1a1a);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--terminal-green-dim, #00cc33);
+    }
+    input, select {
+      background: #111;
+      border: 1px solid var(--terminal-gray-dark, #333);
+      color: var(--terminal-green, #00ff41);
+      height: 32px;
+      padding: 0 8px;
+      font-family: inherit;
+    }
+    .toggles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-top: 4px;
+    }
+    .toggles label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    t-carousel {
+      --carousel-bg: #111;
+      --carousel-border: var(--terminal-gray-dark, #333);
+      --carousel-text: var(--terminal-green, #00ff41);
+      --carousel-gap: 12px;
+    }
+    .slide {
+      min-height: 200px;
+      border: 1px solid var(--terminal-gray-dark, #333);
+      background: #0f0f0f;
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .slide h3 { margin: 0; font-size: 14px; text-transform: uppercase; }
+    .meta {
+      margin-top: 10px;
+      color: var(--terminal-green-dim, #00cc33);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>TCarouselLit</h1>
+    <div class="crumb">&rarr; Components / Carousel</div>
+
+    <section class="panel">
+      <div class="controls">
+        <label>
+          Slides Per View
+          <input id="slidesPerView" type="number" min="1" max="3" value="1">
+        </label>
+        <label>
+          Gap (px)
+          <input id="gap" type="number" min="0" max="40" value="12">
+        </label>
+        <label>
+          Transition (ms)
+          <input id="transition" type="number" min="0" max="2000" value="450">
+        </label>
+        <label>
+          Autoplay Interval (ms)
+          <input id="interval" type="number" min="300" max="10000" step="100" value="3000">
+        </label>
+      </div>
+      <div class="toggles">
+        <label><input id="infinite" type="checkbox"> Infinite</label>
+        <label><input id="controls" type="checkbox" checked> Controls</label>
+        <label><input id="dots" type="checkbox" checked> Dots</label>
+        <label><input id="keyboard" type="checkbox" checked> Keyboard</label>
+        <label><input id="draggable" type="checkbox" checked> Drag</label>
+        <label><input id="autoplay" type="checkbox"> Autoplay</label>
+      </div>
+    </section>
+
+    <section class="panel">
+      <t-carousel id="carousel" controls dots keyboard draggable>
+        <t-pnl title="System Panel" collapsible>
+          <p>Nested layout component slide.</p>
+          <t-btn slot="actions" variant="ghost">Action</t-btn>
+        </t-pnl>
+
+        <div class="slide">
+          <h3>Accordion + Textarea</h3>
+          <t-accordion multiple>
+            <t-accordion-item title="Overview" expanded>
+              <p>Accordion content inside carousel.</p>
+            </t-accordion-item>
+          </t-accordion>
+          <t-textarea rows="4" value="Editable text in slide"></t-textarea>
+        </div>
+
+        <div class="slide">
+          <h3>Chart + Loader</h3>
+          <t-chart type="bar" style="height: 140px"></t-chart>
+          <t-ldr type="orbit-spinner" size="44" text="Loading metrics"></t-ldr>
+        </div>
+
+        <div class="slide">
+          <h3>Calendar</h3>
+          <t-cal></t-cal>
+        </div>
+      </t-carousel>
+      <div id="meta" class="meta"></div>
+    </section>
+  </div>
+
+  <script type="module">
+    import '../js/components/TCarouselLit.js';
+    import '../js/components/TPanelLit.js';
+    import '../js/components/TButtonLit.js';
+    import '../js/components/TAccordionLit.js';
+    import '../js/components/TTextareaLit.js';
+    import '../js/components/TChartLit.js';
+    import '../js/components/TLoaderLit.js';
+    import '../js/components/TCalendarLit.js';
+
+    const carousel = document.getElementById('carousel');
+    const meta = document.getElementById('meta');
+
+    const bindNumber = (id, prop) => {
+      const input = document.getElementById(id);
+      input.addEventListener('input', () => {
+        carousel[prop] = Number(input.value);
+      });
+      carousel[prop] = Number(input.value);
+    };
+
+    const bindBool = (id, prop) => {
+      const input = document.getElementById(id);
+      input.addEventListener('change', () => {
+        carousel[prop] = input.checked;
+      });
+      carousel[prop] = input.checked;
+    };
+
+    bindNumber('slidesPerView', 'slidesPerView');
+    bindNumber('gap', 'gap');
+    bindNumber('transition', 'transitionMs');
+    bindNumber('interval', 'interval');
+
+    bindBool('infinite', 'infinite');
+    bindBool('controls', 'controls');
+    bindBool('dots', 'dots');
+    bindBool('keyboard', 'keyboard');
+    bindBool('draggable', 'draggable');
+    bindBool('autoplay', 'autoplay');
+
+    const updateMeta = (event) => {
+      const { index, totalSlides } = event.detail;
+      meta.textContent = `slide changed: ${index + 1}/${totalSlides}`;
+    };
+
+    carousel.addEventListener('carousel-change', updateMeta);
+    meta.textContent = `slides: ${carousel.getSlideCount()} · use arrows, drag, buttons, or dots`;
+  </script>
+</body>
+</html>

@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TUserMenuLit - Terminal-style User Menu Component
+ * @module components/TUserMenuLit
+ * @version 3.0.0
+ *
+ * Dropdown menu triggered by user badge click with avatar, user info, and customizable menu items.
+ *
+ * @example
+ * <t-usr></t-usr>
+ */
+
 // ============================================
 // SECTION 1: IMPORTS
 // ============================================
@@ -25,7 +36,7 @@ import {
  * @tagname t-usr
  * @description Dropdown menu triggered by user badge click with avatar, user info, and customizable menu items
  * @category Navigation
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <t-usr user-name="John Doe" user-email="john@example.com">
  * </t-usr>
@@ -36,7 +47,7 @@ export class TUserMenuLit extends LitElement {
   // BLOCK 1: Static Metadata (REQUIRED)
   // ============================================
   static tagName = 't-usr';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Navigation';
 
   // ============================================

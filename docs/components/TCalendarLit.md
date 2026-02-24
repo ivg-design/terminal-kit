@@ -1,10 +1,29 @@
-# TCalendarLit
+# TCalendarLit Component Documentation
 
-A date picker and calendar component with terminal styling, supporting single date selection, date ranges, and multiple view modes.
+<!-- STANDARD_DOC_INTRO -->
 
-## Tag Name
+## Overview
 
-`t-cal`
+Date picker/calendar component with single/multiple/range selection.
+
+## Tag Names
+
+- `t-cal`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Form
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 
@@ -239,7 +258,6 @@ calendar.addEventListener('month-change', (e) => {
 ## Slots
 
 None.
-
 
 ## CSS Custom Properties
 

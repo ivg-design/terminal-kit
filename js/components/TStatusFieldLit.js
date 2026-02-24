@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TStatusFieldLit - Terminal-style Status Field Component
+ * @module components/TStatusFieldLit
+ * @version 3.0.0
+ *
+ * Simple status field component for use within status bars.
+ *
+ * @example
+ * <t-sta-field></t-sta-field>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================
@@ -13,7 +24,7 @@ import { generateManifest } from '../utils/manifest-generator.js';
  * @tagname t-sta-field
  * @description Simple status field component for use within status bars
  * @category Display
- * @since 1.0.0
+ * @since 3.0.0
  * @example
  * <t-sta-field label="CPU" value="42%" width="20%" align="left"></t-sta-field>
  */
@@ -23,7 +34,7 @@ export class TStatusFieldLit extends LitElement {
   // BLOCK 1: STATIC METADATA (REQUIRED)
   // ----------------------------------------------------------
   static tagName = 't-sta-field';
-  static version = '1.0.0';
+  static version = '3.0.0';
   static category = 'Display';
 
   // ----------------------------------------------------------

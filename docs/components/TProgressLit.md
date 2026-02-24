@@ -1,10 +1,29 @@
-# TProgressLit
+# TProgressLit Component Documentation
 
-A progress indicator component with terminal styling, supporting linear bars, circular progress, and various display options.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Progress indicator component with bar and ring types, variants, and animations.
 
 ## Tag Names
 
 - `t-prg`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Display
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 
@@ -209,7 +228,6 @@ async function animateProgress() {
 ## Slots
 
 None.
-
 
 ## CSS Custom Properties
 

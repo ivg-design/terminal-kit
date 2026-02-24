@@ -1,10 +1,29 @@
-# TAvatarLit
+# TAvatarLit Component Documentation
 
-A user/entity avatar component with terminal styling, supporting images, initials, icons, and status indicators.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+User/entity avatar display component with image, initials, icon fallback, and status indicator.
 
 ## Tag Names
 
 - `t-avt`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Display
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 
@@ -185,7 +204,6 @@ avatar.addEventListener('avatar-error', (e) => {
 ## Slots
 
 None.
-
 
 ## CSS Custom Properties
 

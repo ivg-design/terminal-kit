@@ -36,7 +36,7 @@ describe('TBreadcrumbsLit', () => {
 		});
 
 		it('should have version', () => {
-			expect(element.constructor.version).toBe('1.0.0');
+			expect(element.constructor.version).toBe('3.0.0');
 		});
 
 		it('should have category', () => {
@@ -71,6 +71,10 @@ describe('TBreadcrumbsLit', () => {
 			expect(element.separator).toBe('');
 		});
 
+		it('should have default separatorColor as empty string', () => {
+			expect(element.separatorColor).toBe('');
+		});
+
 		it('should have default maxItems as 0', () => {
 			expect(element.maxItems).toBe(0);
 		});
@@ -101,6 +105,13 @@ describe('TBreadcrumbsLit', () => {
 			element.disabled = true;
 			await element.updateComplete;
 			expect(element.hasAttribute('disabled')).toBe(true);
+		});
+
+		it('should set separator-color style var when separatorColor is provided', async () => {
+			element.separatorColor = '#00ffff';
+			await element.updateComplete;
+			expect(element.getAttribute('separator-color')).toBe('#00ffff');
+			expect(element.style.getPropertyValue('--bread-separator')).toBe('#00ffff');
 		});
 	});
 

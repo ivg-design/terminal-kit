@@ -1,35 +1,27 @@
-# TPanelLit - Pure Lit Panel Component
+# TPanelLit Component Documentation
 
-**IMPORTANT: This is a Pure Lit component following strict architectural principles. Do NOT violate these rules.**
+<!-- STANDARD_DOC_INTRO -->
 
-## Architecture: Pure Lit (Zero FOUC, Fully Encapsulated)
+## Overview
 
-### Critical Architecture Rules
+Collapsible panel with header, footer, and nested content support. Follows FULL profile with all 13 blocks.
 
-1. **ALL styles MUST be in the `static styles` CSS block** - NO external stylesheets
-2. **Shadow DOM only** - All styles are encapsulated, no style leakage
-3. **Reactive properties** - Use Lit's `static properties` for all component state
-4. **No manual style adoption** - Lit handles everything automatically
-5. **Zero FOUC** - Styles are adopted before first render by Lit's internal mechanisms
-6. **No `:not(:defined)` hacks needed** - Lit manages component registration
-7. **Slots for content distribution** - Light DOM content projected via named slots
+## Tag Names
 
-### Why These Rules Matter
+- `t-pnl`
 
-This component was migrated from a hybrid Declarative Shadow DOM + StyleSheetManager architecture to Pure Lit because:
-- **Zero FOUC guarantee** - Lit adopts styles before first paint
-- **True encapsulation** - Shadow DOM isolation prevents style conflicts
-- **Reactive by design** - Property changes automatically trigger re-renders
-- **Maintainable** - Single source of truth (component file)
-- **Performant** - Lit optimizes rendering and style adoption
+## Architecture
 
-**DO NOT** try to add external stylesheets, manipulate Shadow DOM manually, or bypass Lit's reactivity system.
+- Extends: `LitElement`
+- Category: Layout
+- Version: 3.0.0
 
-## Tag Name
-
-```html
-<t-pnl></t-pnl>
-```
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
 
 ## Properties
 
@@ -44,6 +36,7 @@ This component was migrated from a hybrid Declarative Shadow DOM + StyleSheetMan
 | `loading` | boolean | `false` | Show loading state |
 | `icon` | string | `''` | SVG icon string for header |
 | `footerCollapsed` | boolean | `false` | Footer collapsed state (attribute: `footer-collapsed`) |
+| `showSizeToggle` | boolean | `false` | Show header size-cycle control (attribute: `show-size-toggle`) |
 
 ### Property Details
 
@@ -526,56 +519,6 @@ Requires:
 - Shadow DOM v1
 - ES6 Modules
 - Lit 3.x
-
-## Migration from Old TerminalPanel
-
-If migrating from the old hybrid component:
-
-### Breaking Changes
-
-1. **Tag name changed:** `<terminal-panel>` → `<t-pnl>`
-2. **Slot names changed:**
-   - `header-actions` → `actions`
-   - `content` → default slot
-   - `status-bar` → removed (status bar is separate component)
-3. **Mode removed:** Use `variant` instead
-4. **Custom elements lifecycle:** No `attributeChangedCallback` needed
-5. **Styles:** All internal, remove external panel.css imports
-
-### Property Mapping
-
-| Old | New |
-|-----|-----|
-| `mode="with-header"` | `variant="standard"` (default) |
-| `mode="headless"` | `variant="headless"` |
-| `mode="with-status-bar"` | Use `slot="footer"` |
-| `compact` | `compact` (same) |
-| `collapsible` | `collapsible` (same) |
-| `collapsed` | `collapsed` (same) |
-
-### Code Changes
-
-**Before:**
-```html
-<terminal-panel mode="with-header" title="Panel" compact>
-  <div slot="header-actions">
-    <button>X</button>
-  </div>
-  <div slot="content">
-    <p>Content</p>
-  </div>
-</terminal-panel>
-```
-
-**After:**
-```html
-<t-pnl title="Panel" compact collapsible>
-  <div slot="actions">
-    <t-btn type="icon" id="closeBtn"></t-btn>
-  </div>
-  <p>Content</p>
-</t-pnl>
-```
 
 ## Implementation Notes
 

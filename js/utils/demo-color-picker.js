@@ -113,6 +113,8 @@ const injectStyles = () => {
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      flex-shrink: 0;
+      white-space: nowrap;
       padding: 4px 8px;
       border: 1px solid var(--terminal-gray-light, #333);
       background: var(--terminal-black, #0a0a0a);
@@ -188,7 +190,7 @@ const mountPicker = () => {
     localStorage.removeItem(STORAGE_KEY);
   });
 
-  const headerControls = document.querySelector('.demo-header-controls');
+  const headerControls = document.querySelector('.demo-header-controls, .demo-header .demo-controls');
   if (headerControls) {
     headerControls.appendChild(container);
   } else {

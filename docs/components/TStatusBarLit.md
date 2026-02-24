@@ -1,6 +1,10 @@
-# TStatusBarLit (t-sta)
+# TStatusBarLit Component Documentation
 
-A **LitElement-based** status bar component for terminal-style user interfaces. Provides dynamic field management, flexible display modes, alignment zones, hover interactions, and automatic width validation with full Shadow DOM encapsulation.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Flexible status bar with dynamic fields, alignment zones, and marquee support
 
 ## Tag Names
 
@@ -8,11 +12,17 @@ A **LitElement-based** status bar component for terminal-style user interfaces. 
 
 ## Architecture
 
-**Tag Name:** `<t-sta>`
-**Extends:** `LitElement`
-**Category:** Display
-**Profile:** CONTAINER
-**Version:** 1.0.0
+- Extends: `LitElement`
+- Category: Display
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [Related Components](#related-components)
 
 ## Properties
 
@@ -20,7 +30,7 @@ All properties are reactive Lit properties:
 
 | Property | Type | Default | Reflects | Description |
 |----------|------|---------|----------|-------------|
-| `fields` | `Array<FieldConfig>` | `[]` | ❌ | Array of field configuration objects |
+| `fields` | `Array<FieldConfig>` | `[]` | No | Array of field configuration objects |
 
 ### FieldConfig Object Structure
 
@@ -111,9 +121,9 @@ Fired when a field is clicked.
 
 **Event Type:** `CustomEvent<{field: FieldConfig, index: number}>`
 
-**Bubbles:** ✅ Yes
+**Bubbles:** <DocIcon name="checkCircle" /> Yes
 
-**Composed:** ✅ Yes (crosses shadow DOM boundary)
+**Composed:** <DocIcon name="checkCircle" /> Yes (crosses shadow DOM boundary)
 
 **Event Detail:**
 ```javascript
@@ -136,9 +146,9 @@ Fired when mouse enters a field with hover enabled.
 
 **Event Type:** `CustomEvent<{field: FieldConfig, index: number}>`
 
-**Bubbles:** ✅ Yes
+**Bubbles:** <DocIcon name="checkCircle" /> Yes
 
-**Composed:** ✅ Yes
+**Composed:** <DocIcon name="checkCircle" /> Yes
 
 **Event Detail:** Same as `field-click`
 
@@ -154,9 +164,9 @@ Fired when mouse leaves a field with hover enabled.
 
 **Event Type:** `CustomEvent<{field: FieldConfig, index: number}>`
 
-**Bubbles:** ✅ Yes
+**Bubbles:** <DocIcon name="checkCircle" /> Yes
 
-**Composed:** ✅ Yes
+**Composed:** <DocIcon name="checkCircle" /> Yes
 
 **Event Detail:** Same as `field-click`
 
@@ -200,14 +210,14 @@ Shows label and value with standard spacing:
 Shows icon and value only:
 ```javascript
 { label: 'CPU', value: '42%', icon: gaugeIcon, displayMode: 'icon' }
-// Renders: [📊] 42%
+// Renders: [<DocIcon name="chartBar" />] 42%
 ```
 
 #### `icon-text`
 Shows icon, label, and value:
 ```javascript
 { label: 'CPU', value: '42%', icon: gaugeIcon, displayMode: 'icon-text' }
-// Renders: [📊] CPU: 42%
+// Renders: [<DocIcon name="chartBar" />] CPU: 42%
 ```
 
 #### `value`
@@ -628,39 +638,11 @@ The component includes:
 ></t-sta>
 ```
 
-## Migration from Legacy TStatusBar
-
-If migrating from the old TStatusBar component:
-
-### Before (Legacy)
-```javascript
-// Old (TComponent-based)
-const oldBar = new TStatusBar();
-```
-
-### After (LitElement-based)
-```javascript
-// New (LitElement-based)
-const newBar = document.createElement('t-sta');
-```
-
-### Key Changes
-1. Now extends LitElement instead of TComponent
-2. Uses Shadow DOM with complete encapsulation
-3. Better memory management and performance
-4. More display modes available
-5. Enhanced hover callbacks support
-6. Improved event system with bubbling/composed events
-7. Reactive properties with automatic re-rendering
-8. CSS variable theming system
-9. Container profile capabilities for nested components
-
 ## Slots
 
 | Slot | Description |
 | --- | --- |
 | default | `t-sta-field` elements |
-
 
 ## Related Components
 

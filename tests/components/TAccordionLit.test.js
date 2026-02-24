@@ -57,10 +57,12 @@ describe('TAccordionItemLit', () => {
 			expect(emptyItem.expanded).toBe(false);
 			expect(emptyItem.disabled).toBe(false);
 			expect(emptyItem.animated).toBe(false);
-			expect(emptyItem.variant).toBe('default');
-			expect(emptyItem.size).toBe('md');
-			expect(emptyItem.iconPosition).toBe('left');
-			expect(emptyItem.orientation).toBe('vertical');
+				expect(emptyItem.variant).toBe('default');
+				expect(emptyItem.size).toBe('md');
+				expect(emptyItem.iconPosition).toBe('left');
+				expect(emptyItem.orientation).toBe('vertical');
+				expect(emptyItem.animationDuration).toBeNull();
+				expect(emptyItem.animationEasing).toBe('');
 		});
 
 		it('should set itemId from attribute', () => {
@@ -127,12 +129,28 @@ describe('TAccordionItemLit', () => {
 			expect(item.getAttribute('icon-position')).toBe('right');
 		});
 
-		it('should update orientation property', async () => {
-			item.orientation = 'horizontal';
-			await item.updateComplete;
-			expect(item.orientation).toBe('horizontal');
-			expect(item.getAttribute('orientation')).toBe('horizontal');
-		});
+			it('should update orientation property', async () => {
+				item.orientation = 'horizontal';
+				await item.updateComplete;
+				expect(item.orientation).toBe('horizontal');
+				expect(item.getAttribute('orientation')).toBe('horizontal');
+			});
+
+			it('should update animationDuration property', async () => {
+				item.animationDuration = 420;
+				await item.updateComplete;
+				expect(item.animationDuration).toBe(420);
+				expect(item.getAttribute('animation-duration')).toBe('420');
+				expect(item.style.getPropertyValue('--accordion-animation-duration')).toBe('420ms');
+			});
+
+			it('should update animationEasing property', async () => {
+				item.animationEasing = 'linear';
+				await item.updateComplete;
+				expect(item.animationEasing).toBe('linear');
+				expect(item.getAttribute('animation-easing')).toBe('linear');
+				expect(item.style.getPropertyValue('--accordion-animation-easing')).toBe('linear');
+			});
 	});
 
 	// ======================================================
@@ -458,9 +476,11 @@ describe('TAccordionLit', () => {
 		it('should have correct default values', () => {
 			const emptyAccordion = document.createElement('t-accordion');
 			expect(emptyAccordion.multiple).toBe(false);
-			expect(emptyAccordion.bordered).toBe(false);
-			expect(emptyAccordion.expandedItems).toEqual([]);
-			expect(emptyAccordion.orientation).toBe('vertical');
+				expect(emptyAccordion.bordered).toBe(false);
+				expect(emptyAccordion.expandedItems).toEqual([]);
+				expect(emptyAccordion.orientation).toBe('vertical');
+				expect(emptyAccordion.animationDuration).toBe(300);
+				expect(emptyAccordion.animationEasing).toBe('ease-out');
 		});
 
 		it('should update multiple property', async () => {
@@ -477,12 +497,25 @@ describe('TAccordionLit', () => {
 			expect(accordion.hasAttribute('bordered')).toBe(true);
 		});
 
-		it('should update orientation property', async () => {
-			accordion.orientation = 'horizontal';
-			await accordion.updateComplete;
-			expect(accordion.orientation).toBe('horizontal');
-			expect(accordion.getAttribute('orientation')).toBe('horizontal');
-		});
+			it('should update orientation property', async () => {
+				accordion.orientation = 'horizontal';
+				await accordion.updateComplete;
+				expect(accordion.orientation).toBe('horizontal');
+				expect(accordion.getAttribute('orientation')).toBe('horizontal');
+			});
+
+			it('should update animation settings', async () => {
+				accordion.animationDuration = 500;
+				accordion.animationEasing = 'linear';
+				await accordion.updateComplete;
+
+				expect(accordion.animationDuration).toBe(500);
+				expect(accordion.animationEasing).toBe('linear');
+				expect(accordion.getAttribute('animation-duration')).toBe('500');
+				expect(accordion.getAttribute('animation-easing')).toBe('linear');
+				expect(accordion.style.getPropertyValue('--accordion-animation-duration')).toBe('500ms');
+				expect(accordion.style.getPropertyValue('--accordion-animation-easing')).toBe('linear');
+			});
 
 		it('should propagate orientation to child items', async () => {
 			accordion.orientation = 'horizontal';

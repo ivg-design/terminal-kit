@@ -1,10 +1,12 @@
 /**
- * @fileoverview TTreeLit - Hierarchical tree structure component
+ * @fileoverview TTreeLit - Terminal-style Tree Component
  * @module components/TTreeLit
  * @version 3.0.0
  *
- * A FULL profile tree component with expand/collapse, selection,
- * checkboxes, drag-and-drop, and lazy loading.
+ * Hierarchical tree structure with expand/collapse, selection, and drag-and-drop.
+ *
+ * @example
+ * <t-tree></t-tree>
  */
 
 import { LitElement, html, css } from 'lit';

@@ -1,10 +1,29 @@
-# TSkeletonLit
+# TSkeletonLit Component Documentation
 
-A loading placeholder component with terminal styling, used to show content structure while data is loading.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Loading placeholder skeleton component with various shapes and animations.
 
 ## Tag Names
 
 - `t-skel`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Display
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 
@@ -195,7 +214,6 @@ function showSkeleton(type) {
 ## Slots
 
 None.
-
 
 ## CSS Custom Properties
 

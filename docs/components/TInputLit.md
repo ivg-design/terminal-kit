@@ -1,61 +1,49 @@
-# TInputLit - Pure Lit Input Component
+# TInputLit Component Documentation
 
-**IMPORTANT: This is a Pure Lit component following strict architectural principles. Do NOT violate these rules.**
+<!-- STANDARD_DOC_INTRO -->
 
-## Architecture: Pure Lit (Zero FOUC, Fully Encapsulated)
+## Overview
 
-### Critical Architecture Rules
+Form input control with validation, type-specific features (password toggle, number controls, search clear), and native form participation via ElementInternals API
 
-1. **ALL styles MUST be in the `static styles` CSS block** - NO external stylesheets
-2. **Shadow DOM only** - All styles are encapsulated, no style leakage
-3. **Reactive properties** - Use Lit's `static properties` for all component state
-4. **No manual style adoption** - Lit handles everything automatically
-5. **Zero FOUC** - Styles are adopted before first render by Lit's internal mechanisms
-6. **No `:not(:defined)` hacks needed** - Lit manages component registration
-7. **ElementInternals for forms** - Native form participation via Form-Associated Custom Elements API
+## Tag Names
 
-### Why These Rules Matter
+- `t-inp`
 
-This component was built from the ground up as Pure Lit because:
-- **Zero FOUC guarantee** - Lit adopts styles before first paint
-- **True encapsulation** - Shadow DOM isolation prevents style conflicts
-- **Reactive by design** - Property changes automatically trigger re-renders
-- **Native form integration** - ElementInternals API for seamless form participation
-- **Maintainable** - Single source of truth (component file)
-- **Performant** - Lit optimizes rendering and style adoption
-- **FORM-ADVANCED Profile Compliance** - Implements Blocks 1-9, 11-13 from COMPONENT_SCHEMA.md
+## Architecture
 
-**DO NOT** try to add external stylesheets, manipulate Shadow DOM manually, or bypass Lit's reactivity system.
+- Extends: `LitElement`
+- Category: Form Controls
+- Version: 3.0.0
 
----
-
-## Tag Name
-
-```html
-<t-inp></t-inp>
-```
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
 
 ## Properties
 
 | Property | Type | Default | Reflects | Description |
 |----------|------|---------|----------|-------------|
-| `type` | string | `'text'` | ✅ | Input type: text, password, email, number, search, tel, url |
-| `placeholder` | string | `''` | ✅ | Placeholder text |
-| `value` | string | `''` | ❌ | Input value |
-| `disabled` | boolean | `false` | ✅ | Disabled state |
-| `readonly` | boolean | `false` | ✅ | Readonly state |
-| `required` | boolean | `false` | ✅ | Required field validation |
-| `min` | number | `null` | ✅ | Minimum value (number type only) |
-| `max` | number | `null` | ✅ | Maximum value (number type only) |
-| `minlength` | number | `null` | ✅ | Minimum character length |
-| `maxlength` | number | `null` | ✅ | Maximum character length |
-| `pattern` | string | `null` | ✅ | RegEx validation pattern |
-| `autocomplete` | string | `'off'` | ✅ | Autocomplete attribute |
-| `label` | string | `''` | ✅ | Optional label above input |
-| `helperText` | string | `''` | ✅ | Optional helper text below input |
-| `stepperStyle` | string | `'plusminus'` | ✅ | Number stepper icon style: plusminus, chevron, arrows |
-| `stepperSize` | string | `'md'` | ✅ | Number stepper size preset: sm, md, lg |
-| `icon` | string | `''` | ❌ | Optional icon SVG string |
+| `type` | string | `'text'` | Yes | Input type: text, password, email, number, search, tel, url |
+| `placeholder` | string | `''` | Yes | Placeholder text |
+| `value` | string | `''` | No | Input value |
+| `disabled` | boolean | `false` | Yes | Disabled state |
+| `readonly` | boolean | `false` | Yes | Readonly state |
+| `required` | boolean | `false` | Yes | Required field validation |
+| `min` | number | `null` | Yes | Minimum value (number type only) |
+| `max` | number | `null` | Yes | Maximum value (number type only) |
+| `minlength` | number | `null` | Yes | Minimum character length |
+| `maxlength` | number | `null` | Yes | Maximum character length |
+| `pattern` | string | `null` | Yes | RegEx validation pattern |
+| `autocomplete` | string | `'off'` | Yes | Autocomplete attribute |
+| `label` | string | `''` | Yes | Optional label above input |
+| `helperText` | string | `''` | Yes | Optional helper text below input |
+| `stepperStyle` | string | `'plusminus'` | Yes | Number stepper icon style: plusminus, chevron, arrows |
+| `stepperSize` | string | `'md'` | Yes | Number stepper size preset: sm, md, lg |
+| `icon` | string | `''` | No | Optional icon SVG string |
 
 ### Property Details
 
@@ -574,11 +562,11 @@ TInputLit uses the **ElementInternals API** for native form participation:
 ```
 
 **Features:**
-- ✅ Form value included in FormData
-- ✅ Native form validation
-- ✅ Form reset support
-- ✅ Required validation
-- ✅ Constraint validation API
+- Form value included in FormData
+- Native form validation
+- Form reset support
+- Required validation
+- Constraint validation API
 
 **JavaScript Access:**
 ```javascript
@@ -997,10 +985,10 @@ Full keyboard support:
 
 ## Browser Support
 
-- ✅ Chrome/Edge 90+
-- ✅ Firefox 88+
-- ✅ Safari 14.1+
-- ⚠️ ElementInternals API requires:
+- Chrome/Edge 90+
+- Firefox 88+
+- Safari 14.1+
+- ElementInternals API requires:
   - Chrome 77+
   - Firefox 93+
   - Safari 16.4+
@@ -1021,11 +1009,11 @@ Full keyboard support:
 
 ### Memory Management
 
-- ✅ No timers to clean up
-- ✅ No document listeners
-- ✅ No manual DOM manipulation
-- ✅ Automatic cleanup on disconnect
-- ✅ No memory leaks
+- No timers to clean up
+- No document listeners
+- No manual DOM manipulation
+- Automatic cleanup on disconnect
+- No memory leaks
 
 ---
 
@@ -1086,49 +1074,6 @@ npm run test:run -- tests/components/TInputLit.test.js
 
 ---
 
-## Migration from TerminalInput
-
-### Breaking Changes
-
-1. **Tag name changed**: `<terminal-input>` → `<t-inp>`
-2. **Import path changed**: New Lit component location
-3. **No external styles**: All styles encapsulated
-4. **Shadow DOM**: Content is isolated
-5. **Event names unchanged**: All events preserved
-
-### Migration Guide
-
-**Before:**
-```html
-<terminal-input
-  type="text"
-  placeholder="Enter text">
-</terminal-input>
-```
-
-**After:**
-```html
-<t-inp
-  type="text"
-  placeholder="Enter text">
-</t-inp>
-```
-
-**JavaScript:**
-```javascript
-// Before
-import './js/components/TerminalInput.js';
-
-// After
-import './js/components/TInputLit.js';
-```
-
-### API Compatibility
-
-✅ **100% compatible** - All properties, methods, and events preserved
-
----
-
 ## Troubleshooting
 
 ### Input not showing
@@ -1163,24 +1108,24 @@ import './js/components/TInputLit.js';
 ### Profile: FORM-ADVANCED
 
 **Blocks Implemented:**
-- ✅ Block 1: Static Metadata
-- ✅ Block 2: Static Styles
-- ✅ Block 3: Reactive Properties
-- ✅ Block 4: Internal State
-- ✅ Block 5: Logger Instance
-- ✅ Block 6: Constructor
-- ✅ Block 7: Lifecycle Methods
-- ✅ Block 8: Public API Methods
-- ✅ Block 9: Event Emitters
-- ✅ Block 11: Validation
-- ✅ Block 12: Render Method
-- ✅ Block 13: Private Helpers
+- Block 1: Static Metadata
+- Block 2: Static Styles
+- Block 3: Reactive Properties
+- Block 4: Internal State
+- Block 5: Logger Instance
+- Block 6: Constructor
+- Block 7: Lifecycle Methods
+- Block 8: Public API Methods
+- Block 9: Event Emitters
+- Block 11: Validation
+- Block 12: Render Method
+- Block 13: Private Helpers
 
 **Special Patterns:**
-- ✅ ElementInternals API (Form-Associated Custom Elements)
-- ✅ Component Logger integration
-- ✅ Type-specific feature rendering
-- ✅ Smart validation timing
+- ElementInternals API (Form-Associated Custom Elements)
+- Component Logger integration
+- Type-specific feature rendering
+- Smart validation timing
 
 ---
 
@@ -1213,14 +1158,14 @@ Part of Terminal Kit component library.
 ## Changelog
 
 ### v1.0.0 (2025-09-28)
-- ✨ Initial release
-- ✅ FORM-ADVANCED profile compliance
-- ✅ ElementInternals API integration
-- ✅ 107 tests passing
-- ✅ All 8 events implemented
-- ✅ Type-specific features complete
-- ✅ Comprehensive validation
-- ✅ Production-ready
+- Initial release
+- FORM-ADVANCED profile compliance
+- ElementInternals API integration
+- 107 tests passing
+- All 8 events implemented
+- Type-specific features complete
+- Comprehensive validation
+- Production-ready
 
 ## Slots
 

@@ -5,6 +5,25 @@ All notable changes to T-Kit will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-02-24
+
+### Added
+- New `TBentoGridLit` component (`<t-bento>`) for mixed-size, responsive bento layouts with span controls.
+- New `TCarouselLit` docs/demo/test integration (`<t-carousel>`) including drag, keyboard, controls, dots, infinite mode, and autoplay usage.
+- New demos: `demos/bento-grid.html` and `demos/carousel.html`.
+- New docs pages: `docs/components/TBentoGridLit.md` and `docs/components/TCarouselLit.md`.
+
+### Changed
+- Standardized all component runtime metadata and JSDoc frontmatter to **version `3.0.0`**.
+- Normalized component documentation titles and architecture headers for consistency across all component pages.
+- Updated docs sidebar to include `TBentoGridLit` and `TCarouselLit`.
+- Updated README component inventory and docs coverage counts.
+
+### Fixed
+- Loader alignment pass: standardized spinner stage centering and removed nested offset dependence for spinner rendering.
+- Loader spinner visibility improvements for low-contrast spinner variants in bundled `wc-spinners` styles.
+- Corrected component-doc tag-name mismatches in multi-tag pages (`TAccordionLit`, `TGridLit`, `TKanbanLit`).
+
 ## [1.0.0] - 2025-01-21
 
 ### Added

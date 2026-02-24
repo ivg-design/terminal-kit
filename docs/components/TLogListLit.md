@@ -1,10 +1,29 @@
-# TLogListLit
+# TLogListLit Component Documentation
 
-A log viewer component with terminal styling, supporting log level filtering, search, auto-scroll, and expandable entries.
+<!-- STANDARD_DOC_INTRO -->
 
-## Tag Name
+## Overview
 
-`t-log-list`
+Log viewer with filtering, search, and virtualization.
+
+## Tag Names
+
+- `t-log-list`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Container
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 

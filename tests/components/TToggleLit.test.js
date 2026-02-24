@@ -19,7 +19,7 @@ describe('TToggleLit', () => {
   describe('Component Initialization', () => {
     it('should have correct static metadata', () => {
       expect(component.constructor.tagName).toBe('t-tog');
-      expect(component.constructor.version).toBe('1.0.0');
+      expect(component.constructor.version).toBe('3.0.0');
       expect(component.constructor.category).toBe('Form Controls');
     });
 

@@ -1,10 +1,29 @@
-# TDynamicControlsLit
+# TDynamicControlsLit Component Documentation
 
-A dynamic form generator that creates controls from a schema definition. Designed to work with Rive parser blueprint format (State Machines and ViewModels).
+<!-- STANDARD_DOC_INTRO -->
 
-## Tag Name
+## Overview
 
-`t-dynamic-controls`
+Dynamic control generator from schema definitions
+
+## Tag Names
+
+- `t-dynamic-controls`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Container
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 
@@ -22,6 +41,8 @@ A dynamic form generator that creates controls from a schema definition. Designe
 | `disabled` | `Boolean` | `false` | Yes | Disable all controls |
 | `showTypes` | `Boolean` | `false` | No | Show type badges on controls |
 | `compact` | `Boolean` | `false` | Yes | Compact layout mode |
+| `showFilter` | `Boolean` | `false` | No | Show type filter dropdown above controls |
+| `typeFilter` | `String` | `''` | No | Active type filter value (e.g. `number`, `boolean`) |
 
 ### Schema Structure (Rive Parser Format)
 

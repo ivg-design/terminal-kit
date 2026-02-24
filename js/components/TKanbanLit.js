@@ -1,17 +1,12 @@
 /**
- * @fileoverview TKanbanLit - Terminal-style Kanban Board
+ * @fileoverview TKanbanLit - Terminal-style Kanban Component
  * @module components/TKanbanLit
  * @version 3.0.0
  *
- * A kanban board component with draggable cards, color-controlled columns,
- * and expandable card content. Follows terminal-kit aesthetic.
+ * Kanban board component with draggable cards, color-controlled columns, and expandable card content.
  *
  * @example
- * <t-kanban>
- *   <t-kanban-column id="todo" title="To Do" color="amber">
- *     <t-kanban-card id="1" title="Task 1"></t-kanban-card>
- *   </t-kanban-column>
- * </t-kanban>
+ * <t-kanban></t-kanban>
  */
 
 import { LitElement, html, css } from 'lit';
@@ -724,10 +719,10 @@ export class TKanbanColumnLit extends LitElement {
 
 	_updatePlaceholderPosition() {
 		// Get or create placeholder
-		let placeholder = this.querySelector('.drag-placeholder');
+		let placeholder = this.querySelector('.drop-placeholder');
 		if (!placeholder) {
 			placeholder = document.createElement('div');
-			placeholder.className = 'drag-placeholder';
+			placeholder.className = 'drop-placeholder';
 			placeholder.style.cssText = `
 				height: 40px;
 				border: 2px dashed var(--column-color, var(--terminal-green, #00ff41));
@@ -749,7 +744,7 @@ export class TKanbanColumnLit extends LitElement {
 	}
 
 	_removePlaceholder() {
-		const placeholder = this.querySelector('.drag-placeholder');
+		const placeholder = this.querySelector('.drop-placeholder');
 		if (placeholder) {
 			placeholder.remove();
 		}

@@ -1,17 +1,36 @@
-# TChatPanelLit (t-chat)
+# TChatPanelLit Component Documentation
 
-A compact, terminal-styled chat panel with markdown rendering, streaming support, message queueing, attachments, and export functionality.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Compact, terminal-styled chat panel with markdown rendering, attachments, queueing, and streaming support.
 
 ## Tag Names
 
 - `t-chat`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Composite
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 
 | Property | Value |
 | --- | --- |
 | tagName | `t-chat` |
-| version | `1.0.0` |
+| version | `3.0.0` |
 | category | `Composite` |
 
 ## Examples

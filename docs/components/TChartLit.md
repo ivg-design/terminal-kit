@@ -1,10 +1,29 @@
-# TChartLit
+# TChartLit Component Documentation
 
-A data visualization component with terminal styling, supporting bar charts, line charts, pie charts, and various display options.
+<!-- STANDARD_DOC_INTRO -->
 
-## Tag Name
+## Overview
 
-`t-chart`
+Simple data visualization component (bar, line, pie, donut).
+
+## Tag Names
+
+- `t-chart`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Display
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 
@@ -29,8 +48,9 @@ A data visualization component with terminal styling, supporting bar charts, lin
 | `height` | `String` | `'200px'` | No | Chart height (CSS value) |
 | `colors` | `Array` | `[]` | No | Custom color palette |
 | `title` | `String` | `''` | No | Chart title |
-| `monochrome` | `Boolean` | `false` | Yes | Use single-color scheme |
-| `baseColor` | `String` | `'#00ff41'` | No | Base color for monochrome mode |
+| `outlineOnly` | `Boolean` | `false` | Yes | Render bars/areas as outlines (stroke only, transparent fill) |
+| `monochrome` | `Boolean` | `false` | Yes | Generate a monochrome ramp (light-to-dark shades) from `baseColor` |
+| `baseColor` | `String` | `'#00ff41'` | No | Base hue used to generate monochrome shades |
 | `colorScheme` | `String` | `'terminal'` | Yes | Color scheme preset: `'terminal'`, `'neon'`, `'cool'`, `'warm'`, `'grayscale'` |
 
 ### Data Object Structure
@@ -176,6 +196,8 @@ Fired when hovering over a segment.
 </t-chart>
 ```
 
+For pie/donut charts, slice labels are rendered with contrast-aware text and stroke so percentages remain readable even when labels cross dark background areas.
+
 ### Custom Colors
 
 ```html
@@ -228,7 +250,6 @@ chart.addEventListener('segment-hover', (e) => {
 ## Slots
 
 None.
-
 
 ## CSS Custom Properties
 

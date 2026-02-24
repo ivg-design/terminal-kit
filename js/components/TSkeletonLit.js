@@ -1,3 +1,14 @@
+/**
+ * @fileoverview TSkeletonLit - Terminal-style Skeleton Component
+ * @module components/TSkeletonLit
+ * @version 3.0.0
+ *
+ * Loading placeholder skeleton component with various shapes and animations.
+ *
+ * @example
+ * <t-skel></t-skel>
+ */
+
 // ============================================================
 // SECTION 1: IMPORTS (REQUIRED)
 // ============================================================

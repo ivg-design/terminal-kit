@@ -1,10 +1,29 @@
-# TLogEntryLit
+# TLogEntryLit Component Documentation
 
-A log entry component with terminal styling, supporting multiple log levels, timestamps, tags, and expandable details.
+<!-- STANDARD_DOC_INTRO -->
 
-## Tag Name
+## Overview
 
-`t-log-entry`
+Structured log entry row with expandable details and tags.
+
+## Tag Names
+
+- `t-log-entry`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Container
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 

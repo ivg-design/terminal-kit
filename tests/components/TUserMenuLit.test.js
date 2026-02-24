@@ -39,7 +39,7 @@ describe('TUserMenuLit', () => {
 
     it('should have correct static metadata', () => {
       expect(TUserMenuLit.tagName).toBe('t-usr');
-      expect(TUserMenuLit.version).toBe('1.0.0');
+      expect(TUserMenuLit.version).toBe('3.0.0');
       expect(TUserMenuLit.category).toBe('Navigation');
     });
 

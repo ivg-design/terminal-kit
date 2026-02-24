@@ -1,29 +1,35 @@
-# TButtonLit (t-btn)
+# TButtonLit Component Documentation
 
-A **Pure Lit** button component with terminal/cyberpunk styling. Built with Lit 3.x for zero FOUC, complete Shadow DOM encapsulation, and reactive properties. Supports multiple variants, sizes, states, toggle functionality, and icon integration.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Terminal-styled button component with variants, loading states, and toggle functionality. Supports multiple button types (text, icon, icon-text), sizes, variants, and includes built-in loading indicators.
+
+## Tag Names
+
+- `t-btn`
 
 ## Architecture
 
-**CRITICAL:** This is a **Pure Lit Component**:
-- ✅ Extends `LitElement`
-- ✅ All styles in `static styles` CSS block
-- ✅ Zero FOUC (Flash of Unstyled Content)
-- ✅ Complete Shadow DOM encapsulation
-- ✅ Reactive properties with `@property()` decorator
-- ✅ No external CSS loading
-- ✅ No `adoptedStyleSheets`
+- Extends: `LitElement`
+- Category: Form Controls
+- Version: 3.0.0
 
-## Tag Name
-```html
-<t-btn></t-btn>
-```
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [Related Components](#related-components)
 
 ## Static Metadata
 
 | Property | Value | Description |
 |----------|-------|-------------|
 | `tagName` | `'t-btn'` | Custom element tag name |
-| `version` | `'1.0.0'` | Component version |
+| `version` | `'3.0.0'` | Component version |
 | `category` | `'Form Controls'` | Component category |
 
 ## Properties
@@ -32,21 +38,21 @@ All properties are reactive Lit properties:
 
 | Property | Type | Default | Reflects | Description |
 |----------|------|---------|----------|-------------|
-| `variant` | String | `'primary'` | ✅ | Button style: 'primary', 'secondary', 'danger', 'error', 'success', 'warning', 'info', 'ghost', 'toggle' |
-| `type` | String | `'text'` | ✅ | Display type: 'text', 'icon', 'icon-text' |
-| `size` | String | `'default'` | ✅ | Size: 'xs', 'small'/'sm', 'default', 'large'/'lg' |
-| `disabled` | Boolean | `false` | ✅ | Disabled state |
-| `loading` | Boolean | `false` | ✅ | Loading state with spinner |
-| `icon` | String | `''` | ❌ | Icon SVG content |
-| `loaderType` | String | `'spinner'` | ❌ | Loader type: 'spinner', 'dots', 'bars' |
-| `loaderColor` | String | `''` | ❌ | Custom loader color (CSS color value) |
-| `toggleState` | Boolean | `false` | ✅ | Toggle state (toggle variant only) |
-| `iconOn` | String | `''` | ❌ | Icon when toggle is on |
-| `iconOff` | String | `''` | ❌ | Icon when toggle is off |
-| `colorOn` | String | `''` | ❌ | Custom color when toggle is on |
-| `colorOff` | String | `''` | ❌ | Custom color when toggle is off |
-| `textOn` | String | `''` | ❌ | Text to display when toggle is on |
-| `textOff` | String | `''` | ❌ | Text to display when toggle is off |
+| `variant` | String | `'primary'` | Yes | Button style: 'primary', 'secondary', 'danger', 'error', 'success', 'warning', 'info', 'ghost', 'toggle' |
+| `type` | String | `'text'` | Yes | Display type: 'text', 'icon', 'icon-text' |
+| `size` | String | `'default'` | Yes | Size: 'xs', 'small'/'sm', 'default', 'large'/'lg' |
+| `disabled` | Boolean | `false` | Yes | Disabled state |
+| `loading` | Boolean | `false` | Yes | Loading state with spinner |
+| `icon` | String | `''` | No | Icon SVG content |
+| `loaderType` | String | `'spinner'` | No | Loader type: 'spinner', 'dots', 'bars' |
+| `loaderColor` | String | `''` | No | Custom loader color (CSS color value) |
+| `toggleState` | Boolean | `false` | Yes | Toggle state (toggle variant only) |
+| `iconOn` | String | `''` | No | Icon when toggle is on |
+| `iconOff` | String | `''` | No | Icon when toggle is off |
+| `colorOn` | String | `''` | No | Custom color when toggle is on |
+| `colorOff` | String | `''` | No | Custom color when toggle is off |
+| `textOn` | String | `''` | No | Text to display when toggle is on |
+| `textOff` | String | `''` | No | Text to display when toggle is off |
 
 ### Variants
 - `primary` - Primary action button (green filled on hover)
@@ -161,9 +167,9 @@ Fired when button is clicked. This is a custom event that fires for all button v
 
 **Event Type:** `CustomEvent`
 
-**Bubbles:** ✅ Yes
+**Bubbles:** <DocIcon name="checkCircle" /> Yes
 
-**Composed:** ✅ Yes (crosses shadow DOM boundary)
+**Composed:** <DocIcon name="checkCircle" /> Yes (crosses shadow DOM boundary)
 
 **Event Detail:**
 ```javascript
@@ -184,9 +190,9 @@ Fired when toggle state changes (toggle variant only).
 
 **Event Type:** `CustomEvent`
 
-**Bubbles:** ✅ Yes
+**Bubbles:** <DocIcon name="checkCircle" /> Yes
 
-**Composed:** ✅ Yes (crosses shadow DOM boundary)
+**Composed:** <DocIcon name="checkCircle" /> Yes (crosses shadow DOM boundary)
 
 **Event Detail:**
 ```javascript
@@ -532,17 +538,17 @@ button.addEventListener('toggle-change', (e) => {
 
 TButtonLit follows the **CORE Profile** of COMPONENT_SCHEMA.md:
 
-- ✅ **Block 1**: Static Metadata (tagName, version, category)
-- ✅ **Block 2**: Static Styles (complete CSS encapsulation)
-- ✅ **Block 3**: Properties (15 reactive properties with reflection)
-- ✅ **Block 4**: Internal State (_icon, _fixedWidth, _originalContent, _preLoadingWidth)
-- ✅ **Block 5**: Logger Instance (componentLogger integration)
-- ✅ **Block 6**: Constructor (initialization with logging)
-- ✅ **Block 7**: Lifecycle Hooks (all hooks with logging)
-- ✅ **Block 8**: Public API Methods (6 methods: click, focus, blur, setIcon, setText, setLoading)
-- ✅ **Block 9**: Event Emitters (_emitEvent helper)
-- ✅ **Block 12**: Render Methods (render with internal helpers)
-- ✅ **Block 13**: Internal Helpers (_renderIcon, _renderLoader, etc.)
+- **Block 1**: Static Metadata (tagName, version, category)
+- **Block 2**: Static Styles (complete CSS encapsulation)
+- **Block 3**: Properties (15 reactive properties with reflection)
+- **Block 4**: Internal State (_icon, _fixedWidth, _originalContent, _preLoadingWidth)
+- **Block 5**: Logger Instance (componentLogger integration)
+- **Block 6**: Constructor (initialization with logging)
+- **Block 7**: Lifecycle Hooks (all hooks with logging)
+- **Block 8**: Public API Methods (6 methods: click, focus, blur, setIcon, setText, setLoading)
+- **Block 9**: Event Emitters (_emitEvent helper)
+- **Block 12**: Render Methods (render with internal helpers)
+- **Block 13**: Internal Helpers (_renderIcon, _renderLoader, etc.)
 
 ### Architecture Details
 
@@ -562,59 +568,11 @@ TButtonLit follows the **CORE Profile** of COMPONENT_SCHEMA.md:
 - Safari 16.4+ (native Lit support)
 - Older browsers: Use Lit polyfills
 
-## Migration from Legacy TButton
-
-If migrating from old `TComponent`-based button:
-
-### Before (Legacy)
-```javascript
-import { TButton } from './js/components/TButton.js';
-button.setProp('variant', 'primary');
-button.emit('button-click', { ... });
-```
-
-### After (Pure Lit)
-```javascript
-import './js/components/TButtonLit.js';
-button.variant = 'primary';
-// button-click event is now automatically emitted
-button.addEventListener('button-click', (e) => {
-  console.log('Clicked:', e.detail.button);
-});
-```
-
-### Key Changes
-1. Component extends `LitElement` not `TComponent`
-2. Use properties directly, not `setProp()`
-3. `button-click` event now automatically emitted (custom event)
-4. New methods: `click()`, `focus()`, `blur()`, `setText()`, `setLoading()`
-5. New properties: `loaderType`, `loaderColor`, `colorOn`, `colorOff`, `textOn`, `textOff`
-6. Property reflection: Key properties now reflect to attributes
-7. Logger integration: All lifecycle and method calls logged
-8. No external CSS loading - all styles in `static styles` block
-9. Static metadata: `tagName`, `version`, `category` properties
-10. Complete lifecycle hooks: `firstUpdated()` added
-
-### Event Migration
-```javascript
-// OLD: Listen to native click event
-button.addEventListener('click', (e) => { ... });
-
-// NEW: Listen to button-click custom event (recommended)
-button.addEventListener('button-click', (e) => {
-  // e.detail.button contains the button element
-});
-
-// Note: Native click still works, but button-click provides
-// consistent event structure across all button interactions
-```
-
 ## Slots
 
 | Slot | Description |
 | --- | --- |
 | default | Button label/content |
-
 
 ## Related Components
 

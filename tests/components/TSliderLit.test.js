@@ -21,7 +21,7 @@ describe('TSliderLit', () => {
       expect(TSliderManifest).toBeDefined();
       expect(TSliderManifest.tagName).toBe('t-sld');
       expect(TSliderManifest.displayName).toBe('Slider');
-      expect(TSliderManifest.version).toBe('1.0.0');
+      expect(TSliderManifest.version).toBe('3.0.0');
     });
 
     it('should document all 10 properties', () => {
@@ -63,7 +63,7 @@ describe('TSliderLit', () => {
     });
 
     it('should have version', () => {
-      expect(TSliderLit.version).toBe('1.0.0');
+      expect(TSliderLit.version).toBe('3.0.0');
     });
 
     it('should have category', () => {

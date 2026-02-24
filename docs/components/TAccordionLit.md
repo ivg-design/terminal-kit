@@ -1,11 +1,30 @@
-# TAccordionLit
+# TAccordionLit Component Documentation
 
-A collapsible accordion component with expandable sections, terminal styling, and support for single or multiple open panels.
+<!-- STANDARD_DOC_INTRO -->
+
+## Overview
+
+Accordion component with collapsible sections, terminal styling, single/multi-open behavior, and per-item animation controls.
 
 ## Tag Names
 
-- `t-accordion` - Container component
-- `t-accordion-item` - Individual panel
+- `t-accordion`
+- `t-accordion-item`
+
+## Architecture
+
+- Extends: `LitElement`
+- Category: Container
+- Version: 3.0.0
+
+## Table of Contents
+1. [Properties](#properties)
+2. [Methods](#methods)
+3. [Events](#events)
+4. [Examples](#examples)
+5. [Slots](#slots)
+6. [CSS Custom Properties](#css-custom-properties)
+7. [Related Components](#related-components)
 
 ## Static Metadata
 
@@ -23,6 +42,8 @@ A collapsible accordion component with expandable sections, terminal styling, an
 | `bordered` | `Boolean` | `false` | Yes | Add outer border to accordion |
 | `expandedItems` | `Array` | `[]` | No | Array of expanded item IDs |
 | `orientation` | `String` | `'vertical'` | Yes | Layout: `'vertical'` or `'horizontal'` |
+| `animationDuration` | `Number` | `300` | Yes | Default expand/collapse animation duration in milliseconds (`animation-duration`) |
+| `animationEasing` | `String` | `'ease-out'` | Yes | Default easing for expand/collapse animations (`animation-easing`) |
 
 ## Item Properties (t-accordion-item)
 
@@ -39,6 +60,8 @@ A collapsible accordion component with expandable sections, terminal styling, an
 | `size` | `String` | `'md'` | Yes | Size: `'sm'`, `'md'`, `'lg'` |
 | `iconPosition` | `String` | `'left'` | Yes | Caret position: `'left'` or `'right'` |
 | `orientation` | `String` | `'vertical'` | Yes | Inherited from parent |
+| `animationDuration` | `Number` | `null` | Yes | Optional per-item animation duration override in milliseconds (`animation-duration`) |
+| `animationEasing` | `String` | `''` | Yes | Optional per-item easing override (`animation-easing`) |
 
 ## Methods
 
@@ -153,11 +176,13 @@ Fired by accordion when any item changes.
 ### Animated with Custom Styling
 
 ```html
-<t-accordion>
+<t-accordion animation-duration="450" animation-easing="cubic-bezier(0.22, 1, 0.36, 1)">
   <t-accordion-item
     item-id="faq1"
     title="What is this?"
     animated
+    animation-duration="220"
+    animation-easing="linear"
     variant="bordered"
     size="lg"
     icon-position="right">
@@ -218,6 +243,8 @@ accordion.addEventListener('accordion-change', (e) => {
 | `--item-border` | `var(--terminal-gray-dark)` | Border color |
 | `--item-color` | `var(--terminal-green)` | Accent color |
 | `--item-header-bg` | `var(--terminal-black)` | Header background |
+| `--accordion-animation-duration` | `300ms` | Expand/collapse transition duration |
+| `--accordion-animation-easing` | `ease-out` | Expand/collapse transition easing |
 
 ## Related Components
 

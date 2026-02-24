@@ -20,7 +20,7 @@ describe('TChatPanelLit', () => {
       expect(TChatPanelManifest).toBeDefined();
       expect(TChatPanelManifest.tagName).toBe('t-chat');
       expect(TChatPanelManifest.displayName).toBe('Chat Panel');
-      expect(TChatPanelManifest.version).toBe('1.0.0');
+      expect(TChatPanelManifest.version).toBe('3.0.0');
     });
 
     it('should document all properties', () => {

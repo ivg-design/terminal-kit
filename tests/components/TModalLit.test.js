@@ -28,7 +28,7 @@ describe('TModalLit', () => {
       expect(TModalManifest).toBeDefined();
       expect(TModalManifest.tagName).toBe('t-mdl');
       expect(TModalManifest.displayName).toBeDefined();
-      expect(TModalManifest.version).toBe('1.0.0');
+      expect(TModalManifest.version).toBe('3.0.0');
     });
 
     it('should document all 7 properties', () => {
